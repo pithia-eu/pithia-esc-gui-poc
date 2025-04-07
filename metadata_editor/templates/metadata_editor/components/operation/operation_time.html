@@ -1,10 +1,23 @@
 <section id="operation-time-section" class="d-flex flex-column row-gap-4">
-    {% with time_period_section_heading_text='Operation Time' time_period_section_help_text='When the operation occurred.' time_period_section_summary_text='Adding information on the operation time is optional. If you would like to add this, you must fill out all of the operation-time-related fields below.' %}
+    <div class="row gy-2">
+        <div class="col-lg-12">
+            <h2 class="mb-0">Operation Time</h2>
+        </div>
+        <div class="col-lg-6">
+            <p class="mb-0">
+                When the operation occurred.
+            </p>
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with custom_summary_text='Adding information on the operation time is optional. If you would like to add this, you must fill out all of the operation-time-related fields below.' %}
+            {% include 'metadata_editor/components/conditional_required_field_info_template.html' %}
+            {% endwith %}
+        </div>
+    </div>
     {% with time_period_id_field=form.time_period_id %}
     {% with time_instant_begin_id_field=form.time_instant_begin_id time_instant_begin_position_field=form.time_instant_begin_position %}
     {% with time_instant_end_id_field=form.time_instant_end_id time_instant_end_position_field=form.time_instant_end_position %}
     {% include 'metadata_editor/components/time_period.html' %}
-    {% endwith %}
     {% endwith %}
     {% endwith %}
     {% endwith %}

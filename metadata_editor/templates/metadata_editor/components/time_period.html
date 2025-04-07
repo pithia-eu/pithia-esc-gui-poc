@@ -1,24 +1,5 @@
 <div class="row gy-2">
     <div class="col-lg-12">
-        <h2 class="mb-0">{{ time_period_section_heading_text|default:'Time Period' }}</h2>
-    </div>
-    {% if time_period_section_help_text %}
-    <div class="col-lg-6">
-        <p class="mb-0">
-            {{ time_period_section_help_text }}
-        </p>
-    </div>
-    {% endif %}
-    {% if time_period_section_summary_text %}
-    <div class="col-xl-9 col-lg-12">
-        {% with custom_summary_text=time_period_section_summary_text %}
-        {% include 'metadata_editor/components/conditional_required_field_info_template.html' %}
-        {% endwith %}
-    </div>
-    {% endif %}
-</div>
-<div class="row gy-2">
-    <div class="col-lg-12">
         <h3 class="fs-4 mb-0">Time Period</h3>
     </div>
     <div class="col-xl-4 col-lg-6">

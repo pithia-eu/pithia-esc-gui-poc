@@ -1,0 +1,18 @@
+<div class="row {% block extra_row_classes %}flex-row-reverse align-items-start{% endblock extra_row_classes %} row-gap-3 pt-4">
+    {% block custom_summary_text %}{% endblock custom_summary_text %}
+    <div class="col-xl-3 col-lg-12 ms-xl-auto py-xl-0 pb-4">
+        <div class="d-flex flex-column align-items-xl-end align-items-stretch">
+            <button class="btn btn-outline-danger remove-source-button py-2" type="button" disabled>
+                <span class="d-flex flex-row justify-content-center align-items-center column-gap-xl-3 column-gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg flex-shrink-0" viewBox="0 0 16 16">
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                    </svg>
+                    <small class="remove-tab-pane-button-text">Remove Tab</small>
+                </span>
+            </button>
+        </div>
+    </div>
+    <div class="d-flex flex-column row-gap-4 col-xl-9 col-lg-12">
+        {% include 'metadata_editor/components/time_period.html' %}
+    </div>
+</div>
