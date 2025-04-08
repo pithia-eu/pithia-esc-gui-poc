@@ -107,11 +107,30 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
             )
             return redirect(reverse_lazy(self.resource_management_list_page_breadcrumb_url_name))
 
-        # Generate XML from the wizard
+        # Load in current XML without wizard changes
         try:
             if not hasattr(self, 'current_resource_xml'):
                 self.current_resource_xml = self.resource.xml
             metadata_editor = self.metadata_editor_class(xml_string=self.current_resource_xml)
+        except XMLSchemaValidationError:
+            logger.exception(f'''The XML for resource with ID
+            "{escape(self.resource_id)}" has become outdated with
+            the latest XML schema definitions. Please try updating
+            via the XML file upload method.''')
+            return HttpResponseServerError('''The XML for this resource has
+                become incompatible with the XML schema and cannot be updated
+                with the wizard. To update this resource (and re-enable
+                compatibility with the wizard), please modify the XML file
+                manually and apply the update using the direct file upload tool.''')
+        except Exception:
+            logger.exception(f'''An unexpected error occurred whilst
+                starting the wizard update process for resource with
+                ID "{escape(self.resource_id)}".''')
+            return HttpResponseServerError(self.error_msg)
+
+        # Apply changes from wizard and generate
+        # new XML.
+        try:
             self.add_form_data_to_metadata_editor(metadata_editor, form.cleaned_data)
             self.xml_string = metadata_editor.to_xml()
             self.run_extra_actions_before_update()
