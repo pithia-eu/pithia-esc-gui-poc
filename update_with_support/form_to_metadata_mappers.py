@@ -10,6 +10,7 @@ from .form_to_metadata_mapper_components import (
     DocumentationFormFieldsToMetadataMixin,
     InputOutputFormFieldsToMetadataMixin,
     LocationFormFieldsToMetadataMixin,
+    MultipleTimePeriodFormFieldsToMetadataMixin,
     QualityAssessmentFormFieldsToMetadataMixin,
     RelatedPartyFormFieldsToMetadataMixin,
     SourceFormFieldsToMetadataMixin,
@@ -328,7 +329,7 @@ class StaticDatasetEntryFormFieldsToMetadataMapper(
 class DataSubsetFormFieldsToMetadataMapper(
         QualityAssessmentFormFieldsToMetadataMixin,
         SourceFormFieldsToMetadataMixin,
-        TimePeriodFormFieldsToMetadataMixin,
+        MultipleTimePeriodFormFieldsToMetadataMixin,
         BaseMetadataFormFieldsToMetadataMixin):
     time_period_container_element_name = 'resultTime'
     
@@ -364,6 +365,17 @@ class DataSubsetFormFieldsToMetadataMapper(
             'name': './/%s:dataSubsetName' % self.DEFAULT_XPATH_NSPREFIX,
         })
         return mappings
+
+    def _map_result_times_to_form(self):
+        return self._map_time_periods_to_form()
+
+    def get_initial_values_with_custom_mappings(self):
+        initial_values = super().get_initial_values_with_custom_mappings()
+        result_time_periods = self._map_result_times_to_form()
+        initial_values.update({
+            'time_periods_json': result_time_periods,
+        })
+        return initial_values
 
 
 class WorkflowFormFieldsToMetadataMapper(BaseMetadataFormFieldsToMetadataMixin):

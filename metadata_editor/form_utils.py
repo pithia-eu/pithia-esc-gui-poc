@@ -1,5 +1,8 @@
+import dateutil.parser
 import json
 import logging
+from datetime import timezone
+
 from .editor_dataclasses import (
     CapabilityLinkMetadataUpdate,
     DataSubsetSourceMetadataUpdate,
@@ -7,6 +10,7 @@ from .editor_dataclasses import (
     InputOutputMetadataUpdate,
     ProcessCapabilityMetadataUpdate,
     RelatedPartyMetadataUpdate,
+    ResultTimeMetadataUpdate,
     SourceMetadataUpdate,
     StandardIdentifierMetadataUpdate,
     TimeSpanMetadataUpdate,
@@ -136,3 +140,15 @@ def map_data_subset_sources_with_existing_data_hub_files_to_dataclasses(form_cle
             datahub_file_name=s.get('dataHubFileName'),
         )
     for s in form_cleaned_data.get('sources_json')]
+
+# Time periods
+def map_time_periods_to_dataclasses(form_cleaned_data):
+    return [
+        ResultTimeMetadataUpdate(
+            time_period_id=tp.get('timePeriodId'),
+            time_instant_begin_id=tp.get('timeInstantBeginId'),
+            time_instant_begin_position=dateutil.parser.parse(tp.get('timeInstantBeginPosition')).replace(microsecond=0, tzinfo=timezone.utc).isoformat().replace('+00:00', 'Z'),
+            time_instant_end_id=tp.get('timeInstantEndId'),
+            time_instant_end_position=dateutil.parser.parse(tp.get('timeInstantEndPosition')).replace(microsecond=0, tzinfo=timezone.utc).isoformat().replace('+00:00', 'Z'),
+        )
+    for tp in form_cleaned_data.get('time_periods_json')]

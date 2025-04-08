@@ -947,11 +947,10 @@ class StatusMetadataEditor(BaseMetadataComponentEditor):
 
 class TimePeriodMetadataEditor(BaseMetadataComponentEditor):
     def _update_time_instant_property_type_element(
-        self,
-        time_prop_element,
-        time_instant_id,
-        time_position_value
-    ):
+            self,
+            time_prop_element,
+            time_instant_id,
+            time_position_value):
         time_instant_key = '%s:TimeInstant' % NamespacePrefix.GML
         time_position_key = '%s:timePosition' % NamespacePrefix.GML
         time_prop_element.setdefault(time_instant_key, {})
@@ -965,14 +964,11 @@ class TimePeriodMetadataEditor(BaseMetadataComponentEditor):
             time_position_value = str(time_position_value)
         time_position['$'] = time_position_value
 
-    def update_time_period(self, update_data: TimePeriodMetadataUpdate, time_period_container_element_key: str):
-        # Time period container element
-        self.metadata_dict.setdefault(time_period_container_element_key, {})
-        time_period_container_element = self.metadata_dict[time_period_container_element_key]
+    def _update_time_period(self, update_data: TimePeriodMetadataUpdate, time_period_container_element: dict):
         # gml:TimePeriod container element
         time_period_key = '%s:TimePeriod' % NamespacePrefix.GML
         time_period_container_element.setdefault(time_period_key, {})
-        time_period = self.metadata_dict[time_period_container_element_key][time_period_key]
+        time_period = time_period_container_element[time_period_key]
         time_period['@%s:id' % NamespacePrefix.GML] = update_data.time_period_id
 
         # Check for clashing gml:TimePeriod child elements -
@@ -1015,8 +1011,8 @@ class TimePeriodMetadataEditor(BaseMetadataComponentEditor):
             if key == time_period_begin_key or key == time_period_end_key
         }
         # Remove "frame" attribute before checking timePeriod
-        # element as it affects whether the it is considered
-        # "empty" or not. If not added by the user xmlschema
+        # element as it affects whether it is considered
+        # "empty" or not. If not added by the user, xmlschema
         # adds it in when parsing an existing XML document.
         self.remove_xml_attributes_from_metadata_component(
             time_period_copy_no_optionals,
@@ -1024,6 +1020,27 @@ class TimePeriodMetadataEditor(BaseMetadataComponentEditor):
         )
         if _is_metadata_component_empty(time_period_copy_no_optionals):
             time_period_container_element.pop(time_period_key)
+        return time_period_container_element
+
+    def update_time_periods(self, update_data: list[TimePeriodMetadataUpdate], time_period_container_element_key: str):
+        # Time period container element
+        self.metadata_dict.setdefault(time_period_container_element_key, [])
+        time_period_container_elements = []
+        for ud in update_data:
+            time_period_container_element = self._update_time_period(ud, {})
+            if not time_period_container_element:
+                continue
+            time_period_container_elements.append(time_period_container_element)
+        self.metadata_dict[time_period_container_element_key] = time_period_container_elements
+
+    def update_time_period(self, update_data: TimePeriodMetadataUpdate, time_period_container_element_key: str):
+        # Time period container element
+        self.metadata_dict.setdefault(time_period_container_element_key, {})
+        self.metadata_dict[time_period_container_element_key] = self._update_time_period(
+            update_data,
+            {}
+        )
+        
 
 
 class TypeMetadataEditor(BaseMetadataComponentEditor):

@@ -402,10 +402,6 @@ class DataSubsetUpdateWithEditorFormView(
 
     def get_initial(self):
         initial = super().get_initial()
-        initial.update({
-            'time_instant_begin_position': parse(initial.get('time_instant_begin_position', '')).replace(second=0, microsecond=0).isoformat().replace('+00:00', ''),
-            'time_instant_end_position': parse(initial.get('time_instant_end_position', '')).replace(second=0, microsecond=0).isoformat().replace('+00:00', ''),
-        })
         if not self.get_online_resource_files_for_data_subset():
             initial.update({
                 'is_file_uploaded_for_each_online_resource': False,

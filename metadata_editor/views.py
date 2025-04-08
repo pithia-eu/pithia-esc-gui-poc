@@ -13,7 +13,6 @@ from .editor_dataclasses import (
     CitationPropertyTypeMetadataUpdate,
     OperationTimeMetadataUpdate,
     PhenomenonTimeMetadataUpdate,
-    ResultTimeMetadataUpdate,
     StandardIdentifierMetadataUpdate,
 )
 from .forms import *
@@ -22,6 +21,7 @@ from .form_utils import (
     map_input_descriptions_to_dataclasses,
     map_processing_inputs_to_dataclasses,
     map_sources_to_dataclasses,
+    map_time_periods_to_dataclasses,
 )
 from .service_utils import BaseMetadataEditor
 from .services import (
@@ -898,12 +898,12 @@ class StaticDatasetEntryEditorFormView(
 
 
 class DataSubsetEditorFormView(
-    DataSubsetDataHubViewMixin,
-    StaticDatasetRelatedEditorFormViewMixin,
-    DataCollectionSelectFormViewMixin,
-    DataLevelSelectFormViewMixin,
-    QualityAssessmentSelectFormViewMixin,
-    ResourceEditorFormView):
+        DataSubsetDataHubViewMixin,
+        StaticDatasetRelatedEditorFormViewMixin,
+        DataCollectionSelectFormViewMixin,
+        DataLevelSelectFormViewMixin,
+        QualityAssessmentSelectFormViewMixin,
+        ResourceEditorFormView):
     form_class = DataSubsetForm
     template_name = 'metadata_editor/data_subset_editor.html'
 
@@ -938,14 +938,7 @@ class DataSubsetEditorFormView(
         metadata_editor.update_description(form_cleaned_data.get('description'))
         metadata_editor.update_entry_identifier(form_cleaned_data.get('entry_identifier'))
         metadata_editor.update_data_collection(form_cleaned_data.get('data_collection'))
-        result_time_update = ResultTimeMetadataUpdate(
-            time_period_id=form_cleaned_data.get('time_period_id'),
-            time_instant_begin_id=form_cleaned_data.get('time_instant_begin_id'),
-            time_instant_begin_position=form_cleaned_data.get('time_instant_begin_position').replace(microsecond=0).isoformat().replace('+00:00', 'Z'),
-            time_instant_end_id=form_cleaned_data.get('time_instant_end_id'),
-            time_instant_end_position=form_cleaned_data.get('time_instant_end_position').replace(microsecond=0).isoformat().replace('+00:00', 'Z'),
-        )
-        metadata_editor.update_result_time(result_time_update)
+        metadata_editor.update_result_times(map_time_periods_to_dataclasses(form_cleaned_data))
         metadata_editor.update_data_levels([form_cleaned_data.get('data_levels')])
         metadata_editor.update_quality_assessment(
             form_cleaned_data.get('data_quality_flags'),

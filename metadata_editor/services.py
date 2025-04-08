@@ -491,6 +491,10 @@ class DataSubsetEditor(
         result_time_key = 'resultTime'
         self.update_time_period(update_data, result_time_key)
 
+    def update_result_times(self, update_data: list[ResultTimeMetadataUpdate]):
+        result_time_key = 'resultTime'
+        self.update_time_periods(update_data, result_time_key)
+
     def update_sources(self, update_data: list[SourceMetadataUpdate]):
         return self._update_sources(self.metadata_dict, update_data)
 
