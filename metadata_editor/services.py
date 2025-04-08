@@ -595,7 +595,7 @@ class SimpleDataSubsetEditor(SimpleMetadataEditor):
     def update_referent_doi_name_if_exists(self, referent_doi_name: str):
         doi_kernel_metadata_element = self.xml_string_parsed.find('{%s}doi' % Namespace.PITHIA)
         if doi_kernel_metadata_element is None:
-            returna
+            return
         referent_doi_name_element = doi_kernel_metadata_element.find('{%s}referentDoiName' % Namespace.DOI)
         referent_doi_name_element.text = referent_doi_name
 
