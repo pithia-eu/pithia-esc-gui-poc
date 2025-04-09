@@ -713,6 +713,25 @@ class DataSubsetForm(
         initial=True
     )
 
+    def clean(self):
+        cleaned_data = super().clean()
+        time_periods = cleaned_data.get('time_periods_json')
+        ids_from_time_periods = []
+        for tp in time_periods:
+            time_period_id = tp.get('timePeriodId')
+            if time_period_id:
+                ids_from_time_periods.append(time_period_id)
+            time_instant_begin_id = tp.get('timeInstantBeginId')
+            if time_instant_begin_id:
+                ids_from_time_periods.append(time_instant_begin_id)
+            time_instant_end_id = tp.get('timeInstantEndId')
+            if time_instant_end_id:
+                ids_from_time_periods.append(time_instant_end_id)
+        ids_from_time_periods_no_duplicates = set(ids_from_time_periods)
+        if len(ids_from_time_periods) != len(ids_from_time_periods_no_duplicates):
+            self.add_error('time_periods_json', ValidationError('Time period/time instant IDs must be unique.'))
+        return cleaned_data
+
 
 class WorkflowEditorForm(BaseEditorForm):
     def __init__(self, *args, data_collection_choices=(), **kwargs):
