@@ -114,14 +114,15 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
             metadata_editor = self.metadata_editor_class(xml_string=self.current_resource_xml)
         except XMLSchemaValidationError:
             logger.exception(f'''The XML for resource with ID
-            "{escape(self.resource_id)}" has become outdated with
-            the latest XML schema definitions. Please try updating
-            via the XML file upload method.''')
-            return HttpResponseServerError('''The XML for this resource has
-                become incompatible with the XML schema and cannot be updated
-                with the wizard. To update this resource (and re-enable
-                compatibility with the wizard), please modify the XML file
-                manually and apply the update using the direct file upload tool.''')
+            "{escape(self.resource_id)}" could not be loaded
+            with the xmlschema etree for editing. Please try
+            updating it via the XML file upload method.''')
+            return HttpResponseServerError('''The XML for this resource could not
+                be loaded in for editing due to conflicts with XML schema
+                constraints, and cannot be updated through the wizard. To update
+                this resource (and re-enable compatibility with the wizard), please
+                modify the XML file manually and apply the update using the direct
+                file upload tool.''')
         except Exception:
             logger.exception(f'''An unexpected error occurred whilst
                 starting the wizard update process for resource with
