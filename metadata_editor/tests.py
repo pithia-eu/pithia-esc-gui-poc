@@ -39,7 +39,7 @@ from .services import (
 from common.test_xml_files import (
     ACQUISITION_METADATA_XML,
     CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML,
-    CATALOGUE_DATA_SUBSET_METADATA_XML,
+    DATA_SUBSET_METADATA_XML,
     DATA_COLLECTION_METADATA_XML,
     INDIVIDUAL_METADATA_XML,
     OPERATION_METADATA_XML,
@@ -1058,8 +1058,8 @@ class SimpleDataSubsetEditorTestCase(SimpleTestCase):
         """The linkage of an OnlineResource element is
         updated with a provided URL.
         """
-        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
-        xml_string = CATALOGUE_DATA_SUBSET_METADATA_XML.read().decode()
+        DATA_SUBSET_METADATA_XML.seek(0)
+        xml_string = DATA_SUBSET_METADATA_XML.read().decode()
         online_resource_url = 'https://www.example.com/'
         self.assertNotIn(
             online_resource_url,
@@ -1069,7 +1069,7 @@ class SimpleDataSubsetEditorTestCase(SimpleTestCase):
             xml_string
         )
         simple_data_subset_editor.update_online_resource_url(
-            'SAO Explorer for DIDBase ionograms',
+            'Hunga-Tonga Eruption Ionograms',
             'https://www.example.com/'
         )
         updated_xml_string = simple_data_subset_editor.to_xml()
