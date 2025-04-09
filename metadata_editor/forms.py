@@ -587,6 +587,7 @@ class StaticDatasetEntryEditorForm(
     def __init__(self, *args, static_dataset_category_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['static_dataset_category'].choices = static_dataset_category_choices
+        self.fields['description'].required = True
         self.fields['description'].help_text = 'A free-text description of the static dataset entry contents.'
         self.fields['time_period_id'].required = True
         self.fields['time_instant_begin_id'].required = True
@@ -594,7 +595,7 @@ class StaticDatasetEntryEditorForm(
 
     static_dataset_category = forms.ChoiceField(
         label='Static Dataset Category',
-        required=False,
+        required=True,
         widget=forms.Select(attrs={
             'class': 'form-select',
         })
