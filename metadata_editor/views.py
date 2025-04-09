@@ -50,6 +50,10 @@ from datahub_management.view_mixins import (
     DataSubsetDataHubViewMixin,
     WorkflowDataHubViewMixin,
 )
+from ontology.services import (
+    get_ontology_category_terms_in_xml_format,
+    OntologyCategoryMetadataService,
+)
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE,
@@ -955,38 +959,33 @@ class DataSubsetEditorFormView(
     def get_static_dataset_entry_choices_for_form(self):
         static_dataset_entries = self.get_resources_with_model_ordered_by_name(models.StaticDatasetEntry)
         UNKNOWN_KEY = 'ZZZ'
-        entries_by_static_dataset = {
+        entries_by_static_dataset_category = {
             UNKNOWN_KEY: {
                 'name': UNKNOWN_KEY,
                 'entries': [],
             }
         }
-        # Sort static dataset entries by static dataset ID
+        xml_of_static_dataset_categories = get_ontology_category_terms_in_xml_format('staticDatasetCategory')
+        static_dataset_categories = OntologyCategoryMetadataService(xml_of_static_dataset_categories)
+        static_dataset_category_properties_by_iri = static_dataset_categories.get_name_and_definition_of_ontology_terms_by_iri()
+        # Sort static dataset entries by static dataset category
         for entry in static_dataset_entries:
-            static_dataset_id = entry.properties.static_dataset_identifier.split('/')[-1]
-            if not static_dataset_id:
-                entries_by_static_dataset[UNKNOWN_KEY]['entries'].append(entry)
+            static_dataset_category_url = entry.properties.static_dataset_category
+            if (not static_dataset_category_url
+                or static_dataset_category_url not in static_dataset_category_properties_by_iri):
+                entries_by_static_dataset_category[UNKNOWN_KEY]['entries'].append(entry)
                 continue
-            if static_dataset_id not in entries_by_static_dataset:
-                entries_by_static_dataset[static_dataset_id] = {
-                    'name': static_dataset_id,
+            if static_dataset_category_url not in entries_by_static_dataset_category:
+                entries_by_static_dataset_category[static_dataset_category_url] = {
+                    'name': static_dataset_category_properties_by_iri.get(static_dataset_category_url).get('name'),
                     'entries': [],
                 }
-            entries_by_static_dataset[static_dataset_id]['entries'].append(entry)
-        # Map each static dataset ID to a name
-        for static_dataset_id, optgroup_data in entries_by_static_dataset.items():
-            try:
-                static_dataset = models.StaticDataset.objects.get(pk=static_dataset_id)
-                optgroup_data.update({
-                    'name': static_dataset.name,
-                })
-            except models.StaticDataset.DoesNotExist:
-                pass
+            entries_by_static_dataset_category[static_dataset_category_url]['entries'].append(entry)
         # Sort static datasets by name
-        entries_by_static_dataset = dict(sorted(entries_by_static_dataset.items(), key=lambda item: item[1]['name']))
-        # Create optgroups and options for select
+        entries_by_static_dataset_category = dict(sorted(entries_by_static_dataset_category.items(), key=lambda item: item[1]['name']))
+        # Create optgroups and options for select menu
         choices_categorised = []
-        for static_dataset_id, optgroup_data in entries_by_static_dataset.items():
+        for static_dataset_category_url, optgroup_data in entries_by_static_dataset_category.items():
             optgroup_name = optgroup_data.get('name')
             if optgroup_name == UNKNOWN_KEY:
                 optgroup_name = 'Unknown'
