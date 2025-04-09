@@ -51,8 +51,8 @@ class DataSubsetDataHubServiceTestCase(SimpleTestCase):
     def tearDown(self) -> None:
         if not self.data_subset_ids_teardown:
             return super().tearDown()
-        for cds_id in self.data_subset_ids_teardown:
-            DataSubsetDataHubService.delete_data_subset_directory(cds_id)
+        for data_subset_id in self.data_subset_ids_teardown:
+            DataSubsetDataHubService.delete_data_subset_directory(data_subset_id)
         return super().tearDown()
 
     def _create_and_store_data_subset_test_resource_file(
@@ -74,10 +74,10 @@ class DataSubsetDataHubServiceTestCase(SimpleTestCase):
         name of a resource.
         """
         resource_name = 'resource_name'
-        cds_resource_file = self._create_and_store_data_subset_test_resource_file(
+        data_subset_resource_file = self._create_and_store_data_subset_test_resource_file(
             resource_name=resource_name
         )
-        self.assertEqual(cds_resource_file.name, f'{resource_name}.pdf')
+        self.assertEqual(data_subset_resource_file.name, f'{resource_name}.pdf')
 
     def test_get_data_subset_file(self):
         """A data subset resource file is retrieved
@@ -85,17 +85,17 @@ class DataSubsetDataHubServiceTestCase(SimpleTestCase):
         """
         data_subset_id = 'data_subset_id'
         resource_name = 'resource_name'
-        cds_resource_file = self._create_and_store_data_subset_test_resource_file(
+        data_subset_resource_file = self._create_and_store_data_subset_test_resource_file(
             data_subset_id,
             resource_name
         )
-        retrieved_cds_resource_file = DataSubsetDataHubService.get_data_subset_file(
+        retrieved_data_subset_resource_file = DataSubsetDataHubService.get_data_subset_file(
             data_subset_id,
             resource_name
         )
         self.assertEqual(
-            os.path.basename(cds_resource_file.name),
-            os.path.basename(retrieved_cds_resource_file.name)
+            os.path.basename(data_subset_resource_file.name),
+            os.path.basename(retrieved_data_subset_resource_file.name)
         )
 
     def test_get_files_for_data_subset(self):
@@ -113,13 +113,13 @@ class DataSubsetDataHubServiceTestCase(SimpleTestCase):
             data_subset_id=data_subset_id,
             resource_name=resource_name_2
         )
-        cds_resource_files = DataSubsetDataHubService.get_files_for_data_subset(
+        data_subset_resource_files = DataSubsetDataHubService.get_files_for_data_subset(
             data_subset_id
         )
-        cds_resource_file_names = [os.path.basename(file.name) for file in cds_resource_files]
-        self.assertEqual(len(cds_resource_files), 2)
-        self.assertIn(resource_file_1.name, cds_resource_file_names)
-        self.assertIn(resource_file_2.name, cds_resource_file_names)
+        data_subset_resource_file_names = [os.path.basename(file.name) for file in data_subset_resource_files]
+        self.assertEqual(len(data_subset_resource_files), 2)
+        self.assertIn(resource_file_1.name, data_subset_resource_file_names)
+        self.assertIn(resource_file_2.name, data_subset_resource_file_names)
 
     def test_delete_data_subset_directory(self):
         """Deletes the directory for a data subset's

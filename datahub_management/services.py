@@ -127,8 +127,8 @@ class DataSubsetDataHubService(DataHubService):
             f'{slugify(resource_name_with_no_extension)}.*'
         )
         file_path = None
-        for cds_resource_file_path in data_subset_resource_file_paths:
-            file_path = cds_resource_file_path
+        for ds_resource_file_path in data_subset_resource_file_paths:
+            file_path = ds_resource_file_path
         return file_path
 
     @classmethod
