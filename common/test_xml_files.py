@@ -1004,7 +1004,6 @@ OPERATION_METADATA_XML = SimpleUploadedFile(
     '''
 )
 
-
 OPERATION_METADATA_WITH_TIME_INTERVAL_XML = SimpleUploadedFile(
     'Operation_Test.xml',
     b'''<?xml version="1.0" encoding="UTF-8"?>
@@ -2844,90 +2843,6 @@ DATA_COLLECTION_WITH_MULTIPLE_POINTS_OF_CONTACT_METADATA_XML = SimpleUploadedFil
 )
 
 
-# CATALOGUES
-CATALOGUE_METADATA_XML = SimpleUploadedFile(
-    'Catalogue_Test.xml',
-    b'''<?xml version="1.0" encoding="UTF-8"?>
-    <Catalogue
-        xmlns="https://metadata.pithia.eu/schemas/2.2"
-        xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:xlink="http://www.w3.org/1999/xlink">
-
-        <identifier>
-            <PITHIA_Identifier>
-                <localID>Catalogue_Test</localID>
-                <namespace>test</namespace>
-                <version>1</version>
-                <creationDate>2022-07-08T09:00:00Z</creationDate>
-                <lastModificationDate>2022-07-08T09:00:00Z</lastModificationDate>
-            </PITHIA_Identifier>
-        </identifier>
-        <name>Test</name>
-        <description>
-            An event list of tests.
-        </description>
-        <!-- Uncomment the following <catalogueCategory> when the URL becomes available -->
-        <!-- <catalogueCategory
-        xlink:href="https://metadata.pithia.eu/ontology/2.2/catalogCategory/VolcanoEruption"/> -->
-        <!-- Remove the following <catalogCategory> when the above URL becomes available -->
-        <catalogueCategory xlink:href="https://metadata.pithia.eu/ontology/2.2/computationType/Model" />
-    </Catalogue>
-    '''
-)
-
-
-# CATALOGUE ENTRIES
-CATALOGUE_ENTRY_METADATA_XML = SimpleUploadedFile(
-    'CatalogueEntry_Test_2023-01-01.xml',
-    b'''<?xml version="1.0" encoding="UTF-8"?>
-    <CatalogueEntry
-        xmlns="https://metadata.pithia.eu/schemas/2.2"
-        xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        xmlns:gml="http://www.opengis.net/gml/3.2"
-        xmlns:om="http://www.opengis.net/om/2.0"
-        gml:id="ce1">
-
-        <identifier>
-            <PITHIA_Identifier>
-                <localID>CatalogueEntry_Test_2023-01-01</localID>
-                <namespace>test</namespace>
-                <version>1</version>
-                <creationDate>2022-07-08T09:00:00Z</creationDate>
-                <lastModificationDate>2022-07-08T09:00:00Z</lastModificationDate>
-            </PITHIA_Identifier>
-        </identifier>
-        <entryName>Test_2022-01-15</entryName>
-        <entryDescription>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </entryDescription>
-        <catalogueIdentifier
-            xlink:href="https://metadata.pithia.eu/resources/2.2/catalogue/test/Test/Catalogue_Test" />
-        <phenomenonTime>
-            <gml:TimePeriod gml:id="tp1">
-                <gml:begin>
-                    <gml:TimeInstant gml:id="b1">
-                        <gml:timePosition>2022-01-15T04:14:45Z</gml:timePosition>
-                    </gml:TimeInstant>
-                </gml:begin>
-                <gml:end>
-                    <gml:TimeInstant gml:id="e1">
-                        <gml:timePosition>2022-01-15T04:30:00Z</gml:timePosition>
-                    </gml:TimeInstant>
-                </gml:end>
-            </gml:TimePeriod>
-        </phenomenonTime>
-    </CatalogueEntry>
-    '''
-)
-
-
 # CATALOGUE DATA SUBSETS
 CATALOGUE_DATA_SUBSET_METADATA_XML = SimpleUploadedFile(
     'DataSubset_Test-2023-01-01_DataCollectionTest.xml',
@@ -3271,6 +3186,102 @@ CATALOGUE_DATA_SUBSET_WITH_HANDLE_METADATA_XML = SimpleUploadedFile(
     '''
 )
 
+
+# STATIC DATASET ENTRIES
+STATIC_DATASET_ENTRY_METADATA_XML = SimpleUploadedFile(
+    'StaticDatasetEntry_Test.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <StaticDatasetEntry xmlns="https://metadata.pithia.eu/schemas/2.2" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>StaticDatasetEntry_Test</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2025-04-09T12:48:00Z</creationDate>
+                <lastModificationDate>2025-04-09T12:48:00Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <entryName>Static Dataset Entry Test</entryName>
+        <entryDescription>Test</entryDescription>
+        <category xlink:href="https://metadata.pithia.eu/ontology/2.2/staticDatasetCategory/AcademicPublication"/>
+        <phenomenonTime>
+            <gml:TimePeriod gml:id="tp1">
+                <gml:begin>
+                    <gml:TimeInstant gml:id="tpb1">
+                        <gml:timePosition>2025-01-01T13:00:00Z</gml:timePosition>
+                    </gml:TimeInstant>
+                </gml:begin>
+                <gml:end>
+                    <gml:TimeInstant gml:id="tpe1">
+                        <gml:timePosition>2025-01-01T14:30:00Z</gml:timePosition>
+                    </gml:TimeInstant>
+                </gml:end>
+            </gml:TimePeriod>
+        </phenomenonTime>
+    </StaticDatasetEntry>
+    '''
+)
+
+
+# DATA SUBSETS
+DATA_SUBSET_METADATA_XML = SimpleUploadedFile(
+    'DataSubset_Test.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <DataSubset xmlns="https://metadata.pithia.eu/schemas/2.2" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>DataSubset_Test</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2025-04-09T15:00:00Z</creationDate>
+                <lastModificationDate>2025-04-09T15:10:00Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <entryIdentifier xlink:href="https://metadata.pithia.eu/resources/2.2/staticDataset/test/StaticDatasetEntry_Test"/>
+        <dataSubsetName>Data Subset Test</dataSubsetName>
+        <dataSubsetDescription>Test</dataSubsetDescription>
+        <dataCollection xlink:href="https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test"/>
+        <resultTime>
+            <gml:TimePeriod gml:id="tp1">
+                <gml:begin>
+                    <gml:TimeInstant gml:id="tpb1">
+                        <gml:timePosition>2025-01-01T11:00:00Z</gml:timePosition>
+                    </gml:TimeInstant>
+                </gml:begin>
+                <gml:end>
+                    <gml:TimeInstant gml:id="tpe1">
+                        <gml:timePosition>2025-01-01T14:30:00Z</gml:timePosition>
+                    </gml:TimeInstant>
+                </gml:end>
+            </gml:TimePeriod>
+        </resultTime>
+        <source>
+            <OnlineResource>
+                <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Numerical"/>
+                <linkage>
+                    <gmd:URL>https://ulcar.uml.edu/SAO-X/</gmd:URL>
+                </linkage>
+                <name>Hunga-Tonga Eruption Ionograms</name>
+                <protocol>HTTPS</protocol>
+                <description>Manually scaled ionograms for Hunga-Tonga volcano eruption data subset.</description>
+                <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-sao"/>
+            </OnlineResource>
+        </source>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L1"/>
+        <qualityAssessment>
+            <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ0"/>
+            <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ1"/>
+            <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ2"/>
+            <metadataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1"/>
+            <metadataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1A"/>
+            <metadataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1D"/>
+        </qualityAssessment>
+    </DataSubset>
+    '''
+)
+
+
+# WORKFLOWS
 WORKFLOW_METADATA_XML = SimpleUploadedFile(
     'Workflow_Test.xml',
     b'''<?xml version="1.0" encoding="UTF-8"?>

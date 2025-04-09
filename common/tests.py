@@ -56,8 +56,7 @@ SAMPLE_INSTITUTION_ID = 'John Doe Institution'
 # Create your tests here.
 class ScientificMetadataPropertiesTestCase(TestCase):
     def test_metadata_registration_has_metadata_server_url(self):
-        """
-        Test that a scientific metadata registration
+        """Test that a scientific metadata registration
         has a metadata server URL.
         """
         xml_file = ORGANISATION_METADATA_XML
@@ -90,8 +89,7 @@ class ImmediateMetadataDependentsTestCase(TestCase):
         return super().setUp()
 
     def test_organisation_immediate_metadata_dependents_are_correct(self):
-        """
-        Metadata registrations referring to an organisation
+        """Metadata registrations referring to an organisation
         metadata URL are correctly identified.
         """
         imds = self.organisation._immediate_metadata_dependents
@@ -104,8 +102,7 @@ class ImmediateMetadataDependentsTestCase(TestCase):
         self.assertEqual(len(imds), 6)
 
     def test_individual_immediate_metadata_dependents_are_correct(self):
-        """
-        Metadata registrations referring to an individual
+        """Metadata registrations referring to an individual
         metadata URL are correctly identified.
         """
         imds = self.individual._immediate_metadata_dependents
@@ -117,8 +114,7 @@ class ImmediateMetadataDependentsTestCase(TestCase):
         self.assertEqual(len(imds), 5)
 
     def test_project_immediate_metadata_dependents_are_correct(self):
-        """
-        Metadata registrations referring to a project
+        """Metadata registrations referring to a project
         metadata URL are correctly identified.
         """
         imds = self.project._immediate_metadata_dependents
@@ -126,8 +122,7 @@ class ImmediateMetadataDependentsTestCase(TestCase):
         self.assertEqual(len(imds), 1)
 
     def test_platform_immediate_metadata_dependents_are_correct(self):
-        """
-        Metadata registrations referring to a platform
+        """Metadata registrations referring to a platform
         metadata URL are correctly identified.
         """
         imds = self.platform._immediate_metadata_dependents
@@ -137,16 +132,14 @@ class ImmediateMetadataDependentsTestCase(TestCase):
         self.assertEqual(len(imds), 3)
 
     def test_operation_immediate_metadata_dependents_are_correct(self):
-        """
-        Metadata registrations referring to an operation
+        """Metadata registrations referring to an operation
         metadata URL are correctly identified.
         """
         imds = self.operation._immediate_metadata_dependents
         self.assertEqual(len(imds), 0)
 
     def test_instrument_immediate_metadata_dependents_are_correct(self):
-        """
-        Metadata registrations referring to an instrument
+        """Metadata registrations referring to an instrument
         metadata URL are correctly identified.
         """
         imds = self.instrument._immediate_metadata_dependents
@@ -154,8 +147,7 @@ class ImmediateMetadataDependentsTestCase(TestCase):
         self.assertEqual(len(imds), 1)
 
     def test_acquisition_capabilities_immediate_metadata_dependents_are_correct(self):
-        """
-        Metadata registrations referring to an acquisition
+        """Metadata registrations referring to an acquisition
         capabilities metadata URL are correctly identified.
         """
         imds = self.acquisition_capabilities._immediate_metadata_dependents
@@ -163,8 +155,7 @@ class ImmediateMetadataDependentsTestCase(TestCase):
         self.assertEqual(len(imds), 1)
 
     def test_acquisition_immediate_metadata_dependents_are_correct(self):
-        """
-        Metadata registrations referring to an acquisition
+        """Metadata registrations referring to an acquisition
         metadata URL are correctly identified.
         """
         imds = self.acquisition._immediate_metadata_dependents
@@ -172,8 +163,7 @@ class ImmediateMetadataDependentsTestCase(TestCase):
         self.assertEqual(len(imds), 1)
 
     def test_computation_capabilities_immediate_metadata_dependents_are_correct(self):
-        """
-        Metadata registrations referring to a computation
+        """Metadata registrations referring to a computation
         capabilities metadata URL are correctly identified.
         """
         imds = self.computation_capabilities._immediate_metadata_dependents
@@ -181,8 +171,7 @@ class ImmediateMetadataDependentsTestCase(TestCase):
         self.assertEqual(len(imds), 1)
 
     def test_computation_immediate_metadata_dependents_are_correct(self):
-        """
-        Metadata registrations referring to a computation
+        """Metadata registrations referring to a computation
         metadata URL are correctly identified.
         """
         imds = self.computation._immediate_metadata_dependents
@@ -190,8 +179,7 @@ class ImmediateMetadataDependentsTestCase(TestCase):
         self.assertEqual(len(imds), 1)
 
     def test_process_immediate_metadata_dependents_are_correct(self):
-        """
-        Metadata registrations referring to a process
+        """Metadata registrations referring to a process
         metadata URL are correctly identified.
         """
         imds = self.process._immediate_metadata_dependents
@@ -199,8 +187,7 @@ class ImmediateMetadataDependentsTestCase(TestCase):
         self.assertEqual(len(imds), 1)
 
     def test_data_collection_immediate_metadata_dependents_are_correct(self):
-        """
-        Metadata registrations referring to a data
+        """Metadata registrations referring to a data
         collection metadata URL are correctly identified.
         """
         imds = self.data_collection._immediate_metadata_dependents
@@ -208,8 +195,7 @@ class ImmediateMetadataDependentsTestCase(TestCase):
         self.assertEqual(len(imds), 1)
 
     def test_static_dataset_entry_immediate_metadata_dependents_are_correct(self):
-        """
-        Metadata registrations referring to a static dataset
+        """Metadata registrations referring to a static dataset
         entry metadata URL are correctly identified.
         """
         imds = self.static_dataset_entry._immediate_metadata_dependents
@@ -217,16 +203,14 @@ class ImmediateMetadataDependentsTestCase(TestCase):
         self.assertEqual(len(imds), 1)
 
     def test_data_subset_immediate_metadata_dependents_are_correct(self):
-        """
-        Metadata registrations referring to a data subset
+        """Metadata registrations referring to a data subset
         metadata URL are correctly identified.
         """
         imds = self.data_subset._immediate_metadata_dependents
         self.assertEqual(len(imds), 0)
 
     def test_child_computation_references_are_included(self):
-        """
-        Check that registrations with child computation
+        """Check that registrations with child computation
         references are included in the list of immediate
         metadata dependents.
         """
@@ -236,8 +220,7 @@ class ImmediateMetadataDependentsTestCase(TestCase):
 
 
     def test_child_platform_references_are_included(self):
-        """
-        Check that registrations with child platform
+        """Check that registrations with child platform
         references are included in the list of immediate
         metadata dependents.
         """
@@ -261,8 +244,7 @@ class AcquisitionCapabilitiesQuerySetSearchTestCase(TestCase):
         return super().setUp()
 
     def test_correct_registrations_retrieved_for_search(self):
-        """
-        Verify the subset of Acquisition Capabilities retrieved
+        """Verify the subset of Acquisition Capabilities retrieved
         for the ontology-based search based on some Instrument
         URLs and Observed Properties.
         """
@@ -277,8 +259,7 @@ class AcquisitionCapabilitiesQuerySetSearchTestCase(TestCase):
         self.assertTrue(len(acquisition_capability_sets) > 0)
 
     def test_correct_registrations_retrieved_with_bad_input_data(self):
-        """
-        Verify that the subset of Acquisition Capabilities retrieved
+        """Verify that the subset of Acquisition Capabilities retrieved
         for the ontology-based search returns the correct results.
         """
         instrument_urls = ['https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test']
@@ -289,8 +270,7 @@ class AcquisitionCapabilitiesQuerySetSearchTestCase(TestCase):
         self.assertEqual(len(acquisition_capability_sets_empty), 0)
 
     def test_correct_registrations_retrieved_with_instrument_urls_and_no_observed_properties(self):
-        """
-        Verify that the subset of Acquisition Capabilities retrieved
+        """Verify that the subset of Acquisition Capabilities retrieved
         for the ontology-based search returns the correct results.
         """
         instrument_urls = ['https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test']
@@ -301,8 +281,7 @@ class AcquisitionCapabilitiesQuerySetSearchTestCase(TestCase):
 
 class ComputationCapabilitiesQuerySetTestCase(TestCase):
     def test_all_computation_capability_set_referers(self):
-        """
-        Recursively retrieve a list of Computation Capabilities
+        """Recursively retrieve a list of Computation Capabilities
         registrations that reference other Computation Capabilities
         registrations, starting from a given Computation Capabilities
         registration.
@@ -360,8 +339,7 @@ class ComputationCapabilitiesQuerySetSearchTestCase(TestCase):
         return super().setUp()
 
     def test_correct_registrations_are_returned_for_search(self):
-        """
-        ComputationCapabilities.objects.for_search() returns
+        """ComputationCapabilities.objects.for_search() returns
         a QuerySet of Computation Capabilities registrations.
         """
         computation_type_urls = [
