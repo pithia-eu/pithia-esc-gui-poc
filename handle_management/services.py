@@ -32,7 +32,6 @@ from metadata_editor.service_utils import (
     Namespace,
     NamespacePrefix,
 )
-from utils.dict_helpers import flatten
 
 
 logger = logging.getLogger(__name__)
