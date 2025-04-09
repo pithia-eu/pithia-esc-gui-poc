@@ -27,7 +27,7 @@ from common.models import (
     Organisation,
 )
 from common.test_xml_files import (
-    CATALOGUE_DATA_SUBSET_METADATA_XML,
+    DATA_SUBSET_METADATA_XML,
     CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML,
     DATA_COLLECTION_METADATA_XML,
     DATA_COLLECTION_2_METADATA_XML,
@@ -35,6 +35,7 @@ from common.test_xml_files import (
     DATA_COLLECTION_WITH_MULTIPLE_POINTS_OF_CONTACT_METADATA_XML,
     DATA_COLLECTION_WITH_NO_RELATED_PARTIES_METADATA_XML,
     DATA_COLLECTION_WITH_PRINCIPAL_INVESTIGATOR_ONLY_METADATA_XML,
+    DATA_SUBSET_METADATA_XML,
     DOI_KERNEL_METADATA_XML,
     INDIVIDUAL_METADATA_XML,
     INDIVIDUAL_2_METADATA_XML,
@@ -259,9 +260,9 @@ class PyHandleTestCase(PyHandleSetupTestCase):
         adds the DOI kernel metadata as an XML string to a
         handle.
         """
-        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
+        DATA_SUBSET_METADATA_XML.seek(0)
         data_subset = DataSubset.objects.create_from_xml_string(
-            CATALOGUE_DATA_SUBSET_METADATA_XML.read(),
+            DATA_SUBSET_METADATA_XML.read(),
             SAMPLE_INSTITUTION_ID,
             SAMPLE_USER_ID
         )
@@ -294,10 +295,10 @@ class DoiRegistrationAndReapplicationTestCase(PyHandleSetupTestCase):
         filled out <doi> element to an XML string.
         """
         self._create_and_register_handle_for_test()
-        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
+        DATA_SUBSET_METADATA_XML.seek(0)
         DOI_KERNEL_METADATA_XML.seek(0)
         updated_xml_string = add_doi_xml_string_to_metadata_xml_string(
-            CATALOGUE_DATA_SUBSET_METADATA_XML.read(),
+            DATA_SUBSET_METADATA_XML.read(),
             DOI_KERNEL_METADATA_XML.read()
         )
         print('updated_xml_string', updated_xml_string)
@@ -308,8 +309,8 @@ class DoiRegistrationAndReapplicationTestCase(PyHandleSetupTestCase):
         Data Subset XML string, to act as a marker on
         where to insert a new DOI element.
         """
-        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
-        xml_string_parsed = etree.fromstring(CATALOGUE_DATA_SUBSET_METADATA_XML.read())
+        DATA_SUBSET_METADATA_XML.seek(0)
+        xml_string_parsed = etree.fromstring(DATA_SUBSET_METADATA_XML.read())
         last_result_time_element = get_last_result_time_element(xml_string_parsed)
         print('last_result_time_element', last_result_time_element)
 
@@ -319,8 +320,8 @@ class DoiRegistrationAndReapplicationTestCase(PyHandleSetupTestCase):
         Subset XML string, to act as a marker on
         where to insert a new DOI element.
         """
-        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
-        xml_string_parsed = etree.fromstring(CATALOGUE_DATA_SUBSET_METADATA_XML.read())
+        DATA_SUBSET_METADATA_XML.seek(0)
+        xml_string_parsed = etree.fromstring(DATA_SUBSET_METADATA_XML.read())
         last_source_element = get_last_source_element(xml_string_parsed)
         print('last_source_element', last_source_element)
 
@@ -329,8 +330,8 @@ class DoiRegistrationAndReapplicationTestCase(PyHandleSetupTestCase):
         """is_doi_element_present_in_xml_file() does not find
         a DOI element in the test XML file and returns False.
         """
-        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
-        result = is_doi_element_present_in_xml_file(CATALOGUE_DATA_SUBSET_METADATA_XML)
+        DATA_SUBSET_METADATA_XML.seek(0)
+        result = is_doi_element_present_in_xml_file(DATA_SUBSET_METADATA_XML)
         print('result', result)
         self.assertEqual(result, False)
 
@@ -415,7 +416,7 @@ class PrincipalAgentTestCase(TestCase):
             DataCollection
         )
         data_subset = self._register_xml_file_for_test(
-            CATALOGUE_DATA_SUBSET_METADATA_XML,
+            DATA_SUBSET_METADATA_XML,
             DataSubset
         )
         handle_reg_process = HandleRegistrationProcessForDataSubset(
@@ -444,7 +445,7 @@ class PrincipalAgentTestCase(TestCase):
             DataCollection
         )
         data_subset = self._register_xml_file_for_test(
-            CATALOGUE_DATA_SUBSET_METADATA_XML,
+            DATA_SUBSET_METADATA_XML,
             DataSubset
         )
         handle_reg_process = HandleRegistrationProcessForDataSubset(
@@ -471,7 +472,7 @@ class PrincipalAgentTestCase(TestCase):
             DataCollection
         )
         data_subset = self._register_xml_file_for_test(
-            CATALOGUE_DATA_SUBSET_METADATA_XML,
+            DATA_SUBSET_METADATA_XML,
             DataSubset
         )
         handle_reg_process = HandleRegistrationProcessForDataSubset(
@@ -497,7 +498,7 @@ class PrincipalAgentTestCase(TestCase):
             DataCollection
         )
         data_subset = self._register_xml_file_for_test(
-            CATALOGUE_DATA_SUBSET_METADATA_XML,
+            DATA_SUBSET_METADATA_XML,
             DataSubset
         )
         handle_reg_process = HandleRegistrationProcessForDataSubset(
@@ -520,7 +521,7 @@ class PrincipalAgentTestCase(TestCase):
             DataCollection
         )
         data_subset = self._register_xml_file_for_test(
-            CATALOGUE_DATA_SUBSET_METADATA_XML,
+            DATA_SUBSET_METADATA_XML,
             DataSubset
         )
         handle_reg_process = HandleRegistrationProcessForDataSubset(
@@ -541,7 +542,7 @@ class PrincipalAgentTestCase(TestCase):
             DataCollection
         )
         data_subset = self._register_xml_file_for_test(
-            CATALOGUE_DATA_SUBSET_METADATA_XML,
+            DATA_SUBSET_METADATA_XML,
             DataSubset
         )
         handle_reg_process = HandleRegistrationProcessForDataSubset(
@@ -568,9 +569,9 @@ class HandleRegistrationProcessForDataSubsetTestCase(PyHandleSetupTestCase):
             SAMPLE_INSTITUTION_ID,
             SAMPLE_USER_ID
         )
-        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
+        DATA_SUBSET_METADATA_XML.seek(0)
         self.data_subset = DataSubset.objects.create_from_xml_string(
-            CATALOGUE_DATA_SUBSET_METADATA_XML.read(),
+            DATA_SUBSET_METADATA_XML.read(),
             SAMPLE_INSTITUTION_ID,
             SAMPLE_USER_ID
         )
