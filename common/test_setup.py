@@ -70,9 +70,6 @@ def register_process_for_test():
 def register_data_collection_for_test():
     return _register_metadata_file_for_test(test_xml_files.DATA_COLLECTION_METADATA_XML, DataCollection)
 
-def register_static_dataset_for_test():
-    return _register_metadata_file_for_test(test_xml_files.CATALOGUE_METADATA_XML, StaticDataset)
-
 def register_static_dataset_entry_for_test():
     return _register_metadata_file_for_test(test_xml_files.CATALOGUE_ENTRY_METADATA_XML, StaticDatasetEntry)
 
@@ -92,6 +89,5 @@ def register_all_metadata_types():
     register_computation_for_test()
     register_process_for_test()
     register_data_collection_for_test()
-    register_static_dataset_for_test()
     register_static_dataset_entry_for_test()
     register_data_subset_for_test()

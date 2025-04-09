@@ -16,7 +16,6 @@ from common.models import (
     Computation,
     Process,
     DataCollection,
-    StaticDatasetEntry,
     DataSubset,
 )
 from common.test_setup import (
@@ -26,7 +25,6 @@ from common.test_setup import (
     register_all_metadata_types,
     register_data_subset_for_test,
     register_static_dataset_entry_for_test,
-    register_static_dataset_for_test,
     register_computation_capabilities_2_for_test,
     register_computation_capabilities_for_test,
     register_computation_for_test,
@@ -50,8 +48,7 @@ class BulkDeleteByMetadataURLTestCase(TestCase):
         return super().setUp()
 
     def test_delete_by_metadata_server_urls(self):
-        """
-        A registration is deleted if it corresponds with
+        """A registration is deleted if it corresponds with
         a URL within a list of metadata URLs.
         """
         metadata_server_urls = [m.metadata_server_url for m in list(ScientificMetadata.objects.all())]
@@ -72,8 +69,7 @@ class OrganisationDeleteChainTestCase(TestCase):
 
     @tag('immediate_metadata_dependents')
     def test_delete_chain_contains_correct_metadata_types(self):
-        """
-        Metadata with a possibility of referencing an
+        """Metadata with a possibility of referencing an
         organisation are included in the delete chain.
         """
         immediate_metadata_dependents = self.organisation._immediate_metadata_dependents
@@ -97,8 +93,7 @@ class IndividualDeleteChainTestCase(TestCase):
     
     @tag('immediate_metadata_dependents')
     def test_delete_chain_contains_correct_metadata_types(self):
-        """
-        Metadata with a possibility of referencing an
+        """Metadata with a possibility of referencing an
         individual are included in the delete chain.
         """
         immediate_metadata_dependents = self.individual._immediate_metadata_dependents
@@ -116,8 +111,7 @@ class ProjectDeleteChainTestCase(TestCase):
 
     @tag('immediate_metadata_dependents')
     def test_delete_chain_contains_correct_metadata_types(self):
-        """
-        Metadata with a possibility of referencing a
+        """Metadata with a possibility of referencing a
         project are included in the delete chain.
         """
         immediate_metadata_dependents = self.project._immediate_metadata_dependents
@@ -132,8 +126,7 @@ class PlatformDeleteChainTestCase(TestCase):
 
     @tag('immediate_metadata_dependents')
     def test_delete_chain_contains_correct_metadata_types(self):
-        """
-        Metadata with a possibility of referencing a
+        """Metadata with a possibility of referencing a
         platform are included in the delete chain.
         """
         immediate_metadata_dependents = self.platform._immediate_metadata_dependents
@@ -147,8 +140,7 @@ class OperationDeleteChainTestCase(TestCase):
         
     @tag('immediate_metadata_dependents')
     def test_delete_chain_contains_correct_metadata_types(self):
-        """
-        Metadata with a possibility of referencing an
+        """Metadata with a possibility of referencing an
         operation are included in the delete chain.
         """
         operation = Operation.objects.all()[0]
@@ -164,8 +156,7 @@ class InstrumentDeleteChainTestCase(TestCase):
         
     @tag('immediate_metadata_dependents')
     def test_delete_chain_contains_correct_metadata_types(self):
-        """
-        Metadata with a possibility of referencing an
+        """Metadata with a possibility of referencing an
         instrument are included in the delete chain.
         """
         immediate_metadata_dependents = self.instrument._immediate_metadata_dependents
@@ -180,8 +171,7 @@ class AcquisitionCapabilitiesDeleteChainTestCase(TestCase):
         
     @tag('immediate_metadata_dependents')
     def test_delete_chain_contains_correct_metadata_types(self):
-        """
-        Metadata with a possibility of referencing
+        """Metadata with a possibility of referencing
         acquisition capabilities are included in the
         delete chain.
         """
@@ -196,8 +186,7 @@ class AcquisitionDeleteChainTestCase(TestCase):
         
     @tag('immediate_metadata_dependents')
     def test_delete_chain_contains_correct_metadata_types(self):
-        """
-        Metadata with a possibility of referencing an
+        """Metadata with a possibility of referencing an
         acquisition are included in the delete chain.
         """
         immediate_metadata_dependents = self.acquisition._immediate_metadata_dependents
@@ -212,8 +201,7 @@ class ComputationCapabilitiesDeleteChainTestCase(TestCase):
         
     @tag('immediate_metadata_dependents')
     def test_delete_chain_contains_correct_metadata_types(self):
-        """
-        Metadata with a possibility of referencing
+        """Metadata with a possibility of referencing
         computation capabilities are included in the
         delete chain.
         """
@@ -229,8 +217,7 @@ class ComputationDeleteChainTestCase(TestCase):
         
     @tag('immediate_metadata_dependents')
     def test_delete_chain_contains_correct_metadata_types(self):
-        """
-        Metadata with a possibility of referencing a
+        """Metadata with a possibility of referencing a
         computation are included in the delete chain.
         """
         immediate_metadata_dependents = self.computation._immediate_metadata_dependents
@@ -244,8 +231,7 @@ class ProcessDeleteChainTestCase(TestCase):
         
     @tag('immediate_metadata_dependents')
     def test_delete_chain_contains_correct_metadata_types(self):
-        """
-        Metadata with a possibility of referencing a
+        """Metadata with a possibility of referencing a
         process are included in the delete chain.
         """
         immediate_metadata_dependents = self.process._immediate_metadata_dependents
@@ -259,45 +245,29 @@ class DataCollectionDeleteChainTestCase(TestCase):
         
     @tag('immediate_metadata_dependents')
     def test_delete_chain_contains_correct_metadata_types(self):
-        """
-        Metadata with a possibility of referencing a
+        """Metadata with a possibility of referencing a
         data collection are included in the delete
         chain.
         """
         immediate_metadata_dependents = self.data_collection._immediate_metadata_dependents
         self.assertTrue(any(isinstance(md, DataSubset) for md in immediate_metadata_dependents))
 
-class StaticDatasetDeleteChainTestCase(TestCase):
-    def setUp(self) -> None:
-        self.static_dataset = register_static_dataset_for_test()
-        register_static_dataset_entry_for_test()
-        return super().setUp()
-        
-    @tag('immediate_metadata_dependents')
-    def test_delete_chain_contains_correct_metadata_types(self):
-        """
-        Metadata with a possibility of referencing a
-        static dataset are included in the delete chain.
-        """
-        immediate_metadata_dependents = self.static_dataset._immediate_metadata_dependents
-        self.assertTrue(any(isinstance(md, StaticDatasetEntry) for md in immediate_metadata_dependents))
 
 class StaticDatasetEntryDeleteChainTestCase(TestCase):
     def setUp(self) -> None:
-        register_static_dataset_for_test()
         self.static_dataset_entry = register_static_dataset_entry_for_test()
         register_data_subset_for_test()
         return super().setUp()
         
     @tag('immediate_metadata_dependents')
     def test_delete_chain_contains_correct_metadata_types(self):
-        """
-        Metadata with a possibility of referencing a
+        """Metadata with a possibility of referencing a
         static dataset entry are included in the delete
         chain.
         """
         immediate_metadata_dependents = self.static_dataset_entry._immediate_metadata_dependents
         self.assertTrue(any(isinstance(md, DataSubset) for md in immediate_metadata_dependents))
+
 
 class DataSubsetDeleteChainTestCase(TestCase):
     def setUp(self) -> None:
@@ -306,8 +276,7 @@ class DataSubsetDeleteChainTestCase(TestCase):
         
     @tag('immediate_metadata_dependents')
     def test_delete_chain_contains_correct_metadata_types(self):
-        """
-        Metadata with a possibility of referencing a
+        """Metadata with a possibility of referencing a
         data subset are included in the delete chain.
         """
         data_subset = DataSubset.objects.all()[0]

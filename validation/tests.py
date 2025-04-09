@@ -23,9 +23,10 @@ from .url_validation_services import (
 
 from common import test_xml_files
 from common.models import (
-    StaticDataset,
+    DataCollection,
     Organisation,
     ScientificMetadata,
+    StaticDatasetEntry,
 )
 from common.test_setup import (
     register_instrument_for_test,
@@ -469,13 +470,16 @@ class XMLMetadataFileIntegrationTestCase(TestCase):
         """The validator returns no invalid metadata URLs when validating
         a valid static dataset-related metadata file.
         """
-        static_dataset_xml_file = test_xml_files.CATALOGUE_METADATA_XML
-        static_dataset_xml_file.seek(0)
-        StaticDataset.objects.create_from_xml_string(static_dataset_xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        data_collection_xml_file = test_xml_files.DATA_COLLECTION_METADATA_XML
+        data_collection_xml_file.seek(0)
+        DataCollection.objects.create_from_xml_string(data_collection_xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        static_dataset_entry_xml_file = test_xml_files.STATIC_DATASET_ENTRY_METADATA_XML
+        static_dataset_entry_xml_file.seek(0)
+        StaticDatasetEntry.objects.create_from_xml_string(static_dataset_entry_xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         
-        static_dataset_entry_xml_file = test_xml_files.CATALOGUE_ENTRY_METADATA_XML
+        data_subset_xml_file = test_xml_files.DATA_SUBSET_METADATA_XML
         invalid_resource_urls_dict = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(
-            XMLMetadataFile.from_file(static_dataset_entry_xml_file)
+            XMLMetadataFile.from_file(data_subset_xml_file)
         )
         for key in invalid_resource_urls_dict.keys():
             self.assertEqual(len(invalid_resource_urls_dict[key]), 0)
