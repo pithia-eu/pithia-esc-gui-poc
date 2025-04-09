@@ -286,7 +286,7 @@ class StaticDatasetXmlMappingShortcuts(
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
     def static_dataset_category(self):
-        return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:staticDatasetCategory/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+        return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:category/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
 
 class StaticDatasetEntryXmlMappingShortcuts(
@@ -302,7 +302,7 @@ class StaticDatasetEntryXmlMappingShortcuts(
 
     @property
     def static_dataset_category(self):
-        return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:staticDatasetCategory/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+        return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:category/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
     @property
     def phenomenon_time(self):

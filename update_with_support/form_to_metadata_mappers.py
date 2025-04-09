@@ -306,7 +306,7 @@ class StaticDatasetFormFieldsToMetadataMapper(BaseMetadataFormFieldsToMetadataMi
     def get_basic_form_field_to_xml_field_mappings(self):
         mappings = super().get_basic_form_field_to_xml_field_mappings()
         mappings.update({
-            'static_dataset_category': './/%s:staticDatasetCategory/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK)
+            'static_dataset_category': './/%s:category/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK)
         })
         return mappings
 

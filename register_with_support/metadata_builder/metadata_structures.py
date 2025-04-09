@@ -552,7 +552,7 @@ class StaticDatasetMetadata(DescriptionMetadataComponent, IdentifierMetadataComp
         static_dataset_category_element_attributes = {
             '{%s}href' % Namespace.XLINK: static_dataset_category,
         }
-        etree.SubElement(self.root, 'staticDatasetCategory', **static_dataset_category_element_attributes)
+        etree.SubElement(self.root, 'category', **static_dataset_category_element_attributes)
 
 
 class StaticDatasetEntryMetadata(GMLTimePeriodMetadataComponent, IdentifierMetadataComponent):
