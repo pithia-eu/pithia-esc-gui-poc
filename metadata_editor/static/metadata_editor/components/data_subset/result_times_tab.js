@@ -27,6 +27,44 @@ export class TimePeriodsTab extends DynamicEditorTab {
         this.timeInstantEndPositionInputSelector = "input[name='time_instant_end_position']";
     }
 
+    #updateInvalidFeedbackForInput(input) {
+        document.querySelector(`#invalid-feedback-${input.id}`).textContent = "IDs must be unique.";
+    }
+
+    #markInputAsInvalid(input) {
+        input.classList.add("is-invalid");
+    }
+
+    #resetInvalidInput(input) {
+        input.classList.remove("is-invalid");
+    }
+
+    #alertIfDuplicateIds() {
+        const idInputsInTab = Array.from(this.tabContent.querySelectorAll(`${this.timePeriodIdInputSelector}, ${this.timeInstantBeginIdInputSelector}, ${this.timeInstantEndIdInputSelector}`));
+        const idInputsInTabMarkedAsInvalid = Array.from(this.tabContent.querySelectorAll(`${this.timePeriodIdInputSelector}.is-invalid, ${this.timeInstantBeginIdInputSelector}.is-invalid, ${this.timeInstantEndIdInputSelector}.is-invalid`));
+        // Reset styling of fields that are marked as invalid
+        idInputsInTabMarkedAsInvalid.forEach(input => this.#resetInvalidInput(input));
+        // Find and mark fields that have duplicate IDs
+        for (const input of idInputsInTab) {
+            // If fields are empty, continue
+            if (!input.value.trim()) {
+                continue;
+            }
+            const otherInputsWithSameId = idInputsInTab.filter(otherInput => input.id !== otherInput.id && input.value.trim() === otherInput.value.trim());
+            // If no other duplicate IDs, continue
+            if (!otherInputsWithSameId.length) {
+                continue;
+            }
+            // If duplicate IDs, mark fields as invalid
+            this.#updateInvalidFeedbackForInput(input);
+            this.#markInputAsInvalid(input);
+            otherInputsWithSameId.forEach(otherInput => {
+                this.#updateInvalidFeedbackForInput(otherInput);
+                this.#markInputAsInvalid(otherInput);
+            });
+        }
+    }
+
     tabPaneControlEventHandlerActions(tabPane) {
         this.exportTabData();
     }
@@ -34,6 +72,14 @@ export class TimePeriodsTab extends DynamicEditorTab {
     setupTabPaneEventListeners(tabPane) {
         super.setupTabPaneEventListeners(tabPane);
         setupTimePeriodElements(`#${tabPane.id} ${this.timeInstantBeginPositionInputSelector}`, `#${tabPane.id} ${this.timeInstantEndPositionInputSelector}`);
+        this.#alertIfDuplicateIds();
+
+        const idInputsInTab = this.tabContent.querySelectorAll(`${this.timePeriodIdInputSelector}, ${this.timeInstantBeginIdInputSelector}, ${this.timeInstantEndIdInputSelector}`);
+        idInputsInTab.forEach(input => {
+            input.addEventListener("input", () => {
+                this.#alertIfDuplicateIds();
+            });
+        });
 
         const inputs = Array.from(tabPane.querySelectorAll("input"));
         inputs.forEach(input => {
