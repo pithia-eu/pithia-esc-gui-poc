@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StaticDatasetEntry xmlns="https://metadata.pithia.eu/schemas/2.2" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <identifier>
+        <PITHIA_Identifier>
+            <localID>StaticDatasetEntry_Test</localID>
+            <namespace>test</namespace>
+            <version>1</version>
+            <creationDate>2025-04-09T12:48:00Z</creationDate>
+            <lastModificationDate>2025-04-09T12:48:00Z</lastModificationDate>
+        </PITHIA_Identifier>
+    </identifier>
+    <entryName>Static Dataset Entry Test</entryName>
+    <entryDescription>Test</entryDescription>
+    <category xlink:href="https://metadata.pithia.eu/ontology/2.2/staticDatasetCategory/AcademicPublication"/>
+    <phenomenonTime>
+        <gml:TimePeriod gml:id="tp1">
+            <gml:begin>
+                <gml:TimeInstant gml:id="tpb1">
+                    <gml:timePosition>2025-01-01T13:00:00Z</gml:timePosition>
+                </gml:TimeInstant>
+            </gml:begin>
+            <gml:end>
+                <gml:TimeInstant gml:id="tpe1">
+                    <gml:timePosition>2025-01-01T14:30:00Z</gml:timePosition>
+                </gml:TimeInstant>
+            </gml:end>
+        </gml:TimePeriod>
+    </phenomenonTime>
+</StaticDatasetEntry>
