@@ -3166,6 +3166,99 @@ DATA_SUBSET_METADATA_XML = SimpleUploadedFile(
     '''
 )
 
+DATA_SUBSET_WITH_DOI_METADATA_XML = SimpleUploadedFile(
+    'DataSubset_Test.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <DataSubset
+        xmlns="https://metadata.pithia.eu/schemas/2.2"
+        xmlns:doi="http://www.doi.org/2010/DOISchema"
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:gml="http://www.opengis.net/gml/3.2"
+        xmlns:xlink="http://www.w3.org/1999/xlink">
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>DataSubset_Test</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2025-04-09T15:00:00Z</creationDate>
+                <lastModificationDate>2025-04-09T15:10:00Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <entryIdentifier xlink:href="https://metadata.pithia.eu/resources/2.2/staticDataset/test/StaticDatasetEntry_Test"/>
+        <dataSubsetName>Data Subset Test</dataSubsetName>
+        <dataSubsetDescription>Test</dataSubsetDescription>
+        <dataCollection xlink:href="https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test"/>
+        <resultTime>
+            <gml:TimePeriod gml:id="tp1">
+                <gml:begin>
+                    <gml:TimeInstant gml:id="tpb1">
+                        <gml:timePosition>2025-01-01T11:00:00Z</gml:timePosition>
+                    </gml:TimeInstant>
+                </gml:begin>
+                <gml:end>
+                    <gml:TimeInstant gml:id="tpe1">
+                        <gml:timePosition>2025-01-01T14:30:00Z</gml:timePosition>
+                    </gml:TimeInstant>
+                </gml:end>
+            </gml:TimePeriod>
+        </resultTime>
+        <source>
+            <OnlineResource>
+                <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Numerical"/>
+                <linkage>
+                    <gmd:URL>https://ulcar.uml.edu/SAO-X/</gmd:URL>
+                </linkage>
+                <name>Hunga-Tonga Eruption Ionograms</name>
+                <protocol>HTTPS</protocol>
+                <description>Manually scaled ionograms for Hunga-Tonga volcano eruption data subset.</description>
+                <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-sao"/>
+            </OnlineResource>
+        </source>
+        <doi>
+            <!-- Bogus data for testing only -->
+            <doi:referentDoiName>10.1000/my-doi</doi:referentDoiName>
+            <doi:primaryReferentType>Creation</doi:primaryReferentType>
+            <doi:registrationAgencyDoiName>10.1000/ra-5</doi:registrationAgencyDoiName>
+            <doi:issueDate>2025-02-02</doi:issueDate>
+            <doi:issueNumber>8</doi:issueNumber>
+            <doi:referentCreation>
+                <doi:name primaryLanguage="en">
+                    <doi:value>Hunga-Tonga Eruption Ionograms</doi:value>
+                    <doi:type>Title</doi:type>
+                </doi:name>
+                <doi:identifier>
+                    <doi:nonUriValue>21.15112/DATASUBSET_TEST</doi:nonUriValue>
+                    <doi:uri returnType="text/html">
+                        https://ui.eidr.org/view/content?id=21.15112/DATASUBSET_TEST</doi:uri>
+                    <doi:uri returnType="application/xml">
+                        https://doi.org/21.15112/DATASUBSET_TEST</doi:uri>
+                    <doi:type>EidrContentID</doi:type>
+                </doi:identifier>
+                <doi:structuralType>Digital</doi:structuralType>
+                <doi:mode>Visual</doi:mode>
+                <doi:character>Image</doi:character>
+                <doi:type>Dataset</doi:type>
+                <doi:principalAgent>
+                    <doi:name>
+                        <doi:value>Organisation Test</doi:value>
+                        <doi:type>Name</doi:type>
+                    </doi:name>
+                </doi:principalAgent>
+            </doi:referentCreation>
+        </doi>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L1"/>
+        <qualityAssessment>
+            <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ0"/>
+            <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ1"/>
+            <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ2"/>
+            <metadataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1"/>
+            <metadataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1A"/>
+            <metadataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1D"/>
+        </qualityAssessment>
+    </DataSubset>
+    '''
+)
+
 
 # WORKFLOWS
 WORKFLOW_METADATA_XML = SimpleUploadedFile(
