@@ -38,7 +38,7 @@ from .services import (
 
 from common.test_xml_files import (
     ACQUISITION_METADATA_XML,
-    CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML,
+    DATA_SUBSET_WITH_DOI_METADATA_XML,
     DATA_SUBSET_METADATA_XML,
     DATA_COLLECTION_METADATA_XML,
     INDIVIDUAL_METADATA_XML,
@@ -1031,10 +1031,10 @@ class DataCollectionEditorTestCase(SimpleTestCase):
 
 class SimpleDataSubsetEditorTestCase(SimpleTestCase):
     def test_simple_data_subset_editor_with_file(self):
-        CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.seek(0)
-        original_referent_doi_name_element_string = str('<doi:referentDoiName>10.1000/my-doi</doi:referentDoiName>',)
-        updated_referent_doi_name_element_string = str('<doi:referentDoiName>10.1000/my-updated-doi</doi:referentDoiName>',)
-        xml_string = CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.read().decode()
+        DATA_SUBSET_WITH_DOI_METADATA_XML.seek(0)
+        original_referent_doi_name_element_string = str('<doi:referentDoiName>10.1000/my-doi</doi:referentDoiName>')
+        updated_referent_doi_name_element_string = str('<doi:referentDoiName>10.1000/my-updated-doi</doi:referentDoiName>')
+        xml_string = DATA_SUBSET_WITH_DOI_METADATA_XML.read().decode()
         self.assertIn(
             original_referent_doi_name_element_string,
             xml_string
