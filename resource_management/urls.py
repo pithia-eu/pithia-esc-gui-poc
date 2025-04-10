@@ -19,7 +19,6 @@ urlpatterns = [
     path('computations/', views.ComputationManagementListView.as_view(), name='computations'),
     path('processes/', views.ProcessManagementListView.as_view(), name='processes'),
     path('data-collections/', views.DataCollectionManagementListView.as_view(), name='data_collections'),
-    path('static-datasets/', views.StaticDatasetManagementListView.as_view(), name='static_datasets'),
     path('static-dataset-entries/', views.StaticDatasetEntryManagementListView.as_view(), name='static_dataset_entries'),
     path('data-subsets/', views.DataSubsetManagementListView.as_view(), name='data_subsets'),
     path('workflows/', views.WorkflowManagementListView.as_view(), name='workflows'),
