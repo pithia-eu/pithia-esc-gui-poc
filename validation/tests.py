@@ -431,7 +431,7 @@ class DoiValidationTestCase(SimpleTestCase):
         """DataSubsetXMLMetadataFile.contents returns an XML string with a DOI XMLSchema-
         compliant element.
         """
-        xml_file = DataSubsetXMLMetadataFile.from_file(test_xml_files.CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML)
+        xml_file = DataSubsetXMLMetadataFile.from_file(test_xml_files.DATA_SUBSET_WITH_DOI_METADATA_XML)
         self.assertTrue('10.000' in xml_file.contents)
 
     @tag('slow')
@@ -439,7 +439,7 @@ class DoiValidationTestCase(SimpleTestCase):
         """XML Data Subset XSD validation passes DOI XML Schema validation with
         a spoofed DOI element.
         """
-        xml_file = DataSubsetXMLMetadataFile.from_file(test_xml_files.CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML)
+        xml_file = DataSubsetXMLMetadataFile.from_file(test_xml_files.DATA_SUBSET_WITH_DOI_METADATA_XML)
         MetadataFileXSDValidator.validate(xml_file)
 
 

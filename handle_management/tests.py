@@ -28,7 +28,7 @@ from common.models import (
 )
 from common.test_xml_files import (
     DATA_SUBSET_METADATA_XML,
-    CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML,
+    DATA_SUBSET_WITH_DOI_METADATA_XML,
     DATA_COLLECTION_METADATA_XML,
     DATA_COLLECTION_2_METADATA_XML,
     DATA_COLLECTION_REFERENCING_INDIVIDUAL_2_METADATA_XML,
@@ -340,8 +340,8 @@ class DoiRegistrationAndReapplicationTestCase(PyHandleSetupTestCase):
         """is_doi_element_present_in_xml_file() finds a DOI
         element in the test XML fiel and returns True.
         """
-        CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.seek(0)
-        result = is_doi_element_present_in_xml_file(CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML)
+        DATA_SUBSET_WITH_DOI_METADATA_XML.seek(0)
+        result = is_doi_element_present_in_xml_file(DATA_SUBSET_WITH_DOI_METADATA_XML)
         print('result', result)
         self.assertEqual(result, True)
 
@@ -349,9 +349,9 @@ class DoiRegistrationAndReapplicationTestCase(PyHandleSetupTestCase):
     def test_get_doi_xml_string_from_metadata_xml_string(self):
         """Returns the first <doi> element from an XML string.
         """
-        CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.seek(0)
+        DATA_SUBSET_WITH_DOI_METADATA_XML.seek(0)
         doi_element_string = get_doi_xml_string_from_metadata_xml_string(
-            CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.read()
+            DATA_SUBSET_WITH_DOI_METADATA_XML.read()
         )
         print('doi_element_string', doi_element_string)
 
@@ -362,8 +362,8 @@ class DoiRegistrationAndReapplicationTestCase(PyHandleSetupTestCase):
     def test_remove_doi_element_from_metadata_xml_string(self):
         """Removes all <doi> elements from an XML string.
         """
-        CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.seek(0)
-        xml_string = CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.read()
+        DATA_SUBSET_WITH_DOI_METADATA_XML.seek(0)
+        xml_string = DATA_SUBSET_WITH_DOI_METADATA_XML.read()
         updated_xml_string = remove_doi_element_from_metadata_xml_string(xml_string)
         print('updated_xml_string', updated_xml_string)
         self.assertIsInstance(updated_xml_string, str)
@@ -374,8 +374,8 @@ class DoiRegistrationAndReapplicationTestCase(PyHandleSetupTestCase):
         """Removes all <doi> elements from an XML string and
         adds a <doi> element generated from a DOI dict.
         """
-        CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.seek(0)
-        xml_string = CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.read()
+        DATA_SUBSET_WITH_DOI_METADATA_XML.seek(0)
+        xml_string = DATA_SUBSET_WITH_DOI_METADATA_XML.read()
         xml_string_without_doi_element = remove_doi_element_from_metadata_xml_string(
             xml_string
         )
