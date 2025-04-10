@@ -38,11 +38,13 @@ from ontology.services import (
     OntologyCategoryMetadataService,
 )
 
+
 logger = logging.getLogger(__name__)
 
 _INDEX_PAGE_TITLE = 'All Scientific Metadata'
 _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Data Collection-related Metadata'
 _XML_SCHEMAS_PAGE_TITLE = 'Metadata Models'
+
 
 # Create your views here.
 def index(request):
@@ -50,6 +52,7 @@ def index(request):
         'title': _INDEX_PAGE_TITLE,
         'data_collection_related_resource_types_page_title': _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE,
     })
+
 
 def data_collection_related_resource_types(request):
     """Acts as a centre point to all registration list pages
@@ -86,6 +89,7 @@ def data_collection_related_resource_types(request):
         'num_current_data_collections': num_current_data_collections,
         'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
     })
+
 
 def static_dataset_tree(request):
     """Lists all static dataset entries and data subsets
@@ -125,12 +129,14 @@ def static_dataset_tree(request):
         'type_plural_readable': models.StaticDataset.type_plural_readable,
     })
 
+
 def schemas(request):
     """A list of links to the XML metadata schemas.
     """
     return render(request, 'browse/schemas.html', {
         'title': _XML_SCHEMAS_PAGE_TITLE
     })
+
 
 class ResourceListView(ListView):
     """A list of detail page links of scientific metadata
@@ -174,6 +180,7 @@ class OrganisationListView(ResourceListView):
     model = models.Organisation
     resource_detail_page_url_name = 'browse:organisation_detail'
 
+
 class IndividualListView(ResourceListView):
     """A subclass of ResourceListView.
 
@@ -182,6 +189,7 @@ class IndividualListView(ResourceListView):
     """
     model = models.Individual
     resource_detail_page_url_name = 'browse:individual_detail'
+
 
 class ProjectListView(ResourceListView):
     """A subclass of ResourceListView.
@@ -192,6 +200,7 @@ class ProjectListView(ResourceListView):
     model = models.Project
     resource_detail_page_url_name = 'browse:project_detail'
 
+
 class PlatformListView(ResourceListView):
     """A subclass of ResourceListView.
 
@@ -200,6 +209,7 @@ class PlatformListView(ResourceListView):
     """
     model = models.Platform
     resource_detail_page_url_name = 'browse:platform_detail'
+
 
 class InstrumentListView(ResourceListView):
     """A subclass of ResourceListView.
@@ -210,6 +220,7 @@ class InstrumentListView(ResourceListView):
     model = models.Instrument
     resource_detail_page_url_name = 'browse:instrument_detail'
 
+
 class OperationListView(ResourceListView):
     """A subclass of ResourceListView.
 
@@ -218,6 +229,7 @@ class OperationListView(ResourceListView):
     """
     model = models.Operation
     resource_detail_page_url_name = 'browse:operation_detail'
+
 
 class AcquisitionCapabilitiesListView(ResourceListView):
     """A subclass of ResourceListView.
@@ -228,6 +240,7 @@ class AcquisitionCapabilitiesListView(ResourceListView):
     model = models.AcquisitionCapabilities
     resource_detail_page_url_name = 'browse:acquisition_capability_set_detail'
 
+
 class AcquisitionListView(ResourceListView):
     """A subclass of ResourceListView.
 
@@ -236,6 +249,7 @@ class AcquisitionListView(ResourceListView):
     """
     model = models.Acquisition
     resource_detail_page_url_name = 'browse:acquisition_detail'
+
 
 class ComputationCapabilitiesListView(ResourceListView):
     """A subclass of ResourceListView.
@@ -246,6 +260,7 @@ class ComputationCapabilitiesListView(ResourceListView):
     model = models.ComputationCapabilities
     resource_detail_page_url_name = 'browse:computation_capability_set_detail'
 
+
 class ComputationListView(ResourceListView):
     """A subclass of ResourceListView.
 
@@ -255,6 +270,7 @@ class ComputationListView(ResourceListView):
     model = models.Computation
     resource_detail_page_url_name = 'browse:computation_detail'
 
+
 class ProcessListView(ResourceListView):
     """A subclass of ResourceListView.
 
@@ -263,6 +279,7 @@ class ProcessListView(ResourceListView):
     """
     model = models.Process
     resource_detail_page_url_name = 'browse:process_detail'
+
 
 class DataCollectionListView(ResourceListView):
     """A subclass of ResourceListView.
@@ -326,6 +343,7 @@ class DataCollectionListView(ResourceListView):
         context = super().get_context_data(**kwargs)
         context['resource_count'] = len(self.model.objects.all())
         return context
+
 
 class WorkflowListView(ResourceListView):
     """A subclass of ResourceListView.
@@ -451,6 +469,7 @@ class ResourceDetailView(TemplateView):
         context['ontology_node_properties_mapping_url'] = reverse('browse:ontology_node_properties_mapping_url')
         return context
 
+
 class OnlineResourcesViewMixin:
     def categorise_online_resources_from_resource(self, resource: models.DataCollection | models.DataSubset):
         interaction_methods_by_type = {
@@ -491,6 +510,7 @@ class OnlineResourcesViewMixin:
             interaction_methods_by_type[service_function].append(online_resource)
         return interaction_methods_by_type
 
+
 class OrganisationDetailView(ResourceDetailView):
     """A subclass of ResourceDetailView.
 
@@ -518,6 +538,7 @@ class OrganisationDetailView(ResourceDetailView):
         self.resource_id = self.kwargs['organisation_id']
         return super().get(request, *args, **kwargs)
 
+
 class IndividualDetailView(ResourceDetailView):
     """A subclass of ResourceDetailView.
 
@@ -544,6 +565,7 @@ class IndividualDetailView(ResourceDetailView):
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['individual_id']
         return super().get(request, *args, **kwargs)
+
 
 class ProjectDetailView(ResourceDetailView):
     """A subclass of ResourceDetailView.
@@ -584,6 +606,7 @@ class ProjectDetailView(ResourceDetailView):
         context['project_abstract_split'] = self.format_and_split_string_by_multi_newlines(self.get_abstract_from_xml(self.resource))
         return context
 
+
 class PlatformDetailView(ResourceDetailView):
     """A subclass of ResourceDetailView.
 
@@ -615,6 +638,7 @@ class PlatformDetailView(ResourceDetailView):
         self.resource_id = self.kwargs['platform_id']
         return super().get(request, *args, **kwargs)
 
+
 class InstrumentDetailView(ResourceDetailView):
     """A subclass of ResourceDetailView.
 
@@ -645,6 +669,7 @@ class InstrumentDetailView(ResourceDetailView):
         self.resource_id = self.kwargs['instrument_id']
         return super().get(request, *args, **kwargs)
 
+
 class OperationDetailView(ResourceDetailView):
     """A subclass of ResourceDetailView.
 
@@ -672,6 +697,7 @@ class OperationDetailView(ResourceDetailView):
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['operation_id']
         return super().get(request, *args, **kwargs)
+
 
 class AcquisitionCapabilitiesDetailView(ResourceDetailView):
     """A subclass of ResourceDetailView.
@@ -704,6 +730,7 @@ class AcquisitionCapabilitiesDetailView(ResourceDetailView):
         self.resource_id = self.kwargs['acquisition_capability_set_id']
         return super().get(request, *args, **kwargs)
 
+
 class AcquisitionDetailView(ResourceDetailView):
     """A subclass of ResourceDetailView.
 
@@ -728,6 +755,7 @@ class AcquisitionDetailView(ResourceDetailView):
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_id']
         return super().get(request, *args, **kwargs)
+
 
 class ComputationCapabilitiesDetailView(ResourceDetailView):
     """A subclass of ResourceDetailView.
@@ -762,6 +790,7 @@ class ComputationCapabilitiesDetailView(ResourceDetailView):
         self.resource_id = self.kwargs['computation_capability_set_id']
         return super().get(request, *args, **kwargs)
 
+
 class ComputationDetailView(ResourceDetailView):
     """A subclass of ResourceDetailView.
 
@@ -786,6 +815,7 @@ class ComputationDetailView(ResourceDetailView):
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_id']
         return super().get(request, *args, **kwargs)
+
 
 class ProcessDetailView(ResourceDetailView):
     """A subclass of ResourceDetailView.
@@ -815,6 +845,7 @@ class ProcessDetailView(ResourceDetailView):
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['process_id']
         return super().get(request, *args, **kwargs)
+
 
 class DataCollectionDetailView(ResourceDetailView, OnlineResourcesViewMixin):
     """A subclass of ResourceDetailView.
@@ -872,29 +903,6 @@ class DataCollectionDetailView(ResourceDetailView, OnlineResourcesViewMixin):
         
         return context
 
-class StaticDatasetDetailView(ResourceDetailView):
-    """A subclass of StaticDatasetRelatedResourceDetailView.
-
-    A detail page displaying the properties of
-    a Static Dataset registration.
-    """
-    model = models.StaticDataset
-    resource_download_url_name = 'utils:view_static_dataset_as_xml'
-    template_name = 'browse/detail/bases/static_dataset.html'
-
-    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
-        cleaned_property_table = super().configure_resource_copy_for_property_table(property_table_dict)
-        cleaned_property_table = remove_disallowed_properties_from_property_table_dict(
-            cleaned_property_table,
-            disallowed_property_keys=[
-                'staticDatasetCategory',
-            ]
-        )
-        return cleaned_property_table
-
-    def get(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['static_dataset_id']
-        return super().get(request, *args, **kwargs)
 
 class StaticDatasetEntryDetailView(ResourceDetailView):
     """A subclass of StaticDatasetRelatedResourceDetailView.
@@ -926,6 +934,7 @@ class StaticDatasetEntryDetailView(ResourceDetailView):
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['static_dataset_entry_id']
         return super().get(request, *args, **kwargs)
+
 
 class DataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin):
     """A subclass of StaticDatasetRelatedResourceDetailView.
@@ -1021,6 +1030,7 @@ class DataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin):
         context['num_interaction_methods'] = len(list(itertools.chain(*self.interaction_methods_by_type.values())))
         return context
 
+
 class WorkflowDetailView(ResourceDetailView):
     """A subclass of ResourceDetailView.
 
@@ -1052,6 +1062,7 @@ class WorkflowDetailView(ResourceDetailView):
         self.resource_id = self.kwargs['workflow_id']
         return super().get(request, *args, **kwargs)
 
+
 @require_POST
 def get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls(request):
     """Used for mapping ontology server URLs and
@@ -1068,6 +1079,7 @@ def get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls(requ
         'ontology_urls': esc_ontology_urls,
         'resource_urls': esc_resource_urls,
     })
+
 
 @require_POST
 def map_ontology_server_urls_to_corresponding_properties(request):
