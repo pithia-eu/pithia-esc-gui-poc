@@ -267,24 +267,24 @@ class InvalidMetadataUrlStructureValidationTestCase(SimpleTestCase):
         self.assertFalse(result)
 
     def test_collection_resource_type_in_static_dataset_metadata_url_fails(self):
-        """A static dataset metadata URL with 'collection' as the
-        resource type fails validation.
+        """A static dataset entry metadata URL with 'collection'
+        as the resource type fails validation.
         """
-        result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/collection/pithia/VolcanoEruption/Catalogue_VolcanoEruption')
+        result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/collection/pithia/VolcanoEruption/StaticDatasetEntry_VolcanoEruption')
         self.assertFalse(result)
     
     def test_multiple_namespaces_in_static_dataset_metadata_url_fails(self):
-        """A static dataset metadata URL with multiple namespaces
-        fails validation.
+        """A static dataset entry metadata URL with multiple
+        namespaces fails validation.
         """
-        result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/catalogue/pithia/pithia/VolcanoEruption/Catalogue_VolcanoEruption')
+        result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/staticDataset/pithia/pithia/VolcanoEruption/StaticDatasetEntry_VolcanoEruption')
         self.assertFalse(result)
     
     def test_multiple_resource_types_in_static_dataset_metadata_url_fails(self):
-        """A static dataset metadata URL with multiple resource types
-        fails validation.
+        """A static dataset entry metadata URL with multiple
+        resource types fails validation.
         """
-        result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/catalogue/catalogue/pithia/VolcanoEruption/Catalogue_VolcanoEruption')
+        result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/staticDataset/staticDataset/pithia/VolcanoEruption/StaticDatasetEntry_VolcanoEruption')
         self.assertFalse(result)
 
 
@@ -373,25 +373,17 @@ class ValidMetadataUrlStructureValidationTestCase(SimpleTestCase):
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/collection/pithia/DataCollection_TEST')
         self.assertTrue(result)
 
-    def test_valid_static_dataset_metadata_url_passes(self):
-        """A valid static dataset metadata URL passes
-        validation.
-        """
-        result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/catalogue/test/Test/Catalogue_TEST')
-        self.assertTrue(result)
-
     def test_valid_static_dataset_entry_metadata_url_passes(self):
         """A valid static dataset entry metadata URL passes
         validation.
         """
-        result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/catalogue/test/Test/CatalogueEntry_TEST_2023-01-01')
+        result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/staticDataset/test/Test/StaticDatasetEntry_Test')
         self.assertTrue(result)
 
     def test_valid_data_subset_metadata_url_passes(self):
-        """A valid data subset metadata
-        URL passes validation.
+        """A valid data subset metadata URL passes validation.
         """
-        result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/catalogue/test/Test/DataSubset_TEST-2023-01-01_DataCollectionTEST')
+        result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/staticDataset/test/Test/DataSubset_Test')
         self.assertTrue(result)
 
 
@@ -403,7 +395,7 @@ class StaticDatasetMetadataUrlSplittingFunctionTestCase(SimpleTestCase):
         # A static dataset-related metadata URL should have the following structure:
         # "staticDataset/<namespace>/<Event>/<localid>" (i.e. StaticDataset,
         # StaticDatasetEntry, DataSubset).
-        static_dataset_resource_url = 'https://metadata.pithia.eu/resources/2.2/catalogue/pithia/VolcanoEruption/Catalogue_VolcanoEruption'
+        static_dataset_resource_url = 'https://metadata.pithia.eu/resources/2.2/staticDataset/pithia/VolcanoEruption/StaticDatasetEntry_VolcanoEruption'
         static_dataset_resource_url_components = divide_static_dataset_related_resource_url_into_main_components(static_dataset_resource_url)
         static_dataset_url_base = static_dataset_resource_url_components['url_base']
         static_dataset_url_resource_type = static_dataset_resource_url_components['resource_type']
@@ -412,10 +404,10 @@ class StaticDatasetMetadataUrlSplittingFunctionTestCase(SimpleTestCase):
         static_dataset_url_localid = static_dataset_resource_url_components['localid']
 
         self.assertEquals(static_dataset_url_base, 'https://metadata.pithia.eu/resources/2.2')
-        self.assertEquals(static_dataset_url_resource_type, 'catalogue')
+        self.assertEquals(static_dataset_url_resource_type, 'staticDataset')
         self.assertEquals(static_dataset_url_namespace, 'pithia')
         self.assertEquals(static_dataset_url_event, 'VolcanoEruption')
-        self.assertEquals(static_dataset_url_localid, 'Catalogue_VolcanoEruption')
+        self.assertEquals(static_dataset_url_localid, 'StaticDatasetEntry_VolcanoEruption')
 
 
 class DoiValidationTestCase(SimpleTestCase):
