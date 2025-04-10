@@ -21,8 +21,6 @@ from django.utils.html import escape
 from pyexpat import ExpatError
 
 from .forms import *
-from .metadata_builder.metadata_structures import *
-from .metadata_builder.utils import *
 
 from common import models
 from handle_management.view_mixins import HandleRegistrationViewMixin
@@ -69,13 +67,6 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
             last_modification_date=last_modification_date
         )
         metadata_editor.update_pithia_identifier(pithia_identifier_update)
-
-    def process_form(self, form_cleaned_data):
-        # Make copy of cleaned data
-        processed_form = form_cleaned_data
-        processed_form['localid'] = f'{self.model.localid_base}_{processed_form["localid"]}'
-        processed_form['namespace'] = processed_form['namespace']
-        return processed_form
 
     def convert_form_to_validated_xml(self, form):
         metadata_editor = self.metadata_editor_class()
@@ -216,15 +207,6 @@ class InstrumentRegisterWithEditorFormView(
     file_upload_registration_url = reverse_lazy('register:instrument')
     save_data_local_storage_key = 'instrument_r_wizard_save_data'
 
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-
-        processed_form['documentation'] = process_documentation(form_cleaned_data)
-        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
-        processed_form['operational_modes'] = process_operational_modes(form_cleaned_data)
-
-        return processed_form
-
 
 class AcquisitionCapabilitiesRegisterWithEditorFormView(
     AcquisitionCapabilitiesEditorFormView,
@@ -234,17 +216,6 @@ class AcquisitionCapabilitiesRegisterWithEditorFormView(
 
     file_upload_registration_url = reverse_lazy('register:acquisition_capability_set')
     save_data_local_storage_key = 'acquisition_capabilities_r_wizard_save_data'
-
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-
-        processed_form['documentation'] = process_documentation(form_cleaned_data)
-        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
-        processed_form['capabilities'] = process_capabilities(form_cleaned_data)
-        processed_form['instrument_mode_pair'] = process_instrument_mode_pair(form_cleaned_data)
-        processed_form['quality_assessment'] = process_quality_assessment(form_cleaned_data)
-
-        return processed_form
 
 
 class AcquisitionRegisterWithEditorFormView(
@@ -256,11 +227,6 @@ class AcquisitionRegisterWithEditorFormView(
     file_upload_registration_url = reverse_lazy('register:acquisition')
     save_data_local_storage_key = 'acquisition_r_wizard_save_data'
 
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-        processed_form['capability_links'] = process_acquisition_capability_links(form_cleaned_data)
-        return processed_form
-
 
 class ComputationCapabilitiesRegisterWithEditorFormView(
     ComputationCapabilitiesEditorFormView,
@@ -270,18 +236,6 @@ class ComputationCapabilitiesRegisterWithEditorFormView(
 
     file_upload_registration_url = reverse_lazy('register:computation_capability_set')
     save_data_local_storage_key = 'computation_capabilities_r_wizard_save_data'
-
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-        
-        processed_form['documentation'] = process_documentation(form_cleaned_data)
-        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
-        processed_form['capabilities'] = process_capabilities(form_cleaned_data)
-        processed_form['quality_assessment'] = process_quality_assessment(form_cleaned_data)
-        processed_form['processing_inputs'] = process_processing_inputs(form_cleaned_data)
-        processed_form['software_reference'] = process_software_reference(form_cleaned_data)
-        
-        return processed_form
 
 
 class ComputationRegisterWithEditorFormView(
@@ -293,13 +247,6 @@ class ComputationRegisterWithEditorFormView(
     file_upload_registration_url = reverse_lazy('register:computation')
     save_data_local_storage_key = 'computation_r_wizard_save_data'
 
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-
-        processed_form['capability_links'] = process_computation_capability_links(form_cleaned_data)
-
-        return processed_form
-
 
 class ProcessRegisterWithEditorFormView(
     ProcessEditorFormView,
@@ -310,16 +257,6 @@ class ProcessRegisterWithEditorFormView(
     file_upload_registration_url = reverse_lazy('register:process')
     save_data_local_storage_key = 'process_r_wizard_save_data'
 
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-        
-        processed_form['documentation'] = process_documentation(form_cleaned_data)
-        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
-        processed_form['capabilities'] = process_capabilities(form_cleaned_data)
-        processed_form['quality_assessment'] = process_quality_assessment(form_cleaned_data)
-
-        return processed_form
-
 
 class DataCollectionRegisterWithEditorFormView(
     DataCollectionEditorFormView,
@@ -329,15 +266,6 @@ class DataCollectionRegisterWithEditorFormView(
 
     file_upload_registration_url = reverse_lazy('register:data_collection')
     save_data_local_storage_key = 'data_collection_r_wizard_save_data'
-
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-        
-        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
-        processed_form['quality_assessment'] = process_quality_assessment(form_cleaned_data)
-        processed_form['collection_results'] = process_sources(form_cleaned_data)
-
-        return processed_form
 
     def register_api_interaction_method(self, request, new_registration):
         try:
@@ -444,11 +372,6 @@ class WorkflowRegisterWithEditorFormView(
 
     file_upload_registration_url = reverse_lazy('register:workflow')
     save_data_local_storage_key = 'workflow_r_wizard_save_data'
-
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-        processed_form['data_collections'] = process_workflow_data_collections(form_cleaned_data)
-        return processed_form
 
     def register_workflow_api_interaction_method(self, request, new_registration):
         api_specification_url = request.POST.get('api_specification_url', None)
