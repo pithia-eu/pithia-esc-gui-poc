@@ -1,6 +1,7 @@
 import re
 import validators
 from django.core.exceptions import ObjectDoesNotExist
+from django.template.loader import render_to_string
 from operator import itemgetter
 from rdflib import (
     Graph,
@@ -16,7 +17,7 @@ from .file_wrappers import (
     XMLMetadataFile,
 )
 from .helpers import (
-    create_li_element_with_register_link_from_resource_type_from_resource_url,
+    create_register_url_from_resource_type_from_resource_url,
     map_string_to_li_element,
 )
 
@@ -84,6 +85,12 @@ class MetadataFileOntologyURLReferencesValidator:
 
 
 class MetadataFileMetadataURLReferencesValidator:
+    # Keys to access invalid URL categories
+    INCORRECTLY_STRUCTURED_URLS_KEY = 'urls_with_incorrect_structure'
+    UNREGISTERED_RESOURCE_URLS_KEY = 'urls_pointing_to_unregistered_resources'
+    UNREGISTERED_RESOURCE_URL_TYPES_KEY = 'types_of_missing_resources'
+    UNREGISTERED_OPERATIONAL_MODE_URLS_KEY = 'urls_pointing_to_registered_resources_with_missing_op_modes'
+
     @classmethod
     def _is_resource_url_well_formed(cls, resource_url):
         return validators.url(resource_url)
@@ -95,7 +102,14 @@ class MetadataFileMetadataURLReferencesValidator:
     @classmethod
     def _is_resource_url_structure_valid(cls, resource_url):
         url_base, resource_type_in_resource_url, namespace, localid = itemgetter('url_base', 'resource_type', 'namespace', 'localid')(cls._divide_resource_url_into_components(resource_url))
-        if any(comp is None for comp in [url_base, resource_type_in_resource_url, namespace, localid]):
+        if any(
+            component is None
+            for component in [
+                url_base,
+                resource_type_in_resource_url,
+                namespace,
+                localid
+            ]):
             return False
 
         # Verify resource type in resource URL is valid
@@ -106,8 +120,17 @@ class MetadataFileMetadataURLReferencesValidator:
         # URL is valid (matches the resource type used in
         # the resource URL).
         localid_base = localid.split('_')[0]
-        is_localid_base_valid = any(localid_base == cls.localid_base for cls in scientific_metadata_subclasses)
-        is_resource_type_in_resource_url_matching_with_localid_base = any(resource_type_in_resource_url == cls.type_in_metadata_server_url and localid_base == cls.localid_base for cls in scientific_metadata_subclasses)
+        is_localid_base_valid = any(
+            localid_base == cls.localid_base
+            for cls in scientific_metadata_subclasses
+        )
+        is_resource_type_in_resource_url_matching_with_localid_base = any(
+            (
+                resource_type_in_resource_url == cls.type_in_metadata_server_url
+                and localid_base == cls.localid_base
+            )
+            for cls in scientific_metadata_subclasses
+        )
 
         return all([
             resource_url.startswith(PITHIA_METADATA_SERVER_HTTPS_URL_BASE),
@@ -142,7 +165,7 @@ class MetadataFileMetadataURLReferencesValidator:
             resource_type_in_resource_url, localid = itemgetter('resource_type', 'localid')(cls._divide_resource_url_into_components(resource_url))
             validation_summary_for_metadata_server_url['type_of_missing_resource'] = resource_type_in_resource_url
             if resource_type_in_resource_url == 'catalogue':
-                validation_summary_for_metadata_server_url['type_of_missing_resource'] += f'_{localid}'
+                validation_summary_for_metadata_server_url['type_of_missing_resource'] = ('catalogue', localid)
             return validation_summary_for_metadata_server_url
         validation_summary_for_metadata_server_url['is_pointing_to_registered_resource'] = True
 
@@ -154,19 +177,26 @@ class MetadataFileMetadataURLReferencesValidator:
         corresponds with a metadata registration in the e-Science Centre.
         """
         invalid_urls_dict = {
-            'urls_with_incorrect_structure': [],
-            'urls_pointing_to_unregistered_resources': [],
-            'types_of_missing_resources': [],
+            cls.INCORRECTLY_STRUCTURED_URLS_KEY: [],
+            cls.UNREGISTERED_RESOURCE_URLS_KEY: [],
+            cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY: [],
         }
         for resource_url in resource_urls:
-            is_structure_valid, is_pointing_to_registered_resource, type_of_missing_resource = itemgetter('is_structure_valid', 'is_pointing_to_registered_resource', 'type_of_missing_resource')(cls._is_resource_url_valid(resource_url))
+            is_structure_valid, is_pointing_to_registered_resource, type_of_missing_resource = itemgetter(
+                'is_structure_valid',
+                'is_pointing_to_registered_resource',
+                'type_of_missing_resource'
+            )(cls._is_resource_url_valid(resource_url))
             if not is_structure_valid:
-                invalid_urls_dict['urls_with_incorrect_structure'].append(resource_url)
+                invalid_urls_dict[cls.INCORRECTLY_STRUCTURED_URLS_KEY].append(
+                    resource_url
+                )
             elif not is_pointing_to_registered_resource:
-                invalid_urls_dict['urls_pointing_to_unregistered_resources'].append(resource_url)
-                invalid_urls_dict['types_of_missing_resources'].append(type_of_missing_resource)
-                invalid_urls_dict['types_of_missing_resources'] = list(set(invalid_urls_dict['types_of_missing_resources']))
-
+                invalid_urls_dict[cls.UNREGISTERED_RESOURCE_URLS_KEY].append(resource_url)
+                invalid_urls_dict[cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY].append(type_of_missing_resource)
+        # Remove duplicate resource URL types
+        invalid_urls_dict[cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY] = list(set(invalid_urls_dict[cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY]))
+        
         return invalid_urls_dict
 
     @classmethod
@@ -197,13 +227,13 @@ class MetadataFileMetadataURLReferencesValidator:
             return cls._is_each_resource_url_valid([])
         resource_urls = [itemgetter('resource_url')(divide_resource_url_from_op_mode_id(url)) for url in resource_urls_with_op_mode_ids]
         invalid_urls_dict = cls._is_each_resource_url_valid(resource_urls)
-        invalid_urls_dict['urls_pointing_to_registered_resources_with_missing_op_modes'] = []
+        invalid_urls_dict[cls.UNREGISTERED_OPERATIONAL_MODE_URLS_KEY] = []
 
         for url in resource_urls_with_op_mode_ids:
             try:
                 Instrument.objects.get_by_operational_mode_url(url)
             except ObjectDoesNotExist:
-                invalid_urls_dict['urls_pointing_to_registered_resources_with_missing_op_modes'].append(url)
+                invalid_urls_dict[cls.UNREGISTERED_OPERATIONAL_MODE_URLS_KEY].append(url)
         
         return invalid_urls_dict
 
@@ -217,26 +247,33 @@ class MetadataFileMetadataURLReferencesValidator:
             resource_urls_with_op_mode_ids = xml_file.potential_operational_mode_urls
         except:
             return cls._is_each_resource_url_valid([])
-        resource_urls = [itemgetter('resource_url')(divide_resource_url_from_op_mode_id(url)) for url in resource_urls_with_op_mode_ids]
+        resource_urls = [
+            itemgetter('resource_url')(divide_resource_url_from_op_mode_id(url))
+            for url in resource_urls_with_op_mode_ids
+        ]
         invalid_urls_dict = cls._is_each_resource_url_valid(resource_urls)
-        invalid_urls_dict['urls_pointing_to_registered_resources_with_missing_op_modes'] = []
-        safe_resource_urls_with_op_mode_ids = resource_urls_with_op_mode_ids
+        invalid_urls_dict[cls.UNREGISTERED_OPERATIONAL_MODE_URLS_KEY] = []
         invalid_urls = []
         for key in invalid_urls_dict.keys():
-            if key != 'types_of_missing_resources':
-                invalid_urls += invalid_urls_dict[key]
+            if key == cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY:
+                # UNREGISTERED_RESOURCE_URL_TYPES_KEY only
+                # contains types found in resource URLs.
+                continue
+            invalid_urls += invalid_urls_dict[key]
         invalid_urls = list(set(invalid_urls))
+        safe_resource_urls_with_op_mode_ids = resource_urls_with_op_mode_ids
         for safe_url in safe_resource_urls_with_op_mode_ids:
             for invalid_url in invalid_urls:
-                if invalid_url in safe_url:
-                    safe_resource_urls_with_op_mode_ids.remove(safe_url)
+                if invalid_url not in safe_url:
+                    continue
+                safe_resource_urls_with_op_mode_ids.remove(safe_url)
         safe_resource_urls_with_op_mode_ids = list(set(safe_resource_urls_with_op_mode_ids))
 
         for url in safe_resource_urls_with_op_mode_ids:
             try:
                 Instrument.objects.get_by_operational_mode_url(url)
             except ObjectDoesNotExist:
-                invalid_urls_dict['urls_pointing_to_registered_resources_with_missing_op_modes'].append(url)
+                invalid_urls_dict[cls.UNREGISTERED_OPERATIONAL_MODE_URLS_KEY].append(url)
         
         return invalid_urls_dict
 
@@ -252,31 +289,33 @@ class MetadataFileMetadataURLReferencesValidator:
         invalid_resource_urls = cls.is_each_potential_resource_url_valid(xml_metadata_file)
         invalid_operational_mode_urls = cls.is_each_potential_operational_mode_url_valid(xml_metadata_file)
 
-        # Keys to access invalid URL categories
-        INCORRECTLY_STRUCTURED_URLS = 'urls_with_incorrect_structure'
-        UNREGISTERED_RESOURCE_URLS = 'urls_pointing_to_unregistered_resources'
-        UNREGISTERED_RESOURCE_URL_TYPES = 'types_of_missing_resources'
-        UNREGISTERED_OPERATIONAL_MODE_URLS = 'urls_pointing_to_registered_resources_with_missing_op_modes'
-
         # Process the returned invalid resource URLs.
-        incorrectly_structured_urls = invalid_resource_urls.get(INCORRECTLY_STRUCTURED_URLS, []) + invalid_operational_mode_urls.get(INCORRECTLY_STRUCTURED_URLS, [])
-        unregistered_resource_urls = invalid_resource_urls.get(UNREGISTERED_RESOURCE_URLS, []) + invalid_operational_mode_urls.get(UNREGISTERED_RESOURCE_URLS, [])
-        unregistered_resource_url_types = invalid_resource_urls.get(UNREGISTERED_RESOURCE_URL_TYPES, []) + invalid_operational_mode_urls.get(UNREGISTERED_RESOURCE_URL_TYPES, [])
-        unregistered_operational_mode_urls = invalid_operational_mode_urls.get(UNREGISTERED_OPERATIONAL_MODE_URLS, [])
+        incorrectly_structured_urls = invalid_resource_urls.get(cls.INCORRECTLY_STRUCTURED_URLS_KEY, []) + invalid_operational_mode_urls.get(cls.INCORRECTLY_STRUCTURED_URLS_KEY, [])
+        unregistered_resource_urls = invalid_resource_urls.get(cls.UNREGISTERED_RESOURCE_URLS_KEY, []) + invalid_operational_mode_urls.get(cls.UNREGISTERED_RESOURCE_URLS_KEY, [])
+        unregistered_resource_url_types = invalid_resource_urls.get(cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY, []) + invalid_operational_mode_urls.get(cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY, [])
+        unregistered_operational_mode_urls = invalid_operational_mode_urls.get(cls.UNREGISTERED_OPERATIONAL_MODE_URLS_KEY, [])
         
         if len(incorrectly_structured_urls) > 0:
-            error_msg = 'One or multiple resource URLs specified via the xlink:href attribute are invalid.'
-            error_msg = error_msg + '<br>'
-            error_msg = error_msg + 'Invalid document URLs: <ul>%s</ul><div class="mt-2">Your resource URL may reference an unsupported resource type, or may not follow the correct structure.</div>' % ''.join(list(map(map_string_to_li_element, incorrectly_structured_urls)))
-            error_msg = error_msg + '<div class="mt-2">Expected resource URL structure: <i>https://metadata.pithia.eu/resources/2.2/<b>resource type</b>/<b>namespace</b>/<b>localID</b></i></div>'
+            error_msg = render_to_string(
+                'validation/error_incorrectly_structured_urls.html',
+                context={
+                    'incorrectly_structured_urls': incorrectly_structured_urls,
+                }
+            )
             incorrectly_structured_url_errors.append(error_msg)
 
         if len(unregistered_resource_urls) > 0:
-            error_msg = 'One or multiple resources referenced by the xlink:href attribute have not been registered with the e-Science Centre.'
-            error_msg = error_msg + '<br>'
-            error_msg = error_msg + 'Unregistered document URLs: <ul>%s</ul><b>Note:</b> If your URLs start with "<i>http://</i>" please change this to "<i>https://</i>".' % ''.join(list(map(map_string_to_li_element, unregistered_resource_urls)))
-            error_msg = error_msg + '<div class="mt-2">Please use the following links to register the resources referenced in the submitted metadata file:</div>'
-            error_msg = error_msg + '<ul class="mt-2">%s</ul>' % ''.join(list(map(create_li_element_with_register_link_from_resource_type_from_resource_url, unregistered_resource_url_types)))
+            file_upload_registration_url_and_url_texts = list(map(
+                create_register_url_from_resource_type_from_resource_url,
+                unregistered_resource_url_types
+            ))
+            error_msg = render_to_string(
+                'validation/error_unregistered_resource_urls.html',
+                context={
+                    'unregistered_resource_urls': unregistered_resource_urls,
+                    'file_upload_registration_url_and_url_texts': file_upload_registration_url_and_url_texts,
+                }
+            )
             unregistered_resource_url_errors.append(error_msg)
 
         if len(unregistered_operational_mode_urls) > 0:

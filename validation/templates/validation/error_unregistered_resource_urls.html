@@ -1,0 +1,28 @@
+<div class="pb-1">
+    One or multiple resources referenced by the xlink:href
+    attribute have not been registered with the e-Science
+    Centre.
+</div>
+<div class="pb-1">Unregistered document URLs:</div>
+<ul>
+    {% for url in unregistered_resource_urls %}
+    <li>{{ url }}</li>
+    {% endfor %}
+</ul>
+<div class="pt-2">
+    <b>Note:</b>
+    If your URLs start with "<i>http://</i>" please
+    change this to "<i>https://</i>".
+</div>
+<div class="pt-2">
+    Please use the following links to register
+    the resources referenced in the submitted
+    metadata file:
+</div>
+<ul class="pt-1">
+    {% for url, url_text in file_upload_registration_url_and_url_texts %}
+    <li>
+        <a href="{{ url }}" target="_blank" class="alert-link">{{ url_text }}</a>
+    </li>
+    {% endfor %}
+</ul>
