@@ -306,20 +306,6 @@ def data_collection_interaction_methods(request, resource_id):
     })
 
 
-class StaticDatasetUpdateFormView(ResourceUpdateFormView):
-    model = models.StaticDataset
-
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:static_datasets'
-    resource_update_page_url_name = 'update:static_dataset'
-    success_url = reverse_lazy('resource_management:static_datasets')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['resource_management_category_list_page_breadcrumb_text'] = _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE
-        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:static_dataset_related_metadata_index'
-        return context
-
-
 class StaticDatasetEntryUpdateFormView(ResourceUpdateFormView):
     model = models.StaticDatasetEntry
 

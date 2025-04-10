@@ -21,7 +21,6 @@ from .form_to_metadata_mappers import (
     AcquisitionFormFieldsToMetadataMapper,
     DataSubsetFormFieldsToMetadataMapper,
     StaticDatasetEntryFormFieldsToMetadataMapper,
-    StaticDatasetFormFieldsToMetadataMapper,
     ComputationCapabilitiesFormFieldsToMetadataMapper,
     ComputationFormFieldsToMetadataMapper,
     DataCollectionFormFieldsToMetadataMapper,
@@ -280,14 +279,6 @@ class DataCollectionUpdateWithEditorFormView(
     model = models.DataCollection
     success_url_name = 'update:data_collection_with_editor'
     form_field_to_metadata_mapper_class = DataCollectionFormFieldsToMetadataMapper
-
-
-class StaticDatasetUpdateWithEditorFormView(
-    ResourceUpdateWithEditorFormView,
-    StaticDatasetEditorFormView):
-    model = models.StaticDataset
-    success_url_name = 'update:static_dataset_with_editor'
-    form_field_to_metadata_mapper_class = StaticDatasetFormFieldsToMetadataMapper
 
 
 class StaticDatasetEntryUpdateWithEditorFormView(

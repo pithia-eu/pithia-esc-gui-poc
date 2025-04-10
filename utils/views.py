@@ -130,13 +130,6 @@ class DataCollectionXmlDownloadFromBrowsingView(
     pass
 
 
-class StaticDatasetXmlDownloadFromBrowsingView(
-        view_mixins.StaticDatasetXmlDownloadViewMixin,
-        view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
-        ResourceXmlDownloadView):
-    template_name = 'utils/from_browsing/resource_as_xml_from_browsing_2.html'
-
-
 class StaticDatasetEntryXmlDownloadFromBrowsingView(
         view_mixins.StaticDatasetEntryXmlDownloadViewMixin,
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,

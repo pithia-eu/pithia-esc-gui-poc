@@ -9,12 +9,15 @@ from user_management.services import (
     get_members_by_institution_id,
 )
 
+
 _INDEX_PAGE_TITLE = 'Manage Registrations'
 _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE = 'Data Collection-related Metadata'
 _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE = 'Static Dataset-related Metadata'
 
+
 def _create_manage_resource_page_title(resource_type_plural_readable):
     return resource_type_plural_readable.title()
+
 
 # Create your views here.
 @login_session_institution_required
@@ -23,6 +26,7 @@ def index(request):
         'title': _INDEX_PAGE_TITLE,
         'data_collection_related_index_page_title': _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
     })
+
 
 @login_session_institution_required
 def data_collection_related_metadata_index(request):
@@ -58,21 +62,21 @@ def data_collection_related_metadata_index(request):
         'index_page_title_breadcrumb': _INDEX_PAGE_TITLE,
     })
 
+
 @login_session_institution_required
 def static_dataset_related_metadata_index(request):
     institution_id = get_institution_id_for_login_session(request.session)
     
-    num_current_static_datasets = models.StaticDataset.objects.owned_by_institution(institution_id).count()
     num_current_static_dataset_entries = models.StaticDatasetEntry.objects.owned_by_institution(institution_id).count()
     num_current_data_subsets = models.DataSubset.objects.owned_by_institution(institution_id).count()
     return render(request, 'resource_management/static_dataset_index.html', {
-        'num_current_static_datasets': num_current_static_datasets,
         'num_current_static_dataset_entries': num_current_static_dataset_entries,
         'num_current_data_subsets': num_current_data_subsets,
         'title': _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE,
         'index_page_url_name_breadcrumb': 'resource_management:index',
         'index_page_title_breadcrumb': _INDEX_PAGE_TITLE,
     })
+
 
 @method_decorator(login_session_institution_required, name='dispatch')
 class ResourceManagementListView(ListView):
@@ -115,6 +119,7 @@ class ResourceManagementListView(ListView):
         context['resource_management_category_list_page_breadcrumb_url_name'] = self.resource_management_category_list_page_breadcrumb_url_name
         return context
 
+
 class OrganisationManagementListView(ResourceManagementListView):
     model = models.Organisation
 
@@ -124,6 +129,7 @@ class OrganisationManagementListView(ResourceManagementListView):
     resource_register_page_url_name = 'register:organisation'
     resource_register_with_editor_name = 'register:organisation_with_editor'
     resource_xml_download_page_url_name = 'utils_secure:view_organisation_as_xml_with_editing'
+
 
 class IndividualManagementListView(ResourceManagementListView):
     model = models.Individual
@@ -135,6 +141,7 @@ class IndividualManagementListView(ResourceManagementListView):
     resource_register_with_editor_name = 'register:individual_with_editor'
     resource_xml_download_page_url_name = 'utils_secure:view_individual_as_xml_with_editing'
 
+
 class ProjectManagementListView(ResourceManagementListView):
     model = models.Project
 
@@ -144,6 +151,7 @@ class ProjectManagementListView(ResourceManagementListView):
     resource_register_page_url_name = 'register:project'
     resource_register_with_editor_name = 'register:project_with_editor'
     resource_xml_download_page_url_name = 'utils_secure:view_project_as_xml_with_editing'
+
 
 class PlatformManagementListView(ResourceManagementListView):
     model = models.Platform
@@ -170,6 +178,7 @@ class PlatformManagementListView(ResourceManagementListView):
         context['no_platforms_message'] = 'No individual platforms have been registered by your institution.'
         return context
 
+
 class OperationManagementListView(ResourceManagementListView):
     model = models.Operation
 
@@ -179,6 +188,7 @@ class OperationManagementListView(ResourceManagementListView):
     resource_register_page_url_name = 'register:operation'
     resource_register_with_editor_name = 'register:operation_with_editor'
     resource_xml_download_page_url_name = 'utils_secure:view_operation_as_xml_with_editing'
+
 
 class InstrumentManagementListView(ResourceManagementListView):
     model = models.Instrument
@@ -190,6 +200,7 @@ class InstrumentManagementListView(ResourceManagementListView):
     resource_register_with_editor_name = 'register:instrument_with_editor'
     resource_xml_download_page_url_name = 'utils_secure:view_instrument_as_xml_with_editing'
 
+
 class AcquisitionCapabilitiesManagementListView(ResourceManagementListView):
     model = models.AcquisitionCapabilities
 
@@ -199,6 +210,7 @@ class AcquisitionCapabilitiesManagementListView(ResourceManagementListView):
     resource_register_page_url_name = 'register:acquisition_capability_set'
     resource_register_with_editor_name = 'register:acquisition_capability_set_with_editor'
     resource_xml_download_page_url_name = 'utils_secure:view_acquisition_capability_set_as_xml_with_editing'
+
 
 class AcquisitionManagementListView(ResourceManagementListView):
     model = models.Acquisition
@@ -210,6 +222,7 @@ class AcquisitionManagementListView(ResourceManagementListView):
     resource_register_with_editor_name = 'register:acquisition_with_editor'
     resource_xml_download_page_url_name = 'utils_secure:view_acquisition_as_xml_with_editing'
 
+
 class ComputationCapabilitiesManagementListView(ResourceManagementListView):
     model = models.ComputationCapabilities
 
@@ -219,6 +232,7 @@ class ComputationCapabilitiesManagementListView(ResourceManagementListView):
     resource_register_page_url_name = 'register:computation_capability_set'
     resource_register_with_editor_name = 'register:computation_capability_set_with_editor'
     resource_xml_download_page_url_name = 'utils_secure:view_computation_capability_set_as_xml_with_editing'
+
 
 class ComputationManagementListView(ResourceManagementListView):
     model = models.Computation
@@ -230,6 +244,7 @@ class ComputationManagementListView(ResourceManagementListView):
     resource_register_with_editor_name = 'register:computation_with_editor'
     resource_xml_download_page_url_name = 'utils_secure:view_computation_as_xml_with_editing'
 
+
 class ProcessManagementListView(ResourceManagementListView):
     model = models.Process
 
@@ -239,6 +254,7 @@ class ProcessManagementListView(ResourceManagementListView):
     resource_register_page_url_name = 'register:process'
     resource_register_with_editor_name = 'register:process_with_editor'
     resource_xml_download_page_url_name = 'utils_secure:view_process_as_xml_with_editing'
+
 
 class DataCollectionManagementListView(ResourceManagementListView):
     template_name = 'resource_management/data_collection_management_list_outer.html'
@@ -256,17 +272,6 @@ class DataCollectionManagementListView(ResourceManagementListView):
         context['interaction_method_update_page_url_name'] = 'update:data_collection_interaction_methods'
         return context
 
-class StaticDatasetManagementListView(ResourceManagementListView):
-    model = models.StaticDataset
-
-    resource_delete_page_url_name = 'delete:static_dataset'
-    resource_update_page_url_name = 'update:static_dataset'
-    resource_update_with_wizard_page_url_name = 'update:static_dataset_with_editor'
-    resource_register_page_url_name = 'register:static_dataset'
-    resource_register_with_editor_name = 'register:static_dataset_with_editor'
-    resource_xml_download_page_url_name = 'utils_secure:view_static_dataset_as_xml_with_editing'
-    resource_management_category_list_page_breadcrumb_text = _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE
-    resource_management_category_list_page_breadcrumb_url_name = 'resource_management:static_dataset_related_metadata_index'
 
 class StaticDatasetEntryManagementListView(ResourceManagementListView):
     model = models.StaticDatasetEntry
@@ -280,6 +285,7 @@ class StaticDatasetEntryManagementListView(ResourceManagementListView):
     resource_management_category_list_page_breadcrumb_text = _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:static_dataset_related_metadata_index'
 
+
 class DataSubsetManagementListView(ResourceManagementListView):
     model = models.DataSubset
 
@@ -291,6 +297,7 @@ class DataSubsetManagementListView(ResourceManagementListView):
     resource_xml_download_page_url_name = 'utils_secure:view_data_subset_as_xml_with_editing'
     resource_management_category_list_page_breadcrumb_text = _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:static_dataset_related_metadata_index'
+
 
 class WorkflowManagementListView(ResourceManagementListView):
     template_name = 'resource_management/workflow_management_list_outer.html'

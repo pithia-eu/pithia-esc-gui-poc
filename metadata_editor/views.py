@@ -27,7 +27,6 @@ from .service_utils import BaseMetadataEditor
 from .services import (
     AcquisitionCapabilitiesEditor,
     AcquisitionEditor,
-    StaticDatasetEditor,
     DataSubsetEditor,
     StaticDatasetEntryEditor,
     ComputationCapabilitiesEditor,
@@ -840,33 +839,6 @@ class StaticDatasetRelatedEditorFormViewMixin:
         context['resource_management_category_list_page_breadcrumb_text'] = _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:static_dataset_related_metadata_index'
         return context
-
-
-class StaticDatasetEditorFormView(
-    StaticDatasetRelatedEditorFormViewMixin,
-    OntologyCategoryChoicesViewMixin,
-    ResourceEditorFormView):
-    form_class = StaticDatasetEditorForm
-    template_name = 'metadata_editor/static_dataset_editor.html'
-
-    model = models.StaticDataset
-    metadata_editor_class = StaticDatasetEditor
-
-    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.StaticDataset.type_plural_readable)
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:static_datasets'
-
-    def get_static_dataset_category_choices_for_form(self):
-        return self.get_choices_from_ontology_category('staticDatasetCategory')
-
-    def add_form_data_to_metadata_editor(self, metadata_editor: StaticDatasetEditor, form_cleaned_data):
-        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
-        metadata_editor.update_description(form_cleaned_data.get('description'))
-        metadata_editor.update_static_dataset_category(form_cleaned_data.get('static_dataset_category'))
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['static_dataset_category_choices'] = self.get_static_dataset_category_choices_for_form()
-        return kwargs
 
 
 class StaticDatasetEntryEditorFormView(

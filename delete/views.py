@@ -260,17 +260,6 @@ class DataCollectionDeleteView(ResourceDeleteView):
         return context
 
 
-class StaticDatasetDeleteView(StaticDatasetRelatedResourceDeleteView):
-    """The deletion confirmation page for a Static Dataset
-    registration.
-    """
-    model = models.StaticDataset
-
-    redirect_url = reverse_lazy('resource_management:static_datasets')
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:static_datasets'
-    delete_resource_page_breadcrumb_url_name = 'delete:static_dataset'
-
-
 class StaticDatasetEntryDeleteView(StaticDatasetRelatedResourceDeleteView):
     """The deletion confirmation page for a Static Dataset
     Entry registration.

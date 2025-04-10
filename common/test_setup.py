@@ -2,7 +2,6 @@ from . import test_xml_files
 from .models import (
     Acquisition,
     AcquisitionCapabilities,
-    StaticDataset,
     DataSubset,
     StaticDatasetEntry,
     Computation,

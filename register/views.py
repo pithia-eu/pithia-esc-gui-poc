@@ -276,22 +276,6 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
         return context
 
 
-class StaticDatasetRegisterFormView(ResourceRegisterFormView):
-    template_name = 'register/file_upload.html'
-    model = models.StaticDataset
-    success_url = reverse_lazy('register:static_dataset')
-
-    post_url = reverse_lazy('register:static_dataset')
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:static_datasets'
-    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('static datasets')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['resource_management_category_list_page_breadcrumb_text'] = _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE
-        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:static_dataset_related_metadata_index'
-        return context
-
-
 class StaticDatasetEntryRegisterFormView(ResourceRegisterFormView):
     template_name = 'register/file_upload.html'
     model = models.StaticDatasetEntry
