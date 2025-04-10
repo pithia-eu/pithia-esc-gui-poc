@@ -424,7 +424,7 @@ class DoiValidationTestCase(SimpleTestCase):
         """Data subset validation fails with a handle in the
         DOI metadata kernel element.
         """
-        xml_file = XMLMetadataFile.from_file(test_xml_files.CATALOGUE_DATA_SUBSET_WITH_HANDLE_METADATA_XML)
+        xml_file = XMLMetadataFile.from_file(test_xml_files.DATA_SUBSET_WITH_HANDLE_METADATA_XML)
         self.assertRaises(XMLSchemaValidationError, MetadataFileXSDValidator.validate, xml_file)
 
     def test_contents_with_spoofed_doi(self):
