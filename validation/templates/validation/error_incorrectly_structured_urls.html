@@ -1,0 +1,21 @@
+<div class="pb-1">
+    One or multiple resource URLs specified via
+    the xlink:href attribute are invalid.
+</div>
+<div class="pb-1">Invalid document URLs:</div>
+<ul>
+    {% for incorrectly_structured_url in incorrectly_structured_urls %}
+    <li>{{ incorrectly_structured_url }}</li>
+    {% endfor %}
+</ul>
+<div class="pt-2">
+    Your resource URL may reference an unsupported
+    resource type, or may not follow the correct
+    structure.
+</div>
+<div class="pt-2">
+    Expected resource URL structure:
+    <span class="d-inline-block font-monospace">
+        https://metadata.pithia.eu/resources/2.2/<b>&lt;resource type&gt;</b>/<b>&lt;namespace&gt;</b>/<b>&lt;localID&gt;</b>
+    </span>
+</div>
