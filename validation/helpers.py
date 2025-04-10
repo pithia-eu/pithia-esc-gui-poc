@@ -33,7 +33,7 @@ def create_register_url_from_resource_type_from_resource_url(resource_type_from_
     except AttributeError:
         pass
     
-    # Catalogue-related URLs are sets
+    # Static dataset-related URLs are sets
     type, localid = resource_type_from_resource_url[0], resource_type_from_resource_url[1]
     if localid.startswith('StaticDatasetEntry_'):
         url_name = 'static_dataset_entry'
