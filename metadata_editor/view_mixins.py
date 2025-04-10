@@ -7,7 +7,6 @@ from django.views.generic import View
 from django_countries import countries
 from rdflib.namespace._SKOS import SKOS
 from unidecode import unidecode
-from urllib.parse import quote
 
 from .editor_dataclasses import (
     CitationPropertyTypeMetadataUpdate,
