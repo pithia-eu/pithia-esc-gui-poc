@@ -403,24 +403,10 @@ class DataCollectionEditor(
         )
 
 
-class StaticDatasetEditor(
-    BaseMetadataEditor,
-    XlinkHrefMetadataEditor):
-    def __init__(self, xml_string: str = '') -> None:
-        super().__init__(models.StaticDataset.root_element_name, xml_string)
-
-    def update_static_dataset_category(self, static_dataset_category_url: str):
-        self.update_child_element_and_remove_if_empty(
-            self.metadata_dict,
-            'staticDatasetCategory',
-            self.get_as_xlink_href(static_dataset_category_url)
-        )
-
-
 class StaticDatasetEntryEditor(
-    BaseMetadataEditor,
-    TimePeriodMetadataEditor,
-    XlinkHrefMetadataEditor):
+        BaseMetadataEditor,
+        TimePeriodMetadataEditor,
+        XlinkHrefMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
         super().__init__(models.StaticDatasetEntry.root_element_name, xml_string)
 

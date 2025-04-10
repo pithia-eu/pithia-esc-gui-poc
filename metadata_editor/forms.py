@@ -566,21 +566,6 @@ class DataCollectionEditorForm(
     )
 
 
-class StaticDatasetEditorForm(BaseEditorForm):
-    def __init__(self, *args, static_dataset_category_choices=(), **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['static_dataset_category'].choices = static_dataset_category_choices
-
-    static_dataset_category = forms.ChoiceField(
-        label='Static Dataset Category',
-        required=False,
-        widget=forms.Select(attrs={
-            'class': 'form-select',
-        }),
-        help_text='A category of the static dataset from the ontology dictionary.'
-    )
-
-
 class StaticDatasetEntryEditorForm(
     BaseEditorForm,
     TimePeriodEditorFormComponent):

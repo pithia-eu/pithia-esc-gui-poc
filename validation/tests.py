@@ -393,8 +393,8 @@ class StaticDatasetMetadataUrlSplittingFunctionTestCase(SimpleTestCase):
         its components correctly.
         """
         # A static dataset-related metadata URL should have the following structure:
-        # "staticDataset/<namespace>/<Event>/<localid>" (i.e. StaticDataset,
-        # StaticDatasetEntry, DataSubset).
+        # "staticDataset/<namespace>/<Event>/<localid>" (i.e. StaticDatasetEntry,
+        # DataSubset).
         static_dataset_resource_url = 'https://metadata.pithia.eu/resources/2.2/staticDataset/pithia/VolcanoEruption/StaticDatasetEntry_VolcanoEruption'
         static_dataset_resource_url_components = divide_static_dataset_related_resource_url_into_main_components(static_dataset_resource_url)
         static_dataset_url_base = static_dataset_resource_url_components['url_base']
