@@ -145,10 +145,11 @@ def map_data_subset_sources_with_existing_data_hub_files_to_dataclasses(form_cle
 def map_time_periods_to_dataclasses(form_cleaned_data):
     return [
         ResultTimeMetadataUpdate(
-            time_period_id=tp.get('timePeriodId'),
-            time_instant_begin_id=tp.get('timeInstantBeginId'),
+            time_period_id=f'rtp{i}',
+            time_instant_begin_id=f'rst{i}',
             time_instant_begin_position=dateutil.parser.parse(tp.get('timeInstantBeginPosition')).replace(microsecond=0, tzinfo=timezone.utc).isoformat().replace('+00:00', 'Z'),
-            time_instant_end_id=tp.get('timeInstantEndId'),
+            time_instant_end_id=f'ret{i}',
             time_instant_end_position=dateutil.parser.parse(tp.get('timeInstantEndPosition')).replace(microsecond=0, tzinfo=timezone.utc).isoformat().replace('+00:00', 'Z'),
         )
-    for tp in form_cleaned_data.get('time_periods_json')]
+        for i, tp in enumerate(form_cleaned_data.get('time_periods_json'), start=1)
+    ]

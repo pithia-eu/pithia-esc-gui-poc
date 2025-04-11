@@ -284,10 +284,10 @@ class OperationEditorFormView(
         metadata_editor.update_platforms(form_cleaned_data.get('platforms'))
         metadata_editor.update_child_operations(form_cleaned_data.get('child_operations'))
         operation_time_update = OperationTimeMetadataUpdate(
-            time_period_id='op-time-period',
-            time_instant_begin_id='op-start-time',
+            time_period_id='otp',
+            time_instant_begin_id='ost',
             time_instant_begin_position=form_cleaned_data.get('time_instant_begin_position'),
-            time_instant_end_id='op-end-time',
+            time_instant_end_id='oet',
             time_instant_end_position=form_cleaned_data.get('time_instant_end_position')
         )
         metadata_editor.update_operation_time(operation_time_update)
@@ -859,10 +859,10 @@ class StaticDatasetEntryEditorFormView(
         metadata_editor.update_description(form_cleaned_data.get('description'))
         metadata_editor.update_static_dataset_category(form_cleaned_data.get('static_dataset_category'))
         phenomenon_time_update = PhenomenonTimeMetadataUpdate(
-            time_period_id=form_cleaned_data.get('time_period_id'),
-            time_instant_begin_id=form_cleaned_data.get('time_instant_begin_id'),
+            time_period_id='ptp',
+            time_instant_begin_id='pst',
             time_instant_begin_position=form_cleaned_data.get('time_instant_begin_position').replace(microsecond=0).isoformat().replace('+00:00', 'Z'),
-            time_instant_end_id=form_cleaned_data.get('time_instant_end_id'),
+            time_instant_end_id='pet',
             time_instant_end_position=form_cleaned_data.get('time_instant_end_position').replace(microsecond=0).isoformat().replace('+00:00', 'Z'),
         )
         metadata_editor.update_phenomenon_time(phenomenon_time_update)
