@@ -497,8 +497,9 @@ class TimePeriodValidationEditorFormComponent(forms.Form):
             return cleaned_data
         if not time_instant_end_position:
             return cleaned_data
-        if time_instant_begin_position > time_instant_end_position:
-            self.add_error('time_instant_begin_position', ValidationError('The begin time cannot be later than the end time.'))
+        if time_instant_begin_position <= time_instant_end_position:
+            return cleaned_data
+        self.add_error('time_instant_begin_position', ValidationError('The begin time cannot be later than the end time.'))
         return cleaned_data
 
 
