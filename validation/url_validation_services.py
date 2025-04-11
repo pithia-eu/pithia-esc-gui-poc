@@ -18,7 +18,6 @@ from .file_wrappers import (
 )
 from .helpers import (
     create_register_url_from_resource_type_from_resource_url,
-    map_string_to_li_element,
 )
 
 from common.constants import PITHIA_METADATA_SERVER_HTTPS_URL_BASE
@@ -246,6 +245,8 @@ class MetadataFileMetadataURLReferencesValidator:
         try:
             resource_urls_with_op_mode_ids = xml_file.potential_operational_mode_urls
         except:
+            # Only Acquisition Capabilities XML files
+            # have potential operational mode URLs.
             return cls._is_each_resource_url_valid([])
         resource_urls = [
             itemgetter('resource_url')(divide_resource_url_from_op_mode_id(url))
