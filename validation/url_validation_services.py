@@ -319,18 +319,24 @@ class MetadataFileMetadataURLReferencesValidator:
             unregistered_resource_url_errors.append(error_msg)
 
         if len(unregistered_operational_mode_urls) > 0:
-            error_msg = 'One or multiple referenced operational modes are invalid.'
-            error_msg = error_msg + '<br>'
-            error_msg = error_msg + 'Invalid operational mode references: <ul>%s</ul>' % ''.join(list(map(map_string_to_li_element, unregistered_operational_mode_urls)))
+            error_msg = render_to_string(
+                'validation/error_unregistered_operational_mode_urls.html',
+                context={
+                    'unregistered_resource_urls': unregistered_operational_mode_urls,
+                }
+            )
             unregistered_operational_mode_url_errors.append(error_msg)
 
         # Ontology URL validation
         invalid_ontology_urls = MetadataFileOntologyURLReferencesValidator.is_each_potential_ontology_url_in_xml_file_valid(xml_metadata_file)
         invalid_ontology_url_errors = []
         if len(invalid_ontology_urls) > 0:
-            error_msg = 'One or multiple ontology terms referenced by the xlink:href attribute are not valid PITHIA ontology terms.'
-            error_msg = error_msg + '<br>'
-            error_msg = error_msg + 'Invalid ontology term URLs: <ul>%s</ul><div class="mt-2">These ontology URLs may reference terms which have not yet been added to the PITHIA ontology, or no longer exist in the PITHIA ontology. Please also ensure URLs start with "<i>https://</i>" and not "<i>http://</i>".</div>' % ''.join(list(map(map_string_to_li_element, invalid_ontology_urls)))
+            error_msg = render_to_string(
+                'validation/error_invalid_ontology_urls.html',
+                context={
+                    'invalid_ontology_urls': invalid_ontology_urls,
+                }
+            )
             invalid_ontology_url_errors.append(error_msg)
 
         return {

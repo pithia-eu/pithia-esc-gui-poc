@@ -1,0 +1,22 @@
+<div class="pb-1">
+    One or multiple ontology terms referenced
+    by the <span class="font-monospace">xlink:href</span>
+    attribute are not valid Space Physics Ontology terms.
+</div>
+<div class="pb-1">Invalid URLs:</div>
+<ul>
+    {% for url in invalid_ontology_urls %}
+    <li>{{ url }}</li>
+    {% endfor %}
+</ul>
+<div class="pt-2">
+    These URLs may reference terms which are no longer a
+    part of the Space Physics Ontology, or have yet to be
+    added to it.
+</div>
+<div class="pt-2">
+    Expected ontology URL structure:
+    <span class="d-inline-block font-monospace">
+        https://metadata.pithia.eu/ontology/2.2/<b>&lt;ontology_category&gt;</b>/<b>&lt;ontology_term_ID&gt;</b>
+    </span>
+</div>
