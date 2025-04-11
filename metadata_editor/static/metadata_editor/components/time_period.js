@@ -5,7 +5,7 @@ function isTimePeriodBeginBeforeOrEqualToTimePeriodEnd(timePeriodBeginValue, tim
     return beginDateTime <= endDateTime;
 }
 
-function alertIfTimePeriodIsInvalid(timePeriodBeginInput, timePeriodEndInput) {
+export function alertIfTimePeriodIsInvalid(timePeriodBeginInput, timePeriodEndInput) {
     if (!timePeriodBeginInput.value) {
         timePeriodBeginInput.classList.remove("is-invalid");
         return;
