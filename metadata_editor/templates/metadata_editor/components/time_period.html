@@ -9,6 +9,9 @@
             id="{{ time_instant_begin_position_field.auto_id }}"
             class="form-control {% if time_instant_begin_position_field.errors %}is-invalid{% endif %}"
             value="{{ time_instant_begin_position_field.value|default:'' }}"
+            {% if time_instant_begin_position_field.field.required %}
+            required
+            {% endif %}
             aria-describedby="{{ time_instant_begin_position_field.auto_id }}-invalid-feedback">
         <div id="invalid-feedback-{{ time_instant_begin_position_field.auto_id }}" class="invalid-feedback">
             {% if time_instant_begin_position_field.errors %}
@@ -33,6 +36,9 @@
             id="{{ time_instant_end_position_field.auto_id }}"
             class="form-control {% if time_instant_end_position_field.errors %}is-invalid{% endif %}"
             value="{{ time_instant_end_position_field.value|default:'' }}"
+            {% if time_instant_end_position_field.field.required %}
+            required
+            {% endif %}
             aria-describedby="{{ time_instant_end_position_field.auto_id }}-invalid-feedback">
         <div id="invalid-feedback-{{ time_instant_end_position_field.auto_id }}" class="invalid-feedback">
             {% if time_instant_end_position_field.errors %}
