@@ -111,6 +111,7 @@ class ResourceEditorFormView(
         return context
 
     def form_invalid(self, form):
+        logger.exception(f'An invalid XML wizard form was submitted: {form.errors}')
         return HttpResponseBadRequest('The form submitted was not valid. Please check the form for any errors.')
     
     def dispatch(self, request, *args, **kwargs):
