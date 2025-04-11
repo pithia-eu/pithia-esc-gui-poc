@@ -113,7 +113,7 @@ class MultipleMetadataUrlMappingTestCase(TestCase):
         self.assertNotEqual(converted_process_metadata_url['converted_url_text'], '')
         self.assertNotEqual(converted_process_metadata_url['original_server_url'], converted_process_metadata_url['converted_url'])
 
-        # Static dataset URL
+        # Static dataset-related URL
         self.assertNotEqual(converted_static_dataset_related_resource_url['original_server_url'], '')
         self.assertNotEqual(converted_static_dataset_related_resource_url['converted_url'], '')
         self.assertNotEqual(converted_static_dataset_related_resource_url['converted_url_text'], '')

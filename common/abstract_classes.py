@@ -489,19 +489,6 @@ class AbstractDataCollectionDatabaseQueries(ABC):
 
 class AbstractStaticDatasetEntryDatabaseQueries(ABC):
     @abstractmethod
-    def referencing_static_dataset_url(self, static_dataset_url: str):
-        """Static Dataset Entries referencing a given Static Dataset URL.
-        """
-        pass
-
-    @abstractmethod
-    def referencing_static_dataset_id(self, static_dataset_id: str):
-        """Static Dataset Entries referencing a given Static Dataset's
-        local ID.
-        """
-        pass
-
-    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """Static Dataset Entries referencing a URL corresponding
         to a metadata registration that is planned for

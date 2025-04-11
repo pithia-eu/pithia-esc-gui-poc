@@ -388,26 +388,26 @@ class ValidMetadataUrlStructureValidationTestCase(SimpleTestCase):
 
 
 class StaticDatasetMetadataUrlSplittingFunctionTestCase(SimpleTestCase):
-    def test_static_dataset_metadata_url_splits_correctly(self):
+    def test_static_dataset_entry_metadata_url_splits_correctly(self):
         """A static dataset-related metadata URL is split up into
         its components correctly.
         """
         # A static dataset-related metadata URL should have the following structure:
         # "staticDataset/<namespace>/<Event>/<localid>" (i.e. StaticDatasetEntry,
         # DataSubset).
-        static_dataset_resource_url = 'https://metadata.pithia.eu/resources/2.2/staticDataset/pithia/VolcanoEruption/StaticDatasetEntry_VolcanoEruption'
-        static_dataset_resource_url_components = divide_static_dataset_related_resource_url_into_main_components(static_dataset_resource_url)
-        static_dataset_url_base = static_dataset_resource_url_components['url_base']
-        static_dataset_url_resource_type = static_dataset_resource_url_components['resource_type']
-        static_dataset_url_namespace = static_dataset_resource_url_components['namespace']
-        static_dataset_url_event = static_dataset_resource_url_components['event']
-        static_dataset_url_localid = static_dataset_resource_url_components['localid']
+        static_dataset_entry_resource_url = 'https://metadata.pithia.eu/resources/2.2/staticDataset/pithia/VolcanoEruption/StaticDatasetEntry_VolcanoEruption'
+        static_dataset_entry_resource_url_components = divide_static_dataset_related_resource_url_into_main_components(static_dataset_entry_resource_url)
+        static_dataset_entry_url_base = static_dataset_entry_resource_url_components['url_base']
+        static_dataset_entry_url_resource_type = static_dataset_entry_resource_url_components['resource_type']
+        static_dataset_entry_url_namespace = static_dataset_entry_resource_url_components['namespace']
+        static_dataset_entry_url_event = static_dataset_entry_resource_url_components['event']
+        static_dataset_entry_url_localid = static_dataset_entry_resource_url_components['localid']
 
-        self.assertEquals(static_dataset_url_base, 'https://metadata.pithia.eu/resources/2.2')
-        self.assertEquals(static_dataset_url_resource_type, 'staticDataset')
-        self.assertEquals(static_dataset_url_namespace, 'pithia')
-        self.assertEquals(static_dataset_url_event, 'VolcanoEruption')
-        self.assertEquals(static_dataset_url_localid, 'StaticDatasetEntry_VolcanoEruption')
+        self.assertEquals(static_dataset_entry_url_base, 'https://metadata.pithia.eu/resources/2.2')
+        self.assertEquals(static_dataset_entry_url_resource_type, 'staticDataset')
+        self.assertEquals(static_dataset_entry_url_namespace, 'pithia')
+        self.assertEquals(static_dataset_entry_url_event, 'VolcanoEruption')
+        self.assertEquals(static_dataset_entry_url_localid, 'StaticDatasetEntry_VolcanoEruption')
 
 
 class DoiValidationTestCase(SimpleTestCase):
