@@ -806,8 +806,8 @@ class Workflow(ScientificMetadata):
     type_readable = 'workflow'
     type_plural_readable = 'workflows'
     type_description_readable = '''A workflow is a combination of different interconnected data collections executed repeatedly in an 
-orchestrated pattern to produce its output result. The pattern in its general form is a directed acyclic 
-graph (DAG) and in its simplest form, a linear sequence of steps.'''
+        orchestrated pattern to produce its output result. The pattern in its general form is a directed acyclic 
+        graph (DAG) and in its simplest form, a linear sequence of steps.'''
     _browse_detail_page_url_name = 'browse:workflow_detail'
     root_element_name = 'Workflow'
 
