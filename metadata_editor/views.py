@@ -284,10 +284,10 @@ class OperationEditorFormView(
         metadata_editor.update_platforms(form_cleaned_data.get('platforms'))
         metadata_editor.update_child_operations(form_cleaned_data.get('child_operations'))
         operation_time_update = OperationTimeMetadataUpdate(
-            time_period_id=form_cleaned_data.get('time_period_id'),
-            time_instant_begin_id=form_cleaned_data.get('time_instant_begin_id'),
+            time_period_id='op-time-period',
+            time_instant_begin_id='op-start-time',
             time_instant_begin_position=form_cleaned_data.get('time_instant_begin_position'),
-            time_instant_end_id=form_cleaned_data.get('time_instant_end_id'),
+            time_instant_end_id='op-end-time',
             time_instant_end_position=form_cleaned_data.get('time_instant_end_position')
         )
         metadata_editor.update_operation_time(operation_time_update)
