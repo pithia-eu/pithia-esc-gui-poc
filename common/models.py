@@ -721,7 +721,7 @@ class StaticDatasetTypeDescriptionMixin:
 class StaticDatasetEntry(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
     type_in_metadata_server_url = 'staticDataset'
     localid_base = 'StaticDatasetEntry'
-    weight = 13
+    weight = 12
     type_readable = 'static dataset entry'
     type_plural_readable = 'static dataset entries'
     _browse_detail_page_url_name = 'browse:static_dataset_entry_detail'
@@ -759,7 +759,7 @@ class StaticDatasetEntry(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
 class DataSubset(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
     type_in_metadata_server_url = 'staticDataset'
     localid_base = 'DataSubset'
-    weight = 14
+    weight = 13
     type_readable = 'data subset'
     type_plural_readable = 'data subsets'
     _browse_detail_page_url_name = 'browse:data_subset_detail'
@@ -802,7 +802,7 @@ class DataSubset(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
 class Workflow(ScientificMetadata):
     type_in_metadata_server_url = 'workflow'
     localid_base = 'Workflow'
-    weight = 15
+    weight = 14
     type_readable = 'workflow'
     type_plural_readable = 'workflows'
     type_description_readable = '''A workflow is a combination of different interconnected data collections executed repeatedly in an 
