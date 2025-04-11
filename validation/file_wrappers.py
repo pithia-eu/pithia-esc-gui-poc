@@ -7,6 +7,10 @@ from common.constants import (
     SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE_NO_VERSION,
     SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE,
 )
+from common.xml_metadata_utils import (
+    Namespace,
+    NamespacePrefix,
+)
 
 class XMLMetadataFile:
     """
@@ -42,27 +46,39 @@ class XMLMetadataFile:
     @property
     def localid(self):
         # There should be only one <localID> tag in the tree
-        return self._parsed_xml.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text
+        return self._parsed_xml.find('.//{%s}localID' % Namespace.PITHIA).text
 
     @property
     def namespace(self):
-        return self._parsed_xml.find('.//{https://metadata.pithia.eu/schemas/2.2}namespace').text
+        return self._parsed_xml.find('.//{%s}namespace' % Namespace.PITHIA).text
     
     @property
     def ontology_urls(self):
-        return self._parsed_xml.xpath(f"//*[contains(@xlink:href, '{SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE}')]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
+        return self._parsed_xml.xpath(
+            f"//*[contains(@xlink:href, '{SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE}')]/@*[local-name()='href' and namespace-uri()='{Namespace.XLINK}']",
+            namespaces={NamespacePrefix.XLINK: Namespace.XLINK}
+        )
     
     @property
     def metadata_urls(self):
-        return self._parsed_xml.xpath(f"//*[contains(@xlink:href, '{PITHIA_METADATA_SERVER_URL_BASE}') and not(contains(@xlink:href, '#'))]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
+        return self._parsed_xml.xpath(
+            f"//*[contains(@xlink:href, '{PITHIA_METADATA_SERVER_URL_BASE}') and not(contains(@xlink:href, '#'))]/@*[local-name()='href' and namespace-uri()='{Namespace.XLINK}']",
+            namespaces={NamespacePrefix.XLINK: Namespace.XLINK}
+        )
     
     @property
     def potential_ontology_urls(self):
-        return self._parsed_xml.xpath(f"//*[contains(@xlink:href, '{SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE_NO_VERSION}')]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
+        return self._parsed_xml.xpath(
+            f"//*[contains(@xlink:href, '{SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE_NO_VERSION}')]/@*[local-name()='href' and namespace-uri()='{Namespace.XLINK}']",
+            namespaces={NamespacePrefix.XLINK: Namespace.XLINK}
+        )
     
     @property
     def potential_metadata_urls(self):
-        return self._parsed_xml.xpath(f"//*[contains(@xlink:href, '{PITHIA_METADATA_SERVER_URL_BASE_NO_VERSION}') and not(contains(@xlink:href, '#'))]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
+        return self._parsed_xml.xpath(
+            f"//*[contains(@xlink:href, '{PITHIA_METADATA_SERVER_URL_BASE_NO_VERSION}') and not(contains(@xlink:href, '#'))]/@*[local-name()='href' and namespace-uri()='{Namespace.XLINK}']",
+            namespaces={NamespacePrefix.XLINK: Namespace.XLINK}
+        )
 
     # Helper properties
     @property
@@ -92,8 +108,8 @@ class DataSubsetXMLMetadataFile(XMLMetadataFile):
     def _xml_string_with_spoofed_doi(self, xml_string):
         parsed_xml_string = self._parse_xml_string(xml_string)
         valid_doi_name = '10.000/000'
-        doi_name_element = parsed_xml_string.find('.//{http://www.doi.org/2010/DOISchema}referentDoiName')
-        doi_registration_agency_name_element = parsed_xml_string.find('.//{http://www.doi.org/2010/DOISchema}registrationAgencyDoiName')
+        doi_name_element = parsed_xml_string.find('.//{%s}referentDoiName' % Namespace.PITHIA)
+        doi_registration_agency_name_element = parsed_xml_string.find('.//{%s}registrationAgencyDoiName' % Namespace.PITHIA)
         if doi_name_element is not None:
             doi_name_element.text = valid_doi_name
         if doi_registration_agency_name_element is not None:
@@ -109,13 +125,22 @@ class InstrumentXMLMetadataFile(XMLMetadataFile):
     @property
     def operational_mode_ids(self):
         # Operational mode IDs are the only values enclosed in <id></id> tags
-        return [om_element.text for om_element in self._parsed_xml.findall('.//{https://metadata.pithia.eu/schemas/2.2}id')]
+        return [
+            om_element.tex
+            for om_element in self._parsed_xml.findall('.//{%s}id' % Namespace.PITHIA)
+        ]
     
 class AcquisitionCapabilitiesXMLMetadataFile(XMLMetadataFile):
     @property
     def operational_mode_urls(self):
-        return self._parsed_xml.xpath(f"//*[contains(@xlink:href, '{PITHIA_METADATA_SERVER_URL_BASE}') and contains(@xlink:href, '#')]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
+        return self._parsed_xml.xpath(
+            f"//*[contains(@xlink:href, '{PITHIA_METADATA_SERVER_URL_BASE}') and contains(@xlink:href, '#')]/@*[local-name()='href' and namespace-uri()='{Namespace.XLINK}']",
+            namespaces={NamespacePrefix.XLINK: Namespace.XLINK}
+        )
     
     @property
     def potential_operational_mode_urls(self):
-        return self._parsed_xml.xpath(f"//*[contains(@xlink:href, '{PITHIA_METADATA_SERVER_URL_BASE_NO_VERSION}') and contains(@xlink:href, '#')]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
+        return self._parsed_xml.xpath(
+            f"//*[contains(@xlink:href, '{PITHIA_METADATA_SERVER_URL_BASE_NO_VERSION}') and contains(@xlink:href, '#')]/@*[local-name()='href' and namespace-uri()='{Namespace.XLINK}']",
+            namespaces={NamespacePrefix.XLINK: Namespace.XLINK}
+        )
