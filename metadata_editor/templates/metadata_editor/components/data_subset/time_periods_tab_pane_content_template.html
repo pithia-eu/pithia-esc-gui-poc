@@ -13,10 +13,10 @@
         </div>
     </div>
     <div class="d-flex flex-column row-gap-4 col-xl-9 col-lg-12">
-        {% with time_period_id_field_col_classes='col-xl-6' time_instant_id_field_col_classes='col-xl-5' time_instant_position_field_col_classes='col-xl-7' %}
-        {% with time_period_id_field=form.time_period_id time_period_input_type='datetime-local' time_period_id_field_col_classes='col-xl-6' %}
-        {% with time_instant_begin_id_field=form.time_instant_begin_id time_instant_begin_position_field=form.time_instant_begin_position %}
-        {% with time_instant_end_id_field=form.time_instant_end_id time_instant_end_position_field=form.time_instant_end_position %}
+        {% with time_instant_position_field_col_classes='col-xl-7' %}
+        {% with time_period_input_type='datetime-local' %}
+        {% with time_instant_begin_position_field=form.time_instant_begin_position %}
+        {% with time_instant_end_position_field=form.time_instant_end_position %}
         {% include 'metadata_editor/components/time_period.html' %}
         {% endwith %}
         {% endwith %}

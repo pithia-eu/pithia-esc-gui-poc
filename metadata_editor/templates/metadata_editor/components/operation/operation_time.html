@@ -14,11 +14,9 @@
             {% endwith %}
         </div>
     </div>
-    {% with time_period_id_field=form.time_period_id %}
-    {% with time_instant_begin_id_field=form.time_instant_begin_id time_instant_begin_position_field=form.time_instant_begin_position %}
-    {% with time_instant_end_id_field=form.time_instant_end_id time_instant_end_position_field=form.time_instant_end_position %}
+    {% with time_instant_begin_position_field=form.time_instant_begin_position %}
+    {% with time_instant_end_position_field=form.time_instant_end_position %}
     {% include 'metadata_editor/components/time_period.html' %}
-    {% endwith %}
     {% endwith %}
     {% endwith %}
 </section>

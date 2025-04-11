@@ -166,17 +166,12 @@ class OperationEditorForm(
     LocationEditorFormComponent,
     RelatedPartiesEditorFormComponent,
     StatusEditorFormComponent,
-    TimePeriodEditorFormComponent,
     TimePeriodValidationEditorFormComponent):
     def __init__(self, *args, platform_choices=(), child_operation_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['platforms'].help_text = 'The operated platform(s).'
         self.fields['platforms'].choices = platform_choices
         self.fields['child_operations'].choices = child_operation_choices
-        self.fields['time_instant_begin_position'].label = 'Start Date'
-        self.fields['time_instant_begin_position'].widget = forms.DateInput()
-        self.fields['time_instant_end_position'].label = 'End Date'
-        self.fields['time_instant_end_position'].widget = forms.DateInput()
 
     platforms = forms.MultipleChoiceField(
         label='Platforms',
@@ -192,6 +187,18 @@ class OperationEditorForm(
         widget=forms.SelectMultiple(attrs={
             'class': 'form-select'
         })
+    )
+
+    time_instant_begin_position = forms.DateField(
+        label='Begin Date',
+        required=False,
+        widget=forms.DateInput()
+    )
+
+    time_instant_end_position = forms.DateField(
+        label='End Date',
+        required=False,
+        widget=forms.DateInput()
     )
 
 
@@ -573,7 +580,7 @@ class DataCollectionEditorForm(
 
 class StaticDatasetEntryEditorForm(
     BaseEditorForm,
-    TimePeriodEditorFormComponent,
+    TimePeriodDateTimeEditorFormComponent,
     TimePeriodValidationEditorFormComponent):
     def __init__(self, *args, static_dataset_category_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
@@ -595,7 +602,7 @@ class DataSubsetForm(
     DataLevelFormComponent,
     QualityAssessmentFormComponent,
     SourceMetadataFormComponent,
-    TimePeriodEditorFormComponent):
+    TimePeriodDateTimeEditorFormComponent):
     def __init__(self, *args, data_collection_choices=(), static_dataset_entry_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['data_collection'].choices = data_collection_choices

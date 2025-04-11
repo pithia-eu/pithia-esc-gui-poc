@@ -435,7 +435,6 @@ class BaseTimePeriodFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMix
 
 class MultipleTimePeriodFormFieldsToMetadataMixin(BaseTimePeriodFormFieldsToMetadataMixin):
     def _map_time_period_to_form(self, time_period_element):
-        # parse().replace(second=0, microsecond=0).isoformat().replace('+00:00', '')
         time_period_begin_position = self._get_element_text_or_blank_string(self._get_first_element_from_list(time_period_element.xpath('.//%s:begin/%s/%s' % (NamespacePrefix.GML, self._time_instant_element_xpath_section, self._time_position_element_xpath_section), namespaces=self.namespaces)))
         if time_period_begin_position:
             time_period_begin_position = dateutil.parser.parse(time_period_begin_position).replace(second=0, microsecond=0).isoformat().replace('+00:00', '')
@@ -443,10 +442,7 @@ class MultipleTimePeriodFormFieldsToMetadataMixin(BaseTimePeriodFormFieldsToMeta
         if time_period_end_position:
             time_period_end_position = dateutil.parser.parse(time_period_end_position).replace(second=0, microsecond=0).isoformat().replace('+00:00', '')
         return {
-            'timePeriodId': self._get_first_element_from_list(time_period_element.xpath('.//%s' % (self._gml_id_xpath_section), namespaces=self.namespaces)),
-            'timeInstantBeginId': self._get_first_element_from_list(time_period_element.xpath('.//%s:begin/%s/%s' % (NamespacePrefix.GML, self._time_instant_element_xpath_section, self._gml_id_xpath_section), namespaces=self.namespaces)),
             'timeInstantBeginPosition': time_period_begin_position,
-            'timeInstantEndId': self._get_first_element_from_list(time_period_element.xpath('.//%s:end/%s/%s' % (NamespacePrefix.GML, self._time_instant_element_xpath_section, self._gml_id_xpath_section), namespaces=self.namespaces)),
             'timeInstantEndPosition': time_period_end_position,
         }
 
@@ -466,10 +462,7 @@ class TimePeriodFormFieldsToMetadataMixin(BaseTimePeriodFormFieldsToMetadataMixi
     def get_basic_form_field_to_xml_field_mappings(self):
         mappings = super().get_basic_form_field_to_xml_field_mappings()
         mappings.update({
-            'time_period_id': './/%s/%s' % (self._time_period_element_xpath_section, self._gml_id_xpath_section),
-            'time_instant_begin_id': './/%s/%s:begin/%s/%s' % (self._time_period_element_xpath_section, NamespacePrefix.GML, self._time_instant_element_xpath_section, self._gml_id_xpath_section),
             'time_instant_begin_position': './/%s/%s:begin/%s/%s' % (self._time_period_element_xpath_section, NamespacePrefix.GML, self._time_instant_element_xpath_section, self._time_position_element_xpath_section),
-            'time_instant_end_id': './/%s/%s:end/%s/%s' % (self._time_period_element_xpath_section, NamespacePrefix.GML, self._time_instant_element_xpath_section, self._gml_id_xpath_section),
             'time_instant_end_position': './/%s/%s:end/%s/%s' % (self._time_period_element_xpath_section, NamespacePrefix.GML, self._time_instant_element_xpath_section, self._time_position_element_xpath_section),
         })
         return mappings

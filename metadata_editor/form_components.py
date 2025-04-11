@@ -456,32 +456,14 @@ class StandardIdentifierEditorFormComponent(forms.Form):
     )
 
 
-class TimePeriodEditorFormComponent(forms.Form):
-    time_period_id = forms.CharField(
-        label='ID',
-        required=False,
-        widget=forms.TextInput()
-    )
-
-    time_instant_begin_id = forms.CharField(
-        label='ID',
-        required=False,
-        widget=forms.TextInput()
-    )
-
-    time_instant_begin_position = forms.DateField(
+class TimePeriodDateTimeEditorFormComponent(forms.Form):
+    time_instant_begin_position = forms.DateTimeField(
         label='Begin Time',
         required=False,
         widget=forms.DateTimeInput()
     )
 
-    time_instant_end_id = forms.CharField(
-        label='ID',
-        required=False,
-        widget=forms.TextInput()
-    )
-
-    time_instant_end_position = forms.DateField(
+    time_instant_end_position = forms.DateTimeField(
         label='End Time',
         required=False,
         widget=forms.DateTimeInput()
