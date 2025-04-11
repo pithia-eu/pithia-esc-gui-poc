@@ -112,12 +112,14 @@ class ScientificMetadataManager(models.Manager):
     class Meta:
         abstract = True
 
+
 class OrganisationManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.ORGANISATION)
 
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.ORGANISATION, institution_id, owner_id)
+
 
 class IndividualManager(ScientificMetadataManager):
     def get_queryset(self):
@@ -126,12 +128,14 @@ class IndividualManager(ScientificMetadataManager):
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.INDIVIDUAL, institution_id, owner_id)
 
+
 class ProjectManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.PROJECT)
 
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.PROJECT, institution_id, owner_id)
+
 
 class PlatformManager(ScientificMetadataManager):
     def get_queryset(self):
@@ -140,12 +144,14 @@ class PlatformManager(ScientificMetadataManager):
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.PLATFORM, institution_id, owner_id)
 
+
 class OperationManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.OPERATION)
 
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.OPERATION, institution_id, owner_id)
+
 
 class InstrumentManager(ScientificMetadataManager):
     def get_queryset(self):
@@ -154,12 +160,14 @@ class InstrumentManager(ScientificMetadataManager):
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.INSTRUMENT, institution_id, owner_id)
 
+
 class AcquisitionCapabilitiesManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.ACQUISITION_CAPABILITIES)
 
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.ACQUISITION_CAPABILITIES, institution_id, owner_id)
+
 
 class AcquisitionManager(ScientificMetadataManager):
     def get_queryset(self):
@@ -168,12 +176,14 @@ class AcquisitionManager(ScientificMetadataManager):
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.ACQUISITION, institution_id, owner_id)
 
+
 class ComputationCapabilitiesManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.COMPUTATION_CAPABILITIES)
 
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.COMPUTATION_CAPABILITIES, institution_id, owner_id)
+
 
 class ComputationManager(ScientificMetadataManager):
     def get_queryset(self):
@@ -182,12 +192,14 @@ class ComputationManager(ScientificMetadataManager):
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.COMPUTATION, institution_id, owner_id)
 
+
 class ProcessManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.PROCESS)
 
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.PROCESS, institution_id, owner_id)
+
 
 class DataCollectionManager(ScientificMetadataManager):
     def get_queryset(self):
@@ -196,12 +208,6 @@ class DataCollectionManager(ScientificMetadataManager):
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.DATA_COLLECTION, institution_id, owner_id)
 
-class StaticDatasetManager(ScientificMetadataManager):
-    def get_queryset(self):
-        return super().get_queryset().filter(type=self.model.STATIC_DATASET)
-
-    def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
-        return super()._create_from_xml_string(xml_string, self.model.STATIC_DATASET, institution_id, owner_id)
 
 class StaticDatasetEntryManager(ScientificMetadataManager):
     def get_queryset(self):
@@ -210,6 +216,7 @@ class StaticDatasetEntryManager(ScientificMetadataManager):
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.STATIC_DATASET_ENTRY, institution_id, owner_id)
 
+
 class DataSubsetManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.DATA_SUBSET)
@@ -217,15 +224,18 @@ class DataSubsetManager(ScientificMetadataManager):
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.DATA_SUBSET, institution_id, owner_id)
 
+
 class WorkflowManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.WORKFLOW)
 
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.WORKFLOW, institution_id, owner_id)
-    
+
+
 class InteractionMethodManager(models.Manager):
     pass
+
 
 class APIInteractionMethodManager(models.Manager):
     def get_queryset(self):
@@ -253,7 +263,8 @@ class APIInteractionMethodManager(models.Manager):
         interaction_method.description = description
         interaction_method.save(using=os.environ['DJANGO_RW_DATABASE_NAME'])
         return interaction_method
-    
+
+
 class WorkflowAPIInteractionMethodManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(scientific_metadata__type=apps.get_model('common', 'ScientificMetadata').WORKFLOW, type=self.model.API)
