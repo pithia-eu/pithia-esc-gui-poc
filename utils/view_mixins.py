@@ -3,6 +3,7 @@ from browse.views import (
     _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE,
 )
 from common import models
+from common.constants import STATIC_DATASET_TYPE_PLURAL_READABLE
 from resource_management.views import _INDEX_PAGE_TITLE as _RESOURCE_MANAGEMENT_INDEX_PAGE_TITLE
 from resource_management.views import (
     _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE,
@@ -131,7 +132,7 @@ class StaticDatasetRelatedDownloadViewMixin:
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['resource_list_page_breadcrumb_text'] = models.StaticDataset.type_plural_readable.title()
+        context['resource_list_page_breadcrumb_text'] = STATIC_DATASET_TYPE_PLURAL_READABLE.title()
         return context
 
 

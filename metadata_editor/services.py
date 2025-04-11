@@ -418,13 +418,6 @@ class StaticDatasetEntryEditor(
     def update_description(self, description):
         self.metadata_dict['entryDescription'] = description
 
-    def update_static_dataset_identifier(self, static_dataset_url: str):
-        self.update_child_element_and_remove_if_empty(
-            self.metadata_dict,
-            'staticDatasetIdentifier',
-            self.get_as_xlink_href(static_dataset_url)
-        )
-
     def update_static_dataset_category(self, static_dataset_category_url: str):
         self.update_child_element_and_remove_if_empty(
             self.metadata_dict,

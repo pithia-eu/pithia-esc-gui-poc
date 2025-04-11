@@ -13,3 +13,11 @@ COMPUTATION_TYPE_URL_BASE = f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/com
 FEATURE_OF_INTEREST_URL_BASE = f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/featureOfInterest'
 INSTRUMENT_TYPE_URL_BASE = f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/instrumentType'
 OBSERVED_PROPERTY_URL_BASE = f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/observedProperty'
+# Static dataset
+STATIC_DATASET_TYPE_READABLE = 'static dataset'
+STATIC_DATASET_TYPE_PLURAL_READABLE = 'static datasets'
+STATIC_DATASET_TYPE_DESCRIPTION = '''A listing of events or investigations assembled to
+    aid users in locating data of interest. Each Entry
+    in a Static Dataset has distinct begin and end times
+    and a list of registered Data Subsets with optional
+    DOIs to their persistent storage.'''

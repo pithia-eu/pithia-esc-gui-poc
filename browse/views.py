@@ -31,6 +31,11 @@ from .utils import (
 )
 
 from common import models
+from common.constants import (
+    STATIC_DATASET_TYPE_DESCRIPTION,
+    STATIC_DATASET_TYPE_PLURAL_READABLE,
+    STATIC_DATASET_TYPE_READABLE,
+)
 from common.xml_metadata_mapping_shortcuts import DoiKernelMetadataMappingShortcuts
 from handle_management.services import HandleClient
 from ontology.services import (
@@ -120,13 +125,13 @@ def static_dataset_tree(request):
         },
     })
     return render(request, 'browse/static_dataset_tree.html', {
-        'title': models.StaticDataset.type_plural_readable.title(),
-        'description': models.StaticDataset.type_description_readable,
+        'title': STATIC_DATASET_TYPE_PLURAL_READABLE.title(),
+        'description': STATIC_DATASET_TYPE_DESCRIPTION,
         'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
         'resources': static_dataset_entries,
         'static_dataset_category_properties_by_iri': static_dataset_category_properties_by_iri,
-        'type_readable': models.StaticDataset.type_readable,
-        'type_plural_readable': models.StaticDataset.type_plural_readable,
+        'type_readable': STATIC_DATASET_TYPE_READABLE,
+        'type_plural_readable': STATIC_DATASET_TYPE_PLURAL_READABLE,
     })
 
 

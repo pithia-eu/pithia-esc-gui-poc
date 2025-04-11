@@ -1,5 +1,4 @@
 import logging
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.urls import reverse
 from lxml import etree
@@ -7,6 +6,7 @@ from urllib.parse import quote
 
 from .constants import (
     PITHIA_METADATA_SERVER_HTTPS_URL_BASE,
+    STATIC_DATASET_TYPE_DESCRIPTION,
 )
 from .converted_xml_correction_functions import *
 from .managers import *
@@ -16,7 +16,6 @@ from .xml_metadata_mapping_shortcuts import (
     AcquisitionXmlMappingShortcuts,
     DataSubsetXmlMappingShortcuts,
     StaticDatasetEntryXmlMappingShortcuts,
-    StaticDatasetXmlMappingShortcuts,
     ComputationCapabilitiesXmlMappingShortcuts,
     ComputationXmlMappingShortcuts,
     DataCollectionXmlMappingShortcuts,
@@ -50,7 +49,6 @@ class ScientificMetadata(models.Model):
     COMPUTATION = 'computation'
     PROCESS = 'process'
     DATA_COLLECTION = 'data_collection'
-    STATIC_DATASET = 'static_dataset'
     STATIC_DATASET_ENTRY = 'static_dataset_entry'
     DATA_SUBSET = 'data_subset'
     WORKFLOW = 'workflow'
@@ -67,7 +65,6 @@ class ScientificMetadata(models.Model):
         (COMPUTATION, 'Computation'),
         (PROCESS, 'Process'),
         (DATA_COLLECTION, 'Data Collection'),
-        (STATIC_DATASET, 'Static Dataset'),
         (STATIC_DATASET_ENTRY, 'Static Dataset Entry'),
         (DATA_SUBSET, 'Data Subset'),
         (WORKFLOW, 'Workflow'),
@@ -261,7 +258,6 @@ class ScientificMetadata(models.Model):
     computations = ComputationManager.from_queryset(ComputationQuerySet)()
     processes = ProcessManager.from_queryset(ProcessQuerySet)()
     data_collections = DataCollectionManager.from_queryset(DataCollectionQuerySet)()
-    static_datasets = StaticDatasetManager.from_queryset(StaticDatasetQuerySet)()
     static_dataset_entries = StaticDatasetEntryManager.from_queryset(StaticDatasetEntryQuerySet)()
     data_subsets = DataSubsetManager.from_queryset(DataSubsetQuerySet)()
     workflows = WorkflowManager.from_queryset(WorkflowQuerySet)()
@@ -719,39 +715,8 @@ class DataCollection(ScientificMetadata):
 
 
 class StaticDatasetTypeDescriptionMixin:
-    type_description_readable = '''
-        A listing of events or investigations assembled to
-        aid users in locating data of interest. Each Entry
-        in a Static Dataset has distinct begin and end times
-        and a list of registered Data Subsets with optional
-        DOIs to their persistent storage.'''
+    type_description_readable = STATIC_DATASET_TYPE_DESCRIPTION
 
-
-class StaticDataset(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
-    type_in_metadata_server_url = 'staticDataset'
-    localid_base = 'StaticDataset'
-    weight = 12
-    type_readable = 'static dataset'
-    type_plural_readable = 'static datasets'
-    _browse_detail_page_url_name = 'browse:static_dataset_detail'
-    root_element_name = 'StaticDataset'
-
-    @property
-    def entries(self):
-        return StaticDatasetEntry.objects.referencing_static_dataset_id(self.localid)
-
-    @property
-    def metadata_server_url(self):
-        return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.name}/{self.localid}', safe='/:?=&')
-
-    @property
-    def properties(self):
-        return StaticDatasetXmlMappingShortcuts(self.xml)
-
-    objects = StaticDatasetManager.from_queryset(StaticDatasetQuerySet)()
-
-    class Meta:
-        proxy = True
 
 class StaticDatasetEntry(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
     type_in_metadata_server_url = 'staticDataset'
@@ -769,17 +734,6 @@ class StaticDatasetEntry(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
     @property
     def description(self):
         return self.json['entryDescription']
-    
-    @property
-    def static_dataset_url(self):
-        try:
-            return self.json['staticDatasetIdentifier']['@xlink:href']
-        except KeyError:
-            return ''
-
-    @property
-    def static_dataset(self):
-        return StaticDataset.objects.get_by_metadata_server_url(self.static_dataset_url)
 
     @property
     def data_subsets(self):
@@ -787,10 +741,7 @@ class StaticDatasetEntry(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
 
     @property
     def metadata_server_url(self):
-        try:
-            return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.static_dataset.name}/{self.localid}', safe='/:?=&')
-        except StaticDataset.DoesNotExist:
-            return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}', safe='/:?=&')
+        return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}', safe='/:?=&')
 
     @property
     def properties(self):
@@ -835,17 +786,7 @@ class DataSubset(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
         return StaticDatasetEntry.objects.get_by_metadata_server_url(self.static_dataset_entry_url)
 
     @property
-    def static_dataset(self):
-        return self.static_dataset_entry.static_dataset
-
-    @property
     def metadata_server_url(self):
-        try:
-            return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.static_dataset.name}/{self.localid}', safe='/:?=&')
-        except ObjectDoesNotExist:
-            pass
-        except AttributeError:
-            pass
         return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}', safe='/:?=&')
 
     @property
