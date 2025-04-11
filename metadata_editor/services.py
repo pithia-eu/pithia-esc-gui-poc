@@ -462,10 +462,6 @@ class DataSubsetEditor(
             self.get_as_xlink_href(data_collection_url)
         )
 
-    def update_phenomenon_time(self, update_data: PhenomenonTimeMetadataUpdate):
-        phenomenon_time_key = 'phenomenonTime'
-        self.update_time_period(update_data, phenomenon_time_key)
-
     def update_result_time(self, update_data: ResultTimeMetadataUpdate):
         result_time_key = 'resultTime'
         self.update_time_period(update_data, result_time_key)
