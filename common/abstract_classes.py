@@ -3,6 +3,7 @@ from abc import (
     abstractmethod,
 )
 
+
 class AbstractMetadataDatabaseQueries(ABC):
     @abstractmethod
     def get_by_namespace_and_localid(self, namespace: str, localid: str):
@@ -33,12 +34,14 @@ class AbstractMetadataDatabaseQueries(ABC):
         """
         pass
 
+
 class AbstractOrganisationDatabaseQueries(ABC):
     @abstractmethod
     def for_simple_search(self, query_sections: list):
         """Organisations with a name containing all of the
         passed in query sections.
         """
+
 
 class AbstractIndividualDatabaseQueries(ABC):
     @abstractmethod
@@ -54,6 +57,7 @@ class AbstractIndividualDatabaseQueries(ABC):
         for deletion.
         """
         pass
+
 
 class AbstractProjectDatabaseQueries(ABC):
     @abstractmethod
@@ -77,6 +81,7 @@ class AbstractProjectDatabaseQueries(ABC):
         passed in query sections.
         """
 
+
 class AbstractPlatformDatabaseQueries(ABC):
     @abstractmethod
     def referencing_party_url(self, party_url: str):
@@ -99,6 +104,7 @@ class AbstractPlatformDatabaseQueries(ABC):
         """
         pass
 
+
 class AbstractOperationDatabaseQueries(ABC):
     @abstractmethod
     def referencing_party_url(self, party_url: str):
@@ -120,6 +126,7 @@ class AbstractOperationDatabaseQueries(ABC):
         for deletion.
         """
         pass
+
 
 class AbstractInstrumentDatabaseQueries(ABC):
     @abstractmethod
@@ -156,6 +163,7 @@ class AbstractInstrumentDatabaseQueries(ABC):
         """All distinct Instrument Type URLs among all
         registered Instruments.
         """
+
 
 class AbstractAcquisitionCapabilitiesDatabaseQueries(ABC):
     @abstractmethod
@@ -207,6 +215,7 @@ class AbstractAcquisitionCapabilitiesDatabaseQueries(ABC):
         """
         pass
 
+
 class AbstractAcquisitionDatabaseQueries(ABC):
     @abstractmethod
     def referencing_acquisition_capability_set_url(self, acquisition_capability_set_url: str):
@@ -248,6 +257,7 @@ class AbstractAcquisitionDatabaseQueries(ABC):
         for deletion.
         """
         pass
+
 
 class AbstractComputationCapabilitiesDatabaseQueries(ABC):
     @abstractmethod
@@ -323,6 +333,7 @@ class AbstractComputationCapabilitiesDatabaseQueries(ABC):
         """
         pass
 
+
 class AbstractComputationDatabaseQueries(ABC):
     @abstractmethod
     def referencing_computation_capability_set_url(self, computation_capability_set_url: str):
@@ -352,6 +363,7 @@ class AbstractComputationDatabaseQueries(ABC):
         for deletion.
         """
         pass
+
 
 class AbstractProcessDatabaseQueries(ABC):
     @abstractmethod
@@ -395,6 +407,7 @@ class AbstractProcessDatabaseQueries(ABC):
         for deletion.
         """
         pass
+
 
 class AbstractDataCollectionDatabaseQueries(ABC):
     @abstractmethod
@@ -473,8 +486,6 @@ class AbstractDataCollectionDatabaseQueries(ABC):
         """
         pass
 
-class AbstractStaticDatasetDatabaseQueries(ABC):
-    pass
 
 class AbstractStaticDatasetEntryDatabaseQueries(ABC):
     @abstractmethod
@@ -497,6 +508,7 @@ class AbstractStaticDatasetEntryDatabaseQueries(ABC):
         deletion.
         """
         pass
+
 
 class AbstractDataSubsetDatabaseQueries(ABC):
     @abstractmethod
@@ -522,21 +534,21 @@ class AbstractDataSubsetDatabaseQueries(ABC):
 
     @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
-        """
-        Data Subsets referencing a URL
+        """Data Subsets referencing a URL
         corresponding to a metadata registration that
         is planned for deletion.
         """
         pass
 
+
 class AbstractWorkflowDatabaseQueries(ABC):
     pass
+
 
 class AbstractHandleURLMappingDatabaseQueries(ABC):
     @abstractmethod
     def for_url(self, url):
-        """
-        Handle to URL mappings for a given URL. One
+        """Handle to URL mappings for a given URL. One
         URL may be registered with many handles.
         """
         pass

@@ -11,6 +11,7 @@ from utils.url_helpers import (
     get_namespace_and_localid_from_resource_url,
 )
 
+
 class ScientificMetadataQuerySet(models.QuerySet, AbstractMetadataDatabaseQueries):
     def get_by_namespace_and_localid(self, namespace: str, localid: str):
         return self.get(json__identifier__PITHIA_Identifier__namespace=namespace, json__identifier__PITHIA_Identifier__localID=localid)
@@ -50,6 +51,7 @@ class OrganisationQuerySet(ScientificMetadataQuerySet, AbstractOrganisationDatab
             search_query &= Q(json__name__icontains=qs)
         return self.filter(search_query)
 
+
 class IndividualQuerySet(ScientificMetadataQuerySet, AbstractIndividualDatabaseQueries):
     def referencing_organisation_url(self, organisation_url: str):
         return self.filter(**{'json__organisation__@xlink:href': organisation_url})
@@ -57,6 +59,7 @@ class IndividualQuerySet(ScientificMetadataQuerySet, AbstractIndividualDatabaseQ
     def for_delete_chain(self, metadata_server_url: str):
         referencing_organisation_url = self.referencing_organisation_url(metadata_server_url)
         return referencing_organisation_url
+
 
 class ProjectQuerySet(ScientificMetadataQuerySet, AbstractProjectDatabaseQueries):
     def referencing_party_url(self, party_url: str):
@@ -72,6 +75,7 @@ class ProjectQuerySet(ScientificMetadataQuerySet, AbstractProjectDatabaseQueries
             search_query &= Q(json__name__icontains=qs)
         return self.filter(search_query)
 
+
 class PlatformQuerySet(ScientificMetadataQuerySet, AbstractPlatformDatabaseQueries):
     def referencing_party_url(self, party_url: str):
         return self.filter(**{'json__relatedParty__contains': [{'ResponsiblePartyInfo': {'party': {'@xlink:href': party_url}}}]})
@@ -84,6 +88,7 @@ class PlatformQuerySet(ScientificMetadataQuerySet, AbstractPlatformDatabaseQueri
         referencing_other_platforms = self.referencing_platform_url(metadata_server_url)
         return referencing_party_url | referencing_other_platforms
 
+
 class OperationQuerySet(ScientificMetadataQuerySet, AbstractOperationDatabaseQueries):
     def referencing_party_url(self, party_url: str):
         return self.filter(**{'json__relatedParty__contains': [{'ResponsiblePartyInfo': {'party': {'@xlink:href': party_url}}}]})
@@ -95,6 +100,7 @@ class OperationQuerySet(ScientificMetadataQuerySet, AbstractOperationDatabaseQue
         referencing_party_url = self.referencing_party_url(metadata_server_url)
         referencing_platform_url = self.referencing_platform_url(metadata_server_url)
         return referencing_party_url | referencing_platform_url
+
 
 class InstrumentQuerySet(ScientificMetadataQuerySet, AbstractInstrumentDatabaseQueries):
     def distinct_instrument_type_urls(self):
@@ -129,6 +135,7 @@ class InstrumentQuerySet(ScientificMetadataQuerySet, AbstractInstrumentDatabaseQ
     def for_delete_chain(self, metadata_server_url: str):
         referencing_party_url = self.referencing_party_url(metadata_server_url)
         return referencing_party_url
+
 
 class AcquisitionCapabilitiesQuerySet(ScientificMetadataQuerySet, AbstractAcquisitionCapabilitiesDatabaseQueries):
     def referencing_instrument_url(self, instrument_url: str):
@@ -187,6 +194,7 @@ class AcquisitionCapabilitiesQuerySet(ScientificMetadataQuerySet, AbstractAcquis
         referencing_operational_mode_urls = self.referencing_operational_mode_urls(operational_mode_urls)
         return referencing_instrument_url | referencing_operational_mode_urls
 
+
 class AcquisitionQuerySet(ScientificMetadataQuerySet, AbstractAcquisitionDatabaseQueries):
     def referencing_acquisition_capability_set_url(self, acquisition_capability_set_url: str):
         return self.filter(**{'json__capabilityLinks__capabilityLink__contains': [{'acquisitionCapabilities': {'@xlink:href': acquisition_capability_set_url}}]})
@@ -219,6 +227,7 @@ class AcquisitionQuerySet(ScientificMetadataQuerySet, AbstractAcquisitionDatabas
         referencing_acquisition_capability_set_url = self.referencing_acquisition_capability_set_url(metadata_server_url)
         referencing_platform_url = self.referencing_platform_url(metadata_server_url)
         return referencing_instrument_url | referencing_acquisition_capability_set_url | referencing_platform_url
+
 
 class ComputationCapabilitiesQuerySet(ScientificMetadataQuerySet, AbstractComputationCapabilitiesDatabaseQueries):
     def referencing_computation_type_urls(self, computation_type_urls: list):
@@ -320,6 +329,7 @@ class ComputationCapabilitiesQuerySet(ScientificMetadataQuerySet, AbstractComput
         referencing_computation_capability_set_url = self.referencing_computation_capability_set_url(metadata_server_url)
         return referencing_computation_capability_set_url
 
+
 class ComputationQuerySet(ScientificMetadataQuerySet, AbstractComputationDatabaseQueries):
     def referencing_computation_capability_set_url(self, computation_capability_set_url: str):
         return self.filter(**{'json__capabilityLinks__capabilityLink__contains': [{'computationCapabilities': {'@xlink:href': computation_capability_set_url}}]})
@@ -344,6 +354,7 @@ class ComputationQuerySet(ScientificMetadataQuerySet, AbstractComputationDatabas
     def for_delete_chain(self, metadata_server_url: str):
         referencing_computation_capability_set_url = self.referencing_computation_capability_set_url(metadata_server_url)
         return referencing_computation_capability_set_url
+
 
 class ProcessQuerySet(ScientificMetadataQuerySet, AbstractProcessDatabaseQueries):
     def referencing_acquisition_url(self, acquisition_url: str):
@@ -386,6 +397,7 @@ class ProcessQuerySet(ScientificMetadataQuerySet, AbstractProcessDatabaseQueries
         referencing_acquisition_url = self.referencing_acquisition_url(metadata_server_url)
         referencing_computation_url = self.referencing_computation_url(metadata_server_url)
         return referencing_acquisition_url | referencing_computation_url
+
 
 class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionDatabaseQueries):
     def referencing_feature_of_interest_urls(self, feature_of_interest_urls: list):
@@ -504,8 +516,6 @@ class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionD
         referencing_process_url = self.referencing_process_url(metadata_server_url)
         return referencing_party_url | referencing_project_url | referencing_process_url
 
-class StaticDatasetQuerySet(ScientificMetadataQuerySet, AbstractStaticDatasetDatabaseQueries):
-    pass
 
 class StaticDatasetEntryQuerySet(ScientificMetadataQuerySet, AbstractStaticDatasetEntryDatabaseQueries):
     def referencing_static_dataset_url(self, static_dataset_url: str):
@@ -517,6 +527,7 @@ class StaticDatasetEntryQuerySet(ScientificMetadataQuerySet, AbstractStaticDatas
     def for_delete_chain(self, metadata_server_url: str):
         referencing_static_dataset_url = self.referencing_static_dataset_url(metadata_server_url)
         return referencing_static_dataset_url
+
 
 class DataSubsetQuerySet(ScientificMetadataQuerySet, AbstractDataSubsetDatabaseQueries):
     def referencing_static_dataset_entry_url(self, static_dataset_entry_url: str):
@@ -533,9 +544,11 @@ class DataSubsetQuerySet(ScientificMetadataQuerySet, AbstractDataSubsetDatabaseQ
         referencing_static_dataset_entry_url = self.referencing_static_dataset_entry_url(metadata_server_url)
         return referencing_data_collection_url | referencing_static_dataset_entry_url
 
+
 class WorkflowQuerySet(ScientificMetadataQuerySet, AbstractWorkflowDatabaseQueries):
     pass
-    
+
+
 class HandleURLMappingQuerySet(AbstractHandleURLMappingDatabaseQueries, models.QuerySet):
     def for_url(self, url):
         return self.filter(url=url)
