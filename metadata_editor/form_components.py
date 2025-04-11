@@ -470,9 +470,9 @@ class TimePeriodEditorFormComponent(forms.Form):
     )
 
     time_instant_begin_position = forms.DateField(
-        label='Time Position',
+        label='Begin Time',
         required=False,
-        widget=forms.DateInput()
+        widget=forms.DateTimeInput()
     )
 
     time_instant_end_id = forms.CharField(
@@ -482,11 +482,13 @@ class TimePeriodEditorFormComponent(forms.Form):
     )
 
     time_instant_end_position = forms.DateField(
-        label='Time Position',
+        label='End Time',
         required=False,
-        widget=forms.DateInput()
+        widget=forms.DateTimeInput()
     )
 
+
+class TimePeriodValidationEditorFormComponent(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
         time_instant_begin_position = cleaned_data.get('time_instant_begin_position')

@@ -165,13 +165,17 @@ class OperationEditorForm(
     LocationEditorFormComponent,
     RelatedPartiesEditorFormComponent,
     StatusEditorFormComponent,
-    TimePeriodEditorFormComponent
-):
+    TimePeriodEditorFormComponent,
+    TimePeriodValidationEditorFormComponent):
     def __init__(self, *args, platform_choices=(), child_operation_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['platforms'].help_text = 'The operated platform(s).'
         self.fields['platforms'].choices = platform_choices
         self.fields['child_operations'].choices = child_operation_choices
+        self.fields['time_instant_begin_position'].label = 'Start Date'
+        self.fields['time_instant_begin_position'].widget = forms.DateInput()
+        self.fields['time_instant_end_position'].label = 'End Date'
+        self.fields['time_instant_end_position'].widget = forms.DateInput()
 
     platforms = forms.MultipleChoiceField(
         label='Platforms',
@@ -568,15 +572,13 @@ class DataCollectionEditorForm(
 
 class StaticDatasetEntryEditorForm(
     BaseEditorForm,
-    TimePeriodEditorFormComponent):
+    TimePeriodEditorFormComponent,
+    TimePeriodValidationEditorFormComponent):
     def __init__(self, *args, static_dataset_category_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['static_dataset_category'].choices = static_dataset_category_choices
         self.fields['description'].required = True
         self.fields['description'].help_text = 'A free-text description of the static dataset entry contents.'
-        self.fields['time_period_id'].required = True
-        self.fields['time_instant_begin_id'].required = True
-        self.fields['time_instant_end_id'].required = True
 
     static_dataset_category = forms.ChoiceField(
         label='Static Dataset Category',
@@ -586,30 +588,21 @@ class StaticDatasetEntryEditorForm(
         })
     )
 
-    time_instant_begin_position = forms.DateTimeField(
-        label='Time Position',
-        required=True,
-        widget=forms.DateTimeInput()
-    )
-
-    time_instant_end_position = forms.DateTimeField(
-        label='Time Position',
-        required=True,
-        widget=forms.DateTimeInput()
-    )
-
 
 class DataSubsetForm(
     BaseEditorForm,
     DataLevelFormComponent,
     QualityAssessmentFormComponent,
-    SourceMetadataFormComponent):
+    SourceMetadataFormComponent,
+    TimePeriodEditorFormComponent):
     def __init__(self, *args, data_collection_choices=(), static_dataset_entry_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['data_collection'].choices = data_collection_choices
         self.fields['entry_identifier'].choices = static_dataset_entry_choices
         self.fields['description'].help_text = 'A free-text description of the data subset contents.'
         self.fields['data_quality_flags'].required = True
+        self.fields['time_instant_begin_position'].required = True
+        self.fields['time_instant_end_position'].required = True
 
     data_collection = forms.ChoiceField(
         label='Subset of Data Collection',
@@ -630,36 +623,6 @@ class DataSubsetForm(
     )
 
     # Result time
-    time_period_id = forms.CharField(
-        label='ID',
-        required=True,
-        widget=forms.TextInput()
-    )
-
-    time_instant_begin_id = forms.CharField(
-        label='ID',
-        required=True,
-        widget=forms.TextInput()
-    )
-
-    time_instant_begin_position = forms.DateTimeField(
-        label='Time Position',
-        required=True,
-        widget=forms.DateTimeInput()
-    )
-
-    time_instant_end_id = forms.CharField(
-        label='ID',
-        required=True,
-        widget=forms.TextInput()
-    )
-
-    time_instant_end_position = forms.DateTimeField(
-        label='Time Position',
-        required=True,
-        widget=forms.DateTimeInput()
-    )
-
     time_periods_json = forms.JSONField(
         required=False,
         initial=list,
