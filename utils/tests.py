@@ -8,8 +8,7 @@ from .url_helpers import (
 
 class MetadataUrlDivisionTestCase(SimpleTestCase):
     def test_valid_metadata_url_is_divided_correctly(self):
-        """
-        A given metadata URL is split up into:
+        """A given metadata URL is split up into:
         - URL base (https://metadata.pithia.eu/resources/2.2)
         - resource type (e.g. organisation)
         - namespace (e.g. pithia)
@@ -22,8 +21,7 @@ class MetadataUrlDivisionTestCase(SimpleTestCase):
         self.assertEquals(url_division['localid'], 'Project_TEST')
 
     def test_unexpected_metadata_url_is_divided_without_an_error_1(self):
-        """
-        A metadata URL with an unusual sequence is divided
+        """A metadata URL with an unusual sequence is divided
         into separate components, despite not being valid.
         """
         try:
@@ -32,8 +30,7 @@ class MetadataUrlDivisionTestCase(SimpleTestCase):
             self.fail('Metadata URL division shouldn\'t fail on URLs with more forward slashes than a typical metadata URL.')
 
     def test_unexpected_metadata_url_is_divided_without_an_error_2(self):
-        """
-        A metadata URL with an unusual sequence is divided
+        """A metadata URL with an unusual sequence is divided
         into separate components, despite not being valid.
         """
         try:
@@ -44,8 +41,7 @@ class MetadataUrlDivisionTestCase(SimpleTestCase):
 
 class OperationalModeUrlDivisionTestCase(SimpleTestCase):
     def test_valid_operational_mode_url_is_divided_correctly(self):
-        """
-        A given operational mode URL is split up into:
+        """A given operational mode URL is split up into:
         - URL base (https://metadata.pithia.eu/resources/2.2)
         - resource type (e.g. organisation)
         - namespace (e.g. pithia)
@@ -57,8 +53,7 @@ class OperationalModeUrlDivisionTestCase(SimpleTestCase):
         self.assertEquals(url_division['op_mode_id'], 'ionogram')
 
     def test_unexpected_operational_mode_url_is_divided_as_expected_1(self):
-        """
-        An operational mode URL with an unusual sequence is
+        """An operational mode URL with an unusual sequence is
         divded into separate components, despite not being
         valid.
         """
@@ -67,8 +62,7 @@ class OperationalModeUrlDivisionTestCase(SimpleTestCase):
         self.assertEquals(url_division['op_mode_id'], 'sweep')
 
     def test_unexpected_operational_mode_url_is_divided_as_expected_2(self):
-        """
-        An operational mode URL with an unusual sequence is
+        """An operational mode URL with an unusual sequence is
         divded into separate components, despite not being
         valid.
         """
@@ -77,8 +71,7 @@ class OperationalModeUrlDivisionTestCase(SimpleTestCase):
         self.assertEquals(url_division['op_mode_id'], 'test')
 
     def test_unexpected_operational_mode_url_is_divided_as_expected_3(self):
-        """
-        An operational mode URL with an unusual sequence is
+        """An operational mode URL with an unusual sequence is
         divded into separate components, despite not being
         valid.
         """
