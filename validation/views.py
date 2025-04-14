@@ -16,6 +16,7 @@ from openapi_spec_validator import validate_spec_url
 from urllib.error import HTTPError
 
 from .file_wrappers import (
+    AcquisitionCapabilitiesXMLMetadataFile,
     InstrumentXMLMetadataFile,
     XMLMetadataFile,
 )
@@ -123,6 +124,16 @@ class QuickInlineInstrumentUpdateValidationFormView(QuickInlineValidationFormVie
         })
 
         return super().validate(request, xml_metadata_file)
+
+
+@method_decorator(login_session_institution_required, name='dispatch')
+class QuickInlineAcquisitionCapabilitiesRegistrationValidationFormView(QuickInlineRegistrationValidationFormView):
+    file_wrapper_class = AcquisitionCapabilitiesXMLMetadataFile
+
+
+@method_decorator(login_session_institution_required, name='dispatch')
+class QuickInlineAcquisitionCapabilitiesUpdateValidationFormView(QuickInlineUpdateValidationFormView):
+    file_wrapper_class = AcquisitionCapabilitiesXMLMetadataFile
 
 
 @method_decorator(login_session_institution_required, name='dispatch')

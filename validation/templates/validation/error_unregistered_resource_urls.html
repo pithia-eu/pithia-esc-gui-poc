@@ -1,9 +1,16 @@
 <div class="pb-1">
-    One or multiple resources referenced by the xlink:href
-    attribute have not been registered with the e-Science
-    Centre.
+    {% block main_error_text %}
+    One or multiple resources referenced by the
+    <span class="font-monospace">xlink:href</span>
+    attribute have not been registered with the
+    e-Science Centre.
+    {% endblock main_error_text %}
 </div>
-<div class="pb-1">Unregistered document URLs:</div>
+<div class="pb-1">
+    {% block pre_list_text %}
+    Unregistered document URLs:
+    {% endblock pre_list_text %}
+</div>
 <ul>
     {% for url in unregistered_resource_urls %}
     <li>{{ url }}</li>

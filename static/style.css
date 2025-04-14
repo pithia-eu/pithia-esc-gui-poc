@@ -87,7 +87,7 @@ a {
     word-break: break-word;
 }
 
-a:not(header a, a.btn, a.dropdown-item, a.nav-link),
+a:not(header a, a.btn, a.dropdown-item, a.nav-link, a.alert-link),
 a.icon-link:not(a.btn.icon-link),
 .btn-link {
     color: var(--pithia-blue);
@@ -95,9 +95,9 @@ a.icon-link:not(a.btn.icon-link),
     text-decoration-color: var(--pithia-blue);
 }
 
-a:not(header a, a.btn, a.dropdown-item, a.nav-link):hover,
-a:not(header a, a.btn, a.dropdown-item, a.nav-link):focus,
-a:not(header a, a.btn, a.dropdown-item, a.nav-link):active,
+a:not(header a, a.btn, a.dropdown-item, a.nav-link, a.alert-link):hover,
+a:not(header a, a.btn, a.dropdown-item, a.nav-link, a.alert-link):focus,
+a:not(header a, a.btn, a.dropdown-item, a.nav-link, a.alert-link):active,
 a.icon-link:not(a.btn.icon-link):hover,
 a.icon-link:not(a.btn.icon-link):focus,
 a.icon-link:not(a.btn.icon-link):active,
@@ -111,6 +111,7 @@ a.icon-link:not(a.btn.icon-link):active,
 
 a:not(a.btn, a.dropdown-item, header a, a.nav-link, .card-menu a, .list-group-item a),
 a.icon-link:not(a.btn.icon-link),
+a.alert-link,
 .btn-link {
     text-decoration: underline;
 }
@@ -121,6 +122,9 @@ a:not(a.btn, a.dropdown-item, header a, a.nav-link, .card-menu a, .list-group-it
 a.icon-link:not(a.btn.icon-link):hover,
 a.icon-link:not(a.btn.icon-link):focus,
 a.icon-link:not(a.btn.icon-link):active,
+a.alert-link:hover,
+a.alert-link:hover,
+a.alert-link:hover,
 .btn-link:hover,
 .btn-link:focus,
 .btn-link:active {
@@ -998,9 +1002,6 @@ as Bootstrap styling. */
     list-style-type: disc;
     margin-block: 0;
     margin-left: 2rem;
-}
-
-.btn-expand-resource-description {
 }
 
 .btn-expand-resource-description.btn-link {

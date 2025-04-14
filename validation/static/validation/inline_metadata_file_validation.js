@@ -418,7 +418,7 @@ export class MetadataValidationStatusUIController {
                 </svg>${failureText}
             </summary>
             <div class="pt-2">
-                <ul>
+                <ul class="d-flex flex-column row-gap-2">
                     ${errorLisString}
                 </ul>
             </div>
