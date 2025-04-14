@@ -197,6 +197,11 @@ class AcquisitionCapabilitiesRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('acquisition capabilities')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['inline_validation_url'] = reverse_lazy('validation:new_acquisition_capabilities_registration')
+        return context
+
 
 class AcquisitionRegisterFormView(ResourceRegisterFormView):
     model = models.Acquisition

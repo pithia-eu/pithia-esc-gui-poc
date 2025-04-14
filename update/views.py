@@ -198,6 +198,11 @@ class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:acquisition_capability_set'
     success_url = reverse_lazy('resource_management:acquisition_capability_sets')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['inline_validation_url'] = reverse_lazy('validation:acquisition_capabilities_update')
+        return context
+
 
 class AcquisitionUpdateFormView(ResourceUpdateFormView):
     model = models.Acquisition
