@@ -193,7 +193,9 @@ class MetadataFileMetadataURLReferencesValidator:
             elif not is_pointing_to_registered_resource:
                 invalid_urls_dict[cls.UNREGISTERED_RESOURCE_URLS_KEY].append(resource_url)
                 invalid_urls_dict[cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY].append(type_of_missing_resource)
-        # Remove duplicate resource URL types
+        # Remove duplicate URLs/URL types
+        invalid_urls_dict[cls.INCORRECTLY_STRUCTURED_URLS_KEY] = list(set(invalid_urls_dict[cls.INCORRECTLY_STRUCTURED_URLS_KEY]))
+        invalid_urls_dict[cls.UNREGISTERED_RESOURCE_URLS_KEY] = list(set(invalid_urls_dict[cls.UNREGISTERED_RESOURCE_URLS_KEY]))
         invalid_urls_dict[cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY] = list(set(invalid_urls_dict[cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY]))
         
         return invalid_urls_dict
@@ -290,12 +292,26 @@ class MetadataFileMetadataURLReferencesValidator:
         invalid_resource_urls = cls.is_each_potential_resource_url_valid(xml_metadata_file)
         invalid_operational_mode_urls = cls.is_each_potential_operational_mode_url_valid(xml_metadata_file)
 
-        # Process the returned invalid resource URLs.
-        incorrectly_structured_urls = invalid_resource_urls.get(cls.INCORRECTLY_STRUCTURED_URLS_KEY, []) + invalid_operational_mode_urls.get(cls.INCORRECTLY_STRUCTURED_URLS_KEY, [])
-        unregistered_resource_urls = invalid_resource_urls.get(cls.UNREGISTERED_RESOURCE_URLS_KEY, []) + invalid_operational_mode_urls.get(cls.UNREGISTERED_RESOURCE_URLS_KEY, [])
-        unregistered_resource_url_types = invalid_resource_urls.get(cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY, []) + invalid_operational_mode_urls.get(cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY, [])
-        unregistered_operational_mode_urls = invalid_operational_mode_urls.get(cls.UNREGISTERED_OPERATIONAL_MODE_URLS_KEY, [])
+        # Remove duplicates and combine invalid URLs with
+        # invalid URLs derived from operational mode URLs.
+        incorrectly_structured_urls = list(set(
+            invalid_resource_urls.get(cls.INCORRECTLY_STRUCTURED_URLS_KEY, [])
+            + invalid_operational_mode_urls.get(cls.INCORRECTLY_STRUCTURED_URLS_KEY, [])
+        ))
+        unregistered_resource_urls = list(set(
+            invalid_resource_urls.get(cls.UNREGISTERED_RESOURCE_URLS_KEY, [])
+            + invalid_operational_mode_urls.get(cls.UNREGISTERED_RESOURCE_URLS_KEY, [])
+        ))
+        unregistered_resource_url_types = list(set(
+            invalid_resource_urls.get(cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY, []) +
+            invalid_operational_mode_urls.get(cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY, [])
+        ))
+        unregistered_operational_mode_urls = list(set(
+            invalid_operational_mode_urls.get(cls.UNREGISTERED_OPERATIONAL_MODE_URLS_KEY, [])
+        ))
         
+        # Return error messages depending on the what problem
+        # occurred.
         if len(incorrectly_structured_urls) > 0:
             error_msg = render_to_string(
                 'validation/error_incorrectly_structured_urls.html',
