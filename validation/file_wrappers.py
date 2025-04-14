@@ -126,7 +126,7 @@ class InstrumentXMLMetadataFile(XMLMetadataFile):
     def operational_mode_ids(self):
         # Operational mode IDs are the only values enclosed in <id></id> tags
         return [
-            om_element.tex
+            om_element.text
             for om_element in self._parsed_xml.findall('.//{%s}id' % Namespace.PITHIA)
         ]
     
