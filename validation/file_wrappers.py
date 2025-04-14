@@ -108,8 +108,8 @@ class DataSubsetXMLMetadataFile(XMLMetadataFile):
     def _xml_string_with_spoofed_doi(self, xml_string):
         parsed_xml_string = self._parse_xml_string(xml_string)
         valid_doi_name = '10.000/000'
-        doi_name_element = parsed_xml_string.find('.//{%s}referentDoiName' % Namespace.PITHIA)
-        doi_registration_agency_name_element = parsed_xml_string.find('.//{%s}registrationAgencyDoiName' % Namespace.PITHIA)
+        doi_name_element = parsed_xml_string.find('.//{%s}referentDoiName' % Namespace.DOI)
+        doi_registration_agency_name_element = parsed_xml_string.find('.//{%s}registrationAgencyDoiName' % Namespace.DOI)
         if doi_name_element is not None:
             doi_name_element.text = valid_doi_name
         if doi_registration_agency_name_element is not None:
