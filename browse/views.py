@@ -401,7 +401,6 @@ class ResourceDetailView(TemplateView):
             'Computations': self.resource.properties.computation_urls,
             'Processes': self.resource.properties.process_urls,
             'Data Collections': self.resource.properties.data_collection_urls,
-            'Static Datasets': self.resource.properties.static_dataset_urls,
             'Static Dataset Entries': self.resource.properties.static_dataset_entry_urls,
         }
 

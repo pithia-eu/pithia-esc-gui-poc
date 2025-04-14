@@ -38,14 +38,6 @@
     {% include 'browse/detail/components/static_dataset_entry/phenomenon_time_section_content.html' %}
 </section>
 {% endif %}
-{% if resource.properties.static_dataset_urls %}
-<section class="responsive-resource-detail-section resource-detail-section">
-<h2 class="fs-6 fw-semibold mb-2">Static Dataset</h2>
-    {% with value=resource.properties.static_dataset_urls.0 %}
-    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-    {% endwith %}
-</section>
-{% endif %}
 {% endblock post_description_content %}
 
 {# Appears in aside section #}
@@ -62,14 +54,6 @@
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Phenomenon Time</h2>
     {% include 'browse/detail/components/static_dataset_entry/phenomenon_time_section_content.html' %}
-</section>
-{% endif %}
-{% if resource.properties.static_dataset_urls %}
-<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <h2>Static Dataset</h2>
-    {% with value=resource.properties.static_dataset_urls.0 %}
-    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-    {% endwith %}
 </section>
 {% endif %}
 {% endblock aside_extra_content_after_default %}
