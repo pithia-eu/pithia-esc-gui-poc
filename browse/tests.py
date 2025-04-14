@@ -86,7 +86,7 @@ class MultipleMetadataUrlMappingTestCase(TestCase):
         # Test data
         instrument_resource_url_with_op_mode = 'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test#instrumentoperationalmode1'
         process_metadata_url = 'https://metadata.pithia.eu/resources/2.2/process/test/CompositeProcess_Test'
-        static_dataset_related_resource_url = 'https://metadata.pithia.eu/resources/2.2/staticDataset/test/Test/DataSubset_Test-2023-01-01_DataCollectionTest'
+        static_dataset_related_resource_url = 'https://metadata.pithia.eu/resources/2.2/staticDataset/test/DataSubset_Test'
 
         # Operational mode URL
         converted_instrument_resource_url_with_op_mode = map_metadata_server_urls_to_browse_urls([instrument_resource_url_with_op_mode])[0]
