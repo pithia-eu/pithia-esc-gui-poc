@@ -320,10 +320,15 @@ class MetadataFileMetadataURLReferencesValidator:
             unregistered_resource_url_errors.append(error_msg)
 
         if len(unregistered_operational_mode_urls) > 0:
+            file_upload_registration_url_and_url_texts = list(map(
+                create_register_url_from_resource_type_from_resource_url,
+                unregistered_resource_url_types
+            ))
             error_msg = render_to_string(
                 'validation/error_unregistered_operational_mode_urls.html',
                 context={
                     'unregistered_resource_urls': unregistered_operational_mode_urls,
+                    'file_upload_registration_url_and_url_texts': file_upload_registration_url_and_url_texts,
                 }
             )
             unregistered_operational_mode_url_errors.append(error_msg)
