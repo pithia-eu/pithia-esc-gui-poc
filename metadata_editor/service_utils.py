@@ -1038,7 +1038,7 @@ class TimePeriodMetadataEditor(BaseMetadataComponentEditor):
         self.metadata_dict.setdefault(time_period_container_element_key, {})
         self.metadata_dict[time_period_container_element_key] = self._update_time_period(
             update_data,
-            {}
+            self.metadata_dict.get(time_period_container_element_key, {})
         )
         
 
