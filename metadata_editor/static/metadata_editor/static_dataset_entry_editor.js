@@ -3,6 +3,9 @@ import {
     validateAndRegister,
 } from "/static/metadata_editor/components/base_editor.js";
 import {
+    setupPhenomenonTimeSection,
+} from "/static/metadata_editor/components/static_dataset_entry/phenomenon_time_section.js";
+import {
     setupTimePeriodElements,
 } from "/static/metadata_editor/components/time_period.js";
 import {
@@ -37,5 +40,6 @@ editorForm.addEventListener("submit", async e => {
 window.addEventListener("load", () => {
     updateNameInputHelpText();
     setupWizardManualAndAutoSave();
+    setupPhenomenonTimeSection();
     setupTimePeriodElements("input[name='time_instant_begin_position']", "input[name='time_instant_end_position']");
 });
