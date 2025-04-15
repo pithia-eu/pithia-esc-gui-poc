@@ -308,6 +308,7 @@ class DataCollectionListView(ResourceListView):
         ACTIVITY_INDICATORS_KEY = 'Activity Indicators'
         SENSOR_MEASUREMENTS_KEY = 'Sensor Measurements'
         COMPUTATIONAL_MODELS_KEY = 'Computational Models'
+        ANNOTATIONS_KEY = 'Annotations'
         MIXED_KEY = 'Mixed'
         OTHER_KEY = 'Other'
 
@@ -315,6 +316,7 @@ class DataCollectionListView(ResourceListView):
             ACTIVITY_INDICATORS_KEY: [],
             SENSOR_MEASUREMENTS_KEY: [],
             COMPUTATIONAL_MODELS_KEY: [],
+            ANNOTATIONS_KEY: [],
             MIXED_KEY: [],
             OTHER_KEY: [],
         }
@@ -330,6 +332,7 @@ class DataCollectionListView(ResourceListView):
             is_activity_indicator = any([url in urls_of_activity_indicators for url in type_urls])
             is_sensor_measurement = any([re.search('\/instrumentType/(.*)$', url) for url in type_urls])
             is_computational_model = any([re.search('\/computationType/(.*)$', url) for url in type_urls])
+            is_annotation = any([re.search('\/annotationType/(.*)$', url) for url in type_urls])
 
             if sum([is_sensor_measurement, is_computational_model]) > 1:
                 data_collections_by_type[MIXED_KEY].append(dc)
@@ -339,6 +342,8 @@ class DataCollectionListView(ResourceListView):
                 data_collections_by_type[SENSOR_MEASUREMENTS_KEY].append(dc)
             elif is_computational_model:
                 data_collections_by_type[COMPUTATIONAL_MODELS_KEY].append(dc)
+            elif is_annotation:
+                data_collections_by_type[ANNOTATIONS_KEY].append(dc)
             else:
                 data_collections_by_type[OTHER_KEY].append(dc)
 
