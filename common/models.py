@@ -143,8 +143,12 @@ class ScientificMetadata(models.Model):
         return PITHIA_METADATA_SERVER_HTTPS_URL_BASE
 
     @property
+    def _metadata_server_url(self):
+        return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}'
+
+    @property
     def metadata_server_url(self):
-        return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}', safe='/:?=&')
+        return quote(self._metadata_server_url, safe='/:?=&')
     
     @property
     def converted_xml_correction_function(self):
@@ -740,8 +744,16 @@ class StaticDatasetEntry(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
         return DataSubset.objects.referencing_static_dataset_entry_id(self.localid)
 
     @property
-    def metadata_server_url(self):
-        return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}', safe='/:?=&')
+    def _static_dataset_category_localid(self):
+        return self.properties.static_dataset_category.split('/')[-1]
+
+    @property
+    def _metadata_server_url(self):
+        try:
+            return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self._static_dataset_category_localid}/{self.namespace}/{self.localid}'
+        except Exception:
+            logger.exception('Encountered an error trying to create static dataset entry metadata server URL.')
+            return super()._metadata_server_url
 
     @property
     def properties(self):
@@ -786,8 +798,12 @@ class DataSubset(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
         return StaticDatasetEntry.objects.get_by_metadata_server_url(self.static_dataset_entry_url)
 
     @property
-    def metadata_server_url(self):
-        return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}', safe='/:?=&')
+    def _metadata_server_url(self):
+        try:
+            return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.static_dataset_entry.pk}/{self.localid}'
+        except Exception:
+            logger.exception('Encountered an error trying to create data subset metadata server URL.')
+            return super()._metadata_server_url
 
     @property
     def properties(self):
