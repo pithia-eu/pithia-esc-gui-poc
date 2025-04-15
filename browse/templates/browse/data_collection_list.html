@@ -24,11 +24,13 @@ Unlike <a href="{% url 'browse:static_dataset_tree' %}" class="link-underline-by
                 {% for key, value in resources.items %}
                 {% if value %}
                 <li class="my-1">
-                    {% with section_name=key.split|join:'-'|lower %}
-                    <a href="#{{ section_name }}-heading" class="link-plain-by-default">
-                        {{ key }}
-                    </a>
-                    {% endwith %}
+                    <div class="d-inline-flex justify-content-between column-gap-4 w-100">
+                        {% with section_name=key.split|join:'-'|lower %}
+                        <a href="#{{ section_name }}-heading" class="link-plain-by-default">
+                            {{ key }}</a>
+                        {% endwith %}
+                        <span class="text-body-secondary ms-auto">{{ value|length }}</span>
+                    </div>
                 </li>
                 {% endif %}
                 {% endfor %}
@@ -45,11 +47,13 @@ Unlike <a href="{% url 'browse:static_dataset_tree' %}" class="link-underline-by
             {% for key, value in resources.items %}
             {% if value %}
             <li class="my-1">
-                {% with section_name=key.split|join:'-'|lower %}
-                <a href="#{{ section_name }}-heading" class="link-plain-by-default">
-                    {{ key }}
-                </a>
-                {% endwith %}
+                <div class="d-inline-flex justify-content-between column-gap-4 w-100">
+                    {% with section_name=key.split|join:'-'|lower %}
+                    <a href="#{{ section_name }}-heading" class="link-plain-by-default">
+                        {{ key }}</a>
+                    {% endwith %}
+                    <span class="text-body-secondary ms-auto">{{ value|length }}</span>
+                </div>
             </li>
             {% endif %}
             {% endfor %}

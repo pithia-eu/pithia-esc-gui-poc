@@ -19,12 +19,14 @@
                 {% if iri == 'other' and not static_dataset_category.entries %}
                 {% else %}
                 <li class="my-1">
-                    {% with section_name=static_dataset_category.name|lower %}
-                    <a href="#{{ section_name }}-heading" class="link-plain-by-default">
-                        {{ static_dataset_category.name }}
-                    </a>
-                    {% endwith %}
-                    <span class="text-body-secondary">{{ static_dataset_category.entries|length }}</span>
+                    <div class="d-inline-flex justify-content-between column-gap-4 w-100">
+                        {% with section_name=static_dataset_category.name|lower %}
+                        <a href="#{{ section_name }}-heading" class="link-plain-by-default">
+                            {{ static_dataset_category.name }}
+                        </a>
+                        {% endwith %}
+                        <span class="text-body-secondary">{{ static_dataset_category.entries|length }}</span>
+                    </div>
                 </li>
                 {% endif %}
                 {% endfor %}
@@ -42,12 +44,14 @@
             {% if iri == 'other' and not static_dataset_category.entries %}
             {% else %}
             <li class="my-1">
-                {% with section_name=static_dataset_category.name|lower %}
-                <a href="#{{ section_name }}-heading" class="link-plain-by-default">
-                    {{ static_dataset_category.name }}
-                </a>
-                {% endwith %}
-                <span class="text-body-secondary">{{ static_dataset_category.entries|length }}</span>
+                <div class="d-inline-flex justify-content-between column-gap-4 w-100">
+                    {% with section_name=static_dataset_category.name|lower %}
+                    <a href="#{{ section_name }}-heading" class="link-plain-by-default">
+                        {{ static_dataset_category.name }}
+                    </a>
+                    {% endwith %}
+                    <span class="text-body-secondary">{{ static_dataset_category.entries|length }}</span>
+                </div>
             </li>
             {% endif %}
             {% endfor %}
