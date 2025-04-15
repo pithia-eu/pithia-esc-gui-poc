@@ -584,6 +584,7 @@ class StaticDatasetEntryEditorForm(
     TimePeriodValidationEditorFormComponent):
     def __init__(self, *args, static_dataset_category_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['name'].help_text = ' '
         self.fields['static_dataset_category'].choices = static_dataset_category_choices
         self.fields['description'].required = True
         self.fields['description'].help_text = 'A free-text description of the static dataset entry contents.'
