@@ -1,14 +1,14 @@
 {% extends 'browse/resource_list_by_type.html' %}
 {% load static %}
 {% load project_tags %}
-{% block scripts %}
+{% block extra_scripts %}
 <script src="{% static 'utils/expandable_text_block.js' %}" defer></script>
-{% endblock scripts %}
+<script src="{% static 'browse/resource_filter_by_name_static_dataset.js' %}" type="module"></script>
+{% endblock extra_scripts %}
 {% block breadcrumbs %}
 {% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
-{% block search %}{% endblock search %}
 {% block aside %}
 <div class="d-xl-block d-none col-xl-5">
     <section class="d-flex flex-column pt-0">
@@ -63,12 +63,11 @@
 {% for iri, static_dataset_category in static_dataset_category_properties_by_iri.items %}
 {% if iri == 'other' and not static_dataset_category.entries %}
 {% else %}
-<section class="border-top py-4 {% if forloop.counter0 == 0 %}mt-3{% endif %}">
-    {% with section_name=static_dataset_category.name|lower %}
+{% with section_name=static_dataset_category.name.split|join:'-'|lower %}
+<section id="{{ section_name }}-section" class="category-section border-top py-4 {% if forloop.counter0 == 0 %}mt-3{% endif %}">
     <h2 id="{{ section_name }}-heading" class="fs-3 mt-3 mb-3">
         {{ static_dataset_category.name }}
     </h2>
-    {% endwith %}
     {% if static_dataset_category.definition %}
     {# Static dataset category definitions are expandable/collapsible in case there is a lot of text #}
     <div class="mb-2">
@@ -105,6 +104,7 @@
     {% endif %}
     {% endwith %}
 </section>
+{% endwith %}
 {% endif %}
 {% endfor %}
 {% endblock resource_list_outer %}
