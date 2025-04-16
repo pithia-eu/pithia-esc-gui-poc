@@ -842,6 +842,7 @@ class ProcessDetailView(ResourceDetailView):
             cleaned_property_table_dict,
             disallowed_property_keys=[
                 'acquisitionComponent',
+                'capabilities',
                 'computationComponent',
                 'dataLevel',
                 'documentation',
