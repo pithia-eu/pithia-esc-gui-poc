@@ -34,7 +34,6 @@ from common import models
 from common.constants import (
     STATIC_DATASET_TYPE_DESCRIPTION,
     STATIC_DATASET_TYPE_PLURAL_READABLE,
-    STATIC_DATASET_TYPE_READABLE,
 )
 from common.xml_metadata_mapping_shortcuts import DoiKernelMetadataMappingShortcuts
 from handle_management.services import HandleClient
@@ -130,8 +129,8 @@ def static_dataset_tree(request):
         'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
         'resources': static_dataset_entries,
         'static_dataset_category_properties_by_iri': static_dataset_category_properties_by_iri,
-        'type_readable': STATIC_DATASET_TYPE_READABLE,
-        'type_plural_readable': STATIC_DATASET_TYPE_PLURAL_READABLE,
+        'type_readable': 'static dataset category',
+        'type_plural_readable': 'static dataset categories',
     })
 
 
