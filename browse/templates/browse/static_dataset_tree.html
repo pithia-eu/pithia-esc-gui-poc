@@ -94,13 +94,15 @@
         {{ entries|length }} Entries
         {% endif %}
     </p>
-    <ul class="list-group tree-static-dataset-entry pt-2 mb-0">
-        {% for static_dataset_entry in static_dataset_category.entries %}
-        <li class="list-group-item p-3">
-            {% include 'browse/static_dataset_entry_list_item_content.html' %}
-        </li>
-        {% endfor %}
-    </ul>
+    <div class="border rounded mt-2">
+        <ul class="list-group list-group-flush rounded tree-static-dataset-entry mb-0">
+            {% for static_dataset_entry in static_dataset_category.entries %}
+            <li class="list-group-item p-3">
+                {% include 'browse/static_dataset_entry_list_item_content.html' %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
     {% endif %}
     {% endwith %}
 </section>

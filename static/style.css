@@ -742,6 +742,11 @@ header .login-link {
     height: 1.2rem;
 }
 
+/* || Static dataset browsing */
+.category-section .list-group-item:nth-last-child(1 of :not(.d-none)) {
+    border-radius: var(--bs-border-radius);
+    border-bottom: none;
+}
 
 /* || Resource detail page */
 .interaction-method-table td:first-child,
