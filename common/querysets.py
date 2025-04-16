@@ -473,6 +473,12 @@ class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionD
             data_collections_found_by_computation_type,
             data_collections_found_by_annotation_type,
             data_collections_found_by_observed_property):
+        if (not data_collections_found_by_feature_of_interest
+            and not data_collections_found_by_instrument_type
+            and not data_collections_found_by_computation_type
+            and not data_collections_found_by_annotation_type
+            and not data_collections_found_by_observed_property):
+            return self.none()
         search_results = self.all()
         if data_collections_found_by_feature_of_interest:
             search_results &= data_collections_found_by_feature_of_interest

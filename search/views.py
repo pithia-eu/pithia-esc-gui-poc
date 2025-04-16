@@ -6,7 +6,6 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from .services import (
-    find_matching_data_collections,
     get_data_collections_for_search,
     get_parents_of_registered_ontology_terms,
     get_registered_annotation_types,

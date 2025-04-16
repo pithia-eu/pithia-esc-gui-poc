@@ -127,61 +127,6 @@ def get_data_collections_for_search(
 
     return list(data_collections)
 
-def find_matching_data_collections(
-    feature_of_interest_urls: list = [],
-    instrument_type_urls: list = [],
-    computation_type_urls: list = [],
-    observed_property_urls: list = []
-):
-    if len(feature_of_interest_urls) > 0:
-        additional_observed_property_urls = get_observed_property_urls_from_feature_of_interest_urls(feature_of_interest_urls)
-        observed_property_urls += additional_observed_property_urls
-        observed_property_urls = list(set(observed_property_urls))
-
-    # The way in which data collections are found goes according to the
-    # project data model diagram.
-
-
-    # Fetch Instruments
-    instruments = Instrument.objects.for_search(instrument_type_urls)
-    instrument_urls = [i.metadata_server_url for i in instruments]
-
-
-    # Fetch Acquisition Capabilities/Computation Capabilities
-    acquisition_capability_sets = AcquisitionCapabilities.objects.for_search(
-        instrument_urls,
-        observed_property_urls
-    )
-    acquisition_capability_set_urls = [ac.metadata_server_url for ac in acquisition_capability_sets]
-
-    computation_capability_sets = ComputationCapabilities.objects.for_search(
-        computation_type_urls,
-        observed_property_urls
-    )
-    computation_capability_set_urls = [cc.metadata_server_url for cc in computation_capability_sets]
-
-
-    # Fetch Acquisitions/Computations
-    acquisitions = Acquisition.objects.for_search(acquisition_capability_set_urls)
-    computations = Computation.objects.for_search(computation_capability_set_urls)
-
-
-    # Fetch Processes
-    processes = Process.objects.for_search(
-        [a.metadata_server_url for a in acquisitions],
-        [c.metadata_server_url for c in computations]
-    )
-
-
-    # Fetch Data Collections
-    data_collections = DataCollection.objects.for_search(
-        [p.metadata_server_url for p in processes],
-        feature_of_interest_urls,
-        instrument_type_urls,
-        computation_type_urls
-    )
-
-    return list(data_collections)
 
 # Search form setup
 def setup_instrument_types_for_observed_property_search_form():
@@ -208,6 +153,7 @@ def setup_instrument_types_for_observed_property_search_form():
             instrument_types_grouped_by_observed_property[observed_property_id] = list(set(instrument_types_grouped_by_observed_property[observed_property_id]))
     return instrument_types_grouped_by_observed_property
 
+
 def setup_computation_types_for_observed_property_search_form():
     computation_types_grouped_by_observed_property = {}
     computation_capability_sets = ComputationCapabilities.objects.all()
@@ -229,24 +175,30 @@ def setup_computation_types_for_observed_property_search_form():
 
     return computation_types_grouped_by_observed_property
 
+
 def get_distinct_computation_type_urls_from_computation_capability_sets(computation_capability_sets):
     distinct_model_urls = [url for cc in computation_capability_sets for url in cc.computation_type_urls if re.match(f'^{COMPUTATION_TYPE_URL_BASE}', url)]
     return distinct_model_urls
+
 
 def get_distinct_instrument_type_urls_from_data_collections(data_collections):
     instrument_type_urls = [url for dc in data_collections for url in dc.type_urls if re.match(f'^{INSTRUMENT_TYPE_URL_BASE}', url)]
     return list(set(instrument_type_urls))
 
+
 def get_distinct_computation_type_urls_from_data_collections(data_collections):
     model_urls = [url for dc in data_collections for url in dc.type_urls if re.match(f'^{COMPUTATION_TYPE_URL_BASE}', url)]
     return list(set(model_urls))
+
 
 def get_distinct_annotation_type_urls_from_data_collections(data_collections):
     distinct_urls = [url for dc in data_collections for url in dc.type_urls if re.match(f'^{ANNOTATION_TYPE_URL_BASE}', url)]
     return list(set(distinct_urls))
 
+
 def extract_localid_from_xlink_href(xlinkhref):
     return xlinkhref.split('/')[-1]
+
 
 def get_registered_observed_properties():
     acquisition_capability_sets = list(AcquisitionCapabilities.objects.all())
@@ -259,6 +211,7 @@ def get_registered_observed_properties():
     registered_observed_property_ids = [extract_localid_from_xlink_href(url) for url in registered_observed_property_urls]
     return list(set(registered_observed_property_ids))
 
+
 def get_registered_features_of_interest(registered_observed_property_ids):
     feature_of_interest_ids = []
     g_op = get_graph_of_pithia_ontology_component('observedProperty')
@@ -268,6 +221,7 @@ def get_registered_features_of_interest(registered_observed_property_ids):
     feature_of_interest_ids_from_data_collections = [extract_localid_from_xlink_href(url) for dc in registered_data_collections for url in dc.feature_of_interest_urls]
     feature_of_interest_ids.extend(feature_of_interest_ids_from_data_collections)
     return list(set(feature_of_interest_ids))
+
 
 def get_registered_instrument_types():
     # Get Instrument Type URLs from all Instruments
@@ -279,6 +233,7 @@ def get_registered_instrument_types():
     # Join the two lists
     all_registered_instrument_types = list(set(types_from_instruments + types_from_data_collections))
     return all_registered_instrument_types
+
 
 def get_registered_computation_types():
     # Get Computation Type URLs from all Computation Capabilities
@@ -293,12 +248,14 @@ def get_registered_computation_types():
     all_registered_computation_types = list(set(types_from_computation_capability_sets + types_from_data_collections))
     return all_registered_computation_types
 
+
 def get_registered_annotation_types():
     # Get Annotation Type URLs from all Data Collections
     data_collections = DataCollection.objects.all()
     annotation_type_urls_from_data_collections = get_distinct_annotation_type_urls_from_data_collections(data_collections)
     all_registered_annotation_types = list(map(extract_localid_from_xlink_href, annotation_type_urls_from_data_collections))
     return all_registered_annotation_types
+
 
 def get_registered_phenomenons(registered_observed_property_ids):
     phenomenon_ids = []
@@ -307,12 +264,14 @@ def get_registered_phenomenons(registered_observed_property_ids):
         get_phenomenon_ids_from_observed_property_id(id, g_op, phenomenon_ids)
     return phenomenon_ids
 
+
 def get_registered_measurands(registered_observed_property_ids):
     measurand_ids = []
     g_op = get_graph_of_pithia_ontology_component('observedProperty')
     for id in registered_observed_property_ids:
         get_measurand_ids_from_observed_property_id(id, g_op, measurand_ids)
     return measurand_ids
+
 
 def get_parents_of_registered_ontology_terms(ontology_term_ids, ontology_component, parent_node_ids, g=None):
     if g is None:

@@ -236,6 +236,7 @@ class ComputationXmlMappingShortcuts(
 class ProcessXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaCapabilitiesMetadataPropertiesMixin,
         PithiaDocumentationMetadataPropertiesMixin,
         PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaQualityAssessmentMetadataPropertiesMixin,
