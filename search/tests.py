@@ -3,10 +3,9 @@ from django.test import (
 )
 
 from .services import (
-    find_matching_data_collections,
+    get_data_collections_for_search,
     get_distinct_computation_type_urls_from_data_collections,
     get_distinct_instrument_type_urls_from_data_collections,
-    find_matching_data_collections,
     setup_computation_types_for_observed_property_search_form,
     setup_instrument_types_for_observed_property_search_form,
 )
@@ -68,19 +67,55 @@ class SearchBehaviourTestCase(TestCase):
         'https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_E-Region',
     ]
 
-    def test_data_collections_are_found_with_instrument_types(self):
+    def test_data_collections_are_found_with_features_of_interest(self):
+        """A list of data collections matching any of the
+        features of interest in the list are returned.
         """
-        A list of data collections matching any of the
-        instrument types in the list are returned.
-        """
-        # Register XML files
-        # Pass in instrument types
-        data_collections = find_matching_data_collections(feature_of_interest_urls=self.feature_of_interest_urls)
-        # Pass in computation types
-        # Pass in observed properties
+        data_collections = get_data_collections_for_search(feature_of_interest_urls=self.feature_of_interest_urls)
         print('data_collections', data_collections)
         print('len(data_collections)', len(data_collections))
-        self.assertGreater(len(data_collections), 0)
+        self.assertEqual(len(data_collections), 1)
+
+    def test_data_collections_are_found_with_instrument_types(self):
+        """A list of data collections matching any of the
+        instrument types in the list are returned.
+        """
+        data_collections = get_data_collections_for_search(instrument_type_urls=self.instrument_type_urls)
+        print('data_collections', data_collections)
+        print('len(data_collections)', len(data_collections))
+        self.assertEqual(len(data_collections), 1)
+
+    def test_data_collections_are_found_with_computation_types(self):
+        """A list of data collections matching any of the
+        computation types in the list are returned.
+        """
+        data_collections = get_data_collections_for_search(computation_type_urls=self.computation_type_urls)
+        print('data_collections', data_collections)
+        print('len(data_collections)', len(data_collections))
+        self.assertEqual(len(data_collections), 1)
+
+    def test_data_collections_are_found_with_observed_properties(self):
+        """A list of data collections matching any of the
+        observed properties in the list are returned.
+        """
+        data_collections = get_data_collections_for_search(observed_property_urls=self.observed_property_urls)
+        print('data_collections', data_collections)
+        print('len(data_collections)', len(data_collections))
+        self.assertEqual(len(data_collections), 1)
+
+    def test_data_collections_are_found_with_combined_search_criteria(self):
+        """A list of data collections which match at least
+        one URL from each category is returned.
+        """
+        data_collections = get_data_collections_for_search(
+            feature_of_interest_urls=self.feature_of_interest_urls,
+            instrument_type_urls=self.instrument_type_urls,
+            computation_type_urls=self.computation_type_urls,
+            observed_property_urls=self.observed_property_urls
+        )
+        print('data_collections', data_collections)
+        print('len(data_collections)', len(data_collections))
+        self.assertEqual(len(data_collections), 1)
 
 
 class SearchFormSetupTestCase(TestCase):
@@ -89,8 +124,7 @@ class SearchFormSetupTestCase(TestCase):
     # are registered. The registration status of each of
     # these types are displayed in the search form.
     def test_distinct_instrument_urls_are_retrieved_from_data_collections(self):
-        """
-        Returns a list of unique instrument type URLs
+        """Returns a list of unique instrument type URLs
         from all registered data collections.
         """
         register_data_collection_for_test()
@@ -101,8 +135,7 @@ class SearchFormSetupTestCase(TestCase):
         self.assertEqual(len(distinct_instrument_type_urls), len(set(distinct_instrument_type_urls)))
 
     def test_distinct_model_urls_are_retrieved_from_data_collections(self):
-        """
-        Returns a list of unique computation type URLs
+        """Returns a list of unique computation type URLs
         from all registered data collections.
         """
         register_data_collection_for_test()
@@ -115,8 +148,7 @@ class SearchFormSetupTestCase(TestCase):
 
 class ObservedPropertyCategorisationForSearchFormTestCase(TestCase):
     def test_phenomenons_are_retrieved_from_observed_property_child_terms(self):
-        """
-        Returns a flat list of the phenomenons of an observed property
+        """Returns a flat list of the phenomenons of an observed property
         and the observed properties child terms.
         """
         instrument_types_grouped_by_observed_property = setup_instrument_types_for_observed_property_search_form()
@@ -132,8 +164,7 @@ class ObservedPropertyCategorisationForSearchFormTestCase(TestCase):
         self.assertIsInstance(phenomenons, list)
     
     def test_observed_properties_are_categorised_by_top_level_phenomenons(self):
-        """
-        Returns a dict of observed properties where each dict
+        """Returns a dict of observed properties where each dict
         key is a top-level phenomenon that each observed property
         corresponds to.
         """
@@ -153,8 +184,7 @@ class ObservedPropertyCategorisationForSearchFormTestCase(TestCase):
 
 class ObservedPropertySearchFormSetupTestCase(TestCase):
     def test_instrument_types_are_grouped_by_observed_property(self):
-        """
-        Returns a dict of instrument types correctly
+        """Returns a dict of instrument types correctly
         grouped by their observed properties.
         """
         instrument_types_grouped_by_observed_property = setup_instrument_types_for_observed_property_search_form()
@@ -162,8 +192,7 @@ class ObservedPropertySearchFormSetupTestCase(TestCase):
         self.assertTrue(isinstance(instrument_types_grouped_by_observed_property, dict))
 
     def test_computation_types_are_grouped_by_observed_property(self):
-        """
-        Returns a dict of computation types correctly
+        """Returns a dict of computation types correctly
         grouped by their observed properties.
         """
         computation_types_grouped_by_observed_property = setup_computation_types_for_observed_property_search_form()
@@ -173,8 +202,7 @@ class ObservedPropertySearchFormSetupTestCase(TestCase):
 
 class RegisteredOntologyTermsTestCase(TestCase):
     def test_registered_observed_properties_are_correct(self):
-        """
-        Returns a list of observed properties mentioned
+        """Returns a list of observed properties mentioned
         in registered metadata.
         """
         registered_observed_properties = get_registered_observed_properties()
@@ -182,8 +210,7 @@ class RegisteredOntologyTermsTestCase(TestCase):
         self.assertTrue(isinstance(registered_observed_properties, list))
 
     def test_registered_features_of_interest_are_correct(self):
-        """
-        Returns a list of features of interest mentioned
+        """Returns a list of features of interest mentioned
         in registered metadata.
         """
         registered_observed_property_ids = get_registered_observed_properties()
