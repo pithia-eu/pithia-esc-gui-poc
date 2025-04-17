@@ -87,19 +87,22 @@
         <div class="card-body">No entries.</div>
     </div>
     {% else %}
-    <p class="text-body-secondary mb-3">
+    <p class="text-secondary-emphasis entry-count mb-3">
         {% if entries|length == 1 %}
         {{ entries|length }} Entry
         {% else %}
         {{ entries|length }} Entries
         {% endif %}
+        <span class="text-body-secondary hidden-entry-count"></span>
     </p>
     <div class="border rounded mt-2">
         <ul class="list-group list-group-flush rounded tree-static-dataset-entry mb-0">
             {% for static_dataset_entry in static_dataset_category.entries %}
-            <li class="list-group-item p-3">
+            {% with entry_id=static_dataset_entry.id|lower %}
+            <li id="list-item-{{ entry_id }}" class="list-group-item static-dataset-entry-list-item p-3">
                 {% include 'browse/static_dataset_entry_list_item_content.html' %}
             </li>
+            {% endwith %}
             {% endfor %}
         </ul>
     </div>

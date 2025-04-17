@@ -1,21 +1,22 @@
 {% if not static_dataset_entry.data_subsets %}
-<a href="{% url 'browse:static_dataset_entry_detail' static_dataset_entry.id %}" class="link-plain-by-default">
+<a href="{% url 'browse:static_dataset_entry_detail' static_dataset_entry.id %}" class="link-plain-by-default static-dataset-entry-link">
     {{ static_dataset_entry.name }}
 </a>
 {% else %}
 <details>
     <summary class="summary-marker-custom summary-marker-custom-sm summary-marker-custom-baseline">
         <div class="d-inline-flex flex-column">
-            <a href="{% url 'browse:static_dataset_entry_detail' static_dataset_entry.id %}" class="link-plain-by-default">
+            <a href="{% url 'browse:static_dataset_entry_detail' static_dataset_entry.id %}" class="link-plain-by-default static-dataset-entry-link">
                 {{ static_dataset_entry.name }}
             </a>
             {% if static_dataset_entry.data_subsets %}
-            <small class="text-body-secondary">
+            <small class="text-secondary-emphasis data-subset-count">
                 {% if static_dataset_entry.data_subsets|length == 1 %}
                 1 Data Subset
                 {% else %}
                 {{ static_dataset_entry.data_subsets|length }} Data Subsets
                 {% endif %}
+                <span class="text-body-secondary hidden-data-subset-count"></span>
             </small>
             {% endif %}
         </div>
@@ -23,8 +24,8 @@
     {% if static_dataset_entry.data_subsets %}
     <ul class="list-group list-group-flush mt-3">
         {% for data_subset in static_dataset_entry.data_subsets %}
-        <li class="list-group-item">
-            <a href="{% url 'browse:data_subset_detail' data_subset.id %}" class="link-plain-by-default">
+        <li class="list-group-item data-subset-list-item">
+            <a href="{% url 'browse:data_subset_detail' data_subset.id %}" class="link-plain-by-default data-subset-link">
                 {{ data_subset.name }}
             </a>
         </li>
