@@ -743,6 +743,19 @@ header .login-link {
 }
 
 
+/* || Metadata browsing - custom list styling */
+.section-data-collection-list .list-group-item:nth-child(1 of :not(.d-none)) {
+    border-top-left-radius: var(--bs-border-radius);
+    border-top-right-radius: var(--bs-border-radius);
+}
+
+.section-data-collection-list .list-group-item:nth-last-child(1 of :not(.d-none)) {
+    border-bottom-left-radius: var(--bs-border-radius);
+    border-bottom-right-radius: var(--bs-border-radius);
+    border-bottom: none;
+}
+
+
 /* || Resource detail page */
 .interaction-method-table td:first-child,
 .interaction-method-table td:nth-child(3),

@@ -1,63 +1,85 @@
-const searchResultsSection = document.querySelector(".section-search-results");
-const searchResultsSectionList = searchResultsSection.querySelector("ul");
-const dataCollectionCategorySections = document.querySelectorAll(".section-data-collection-list");
+import {
+    disableScrollContainerForSection,
+    enableScrollContainerForSection,
+} from "/static/browse/data_collection_list.js";
+
 
 const searchInput = document.querySelector("#resource-name-search");
-const searchableListItems = document.querySelectorAll(".list-group-searchable li");
-const searchableListItemText = Array.from(searchableListItems).reduce((accumulator, currentValue) => {
-    accumulator[currentValue.id] = currentValue.textContent.trim();
-    return accumulator;
-}, {});
-
 const resourceListCount = document.querySelector("#resource-list-count");
 const typeReadable = JSON.parse(document.querySelector("#type-readable").textContent);
 const typePluralReadable = JSON.parse(document.querySelector("#type-plural-readable").textContent);
 
+const dataCollectionTypeSections = Array.from(document.querySelectorAll(".section-data-collection-list"));
+const listItemsCategorised = dataCollectionTypeSections.reduce(categoriseDataCollectionListItemsByType, {});
+const listItems = document.querySelectorAll(".section-data-collection-list li");
 
-function updateResourceCount(numResourceCount, reset = false) {
+function updateResourceCount(numResourceCount) {
     const resourceCountText = `${numResourceCount} ${(numResourceCount === 1) ? typeReadable : typePluralReadable}`;
-    if (reset) {
-        return resourceListCount.textContent = resourceCountText;
-    }
-    return resourceListCount.textContent = `Found ${resourceCountText}`;
+    return resourceListCount.textContent = resourceCountText;
 }
 
-export function filterResourceList() {
-    const searchInputValue = searchInput.value.trim();
-    if (!searchInputValue) {
-        updateResourceCount(Object.keys(searchableListItemText).length, typeReadable, typePluralReadable, true);
-        searchResultsSection.classList.add("d-none");
-        dataCollectionCategorySections.forEach(section => {
-            section.classList.remove("d-none");
-        });
-        return searchResultsSectionList.replaceChildren();
-    }
-    searchResultsSection.classList.remove("d-none");
-    dataCollectionCategorySections.forEach(section => {
-        section.classList.add("d-none");
+function categoriseDataCollectionListItemsByType(accumulator, section) {
+    const dataCollectionListItemsInSection = Array.from(section.querySelectorAll(".data-collection-list-item"));
+    accumulator[section.id] = dataCollectionListItemsInSection;
+    return accumulator;
+}
+
+function searchDataCollectionListItemsForSection(searchInputValueParts, listItems) {
+    let numMatchesFoundInSection = 0;
+    listItems.forEach(listItem => {
+        const dataCollectionLink = listItem.querySelector("a");
+        if (searchInputValueParts.every(part => dataCollectionLink.textContent.toLowerCase().includes(part))) {
+            numMatchesFoundInSection += 1
+            return listItem.classList.remove("d-none");
+        }
+        return listItem.classList.add("d-none");
     });
-    const searchInputValueSplit = searchInputValue.split(/\s/);
-    const fragment = new DocumentFragment();
-    for (const property in searchableListItemText) {
-        const listItemText = searchableListItemText[property];
-        if (!searchInputValueSplit.every((searchInputValuePart) => listItemText.toLowerCase().includes(searchInputValuePart.toLowerCase()))) {
+    return numMatchesFoundInSection;
+}
+
+function resetSearch() {
+    dataCollectionTypeSections.forEach(section => {
+        enableScrollContainerForSection(section);
+        section.classList.remove("d-none");
+    });
+    listItems.forEach(listItem => {
+        listItem.classList.remove("d-none");
+    });
+    updateResourceCount(listItems.length);
+}
+
+function searchDataCollectionListItems(searchInputValue) {
+    const searchInputValueParts = searchInputValue.toLowerCase().split(/\s+/);
+    let totalMatchesFound = 0;
+    for (const sectionId in listItemsCategorised) {
+        const section = document.querySelector(`#${sectionId}`);
+        const sectionListItems = listItemsCategorised[sectionId];
+        const numMatchesFoundInSection = searchDataCollectionListItemsForSection(
+            searchInputValueParts,
+            sectionListItems
+        );
+        if (numMatchesFoundInSection === 0) {
+            section.classList.add("d-none");
             continue;
         }
-        try {
-            const listItem = document.querySelector(`#${property}`);
-            fragment.append(listItem.cloneNode(true));
-        } catch (error) {
-            console.error(error);
-        }
+        totalMatchesFound += numMatchesFoundInSection;
+        section.classList.remove("d-none");
+        disableScrollContainerForSection(section);
     }
-    updateResourceCount(fragment.childElementCount, typeReadable, typePluralReadable);
-    return searchResultsSectionList.replaceChildren(fragment);
+    updateResourceCount(totalMatchesFound);
 }
 
 searchInput.addEventListener("input", () => {
-    filterResourceList();
+    const searchInputValue = searchInput.value;
+    if (searchInputValue.trim() === "") {
+        return resetSearch();
+    }
+    return searchDataCollectionListItems(searchInputValue);
 });
 
 window.addEventListener("load", () => {
-    filterResourceList();
+    const searchInputValue = searchInput.value;
+    if (searchInputValue.trim() !== "") {
+        searchDataCollectionListItems(searchInputValue);
+    }
 });

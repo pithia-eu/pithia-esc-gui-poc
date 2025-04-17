@@ -1,4 +1,3 @@
-const listGroupContainers = document.querySelectorAll(".list-group-container");
 const listGroupScrollContainers = document.querySelectorAll(".list-group-scroll-container");
 
 function setFade(event) {
@@ -20,6 +19,38 @@ function getContainingSectionOfNode(node) {
     }
 }
 
+export function disableScrollContainerForSection(section) {
+    const scrollContainer = section.querySelector(".list-group-scroll-container");
+    if (!scrollContainer) {
+        return;
+    }
+    scrollContainer.parentElement.classList.remove("off-bottom");
+    scrollContainer.classList.remove("default-view");
+    const showAllDataCollectionsButton = section.querySelector(".show-all-dcs-button");
+    if (!showAllDataCollectionsButton) {
+        return;
+    }
+    return showAllDataCollectionsButton.parentElement.classList.add("d-none");
+}
+
+export function enableScrollContainerForSection(section) {
+    const scrollContainer = section.querySelector(".list-group-scroll-container");
+    if (!scrollContainer) {
+        return;
+    }
+    window.setTimeout(() => {
+        if (scrollContainer.scrollHeight !== scrollContainer.clientHeight) {
+            scrollContainer.parentElement.classList.add("off-bottom");
+        }
+    }, 100);
+    scrollContainer.classList.add("default-view");
+    const showAllDataCollectionsButton = section.querySelector(".show-all-dcs-button");
+    if (!showAllDataCollectionsButton) {
+        return;
+    }
+    return showAllDataCollectionsButton.parentElement.classList.remove("d-none");
+}
+
 listGroupScrollContainers.forEach(scrollContainer => {
     if (scrollContainer.scrollHeight === scrollContainer.clientHeight) {
         scrollContainer.parentElement.classList.remove("off-bottom");
@@ -39,14 +70,10 @@ listGroupScrollContainers.forEach(scrollContainer => {
 document.querySelectorAll(".show-all-dcs-button").forEach(btn => {
     btn.addEventListener("click", () => {
         const containingSection = getContainingSectionOfNode(btn);
-        if (containingSection) {
-            const scrollContainer = containingSection.querySelector(".list-group-scroll-container");
-            if (scrollContainer) {
-                scrollContainer.parentElement.classList.remove("off-bottom");
-                scrollContainer.classList.remove("default-view");
-                btn.parentElement.classList.add("d-none");
-            }
+        if (!containingSection) {
+            return;
         }
+        disableScrollContainerForSection(containingSection);
     });
 });
 
