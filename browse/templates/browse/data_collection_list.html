@@ -2,7 +2,7 @@
 {% load static %}
 {% load project_tags %}
 {% block extra_scripts %}
-<script src="{% static 'browse/data_collection_list.js' %}" defer></script>
+<script src="{% static 'browse/data_collection_list.js' %}" type="module"></script>
 <script src="{% static 'browse/resource_filter_by_name_data_collection.js' %}" type="module"></script>
 {% endblock extra_scripts %}
 {% block extra_description_content %}
@@ -67,9 +67,9 @@ Unlike <a href="{% url 'browse:static_dataset_tree' %}" class="link-underline-by
     <ul class="list-group"></ul>
 </section>
 {% for key, value in resources.items %}
-<section class="section-data-collection-list pb-0 mt-4">
+{% with section_name=key.split|join:'-'|lower %}
+<section id="{{ section_name }}-section" class="section-data-collection-list pb-0 mt-4">
     {% if value %}
-    {% with section_name=key.split|join:'-'|lower %}
     <details open>
         <summary class="summary-marker-custom align-items-center data-collection-category" tabindex="-1">
             <h2 id="{{ section_name }}-heading" class="d-inline-block fs-3">
@@ -78,13 +78,15 @@ Unlike <a href="{% url 'browse:static_dataset_tree' %}" class="link-underline-by
         </summary>
         <div class="list-group-container off-bottom mt-3">
             <div class="list-group-scroll-container default-view">
-                <ul id="list-{{ section_name }}" class="list-group list-group-searchable">
-                    {% for dc in value %}
-                    <li id="li_{{ dc.pk }}" class="list-group-item">
-                        <a href="{{ dc.get_absolute_url }}">{{ dc.name|default:dc.localid }}</a>
-                    </li>
-                    {% endfor %}
-                </ul>
+                <div class="border rounded">
+                    <ul id="list-{{ section_name }}" class="list-group list-group-flush list-group-searchable">
+                        {% for dc in value %}
+                        <li id="li_{{ dc.pk }}" class="list-group-item data-collection-list-item">
+                            <a href="{{ dc.get_absolute_url }}">{{ dc.name|default:dc.localid }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
             <div class="shadows"></div>
         </div>
@@ -98,7 +100,6 @@ Unlike <a href="{% url 'browse:static_dataset_tree' %}" class="link-underline-by
             {% endif %}
         </a>
     </div>
-    {% endwith %}
     {% elif not value and not key|lower == 'other' %}
     {% with section_name=key.split|join:'-'|lower %}
     <h2 id="{{ section_name }}-heading">
@@ -114,5 +115,6 @@ Unlike <a href="{% url 'browse:static_dataset_tree' %}" class="link-underline-by
     </p>
     {% endif %}
 </section>
+{% endwith %}
 {% endfor %}
 {% endblock resource_list_outer %}
