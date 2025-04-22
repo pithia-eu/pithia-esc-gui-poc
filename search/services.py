@@ -122,7 +122,12 @@ def get_data_collections_for_search(
         data_collections_found_by_instrument_type,
         data_collections_found_by_computation_type,
         data_collections_found_by_annotation_type,
-        data_collections_found_by_observed_property
+        data_collections_found_by_observed_property,
+        feature_of_interest_urls=feature_of_interest_urls,
+        instrument_type_urls=instrument_type_urls,
+        computation_type_urls=computation_type_urls,
+        annotation_type_urls=annotation_type_urls,
+        observed_property_urls=observed_property_urls
     )
 
     return list(data_collections)
