@@ -1075,7 +1075,6 @@ as Bootstrap styling. */
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    font-size: var(--fs-sm-2);
 }
 
 .resource-detail-top-section-extra-content > dl > div {
@@ -1900,6 +1899,11 @@ ul.tree ul {
         top: 0.6rem;
         right: 0.9rem;
     }
+
+    .resource-detail-aside .resource-detail-aside-section,
+    .resource-detail-aside #related-aside-section li {
+        font-size: 1rem;
+    }
 }
 
 @media (min-width: 992px) {
@@ -1925,7 +1929,7 @@ ul.tree ul {
 
     .resource-detail-aside .resource-detail-aside-section,
     .resource-detail-aside #related-aside-section li {
-        font-size: var(--fs-sm-1);
+        font-size: var(--fs-sm-2);
     }
 
     #further-information-section .resource-detail-section.d-lg-none:first-child + .resource-detail-section {
