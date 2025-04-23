@@ -90,6 +90,10 @@ class ResourceEditorFormView(
     institution_id = None
     owner_id = None
 
+    # Seconds before XML schema loading
+    # process is manually timed out.
+    xml_schema_loading_timeout = 300
+
     def add_form_data_to_metadata_editor(self, metadata_editor: BaseMetadataEditor, form_cleaned_data):
         metadata_editor.update_name(form_cleaned_data.get('name'))
 

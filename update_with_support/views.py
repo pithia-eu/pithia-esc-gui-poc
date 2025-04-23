@@ -1,3 +1,6 @@
+import logging
+import multiprocessing
+import multiprocessing.pool
 import os
 import tempfile
 import shutil
@@ -61,6 +64,9 @@ from metadata_editor.views import *
 from validation.view_mixins import WorkflowDetailsUrlValidationViewMixin
 
 
+logger = logging.getLogger(__name__)
+
+
 # Create your views here.
 
 class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
@@ -75,6 +81,9 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
         team know.'''
 
     submit_button_text = 'Validate and Update'
+
+    def initialise_metadata_editor(self):
+        return self.metadata_editor_class(xml_string=self.current_resource_xml)
 
     def add_form_data_to_metadata_editor(self, metadata_editor: BaseMetadataEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
@@ -110,7 +119,14 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
         try:
             if not hasattr(self, 'current_resource_xml'):
                 self.current_resource_xml = self.resource.xml
-            metadata_editor = self.metadata_editor_class(xml_string=self.current_resource_xml)
+            metadata_editor = None
+            with multiprocessing.pool.ThreadPool() as pool:
+                metadata_editor = pool.apply_async(self.initialise_metadata_editor).get(timeout=self.xml_schema_loading_timeout)
+        except multiprocessing.TimeoutError:
+            return HttpResponseServerError('''The update has been cancelled as
+            the XML schemas needed to update this registration took too long
+            to load. Please try submitting the form again, and if the problem
+            persists, please inform our support team of the problem.''')
         except XMLSchemaValidationError:
             logger.exception(f'''The XML for resource with ID
             "{escape(self.resource_id)}" could not be loaded

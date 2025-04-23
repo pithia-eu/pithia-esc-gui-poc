@@ -1,4 +1,6 @@
 import logging
+import multiprocessing
+import multiprocessing.pool
 import os
 import tempfile
 from datetime import datetime
@@ -68,8 +70,10 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
         )
         metadata_editor.update_pithia_identifier(pithia_identifier_update)
 
-    def convert_form_to_validated_xml(self, form):
-        metadata_editor = self.metadata_editor_class()
+    def initialise_metadata_editor(self):
+        return self.metadata_editor_class()
+
+    def convert_form_to_validated_xml(self, metadata_editor, form):
         self.add_form_data_to_metadata_editor(metadata_editor, form.cleaned_data)
         xml_string = metadata_editor.to_xml()
         return xml_string
@@ -92,7 +96,15 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
 
         # Generate XMl from the wizard
         try:
-            self.xml_string = self.convert_form_to_validated_xml(form)
+            metadata_editor = None
+            with multiprocessing.pool.ThreadPool() as pool:
+                metadata_editor = pool.apply_async(self.initialise_metadata_editor).get(timeout=self.xml_schema_loading_timeout)
+            self.xml_string = self.convert_form_to_validated_xml(metadata_editor, form)
+        except multiprocessing.TimeoutError:
+            return HttpResponseServerError('''The registration has been cancelled
+            as the XML schemas needed to register this registration took too
+            long to load. Please try submitting the form again, and if the problem
+            persists, please inform our support team of the problem.''')
         except ExpatError:
             logger.exception('Expat error occurred during registration process.')
             return HttpResponseServerError('''An error occurred whilst generating the XML
