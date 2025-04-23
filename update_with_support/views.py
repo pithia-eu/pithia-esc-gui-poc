@@ -6,6 +6,7 @@ import tempfile
 import shutil
 from datetime import datetime
 from datetime import timezone
+from dateutil.parser import ParserError
 from dateutil.parser import parse
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import transaction
@@ -306,10 +307,13 @@ class StaticDatasetEntryUpdateWithEditorFormView(
 
     def get_initial(self):
         initial = super().get_initial()
-        initial.update({
-            'time_instant_begin_position': parse(initial.get('time_instant_begin_position', '')).replace(second=0, microsecond=0).isoformat().replace('+00:00', ''),
-            'time_instant_end_position': parse(initial.get('time_instant_end_position', '')).replace(second=0, microsecond=0).isoformat().replace('+00:00', ''),
-        })
+        try:
+            initial.update({
+                'time_instant_begin_position': parse(initial.get('time_instant_begin_position', '')).replace(second=0, microsecond=0).isoformat().replace('+00:00', ''),
+                'time_instant_end_position': parse(initial.get('time_instant_end_position', '')).replace(second=0, microsecond=0).isoformat().replace('+00:00', ''),
+            })
+        except ParserError:
+            logger.exception('Could not load in static dataset entry phenomenon time.')
         return initial
 
 

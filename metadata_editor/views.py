@@ -295,6 +295,15 @@ class OperationEditorFormView(
             time_instant_end_id='oet',
             time_instant_end_position=form_cleaned_data.get('time_instant_end_position')
         )
+        if (not form_cleaned_data.get('time_instant_begin_position')
+            or not form_cleaned_data.get('time_instant_end_position')):
+            operation_time_update = OperationTimeMetadataUpdate(
+                time_period_id='',
+                time_instant_begin_id='',
+                time_instant_begin_position=form_cleaned_data.get('time_instant_begin_position'),
+                time_instant_end_id='',
+                time_instant_end_position=form_cleaned_data.get('time_instant_end_position')
+            )
         metadata_editor.update_operation_time(operation_time_update)
         self.update_location_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
         self.update_related_parties_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
@@ -864,12 +873,21 @@ class StaticDatasetEntryEditorFormView(
         metadata_editor.update_description(form_cleaned_data.get('description'))
         metadata_editor.update_static_dataset_category(form_cleaned_data.get('static_dataset_category'))
         phenomenon_time_update = PhenomenonTimeMetadataUpdate(
-            time_period_id='ptp',
-            time_instant_begin_id='pst',
-            time_instant_begin_position=form_cleaned_data.get('time_instant_begin_position').replace(microsecond=0).isoformat().replace('+00:00', 'Z'),
-            time_instant_end_id='pet',
-            time_instant_end_position=form_cleaned_data.get('time_instant_end_position').replace(microsecond=0).isoformat().replace('+00:00', 'Z'),
+            time_period_id='',
+            time_instant_begin_id='',
+            time_instant_begin_position=form_cleaned_data.get('time_instant_begin_position'),
+            time_instant_end_id='',
+            time_instant_end_position=form_cleaned_data.get('time_instant_end_position')
         )
+        if (form_cleaned_data.get('time_instant_begin_position')
+            and form_cleaned_data.get('time_instant_end_position')):
+            phenomenon_time_update = PhenomenonTimeMetadataUpdate(
+                time_period_id='ptp',
+                time_instant_begin_id='pst',
+                time_instant_begin_position=form_cleaned_data.get('time_instant_begin_position').replace(microsecond=0).isoformat().replace('+00:00', 'Z'),
+                time_instant_end_id='pet',
+                time_instant_end_position=form_cleaned_data.get('time_instant_end_position').replace(microsecond=0).isoformat().replace('+00:00', 'Z'),
+            )
         metadata_editor.update_phenomenon_time(phenomenon_time_update)
 
     def get_form_kwargs(self):

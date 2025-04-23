@@ -1027,9 +1027,6 @@ class TimePeriodMetadataEditor(BaseMetadataComponentEditor):
         self.metadata_dict.setdefault(time_period_container_element_key, [])
         time_period_container_elements = []
         for ud in update_data:
-            if (not ud.time_instant_begin_position
-                or not ud.time_instant_end_position):
-                continue
             time_period_container_element = self._update_time_period(ud, {})
             if not time_period_container_element:
                 continue
@@ -1039,9 +1036,6 @@ class TimePeriodMetadataEditor(BaseMetadataComponentEditor):
     def update_time_period(self, update_data: TimePeriodMetadataUpdate, time_period_container_element_key: str):
         # Time period container element
         self.metadata_dict.setdefault(time_period_container_element_key, {})
-        if (not update_data.time_instant_begin_position
-            or not update_data.time_instant_end_position):
-            return
         self.metadata_dict[time_period_container_element_key] = self._update_time_period(
             update_data,
             self.metadata_dict.get(time_period_container_element_key, {})

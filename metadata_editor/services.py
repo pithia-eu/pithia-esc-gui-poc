@@ -428,6 +428,10 @@ class StaticDatasetEntryEditor(
     def update_phenomenon_time(self, update_data: PhenomenonTimeMetadataUpdate):
         phenomenon_time_key = 'phenomenonTime'
         self.update_time_period(update_data, phenomenon_time_key)
+        self.remove_child_element_if_empty(
+            self.metadata_dict,
+            phenomenon_time_key
+        )
 
 
 class DataSubsetEditor(
