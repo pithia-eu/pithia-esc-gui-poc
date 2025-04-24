@@ -111,7 +111,6 @@ class UpdateDataCollectionInteractionMethodsForm(forms.Form):
     api_description = forms.CharField(
         label='Description',
         required=False,
-        disabled=True,
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 3,

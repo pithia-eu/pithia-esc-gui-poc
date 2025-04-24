@@ -123,10 +123,10 @@ class ResourceUpdateFormView(FormView):
             self.update_resource()
 
             messages.success(self.request, f'Successfully updated {escape(xml_file.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
-        except ExpatError as err:
+        except ExpatError:
             logger.exception('Could not update a resource as there was an error parsing the update XML.')
             messages.error(self.request, 'An error occurred whilst parsing the XML.')
-        except BaseException as err:
+        except Exception:
             logger.exception(f'An unexpected error occurred whilst attempting to update resource with ID "{escape(self.resource_id)}".')
             messages.error(self.request, 'An unexpected error occurred.')
         return response
@@ -245,70 +245,95 @@ class DataCollectionUpdateFormView(ResourceUpdateFormView):
     success_url = reverse_lazy('resource_management:data_collections')
 
 
-@login_session_institution_required
-@institution_ownership_required
-def data_collection_interaction_methods(request, resource_id):
-    data_collection = get_object_or_404(models.DataCollection, pk=resource_id)
-    if request.method == 'POST':
-        form = UpdateDataCollectionInteractionMethodsForm(request.POST)
-        if form.is_valid():
-            try:
-                is_api_selected = 'api_selected' in request.POST
-                api_specification_url = request.POST.get('api_specification_url')
-                api_description = request.POST.get('api_description')
-                
-                if is_api_selected == False:
-                    try:
-                        models.APIInteractionMethod.objects.get(scientific_metadata=data_collection).delete(using=os.environ['DJANGO_RW_DATABASE_NAME'])
-                    except models.APIInteractionMethod.DoesNotExist:
-                        pass
-                    messages.success(request, f'Successfully updated interaction methods for {escape(data_collection.name)}.')
-                    return redirect('update:data_collection_interaction_methods', resource_id=resource_id)
+@method_decorator(login_session_institution_required, name='dispatch')
+@method_decorator(institution_ownership_required, name='dispatch')
+class DataCollectionInteractionMethodsUpdateView(FormView):
+    form_class = UpdateDataCollectionInteractionMethodsForm
+    template_name = 'update/interaction_methods_update.html'
+    success_url_name = 'update:data_collection_interaction_methods'
 
-                try:
-                    api_interaction_method = models.APIInteractionMethod.objects.get(scientific_metadata=data_collection)
-                    models.APIInteractionMethod.objects.update_config(
-                        api_interaction_method.pk,
-                        api_specification_url,
-                        api_description
-                    )
-                except models.APIInteractionMethod.DoesNotExist:
-                    models.APIInteractionMethod.objects.create_api_interaction_method(
-                        api_specification_url,
-                        api_description,
-                        data_collection
-                    )
-                messages.success(request, f'Successfully updated interaction methods for {escape(data_collection.name)}.')
-            except BaseException as err:
-                logger.exception('An unexpected error occurred whilst trying to update a Data Collection interaction method.')
-                messages.error(request, 'An unexpected error occurred.')
-        else:
-            messages.error(request, 'The form submitted was not valid.')
-        return redirect('update:data_collection_interaction_methods', resource_id=resource_id)
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['resource_id']
+        self.success_url = reverse_lazy(self.success_url_name, args=[self.resource_id])
+        self.data_collection = get_object_or_404(models.DataCollection, pk=self.resource_id)
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        messages.error(self.request, 'The form submitted was not valid.')
+        return response
+
+    def form_valid(self, form):
+        is_api_selected = form.cleaned_data.get('api_selected')
+        if not is_api_selected:
+            try:
+                models.APIInteractionMethod.objects.get(
+                    scientific_metadata=self.data_collection
+                ).delete(using=os.environ['DJANGO_RW_DATABASE_NAME'])
+            except models.APIInteractionMethod.DoesNotExist:
+                pass
+            messages.success(
+                self.request,
+                f'Successfully updated interaction methods for {escape(self.data_collection.name)}.'
+            )
+            return super().form_valid(form)
         
-    # request.method == 'GET'
-    form = UpdateDataCollectionInteractionMethodsForm()
-    form_data = {}
-    try:
-        api_interaction_method = models.APIInteractionMethod.objects.get(scientific_metadata=data_collection)
-        form_data['api_selected'] = True
-        form_data['api_specification_url'] = api_interaction_method.specification_url
-        form_data['api_description'] = api_interaction_method.description
-        form = UpdateDataCollectionInteractionMethodsForm(initial=form_data)
-    except models.APIInteractionMethod.DoesNotExist:
-        pass
-    return render(request, 'update/interaction_methods_update.html', {
-        'data_collection': data_collection,
-        'data_collection_id': data_collection.pk,
-        'form': form,
-        'api_specification_validation_url': reverse_lazy('validation:api_specification_url'),
-        'title': f'Update Interaction Methods for {data_collection.name}',
-        'resource_management_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
-        'resource_management_category_list_page_breadcrumb_url_name': 'resource_management:data_collection_related_metadata_index',
-        'resource_management_category_list_page_breadcrumb_text': _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
-        'resource_management_list_page_breadcrumb_url_name': 'resource_management:data_collections',
-        'resource_management_list_page_breadcrumb_text': _create_manage_resource_page_title(models.DataCollection.type_plural_readable.title())
-    })
+        try:
+            api_specification_url = form.cleaned_data.get('api_specification_url')
+            api_description = form.cleaned_data.get('api_description')
+            try:
+                api_interaction_method = models.APIInteractionMethod.objects.get(
+                    scientific_metadata=self.data_collection
+                )
+                models.APIInteractionMethod.objects.update_config(
+                    api_interaction_method.pk,
+                    api_specification_url,
+                    api_description
+                )
+            except models.APIInteractionMethod.DoesNotExist:
+                models.APIInteractionMethod.objects.create_api_interaction_method(
+                    api_specification_url,
+                    api_description,
+                    self.data_collection
+                )
+            messages.success(
+                self.request,
+                f'Successfully updated interaction methods for {escape(self.data_collection.name)}.'
+            )
+        except Exception:
+            logger.exception('An unexpected error occurred whilst trying to update a Data Collection interaction method.')
+            messages.error(self.request, 'An unexpected error occurred.')
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        initial_values = {}
+        try:
+            api_interaction_method = models.APIInteractionMethod.objects.get(
+                scientific_metadata=self.data_collection
+            )
+            initial_values.update({
+                'api_selected': True,
+                'api_specification_url': api_interaction_method.specification_url,
+                'api_description': api_interaction_method.description,
+            })
+            form = self.form_class(initial=initial_values)
+        except models.APIInteractionMethod.DoesNotExist:
+            form = self.form_class()
+
+        context.update({
+            'data_collection': self.data_collection,
+            'data_collection_id': self.data_collection.pk,
+            'form': form,
+            'api_specification_validation_url': reverse_lazy('validation:api_specification_url'),
+            'title': f'Update Interaction Methods for {self.data_collection.name}',
+            'resource_management_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
+            'resource_management_category_list_page_breadcrumb_url_name': 'resource_management:data_collection_related_metadata_index',
+            'resource_management_category_list_page_breadcrumb_text': _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
+            'resource_management_list_page_breadcrumb_url_name': 'resource_management:data_collections',
+            'resource_management_list_page_breadcrumb_text': _create_manage_resource_page_title(models.DataCollection.type_plural_readable.title())
+        })
+        return context
 
 
 class StaticDatasetEntryUpdateFormView(ResourceUpdateFormView):
@@ -578,7 +603,7 @@ def workflow_openapi_specification_url(request, resource_id):
                     workflow
                 )
             messages.success(request, f'Successfully updated OpenAPI specification for {escape(workflow.name)}.')
-        except BaseException as err:
+        except Exception:
             logger.exception('An unexpected error occurred whilst trying to update an OpenAPI specification for a workflow.')
             messages.error(request, 'An unexpected error occurred.')
         return redirect('update:workflow_openapi_specification_url', resource_id=workflow.id)
