@@ -2161,6 +2161,15 @@ ul.tree ul {
     }
 }
 
+/* Target Safari browsers */
+/* Credit for @supports: https://wojtek.im/journal/targeting-safari-with-css-media-query */
+@supports (hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none) {
+    summary:not(.summary-marker-custom)::marker {
+        font-size: 1.5rem;
+        line-height: 1;
+    }
+}
+
 
 :root {
     --tree-search-container-max-height: 26rem;
