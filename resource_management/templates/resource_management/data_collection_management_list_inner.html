@@ -1,5 +1,7 @@
 {% extends 'resource_management/resource_management_list_by_type_inner.html' %}
 {% block extra_options %}
+{% with interaction_methods=resource.interactionmethod_set.all %}
+{% if interaction_methods %}
 <li>
     <a href="{% url interaction_method_update_page_url_name resource.pk %}" class="dropdown-item">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill me-3" viewBox="0 0 16 16">
@@ -7,35 +9,6 @@
         </svg>Update Interaction Methods
     </a>
 </li>
-{% with interaction_methods=resource.interactionmethod_set.all %}
-{% if interaction_methods and interaction_methods|length == 1 %}
-<li>
-    <a href="{% url 'present:interact_with_data_collection_through_api' resource.pk %}" class="dropdown-item">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill me-3" viewBox="0 0 16 16">
-            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
-        </svg>View API
-    </a>
-</li>
-{% elif interaction_methods and interaction_methods|length > 1 %}
-{% for im in interaction_methods %}
-<li>
-    <a href="{% url 'present:interact_with_data_collection_through_api' resource.pk %}" class="dropdown-item">
-        <div class="d-flex align-items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill me-3" viewBox="0 0 16 16">
-                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-                <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
-            </svg>
-            <div class="d-flex flex-column">
-                <span>View API</span>
-                {% if interaction_methods|length == 1 %}
-                <small class="text-body-secondary">({{ im.config.specification_url }})</small>
-                {% endif %}
-            </div>
-        </div>
-    </a>
-</li>
-{% endfor %}
 {% endif %}
 {% endwith %}
 {% endblock extra_options %}
