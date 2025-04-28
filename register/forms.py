@@ -40,50 +40,6 @@ class UploadFileForm(forms.Form):
     )
 
 
-class UploadDataCollectionFileForm(forms.Form):
-    required_css_class = 'required'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.label_suffix = ''
-
-    files = forms.FileField(
-        label=_FILE_INPUT_LABEL,
-        widget=forms.ClearableFileInput(attrs={
-            'accept': 'application/xml',
-            'class': 'form-control',
-        })
-    )
-    
-    api_selected = forms.BooleanField(
-        label='API',
-        required=False,
-        widget=forms.CheckboxInput(attrs={
-            'class': 'form-check-input'
-        })
-    )
-
-    api_specification_url = forms.URLField(
-        label='OpenAPI Specification URL',
-        required=False,
-        disabled=True,
-        widget=forms.URLInput(attrs={
-            'class': 'form-control'
-        })
-    )
-
-    api_description = forms.CharField(
-        label='Description',
-        required=False,
-        disabled=True,
-        widget=forms.Textarea(attrs={
-            'class': 'form-control',
-            'rows': 3,
-        }),
-        help_text=_API_DESCRIPTION_TEXTAREA_HELP_TEXT
-    )
-
-
 class UploadDataSubsetFileForm(forms.Form):
     required_css_class = 'required'
 

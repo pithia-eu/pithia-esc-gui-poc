@@ -243,9 +243,6 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
     model = models.DataCollection
     success_url = reverse_lazy('register:data_collection')
 
-    template_name = 'register/file_upload_data_collection.html'
-    form_class = UploadDataCollectionFileForm
-
     post_url = reverse_lazy('register:data_collection')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('data collections')
