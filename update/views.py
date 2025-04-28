@@ -258,53 +258,6 @@ class DataCollectionInteractionMethodsUpdateView(FormView):
         self.data_collection = get_object_or_404(models.DataCollection, pk=self.resource_id)
         return super().dispatch(request, *args, **kwargs)
 
-    def form_invalid(self, form):
-        response = super().form_invalid(form)
-        messages.error(self.request, 'The form submitted was not valid.')
-        return response
-
-    def form_valid(self, form):
-        is_api_selected = form.cleaned_data.get('api_selected')
-        if not is_api_selected:
-            try:
-                models.APIInteractionMethod.objects.get(
-                    scientific_metadata=self.data_collection
-                ).delete(using=os.environ['DJANGO_RW_DATABASE_NAME'])
-            except models.APIInteractionMethod.DoesNotExist:
-                pass
-            messages.success(
-                self.request,
-                f'Successfully updated interaction methods for {escape(self.data_collection.name)}.'
-            )
-            return super().form_valid(form)
-        
-        try:
-            api_specification_url = form.cleaned_data.get('api_specification_url')
-            api_description = form.cleaned_data.get('api_description')
-            try:
-                api_interaction_method = models.APIInteractionMethod.objects.get(
-                    scientific_metadata=self.data_collection
-                )
-                models.APIInteractionMethod.objects.update_config(
-                    api_interaction_method.pk,
-                    api_specification_url,
-                    api_description
-                )
-            except models.APIInteractionMethod.DoesNotExist:
-                models.APIInteractionMethod.objects.create_api_interaction_method(
-                    api_specification_url,
-                    api_description,
-                    self.data_collection
-                )
-            messages.success(
-                self.request,
-                f'Successfully updated interaction methods for {escape(self.data_collection.name)}.'
-            )
-        except Exception:
-            logger.exception('An unexpected error occurred whilst trying to update a Data Collection interaction method.')
-            messages.error(self.request, 'An unexpected error occurred.')
-        return super().form_valid(form)
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         initial_values = {}
