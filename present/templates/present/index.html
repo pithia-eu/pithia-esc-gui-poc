@@ -25,11 +25,11 @@
 {% endif %}
 {% endblock scripts %}
 {% block content %}
-<div class="row align-items-start justify-content-between gy-4 mb-3">
+<div class="row align-items-baseline justify-content-between column-gap-4 row-gap-lg-4">
     <div class="col-lg-8">
         <hgroup>
-            <h1 class="text-body-secondary fs-3 mb-0">API Access</h1>
-            <p class="text-body fs-1">{{ scientific_metadata.name }}</p>
+            <h1 class="text-body-secondary fs-6 mb-0">API Access</h1>
+            <p class="text-body fs-5 fw-semibold">{{ scientific_metadata.name }}</p>
         </hgroup>
     </div>
     {% if developer %}
