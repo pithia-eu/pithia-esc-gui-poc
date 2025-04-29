@@ -98,6 +98,37 @@ a description so there isn't extra whitespace if empty. */
     padding-bottom: 0;
 }
 
+/* Normalises the font size and weight of <h1-6> elements (not
+including the <h2> title element. */
+.swagger-ui .information-container.wrapper .info > .description > .renderedMarkdown h1,
+.swagger-ui .information-container.wrapper .info > .description > .renderedMarkdown h2,
+.swagger-ui .information-container.wrapper .info > .description > .renderedMarkdown h3,
+.swagger-ui .information-container.wrapper .info > .description > .renderedMarkdown h4,
+.swagger-ui .information-container.wrapper .info > .description > .renderedMarkdown h5,
+.swagger-ui .information-container.wrapper .info > .description > .renderedMarkdown h6 {
+    padding-top: 1rem;
+}
+
+.swagger-ui .information-container.wrapper .info > .description > .renderedMarkdown h1,
+.swagger-ui .information-container.wrapper .info > .description > .renderedMarkdown h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.swagger-ui .information-container.wrapper .info > .description > .renderedMarkdown h3 {
+    font-size: 1.25rem;
+    font-weight: 550;
+}
+
+.swagger-ui .information-container.wrapper .info > .description > .renderedMarkdown h4 {
+    font-size: var(--fs-base-2);
+}
+
+.swagger-ui .information-container.wrapper .info > .description > .renderedMarkdown h5,
+.swagger-ui .information-container.wrapper .info > .description > .renderedMarkdown h6 {
+    font-size: 1rem;
+}
+
 /* Removes the left padding of the endpoint
 sections. */
 .swagger-ui .wrapper {

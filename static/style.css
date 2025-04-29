@@ -77,7 +77,7 @@ hgroup p {
 }
 
 .fs-base-2 {
-    font-size: 1.1rem !important;
+    font-size: var(--fs-base-2) !important;
 }
 
 
@@ -431,7 +431,7 @@ h3.opblock-tag p {
 }
 
 .page-info-lg {
-    font-size: 1.1rem;
+    font-size: var(--fs-base-2);
 }
 
 .page-info-emphasised {
@@ -574,7 +574,7 @@ header .login-link {
 }
 
 .breadcrumb {
-    font-size: 1.1rem;
+    font-size: var(--fs-base-2);
 }
 
 .breadcrumb-item + .breadcrumb-item {
@@ -1920,7 +1920,7 @@ ul.tree ul {
     }
 
     .resource-detail-aside-section h2:first-child {
-        font-size: 1.1rem;
+        font-size: var(--fs-base-2);
     }
 
     .resource-detail-aside .resource-detail-aside-section:first-child {
@@ -2249,6 +2249,7 @@ ul.tree ul {
     /* Custom font sizes */
     --fs-sm-1: 0.875rem;
     --fs-sm-2: 0.925rem;
+    --fs-base-2: 1.1rem;
 }
 
 @media (min-width: 768px) and (prefers-color-scheme: dark) {
