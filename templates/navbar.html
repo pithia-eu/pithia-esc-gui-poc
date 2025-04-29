@@ -23,50 +23,25 @@
                 </a>
                 {% endif %}
             </div>
-            <ul class="navbar-nav align-items-lg-center align-items-start column-gap-4 fw-medium text-secondary-emphasis w-100 py-lg-0 py-3 mb-0">
+            <ul class="navbar-nav align-items-lg-center align-items-start column-gap-4 fs-sm-2 fw-medium text-secondary-emphasis w-100 py-lg-0 py-3 mb-0">
                 <li class="nav-item">
                     <div class="dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="d-inline-flex align-items-baseline column-gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search me-1" viewBox="0 0 16 16" style="transform: translateY(0.125rem);">
-                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                                </svg>Search Data Collections
-                            </span></a>
+                            Data Collections</a>
                         <ul class="dropdown-menu" data-bs-popper="static">
+                            <li>
+                                {% url 'browse:list_data_collections' as data_collections_url %}
+                                <a href="{{ data_collections_url }}" class="dropdown-item">All Data Collections</a>
+                            </li>
                             <li>
                                 {% url 'search:index' as search_url %}
                                 <a href="{{ search_url }}" class="dropdown-item">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-square me-2" viewBox="0 0 16 16">
-                                        <path d="M3 14.5A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h8a.5.5 0 0 1 0 1H3a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V8a.5.5 0 0 1 1 0v5a1.5 1.5 0 0 1-1.5 1.5z"/>
-                                        <path d="m8.354 10.354 7-7a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0"/>
-                                    </svg>Search by Content</a>
+                                    Search by Content</a>
                             </li>
                             <li>
                                 {% url 'simple_search:index' as simple_search_url %}
                                 <a href="{{ simple_search_url }}" class="dropdown-item">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-input-cursor-text me-2" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M5 2a.5.5 0 0 1 .5-.5c.862 0 1.573.287 2.06.566.174.099.321.198.44.286.119-.088.266-.187.44-.286A4.17 4.17 0 0 1 10.5 1.5a.5.5 0 0 1 0 1c-.638 0-1.177.213-1.564.434a3.5 3.5 0 0 0-.436.294V7.5H9a.5.5 0 0 1 0 1h-.5v4.272c.1.08.248.187.436.294.387.221.926.434 1.564.434a.5.5 0 0 1 0 1 4.17 4.17 0 0 1-2.06-.566A5 5 0 0 1 8 13.65a5 5 0 0 1-.44.285 4.17 4.17 0 0 1-2.06.566.5.5 0 0 1 0-1c.638 0 1.177-.213 1.564-.434.188-.107.335-.214.436-.294V8.5H7a.5.5 0 0 1 0-1h.5V3.228a3.5 3.5 0 0 0-.436-.294A3.17 3.17 0 0 0 5.5 2.5.5.5 0 0 1 5 2"/>
-                                        <path d="M10 5h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-4v1h4a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-4zM6 5V4H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4v-1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/>
-                                    </svg>Simple Search</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <div class="dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Scientific Metadata</a>
-                        <ul class="dropdown-menu" data-bs-popper="static">
-                            <li>
-                                {% url 'browse:list_data_collections' as data_collections_url %}
-                                <a href="{{ data_collections_url }}" class="dropdown-item">Data Collections</a>
-                            </li>
-                            <li>
-                                {% url 'browse:static_dataset_tree' as static_datasets_url %}
-                                <a href="{{ static_datasets_url }}" class="dropdown-item">Static Datasets</a>
-                            </li>
-                            <li>
-                                {% url 'browse:list_workflows' as workflows_url %}
-                                <a href="{{ workflows_url }}" class="dropdown-item">Workflows</a>
+                                    Simple Search</a>
                             </li>
                             <li>
                                 <hr class="dropdown-divider">
@@ -79,18 +54,80 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    {% url 'ontology:index' as browse_ontology_url %}
-                    <a href="{{ browse_ontology_url }}" class="nav-link link-plain-by-default">
-                        Space Physics Ontology
+                    {% url 'browse:list_workflows' as workflows_url %}
+                    <a href="{{ workflows_url }}" class="nav-link link-plain-by-default">Workflows</a>
+                </li>
+                <li class="nav-item">
+                    {% url 'browse:static_dataset_tree' as static_datasets_url %}
+                    <a href="{{ static_datasets_url }}" class="nav-link link-plain-by-default">Static Datasets</a>
+                </li>
+                <li class="nav-item">
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                            Space Physics Ontology</a>
+                        <ul class="dropdown-menu" data-bs-popper="static">
+                            <li>
+                                {% url 'ontology:index' as browse_ontology_url %}
+                                <a href="{{ browse_ontology_url }}" class="dropdown-item">
+                                    Space Physics Ontology</a>
+                            </li>
+                            {% if request.session.institution_for_login_session %}
+                            <li>
+                                {% url 'schemas' as schemas_url %}
+                                <a href="{{ schemas_url }}" class="dropdown-item">
+                                    Space Physics Data Model</a>
+                            </li>
+                            {% endif %}
+                            <li>
+                                {% url 'ontology:guide' as ontology_guide_url %}
+                                <a href="{{ ontology_guide_url }}" class="dropdown-item external-link">
+                                    Ontology User Guide</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                {% comment %} {% if request.session.institution_for_login_session %}
+                <li class="nav-item">
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                            Registration Help</a>
+                        <ul class="dropdown-menu" data-bs-popper="static">
+                            <li>
+                                {% url 'ontology:index' as browse_ontology_url %}
+                                <a href="{{ browse_ontology_url }}" class="dropdown-item">
+                                    Data Collection Help
+                                </a>
+                            </li>
+                            <li>
+                                {% url 'ontology:index' as browse_ontology_url %}
+                                <a href="{{ browse_ontology_url }}" class="dropdown-item">
+                                    Workflow Help
+                                </a>
+                            </li>
+                            <li>
+                                {% url 'ontology:index' as browse_ontology_url %}
+                                <a href="{{ browse_ontology_url }}" class="dropdown-item">
+                                    Static Dataset Help
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                {% endif %} {% endcomment %}
+                <li class="nav-item">
+                    <a href="https://pithia-nrf.eu" class="nav-link link-plain-by-default">
+                        About<span class="d-xl-inline d-none"> PITHIA-NRF</span>
                     </a>
                 </li>
                 {% if request.session.institution_for_login_session %}
                 <li class="d-md-inline-block d-none nav-item pt-lg-0 pt-2 ms-0 ms-lg-auto">
                     <a href="{% url 'resource_management:index' %}" class="nav-link link-plain-by-default">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text me-2" viewBox="0 0 16 16">
-                            <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5"/>
-                            <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
-                        </svg>Manage Registrations
+                        <small>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text me-1" viewBox="0 0 16 16">
+                                <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5"/>
+                                <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
+                            </svg>Manage Metadata
+                        </small>
                     </a>
                 </li>
                 {% endif %}
