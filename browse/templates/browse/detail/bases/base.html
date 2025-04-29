@@ -65,9 +65,17 @@
         <section id="further-information-section" class="resource-detail-section">
             <details>
                 <summary class="summary-marker-custom">
-                    <h2>Further Information and Resources</h2>
+                    <h2>Resources and Further Information</h2>
                 </summary>
                 <div class="d-flex flex-column">
+                    <section class="resource-detail-section">
+                        <h3>Resources</h3>
+                        <a href="{% url resource_download_url_name resource.id %}" id="metadata-file-link" class="icon-link icon-link-hover link-underline-by-default" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text-fill" viewBox="0 0 16 16">
+                                <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M4.5 9a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM4 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 1 0-1h4a.5.5 0 0 1 0 1z"/>
+                            </svg>Metadata File (XML)
+                        </a>
+                    </section>
                     {% if resource.properties.documentation %}
                     {% with documentation=resource.properties.documentation %}
                     <section class="resource-detail-section">
@@ -77,18 +85,6 @@
                     {% endwith %}
                     {% endif %}
                     {% block further_information_extra_sections %}{% endblock further_information_extra_sections %}
-                    <section class="resource-detail-section">
-                        <h3>Resources</h3>
-                        <ul>
-                            <li>
-                                <a href="{% url resource_download_url_name resource.id %}" id="metadata-file-link" class="icon-link icon-link-hover link-underline-by-default" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text-fill" viewBox="0 0 16 16">
-                                        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M4.5 9a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM4 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 1 0-1h4a.5.5 0 0 1 0 1z"/>
-                                    </svg>Metadata File (XML)
-                                </a>
-                            </li>
-                        </ul>
-                    </section>
                     {% if property_table_dict.items|length > 0 %}
                     <section>
                         <h3>More Properties</h3>
