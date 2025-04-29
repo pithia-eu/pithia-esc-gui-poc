@@ -60,11 +60,29 @@ the sections search bar. Also puts the main Swagger
 UI description in a rounded light background box. */
 .swagger-ui .information-container.wrapper {
     padding-inline: 1.5rem !important;
-    padding-block: 1.5rem !important;
-    padding-bottom: 1rem !important;
+    padding-block: 1rem !important;
     margin-bottom: 2rem;
     border-radius: var(--bs-border-radius);
     background-color: var(--bs-tertiary-bg);
+}
+
+/* Removes the bottom margin so there isn't extra
+whitespace if a description is not included. */
+.swagger-ui .information-container.wrapper hgroup.main {
+    margin-bottom: 0;
+}
+
+/* Replaces the main hgroup's bottom margin so spacing
+between the hgroup and description only exists if there
+is a description. */
+.swagger-ui .information-container.wrapper hgroup.main + .description {
+    margin-top: 20px;
+}
+
+/* Hides the description's <div> element if there isn't
+a description so there isn't extra whitespace if empty. */
+.swagger-ui .information-container.wrapper hgroup.main + .description:empty {
+    display: none;
 }
 
 /* Removes the left padding of the endpoint
