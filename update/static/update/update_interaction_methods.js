@@ -1,26 +1,12 @@
 import {
-    isApiSpecificationInputAvailable,
-    isApiSpecificationLinkValid,
-} from "/static/validation/api_specification_validation.js";
-import {
-    apiExecutionMethodCheckbox,
-} from "/static/validation/interaction_methods_form.js";
-let submitButton;
+    apiSpecificationUrlInput,
+} from "/static/validation/api_specification_validation.js"
+
+export const apiExecutionMethodCheckbox = document.querySelector('input[type="checkbox"][name="api_selected"]');
+export const apiSpecificationDescriptionTextarea = document.querySelector("#id_api_description");
 
 window.addEventListener("load", () => {
-    submitButton = document.querySelector("#file-upload-form button[type='submit']");
-    if (submitButton === null) {
-        submitButton = document.querySelector("#interaction-methods-form button[type='submit']")
-    }
+    apiExecutionMethodCheckbox.disabled = true;
+    apiSpecificationUrlInput.disabled = true;
+    apiSpecificationDescriptionTextarea.disabled = true;
 });
-
-document.addEventListener("apiInteractionMethodModified", event => {
-    enableSubmitButtonIfReady();
-});
-
-function enableSubmitButtonIfReady() {
-    if (isApiSpecificationInputAvailable && apiExecutionMethodCheckbox.checked) {
-        return submitButton.disabled = !isApiSpecificationLinkValid;
-    }
-    return submitButton.disabled = false;
-}

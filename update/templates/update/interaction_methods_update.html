@@ -10,17 +10,31 @@
 {% block scripts %}
 {{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
 {{ data_collection_id|json_script:"resource-id" }}
-<script src="{% static 'validation/api_specification_validation.js' %}" type="module" defer></script>
-<script src="{% static "update/update_interaction_methods.js" %}" type="module" defer></script>
+<script src="{% static "validation/interaction_methods_form.js" %}" type="module" defer></script>
+<script src="{% static 'update/update_interaction_methods.js' %}" type="module" defer></script>
 {% endblock scripts %}
 {% block content %}
 <div class="d-flex flex-column row-gap-4 col-xl-7 col-lg-9">
     <h1>{{ title }}</h1>
+    <div class="alert alert-warning">
+        <p>
+            <b>This API-Data Collection linking method is being deprecated.</b> It is no
+            longer possible to edit APIs from this page, and any APIs that have previously
+            been registered using this method will no longer appear in this Data Collection's
+            detail page after the deprecation date (TBA).
+        </p>
+        <p class="mb-0">
+            Please transfer any API information to your Data Collection's metadata file,
+            which can be done through <a href="{% url 'update:data_collection_with_editor' data_collection.pk %}#collection-results-section">
+            the wizard</a> or by updating the file manually and applying the changes via
+            <a href="{% url 'update:data_collection' data_collection.pk %}">file upload</a>.
+        </p>
+    </div>
     <form id="interaction-methods-form" class="d-flex flex-column row-gap-4" action="{% url 'update:data_collection_interaction_methods' data_collection_id %}" method="POST">
         {% csrf_token %}
         {% include 'register/components/interaction_method_choices_form_section.html' %}
         <div class="d-flex flex-column align-items-md-start align-items-stretch">
-            <button type="submit" class="btn btn-lg btn-primary fw-semibold py-2 px-3">
+            <button type="submit" class="btn btn-lg btn-primary fw-semibold py-2 px-3" disabled>
                 Update
             </button>
         </div>

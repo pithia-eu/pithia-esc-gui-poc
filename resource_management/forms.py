@@ -95,24 +95,30 @@ class UpdateDataCollectionInteractionMethodsForm(forms.Form):
     api_selected = forms.BooleanField(
         label='API',
         required=False,
+        disabled=True,
         widget=forms.CheckboxInput(attrs={
-            'class': 'form-check-input'
+            'class': 'form-check-input',
+            'readonly': 'true',
         })
     )
 
     api_specification_url = forms.URLField(
         label='OpenAPI Specification URL',
         required=False,
+        disabled=True,
         widget=forms.URLInput(attrs={
-            'class': 'form-control'
+            'class': 'form-control',
+            'readonly': 'true',
         })
     )
 
     api_description = forms.CharField(
         label='Description',
         required=False,
+        disabled=True,
         widget=forms.Textarea(attrs={
             'class': 'form-control',
+            'readonly': 'true',
             'rows': 3,
         }),
         help_text=_API_DESCRIPTION_TEXTAREA_HELP_TEXT
