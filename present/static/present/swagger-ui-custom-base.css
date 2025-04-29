@@ -92,8 +92,8 @@ a description so there isn't extra whitespace if empty. */
 }
 
 /* Removes extra whitespace at end of top information wrapper. */
-.swagger-ui .information-container.wrapper .info > *:last-child,
-.swagger-ui .information-container.wrapper .info > .description:last-child > .renderedMarkdown > *:last-child {
+.swagger-ui .information-container.wrapper .info > :last-child,
+.swagger-ui .information-container.wrapper .info > .description:last-child > .renderedMarkdown > :last-child {
     margin-bottom: 0;
     padding-bottom: 0;
 }
