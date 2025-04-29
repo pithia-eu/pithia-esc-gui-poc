@@ -1,4 +1,4 @@
-<nav id="navbar-global" class="navbar navbar-expand-lg">
+<nav id="navbar-global" class="navbar navbar-expand-xl">
     <div class="container">
         <a class="d-md-none d-flex align-items-center navbar-brand header-logo-link" href="/">
             {% load static %}
@@ -11,7 +11,7 @@
         <button class="navbar-toggler mx-2 my-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div id="navbarNav" class="collapse navbar-collapse px-lg-0 px-2">
+        <div id="navbarNav" class="collapse navbar-collapse px-xl-0 px-2">
             <div class="d-md-none d-flex flex-column align-items-start column-gap-5 row-gap-3 border-bottom pt-4 pb-3">
                 {% include 'header/user_menu.html' %}
                 {% if request.session.institution_for_login_session %}
@@ -23,7 +23,7 @@
                 </a>
                 {% endif %}
             </div>
-            <ul class="navbar-nav align-items-lg-center align-items-start column-gap-4 fs-sm-2 fw-medium text-secondary-emphasis w-100 py-lg-0 py-3 mb-0">
+            <ul class="navbar-nav align-items-xl-center align-items-start column-gap-4 fs-sm-2 fw-medium text-secondary-emphasis w-100 py-xl-0 py-3 mb-0">
                 <li class="nav-item">
                     <div class="dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
@@ -116,18 +116,19 @@
                 {% endif %} {% endcomment %}
                 <li class="nav-item">
                     <a href="https://pithia-nrf.eu" class="nav-link link-plain-by-default">
-                        About<span class="d-xl-inline d-none"> PITHIA-NRF</span>
+                        About PITHIA-NRF
                     </a>
                 </li>
                 {% if request.session.institution_for_login_session %}
-                <li class="d-md-inline-block d-none nav-item pt-lg-0 pt-2 ms-0 ms-lg-auto">
-                    <a href="{% url 'resource_management:index' %}" class="nav-link link-plain-by-default">
-                        <small>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text me-1" viewBox="0 0 16 16">
-                                <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5"/>
-                                <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
-                            </svg>Manage Metadata
-                        </small>
+                <li class="d-xl-none d-list-item nav-item w-100">
+                    <hr class="d-xl-none d-block my-0 mt-2">
+                </li>
+                <li class="d-md-inline-block d-none nav-item pt-xl-0 pt-2 ms-0 ms-xl-auto">
+                    <a href="{% url 'resource_management:index' %}" class="nav-link link-plain-by-default fs-sm-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text me-1" viewBox="0 0 16 16">
+                            <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5"/>
+                            <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
+                        </svg>Manage Metadata
                     </a>
                 </li>
                 {% endif %}
