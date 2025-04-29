@@ -2279,6 +2279,11 @@ ul.tree ul {
         color: var(--bs-secondary-color);
     }
 
+    .external-link::after {
+        /* Match body text colour */
+        filter: invert(90%) sepia(17%) saturate(55%) hue-rotate(169deg) brightness(102%) contrast(85%);
+    }
+
     :root {
         --pithia-blue: #33AEE4;
         --pithia-blue-2: #3B9FD6;
