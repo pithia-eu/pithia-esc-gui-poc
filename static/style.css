@@ -270,15 +270,16 @@ a.link-underline-by-default:focus,
 
 
 /* || External link styling */
-a[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after,
-.card-menu a[href^="http"]:not([href*="https://esc.pithia.eu"]) span::after {
+a.external-link::after {
     display: inline-block;
+    width: 1em;
     height: 1em;
     background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/><path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/></svg>');
     background-repeat: no-repeat;
     background-position: center right;
     background-size: 75% auto;
-    filter: invert(21%) sepia(98%) saturate(2462%) hue-rotate(181deg) brightness(101%) contrast(101%);
+    /* turn font colour to pithia colour scheme */
+    /* filter: invert(21%) sepia(98%) saturate(2462%) hue-rotate(181deg) brightness(101%) contrast(101%); */
     /* alternative text rules */
     content: '';
     overflow: hidden;
@@ -286,21 +287,21 @@ a[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)
     text-indent: 1em; /* the width of the icon */
 }
 
-.metadata-server-url.loading a[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after {
+.metadata-server-url.loading a.external-link::after {
     display: none;
 }
 
-a[href^="http"].btn-primary:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after,
-a[href^="http"].btn-secondary:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after {
+a.external-link.btn-primary::after,
+a.external-link.btn-secondary::after {
     filter: invert(98%) sepia(2%) saturate(10%) hue-rotate(41deg) brightness(103%) contrast(105%);
 }
 
-a[href^="http"].btn-outline-dark:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after {
+a.external-link.btn-outline-dark::after {
     transition: filter 150ms ease-in-out;
 }
 
-a[href^="http"].btn-outline-dark:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a):hover::after,
-a[href^="http"].btn-outline-dark:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a):focus::after {
+a.external-link.btn-outline-dark:hover::after,
+a.external-link.btn-outline-dark:focus::after {
     filter: invert(100%) sepia(2%) saturate(7490%) hue-rotate(224deg) brightness(107%) contrast(99%);
 }
 
