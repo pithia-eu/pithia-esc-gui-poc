@@ -30,17 +30,14 @@ def get_data_collections_for_search(
         computation_type_urls: list = [],
         annotation_type_urls: list = [],
         observed_property_urls: list = []):
-    if len(feature_of_interest_urls) > 0:
-        # Retrives observed properties that also
-        # reference the features of interest that
-        # were selected.
-        additional_observed_property_urls = get_observed_property_urls_from_feature_of_interest_urls(feature_of_interest_urls)
-        observed_property_urls += additional_observed_property_urls
-        observed_property_urls = list(set(observed_property_urls))
-
+    """Retrieves data collections based on selected features
+    of interest, instrument types, computation types, annotation
+    types and observed properties. Returns search results for the
+    Search by Content tool.
+    """
+    
     # The way in which data collections are found goes according to the
     # project data model diagram.
-
 
     # Search by instrument type
     # fbit = found by instrument type
