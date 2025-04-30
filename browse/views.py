@@ -892,15 +892,27 @@ class DataCollectionDetailView(ResourceDetailView, OnlineResourcesViewMixin):
         self.interaction_methods_by_type = self.categorise_online_resources_from_resource(self.resource)
         # Legacy API Interaction methods
         api_interaction_methods = list(models.APIInteractionMethod.objects.filter(scientific_metadata=self.resource))
-        if api_interaction_methods:
-            self.interaction_methods_by_type['api'] = self.interaction_methods_by_type.get('api', []) + [{
-                'service_functions': ['https://metadata.pithia.eu/ontology/2.2/serviceFunction/OpenAPI'],
-                'linkage': reverse('present:interact_with_data_collection_through_api', kwargs={'data_collection_id': self.resource_id}),
-                'name': 'Access with the PITHIA e-Science Centre',
-                'protocol': '',
-                'description': api_int_method.config.get('description', ''),
-                'data_format': '',
-            } for api_int_method in api_interaction_methods]
+        if not len(api_interaction_methods):
+            return super().get(request, *args, **kwargs)
+
+        try:
+            for api_int_method in api_interaction_methods:
+                if any(
+                    online_resource.get('linkage') == api_int_method.specification_url
+                    for online_resource in self.resource.properties.online_resources):
+                    continue
+                self.interaction_methods_by_type['api'] = self.interaction_methods_by_type.get('api', []) + [
+                    {
+                        'service_functions': ['https://metadata.pithia.eu/ontology/2.2/serviceFunction/OpenAPI'],
+                        'linkage': reverse('present:interact_with_data_collection_through_api', kwargs={'data_collection_id': self.resource_id}),
+                        'name': 'Access with the PITHIA e-Science Centre',
+                        'protocol': '',
+                        'description': api_int_method.config.get('description', ''),
+                        'data_format': '',
+                    }
+                ]
+        except Exception:
+            logger.exception(f'An unexpected error occurred whilst loading in API interaction methods for data collection with ID "{self.resource_id}"')
 
         return super().get(request, *args, **kwargs)
     
