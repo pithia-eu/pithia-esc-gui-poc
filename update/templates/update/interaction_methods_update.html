@@ -23,16 +23,23 @@
             been registered using this method will no longer appear in this Data Collection's
             detail page after the deprecation date (TBA).
         </p>
-        <p class="mb-0">
+        <p>
             Please transfer any API information to your Data Collection's metadata file,
             which can be done through <a href="{% url 'update:data_collection_with_editor' data_collection.pk %}#collection-results-section">
             the wizard</a> or by updating the file manually and applying the changes via
             <a href="{% url 'update:data_collection' data_collection.pk %}">file upload</a>.
         </p>
+        <p class="fw-semibold">
+            If you have already transferred over this API information, please delete the old
+            API-Data Collection link below.
+        </p>
+        <form action="{% url 'delete:data_collection_interaction_method' data_collection.pk %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-dark fw-medium">Delete Old API-Data Collection Link</button>
+        </form>
     </div>
-    <form id="interaction-methods-form" class="d-flex flex-column row-gap-4" action="{% url 'update:data_collection_interaction_methods' data_collection_id %}" method="POST">
-        {% csrf_token %}
+    <div id="interaction-methods-form" class="d-flex flex-column row-gap-4">
         {% include 'register/components/interaction_method_choices_form_section.html' %}
-    </form>
+    </div>
 </div>
 {% endblock content %}

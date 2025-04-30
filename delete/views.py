@@ -3,7 +3,10 @@ import os
 from django.contrib import messages
 from django.db import transaction
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+)
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.html import escape
@@ -323,3 +326,25 @@ class WorkflowDeleteView(ResourceDeleteView, WorkflowDataHubViewMixin):
         context = super().get_context_data(**kwargs)
         context['stored_workflow_details_file'] = self.get_workflow_details_file()
         return context
+
+
+class DataCollectionDeprecatedInteractionMethodDeleteView(TemplateView):
+    def post(self, request, *args, **kwargs):
+        data_collection_id = self.kwargs.get('data_collection_id')
+        try:
+            data_collection = models.DataCollection.objects.get(pk=data_collection_id)
+        except models.DataCollection.DoesNotExist:
+            messages.error(request, f'The data collection ({data_collection_id}) for this API interaction method could not be found.')
+            return redirect(reverse_lazy('resource_management:data_collections'))
+
+        try:
+            api_interaction_method = models.APIInteractionMethod.objects.get(
+                scientific_metadata=data_collection
+            )
+            api_interaction_method.delete(using=os.environ['DJANGO_RW_DATABASE_NAME'])
+            messages.success(request, 'Successfully deleted old API interaction method.')
+        except models.APIInteractionMethod.DoesNotExist:
+            messages.error(request, 'The API interaction method could not be found.')
+        except Exception:
+            logger.exception(f'An unexpected error occurred whilst attempting to delete the API interaction method for data collection with ID "{data_collection_id}"')
+        return redirect(reverse_lazy('resource_management:data_collections'))
