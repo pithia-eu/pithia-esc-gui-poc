@@ -9,10 +9,15 @@ from django.shortcuts import (
     render,
 )
 
+from common.models import DataCollection
 from help.services import (
     DataCollectionsHelpArticleContent,
     DataCollectionsSimpleSearchHelpArticleContent,
     SearchDataCollectionsByContentHelpArticleContent,
+)
+from ontology.services import (
+    get_ontology_category_terms_in_xml_format,
+    OntologyCategoryMetadataService,
 )
 from pithiaesc.settings import BASE_DIR
 from user_management.services import CREATION_URL_BASE
@@ -35,10 +40,19 @@ def index(request):
         DataCollectionsSimpleSearchHelpArticleContent.as_dict(),
         SearchDataCollectionsByContentHelpArticleContent.as_dict(),
     ]
+    xml_of_features_of_interest = get_ontology_category_terms_in_xml_format('featureOfInterest')
+    features_of_interest = OntologyCategoryMetadataService(xml_of_features_of_interest)
+    data_collection_counts_by_fois = features_of_interest.get_first_two_layers_of_ontology_category()
+    for foi_url in data_collection_counts_by_fois.keys():
+        num_data_collections_using_foi = DataCollection.objects.referencing_feature_of_interest_urls([foi_url]).count()
+        data_collection_counts_by_fois[foi_url].update({
+            'count': num_data_collections_using_foi,
+        })
     return render(request, 'index.html', {
         'title': 'PITHIA e-Science Centre',
         'create_institution_url': CREATION_URL_BASE,
         'help_content_dicts': help_content_dicts,
+        'data_collection_counts_by_fois': data_collection_counts_by_fois,
     })
 
 def data_provider_home(request):

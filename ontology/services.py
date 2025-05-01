@@ -42,8 +42,6 @@ def map_ontology_components_to_observed_property_dictionary(op_uri, op_dict, g):
     op_dict['featuresOfInterest'] = op_featuresOfInterest
     return op_dict
 
-
-# Existing
 def get_rdf_text_remotely(ontology_component):
     ontology_component_url = f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/{ontology_component}/'
     ontology_response = get(ontology_component_url)
@@ -60,11 +58,25 @@ def get_rdf_text_locally(ontology_component):
     return ontology_file.read()
 
 
-# New
 class OntologyCategoryMetadataService:
     def __init__(self, xml_of_ontology_category_terms: str) -> None:
         self.xml_parsed = etree.fromstring(xml_of_ontology_category_terms.encode('utf-8'))
         self.namespaces = ontology_namespaces
+
+    def _get_element_value_or_blank_string(self, element):
+        try:
+            return element.text
+        except AttributeError as err:
+            # Remove logging as errors are expected here
+            # if element does not have text.
+            # logger.exception(err)
+            return element
+        except Exception as err:
+            logger.exception(err)
+            return ''
+
+    def _get_first_element_from_list(self, element_list: list):
+        return next(iter(element_list), '')
 
     def _get_elements_by_xpath_query(self, xpath_query: str, parent_element=None):
         if not parent_element:
@@ -137,6 +149,95 @@ class OntologyCategoryMetadataService:
             ims_of_immediate_descendents = self.get_all_descendents_of_ontology_term(descendent_url)
             all_descendents = all_descendents.union(ims_of_immediate_descendents)
         return all_descendents
+
+    def _get_url_and_name_from_ontology_term_element(self, element):
+        url = self._get_element_value_or_blank_string(self._get_first_element_from_list(self._get_elements_by_xpath_query(
+            './/@%s:about' % PithiaOntologyNamespacePrefix.RDF,
+            parent_element=element
+        )))
+        name = self._get_element_value_or_blank_string(self._get_first_element_from_list(self._get_elements_by_xpath_query(
+            './/%s:prefLabel' % PithiaOntologyNamespacePrefix.SKOS,
+            parent_element=element
+        )))
+        return (url, name)
+
+    def _map_ontology_term_elements_to_dictionary(
+            self,
+            ontology_term_elements: list,
+            parent_term_name: str = None):
+        terms_dict = {}
+        for element in ontology_term_elements:
+            term_url, term_name = self._get_url_and_name_from_ontology_term_element(element)
+            if parent_term_name:
+                term_name = f'{parent_term_name}: {term_name}'
+            terms_dict.update({
+                term_url: {
+                    'name': term_name,
+                    'count': 0,
+                },
+            })
+        return terms_dict
+
+    def get_first_two_layers_of_ontology_category(self):
+        elements_of_first_layer_terms = self._get_elements_by_xpath_query(
+            './/%s:Concept[not(%s:broader)]' % (
+                PithiaOntologyNamespacePrefix.SKOS,
+                PithiaOntologyNamespacePrefix.SKOS,
+            )
+        )
+        if not len(elements_of_first_layer_terms):
+            return []
+
+        first_layer_terms_by_url = self._map_ontology_term_elements_to_dictionary(
+            elements_of_first_layer_terms
+        )
+
+        second_layer_terms_by_url = {}
+        for first_layer_term_url, first_layer_term_properties in first_layer_terms_by_url.items():
+            # SKOS broader
+            elements_of_child_terms_by_skos_broader = self._get_elements_by_xpath_query(
+                './/%s:Concept[%s:broader[@%s:resource="%s"]]' % (
+                    PithiaOntologyNamespacePrefix.SKOS,
+                    PithiaOntologyNamespacePrefix.SKOS,
+                    PithiaOntologyNamespacePrefix.RDF,
+                    first_layer_term_url,
+                )
+            )
+            second_layer_terms_by_url.update(self._map_ontology_term_elements_to_dictionary(
+                elements_of_child_terms_by_skos_broader,
+                parent_term_name=first_layer_term_properties.get('name')
+            ))
+
+            # SKOS narrower
+            urls_of_child_terms_by_skos_narrower = self._get_elements_by_xpath_query(
+                './/%s:Concept[@%s:about="%s"]/%s:narrower/@%s:resource' % (
+                    PithiaOntologyNamespacePrefix.SKOS,
+                    PithiaOntologyNamespacePrefix.RDF,
+                    first_layer_term_url,
+                    PithiaOntologyNamespacePrefix.SKOS,
+                    PithiaOntologyNamespacePrefix.RDF,
+                )
+            )
+            if not len(urls_of_child_terms_by_skos_narrower):
+                continue
+
+            _ = [
+                '@%s:about="%s"' % (PithiaOntologyNamespacePrefix.RDF, url)
+                for url in urls_of_child_terms_by_skos_narrower
+            ]
+
+            elements_of_child_terms_by_skos_narrower = self._get_elements_by_xpath_query(
+                './/%s:Concept[%s]' % (
+                    PithiaOntologyNamespacePrefix.SKOS,
+                    ' or '.join(_),
+                )
+            )
+            second_layer_terms_by_url.update(self._map_ontology_term_elements_to_dictionary(
+                elements_of_child_terms_by_skos_narrower,
+                parent_term_name=first_layer_term_properties.get('name')
+            ))
+
+        return first_layer_terms_by_url | second_layer_terms_by_url
 
 
 def get_xml_of_ontology_category_terms_remotely(ontology_category):

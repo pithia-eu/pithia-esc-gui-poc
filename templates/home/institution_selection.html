@@ -1,0 +1,64 @@
+{% if request.session.is_logged_in and not request.session.institution_for_login_session %}
+<div class="row mb-4">
+    <div class="col-lg-12">
+        <div class="alert alert-{% if not request.session.user_institution_subgroups %}light{% else %}primary{% endif %} alert-institution-setting mt-3">
+            <div class="row">
+                <div class="col-lg-7">
+                    {% if not request.session.user_institution_subgroups %}
+                    <div class="p-md-3">
+                        <p class="mb-4">
+                            You must be a member of an e-Science Centre
+                            institution to enable content management
+                            features for this account.
+                        </p>
+                        <div class="d-flex flex-wrap justify-content-lg-start justify-content-center">
+                            <a href="{% url 'list_joinable_perun_organisations' %}" class="btn btn-primary mx-1 ms-lg-0 me-lg-1 my-1">
+                                Join an Existing Institution
+                            </a>
+                            <a href="{{ create_institution_url }}" class="btn btn-secondary mx-1 ms-lg-1 me-lg-0 my-1" target="_blank">
+                                Register a New Institution
+                            </a>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="p-md-2 d-flex align-items-start">
+                        <div>
+                            <p>
+                                Select which institution you would like to set for this login session (this can be changed later from the
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                                </svg> menu).
+                            </p>
+                            <form action="{% url 'choose_institution_for_login_session' %}" method="POST">
+                                {% csrf_token %}
+                                <label for="{{ request.institution_selection_form.institutions.auto_id }}">Institutions:</label>
+                                <select
+                                    name="{{ request.institution_selection_form.institutions.name }}"
+                                    id="{{ request.institution_selection_form.institutions.auto_id }}"
+                                    class="form-select"
+                                    required="{{ request.institution_selection_form.institutions.required }}"
+                                    {% with num_available_institutions=request.institution_selection_form.fields.institutions.choices|length %}
+                                    placeholder="Member of {{ num_available_institutions }} institutions..."
+                                    {% endwith %}
+                                    >
+                                    <option value="" disabled selected>
+                                        Member of {{ request.institution_selection_form.fields.institutions.choices|length }} institutions...
+                                    </option>
+                                    {% for value, text in request.institution_selection_form.fields.institutions.choices %}
+                                    <option value="{{ value }}">{{ text }}</option>
+                                    {% endfor %}
+                                </select>
+                                <small class="form-text d-block mb-3">Data management features will be enabled for the chosen institution.</small>
+                                <button type="submit" class="btn btn-primary">Edit with this institution</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% comment %} <hr class="my-4"> {% endcomment %}
+{% endif %}
