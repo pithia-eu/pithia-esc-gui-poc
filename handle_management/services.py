@@ -1,13 +1,12 @@
 import json
 import logging
-import os
+import os, tempfile
 import requests
 import urllib.parse
 from dateutil import parser
 from django.db import transaction
 from django.urls import reverse_lazy
 from lxml import etree
-from pathlib import Path
 from pyhandle.clientcredentials import PIDClientCredentials
 from pyhandle.handleclient import (
     PyHandleClient,
@@ -263,28 +262,26 @@ class HandleRegistrationProcessForDataSubset:
 class HandleClient:
     credentials: PIDClientCredentials
     client: RESTHandleClient
+    credentials_data = {
+        'client': os.environ['HANDLE_API_CLIENT'],
+        'handle_server_url': os.environ['HANDLE_API_ENDPOINT_URL'],
+        'baseuri': os.environ['HANDLE_API_ENDPOINT_URL'],
+        'username': os.environ['HANDLE_API_USERNAME'],
+        'password': os.environ['HANDLE_API_KEY'],
+        'prefix': os.environ['HANDLE_PREFIX'],
+    }
 
     def __init__(self) -> None:
         # Create
-        self._create_credentials_json_file_if_needed()
-        self.credentials = PIDClientCredentials.load_from_JSON('credentials.json')
+        self._load_pid_client_credentials()
         self.handle_prefix = self.credentials.get_prefix()
         self.client = PyHandleClient('rest').instantiate_with_credentials(self.credentials)
 
-    def _create_credentials_json_file_if_needed(self):
-        credentials_json_file = Path('credentials.json')
-        if credentials_json_file.is_file():
-            return
-        with open('credentials.json', 'w+') as credentials_json_file:
-            credentials_data = {
-                'client': os.environ['HANDLE_API_CLIENT'],
-                'handle_server_url': os.environ['HANDLE_API_ENDPOINT_URL'],
-                'baseuri': os.environ['HANDLE_API_ENDPOINT_URL'],
-                'username': os.environ['HANDLE_API_USERNAME'],
-                'password': os.environ['HANDLE_API_KEY'],
-                'prefix': os.environ['HANDLE_PREFIX'],
-            }
-            json.dump(credentials_data, credentials_json_file, indent=4)
+    def _load_pid_client_credentials(self):
+        with tempfile.NamedTemporaryFile(suffix='json', mode='w+') as tmp:
+            json.dump(self.credentials_data, tmp, indent=4)
+            tmp.flush()
+            self.credentials = PIDClientCredentials.load_from_JSON(tmp.name)
 
     def _create_handle_name_with_suffix(self, handle_suffix: str) -> str:
         return f'{self.handle_prefix}/{handle_suffix}'
