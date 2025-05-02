@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load project_tags %}
 {% block scripts %}
 <script type="module" src="{% static 'help/home_menu_help_dialogs.js' %}" defer></script>
 {% endblock scripts %}
@@ -96,11 +97,14 @@
                 <legend>Features of Interest</legend>
                 <div class="overflow-y" style="max-height: 100%;">
                     <ul class="list-group list-group-flush">
-                        {% for foi_properties in data_collection_counts_by_fois.values %}
+                        {% for foi_url, foi_properties in data_collection_counts_by_fois.items %}
                         {% if foi_properties.count %}
                         <li class="list-group-item">
-                            <span class="d-inline-flex flex-column">
-                                {{ foi_properties.name }}
+                            <span class="d-inline-flex flex-column align-items-start">
+                                <a
+                                    href="{% url 'search:results_from_foi' %}?feature_of_interest={{ foi_url|server_url_id|urlencode }}"
+                                    class="link-plain-by-default">
+                                    {{ foi_properties.name }}</a>
                                 <small class="text-body-secondary">
                                     {{ foi_properties.count }}
                                     {% if foi_properties.count == 1 %}
