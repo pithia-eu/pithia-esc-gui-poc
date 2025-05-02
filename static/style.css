@@ -632,9 +632,10 @@ header .login-link {
 }
 
 .fieldset-hm .card-menu .card {
-    border: 3px solid var(--bs-border-color);
+    border: 2px solid var(--bs-border-color);
     font-size: var(--fs-sm-2);
     box-shadow: none !important;
+    height: 10rem;
 }
 
 .fieldset-hm .card-menu .card:hover,
