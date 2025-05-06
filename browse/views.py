@@ -160,7 +160,7 @@ class ResourceListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = self.model.type_plural_readable.title()
+        context['title'] = f'All {self.model.type_plural_readable.title()}'
         context['description'] = self.model.type_description_readable
         context['type_readable'] = self.model.type_readable
         context['type_plural_readable'] = self.model.type_plural_readable
