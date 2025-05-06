@@ -626,9 +626,10 @@ header .login-link {
     display: grid;
     height: 100%;
     gap: 1.25rem;
-    grid-template-columns: repeat(auto-fill, 12rem);
+    grid-template-columns: repeat(auto-fit, 12rem);
     grid-auto-rows: 1fr;
     justify-content: center;
+    align-items: center;
 }
 
 .fieldset-hm .card-menu .card {
