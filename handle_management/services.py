@@ -262,14 +262,6 @@ class HandleRegistrationProcessForDataSubset:
 class HandleClient:
     credentials: PIDClientCredentials
     client: RESTHandleClient
-    credentials_data = {
-        'client': os.environ['HANDLE_API_CLIENT'],
-        'handle_server_url': os.environ['HANDLE_API_ENDPOINT_URL'],
-        'baseuri': os.environ['HANDLE_API_ENDPOINT_URL'],
-        'username': os.environ['HANDLE_API_USERNAME'],
-        'password': os.environ['HANDLE_API_KEY'],
-        'prefix': os.environ['HANDLE_PREFIX'],
-    }
 
     def __init__(self) -> None:
         # Create
@@ -279,7 +271,14 @@ class HandleClient:
 
     def _load_pid_client_credentials(self):
         with tempfile.NamedTemporaryFile(suffix='json', mode='w+') as tmp:
-            json.dump(self.credentials_data, tmp, indent=4)
+            json.dump({
+                'client': os.environ['HANDLE_API_CLIENT'],
+                'handle_server_url': os.environ['HANDLE_API_ENDPOINT_URL'],
+                'baseuri': os.environ['HANDLE_API_ENDPOINT_URL'],
+                'username': os.environ['HANDLE_API_USERNAME'],
+                'password': os.environ['HANDLE_API_KEY'],
+                'prefix': os.environ['HANDLE_PREFIX'],
+            }, tmp, indent=4)
             tmp.flush()
             self.credentials = PIDClientCredentials.load_from_JSON(tmp.name)
 
