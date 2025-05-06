@@ -173,6 +173,7 @@ class OntologyCategoryMetadataService:
             terms_dict.update({
                 term_url: {
                     'name': term_name,
+                    'descendents': list(self.get_all_descendents_of_ontology_term(term_url)),
                     'count': 0,
                 },
             })

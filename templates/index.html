@@ -2,7 +2,9 @@
 {% load static %}
 {% load project_tags %}
 {% block scripts %}
+{{ data_collection_counts_by_fois|json_script:'data-collection-counts-by-foi' }}
 <script type="module" src="{% static 'help/home_menu_help_dialogs.js' %}" defer></script>
+<script type="module" src="{% static 'utils/home_page_foi_search.js' %}" defer></script>
 {% endblock scripts %}
 {% block content %}
 {% include 'home/institution_selection.html' %}
@@ -204,7 +206,9 @@
             {% endif %}
         </div>
     </div>
-    <div class="col-lg-4">
+    
+    <form action="{% url 'search:index' %}" method="POST" id="foi-search-form" class="col-lg-4">
+        {% csrf_token %}
         <fieldset class="fieldset-hm p-0">
             <legend>Features of Interest</legend>
             <p class="pt-4 px-4">
@@ -217,10 +221,10 @@
                     {% if foi_properties.count %}
                     <li class="list-group-item">
                         <span class="d-inline-flex flex-column align-items-start">
-                            <a
-                                href="{% url 'search:results_from_foi' %}?feature_of_interest={{ foi_url|server_url_id|urlencode }}"
-                                class="link-plain-by-default">
-                                {{ foi_properties.name }}</a>
+                            <button
+                                type="button"
+                                class="btn btn-link btn-foi-search p-0 link-plain-by-default"
+                                data-foi-url="{{ foi_url }}">{{ foi_properties.name }}</button>
                             <small class="text-body-secondary">
                                 {{ foi_properties.count }}
                                 {% if foi_properties.count == 1 %}
@@ -236,7 +240,7 @@
                 </ul>
             </div>
         </fieldset>
-    </div>
+    </form>
 </div>
 {% for dict in help_content_dicts %}
 {% with help_content=dict %}

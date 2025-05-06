@@ -42,9 +42,12 @@ def index(request):
     ]
     xml_of_features_of_interest = get_ontology_category_terms_in_xml_format('featureOfInterest')
     features_of_interest = OntologyCategoryMetadataService(xml_of_features_of_interest)
-    data_collection_counts_by_fois = features_of_interest.get_first_two_layers_of_ontology_category()
-    for foi_url in data_collection_counts_by_fois.keys():
-        num_data_collections_using_foi = DataCollection.objects.referencing_feature_of_interest_urls([foi_url]).count()
+    unsorted_data_collection_counts_by_fois = features_of_interest.get_first_two_layers_of_ontology_category()
+    data_collection_counts_by_fois = dict(sorted(
+        unsorted_data_collection_counts_by_fois.items(), key=lambda item: item[1].get('name')
+    ))
+    for foi_url, foi_properties in data_collection_counts_by_fois.items():
+        num_data_collections_using_foi = DataCollection.objects.referencing_feature_of_interest_urls([foi_url] + foi_properties.get('descendents', [])).count()
         data_collection_counts_by_fois[foi_url].update({
             'count': num_data_collections_using_foi,
         })
