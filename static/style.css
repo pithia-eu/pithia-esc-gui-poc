@@ -627,20 +627,19 @@ header .login-link {
     word-break: keep-all;
     hyphens: auto;
     overflow: hidden;
-    color: var(--bs-body-color);
-    text-decoration: var(--bs-body-color);
     padding: 1.5rem;
 }
 
 .card-menu a.card {
+    color: var(--pithia-blue-2);
+    text-decoration-color: var(--pithia-blue-2);
     border: 2px solid var(--bs-border-color);
-    min-height: 10rem;
+    min-height: 8rem;
 }
 
 .card-menu a.card:hover,
 .card-menu a.card:focus-visible,
 .card-menu a.card:active {
-    text-decoration: none;
     border-color: var(--pithia-blue);
 }
 
