@@ -96,13 +96,13 @@ a.icon-link:not(a.btn.icon-link),
 }
 
 a:not(header a, a.btn, a.dropdown-item, a.nav-link, a.alert-link):hover,
-a:not(header a, a.btn, a.dropdown-item, a.nav-link, a.alert-link):focus,
+a:not(header a, a.btn, a.dropdown-item, a.nav-link, a.alert-link):focus-visible,
 a:not(header a, a.btn, a.dropdown-item, a.nav-link, a.alert-link):active,
 a.icon-link:not(a.btn.icon-link):hover,
-a.icon-link:not(a.btn.icon-link):focus,
+a.icon-link:not(a.btn.icon-link):focus-visible,
 a.icon-link:not(a.btn.icon-link):active,
 .btn-link:hover,
-.btn-link:focus,
+.btn-link:focus-visible,
 .btn-link:active {
     color: var(--pithia-blue);
     -webkit-text-decoration-color: var(--pithia-blue);
@@ -117,16 +117,16 @@ a.alert-link,
 }
 
 a:not(a.btn, a.dropdown-item, header a, a.nav-link, .card-menu a, .list-group-item a):hover,
-a:not(a.btn, a.dropdown-item, header a, a.nav-link, .card-menu a, .list-group-item a):focus,
+a:not(a.btn, a.dropdown-item, header a, a.nav-link, .card-menu a, .list-group-item a):focus-visible,
 a:not(a.btn, a.dropdown-item, header a, a.nav-link, .card-menu a, .list-group-item a):active,
 a.icon-link:not(a.btn.icon-link):hover,
-a.icon-link:not(a.btn.icon-link):focus,
+a.icon-link:not(a.btn.icon-link):focus-visible,
 a.icon-link:not(a.btn.icon-link):active,
 a.alert-link:hover,
 a.alert-link:hover,
 a.alert-link:hover,
 .btn-link:hover,
-.btn-link:focus,
+.btn-link:focus-visible,
 .btn-link:active {
     text-decoration: none;
 }
@@ -138,7 +138,7 @@ a.header-logo-link {
 }
 
 a.header-logo-link:hover,
-a.header-logo-link:focus {
+a.header-logo-link:focus-visible {
     text-decoration: underline;
 }
 
@@ -152,9 +152,9 @@ a.header-logo-link:focus {
 }
 
 .navbar .nav-item a.dropdown-toggle span:hover,
-.navbar .nav-item a.dropdown-toggle span:focus,
+.navbar .nav-item a.dropdown-toggle span:focus-visible,
 .navbar .nav-item a.dropdown-toggle:hover,
-.navbar .nav-item a.dropdown-toggle:focus {
+.navbar .nav-item a.dropdown-toggle:focus-visible {
     text-decoration: underline;
 }
 
@@ -164,9 +164,9 @@ a.nav-link {
 }
 
 a.nav-link:hover,
-a.nav-link:focus,
+a.nav-link:focus-visible,
 .navbar .dropdown-menu .dropdown-item:hover,
-.navbar .dropdown-menu .dropdown-item:focus {
+.navbar .dropdown-menu .dropdown-item:focus-visible {
     text-decoration: underline;
 }
 
@@ -176,7 +176,7 @@ a.nav-link:focus,
 }
 
 .breadcrumb-wrapper .breadcrumb .breadcrumb-item a:hover,
-.breadcrumb-wrapper .breadcrumb .breadcrumb-item a:focus,
+.breadcrumb-wrapper .breadcrumb .breadcrumb-item a:focus-visible,
 .breadcrumb-wrapper .breadcrumb .breadcrumb-item a:active {
     text-decoration: underline;
 }
@@ -195,11 +195,11 @@ a.dropdown-item,
 }
 
 a.dropdown-item:hover,
-a.dropdown-item:focus,
+a.dropdown-item:focus-visible,
 .accordion-button a:hover,
-.accordion-button a:focus,
+.accordion-button a:focus-visible,
 .list-group-item > a:hover,
-.list-group-item > a:focus {
+.list-group-item > a:focus-visible {
     text-decoration: underline;
 }
 
@@ -209,7 +209,7 @@ a.dropdown-item:focus,
 }
 
 .card-menu a:hover,
-.card-menu a:focus {
+.card-menu a:focus-visible {
     text-decoration: underline;
 }
 
@@ -218,13 +218,13 @@ a.dropdown-item:focus,
 }
 
 .user-dropdown .dropdown-menu li a:hover,
-.user-dropdown .dropdown-menu li a:focus,
+.user-dropdown .dropdown-menu li a:focus-visible,
 .user-dropdown .dropdown-menu li button:hover,
-.user-dropdown .dropdown-menu li button:focus {
+.user-dropdown .dropdown-menu li button:focus-visible {
     text-decoration: underline;
 }
 
-.ontology-server-url a.metadata-server-url-text:not(:hover, :focus, :active) {
+.ontology-server-url a.metadata-server-url-text:not(:hover, :focus-visible, :active) {
     text-decoration: underline dotted;
 }
 
@@ -238,7 +238,7 @@ a.dropdown-item:focus,
 }
 
 .metadata-server-url a.metadata-server-url-text:hover,
-.metadata-server-url a.metadata-server-url-text:focus,
+.metadata-server-url a.metadata-server-url-text:focus-visible,
 .metadata-server-url a.metadata-server-url-text:active {
     text-decoration: none;
 }
@@ -250,9 +250,9 @@ a.link-plain-by-default,
 }
 
 a.link-plain-by-default:hover,
-a.link-plain-by-default:focus,
+a.link-plain-by-default:focus-visible,
 .btn-link.link-plain-by-default:hover,
-.btn-link.link-plain-by-default:focus {
+.btn-link.link-plain-by-default:focus-visible {
     text-decoration: underline !important;
 }
 
@@ -262,9 +262,9 @@ a.link-underline-by-default,
 }
 
 a.link-underline-by-default:hover,
-a.link-underline-by-default:focus,
+a.link-underline-by-default:focus-visible,
 .btn-link.link-underline-by-default:hover,
-.btn-link.link-underline-by-default:focus {
+.btn-link.link-underline-by-default:focus-visible {
     text-decoration: none !important;
 }
 
@@ -301,7 +301,7 @@ a.external-link.btn-outline-dark::after {
 }
 
 a.external-link.btn-outline-dark:hover::after,
-a.external-link.btn-outline-dark:focus::after {
+a.external-link.btn-outline-dark:focus-visible::after {
     filter: invert(100%) sepia(2%) saturate(7490%) hue-rotate(224deg) brightness(107%) contrast(99%);
 }
 
@@ -638,7 +638,7 @@ header .login-link {
 }
 
 .card-menu a.card:hover,
-.card-menu a.card:focus,
+.card-menu a.card:focus-visible,
 .card-menu a.card:active {
     text-decoration: none;
     border-color: var(--pithia-blue);
@@ -698,18 +698,18 @@ header .login-link {
 }
 
 .card-menu li .btn-card-help-dialog:hover,
-.card-menu li .btn-card-help-dialog:focus {
+.card-menu li .btn-card-help-dialog:focus-visible {
     background-color: var(--pithia-blue);
 }
 
 .card-menu li .btn-card-help-dialog:hover svg:first-child,
-.card-menu li .btn-card-help-dialog:focus svg:first-child {
+.card-menu li .btn-card-help-dialog:focus-visible svg:first-child {
     display: inline;
     color: white
 }
 
 .card-menu li .btn-card-help-dialog:hover svg:nth-child(2),
-.card-menu li .btn-card-help-dialog:focus svg:nth-child(2) {
+.card-menu li .btn-card-help-dialog:focus-visible svg:nth-child(2) {
     display: none;
 }
 
@@ -721,7 +721,7 @@ header .login-link {
 }
 
 .card-menu li:has(.btn-card-help-dialog:hover) .card-facade,
-.card-menu li:has(.btn-card-help-dialog:focus) .card-facade {
+.card-menu li:has(.btn-card-help-dialog:focus-visible) .card-facade {
     opacity: 60%;
 }
 
@@ -762,12 +762,12 @@ header .login-link {
 }
 
 .btn-card-help-dialog:hover svg:first-child,
-.btn-card-help-dialog:focus svg:first-child {
+.btn-card-help-dialog:focus-visible svg:first-child {
     display: none;
 }
 
 .btn-card-help-dialog:hover svg:nth-child(2),
-.btn-card-help-dialog:focus svg:nth-child(2) {
+.btn-card-help-dialog:focus-visible svg:nth-child(2) {
     display: inline;
 }
 
@@ -904,9 +904,9 @@ as Bootstrap styling. */
 }
 
 .resource-detail-section > details:only-child summary.summary-marker-custom:hover,
-.resource-detail-section > details:only-child summary.summary-marker-custom:focus,
+.resource-detail-section > details:only-child summary.summary-marker-custom:focus-visible,
 .resource-detail-section details[name="details-permissions"] summary.summary-marker-custom:hover,
-.resource-detail-section details[name="details-permissions"] summary.summary-marker-custom:focus {
+.resource-detail-section details[name="details-permissions"] summary.summary-marker-custom:focus-visible {
     background-color: var(--bs-tertiary-bg);
 }
 
@@ -1840,7 +1840,7 @@ ul.tree ul {
     max-height: 20rem;
 }
 
-.table-dynamic textarea:focus {
+.table-dynamic textarea:focus-visible {
     opacity: 100%;
 }
 
@@ -1857,7 +1857,7 @@ ul.tree ul {
     border-radius: var(--bs-border-radius);
 }
 
-.table-dynamic textarea:focus ~ .textarea-facade {
+.table-dynamic textarea:focus-visible ~ .textarea-facade {
     display: none;
 }
 
