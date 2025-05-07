@@ -665,23 +665,39 @@ header .login-link {
     margin-block: 0;
 }
 
+/* FOI search section */
+.list-foi-search button {
+    font-size: var(--fs-sm-2);
+}
+
 /* Home page - card menu variant */
-.fieldset-hm .card-menu {
+.card-menu.card-menu-hm {
     height: 100%;
     justify-content: center;
     align-items: center;
+    margin-bottom: 0;
 }
 
-.fieldset-hm .card-menu a.card svg {
-    flex-shrink: 0;
-    width: 1.5rem;
-    height: 1.5rem;
-}
-
-.fieldset-hm .card-menu a.card {
+.card-menu.card-menu-hm a.card {
+    color: var(--bs-body-color);
+    text-decoration-color: var(--bs-body-color);
     flex-direction: column;
     gap: 0.5rem;
     font-size: var(--fs-sm-2);
+}
+
+.card-menu.card-menu-hm a.card:hover,
+.card-menu.card-menu-hm a.card:focus-visible,
+.card-menu.card-menu-hm a.card:active {
+    color: var(--pithia-blue);
+    text-decoration-color: var(--pithia-blue);
+    text-decoration: none;
+}
+
+.card-menu.card-menu-hm a.card svg {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
 }
 
 /* When quick help button is in card menu */
@@ -1999,6 +2015,11 @@ ul.tree ul {
     
     .breadcrumb {
         font-size: 1rem;
+    }
+
+    .fieldset-hm-foi {
+        contain: size;
+        padding-inline: 0;
     }
 }
 
