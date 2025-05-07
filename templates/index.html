@@ -12,9 +12,11 @@
 <div class="row g-5">
     <div class="col-lg-9">
         <div class="row g-4">
-            <div class="col-lg-7">
+            <section class="col-lg-7 py-0">
                 <div class="card h-100">
-                    <div class="card-header fw-semibold text-center border-bottom-0">Data Collections</div>
+                    <div class="card-header text-center border-bottom-0">
+                        <h2 class="fs-6 fw-semibold mb-0">Data Collections</h2>
+                    </div>
                     <div class="card-body">
                         <ul class="card-menu card-menu-hm list-unstyled">
                             <li>
@@ -62,10 +64,12 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-            <div class="d-flex flex-column row-gap-3 col-lg-5">
-                <div class="card h-100">
-                    <div class="card-header fw-semibold text-center border-bottom-0">Workflows</div>
+            </section>
+            <div class="d-flex flex-column row-gap-4 col-lg-5">
+                <section class="card h-100 py-0">
+                    <div class="card-header text-center border-bottom-0">
+                        <h2 class="fs-6 fw-semibold mb-0">Workflows</h2>
+                    </div>
                     <div class="card-body">
                         <ul class="card-menu card-menu-hm list-unstyled">
                             <li class="my-auto">
@@ -78,9 +82,11 @@
                             </li>
                         </ul>
                     </div>
-                </div>
-                <div class="card h-100">
-                    <div class="card-header fw-semibold text-center border-bottom-0">Static Datasets</div>
+                </section>
+                <section class="card h-100 py-0">
+                    <div class="card-header text-center border-bottom-0">
+                        <h2 class="fs-6 fw-semibold mb-0">Static Datasets</h2>
+                    </div>
                     <div class="card-body">
                         <ul class="card-menu card-menu-hm list-unstyled">
                             <li class="my-auto">
@@ -93,11 +99,13 @@
                             </li>
                         </ul>
                     </div>
-                </div>
+                </section>
             </div>
-            <div class="col-lg-12">
+            <section class="col-lg-12 py-0">
                 <div class="card">
-                    <div class="card-header fw-semibold text-center border-bottom-0">Space Physics Ontology</div>
+                    <div class="card-header text-center border-bottom-0">
+                        <h2 class="fs-6 fw-semibold mb-0">Space Physics Ontology</h2>
+                    </div>
                     <div class="card-body">
                         <ul class="card-menu card-menu-hm list-unstyled">
                             <li>
@@ -120,10 +128,12 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-12">
+            </section>
+            <section class="col-lg-12 py-0">
                 <div class="card">
-                    <div class="card-header fw-semibold text-center border-bottom-0">Registration Help</div>
+                    <div class="card-header text-center border-bottom-0">
+                        <h2 class="fs-6 fw-semibold mb-0">Registration Help</h2>
+                    </div>
                     <div class="card-body">
                         <ul class="card-menu card-menu-hm list-unstyled">
                             <li>
@@ -138,49 +148,35 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-            {% if request.session.is_logged_in and request.session.institution_for_login_session %}
-            <section class="col-lg-12 py-0">
-                <h2 id="current-institution-management" class="mb-2">
-                    {{ request.session.institution_for_login_session }}
-                </h2>
-                <div class="d-flex flex-column row-gap-4">
-                    <div class="card">
-                        <div class="card-header fw-semibold text-center border-bottom-0">Data Registration</div>
-                        <div class="card-body">
-                            <ul class="card-menu card-menu-hm list-unstyled">
+            </section>
+            {% if request.session.institution_for_login_session %}
+            <section class="col-lg-7 py-0">
+                <div class="card">
+                    <div class="card-header text-center border-bottom-0">
+                        <h2 class="fs-6 fw-semibold mb-0">
+                            {{ request.session.institution_for_login_session }}
+                        </h2>
+                    </div>
+                    <div class="d-flex flex-column row-gap-4 card-body">
+                        <div>
+                            <h3 class="fs-6 mb-1">Data Registration</h3>
+                            <ul class="mb-0">
                                 <li>
-                                    <a href="{% url 'resource_management:index' %}" class="card">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus" viewBox="0 0 16 16">
-                                            <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z"/>
-                                            <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
-                                        </svg>
-                                        <span>Manage Registrations</span>
-                                    </a>
+                                    <a href="{% url 'resource_management:index' %}">
+                                        Manage Registrations</a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'schemas' %}" class="card">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-code" viewBox="0 0 16 16">
-                                            <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
-                                            <path d="M8.646 6.646a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 9 8.646 7.354a.5.5 0 0 1 0-.708zm-1.292 0a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0 0 .708l2 2a.5.5 0 0 0 .708-.708L5.707 9l1.647-1.646a.5.5 0 0 0 0-.708z"/>
-                                        </svg>
-                                        <span>Space Physics Data Model</span>
-                                    </a>
+                                    <a href="{% url 'schemas' %}">
+                                        Space Physics Data Model</a>
                                 </li>
                             </ul>
                         </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header fw-semibold text-center border-bottom-0">Members</div>
-                        <div class="card-body">
-                            <ul class="card-menu card-menu-hm list-unstyled">
+                        <div>
+                            <h3 class="fs-6 mb-1">Members</h3>
+                            <ul class="mb-0">
                                 <li>
-                                    <a href="{% url 'list_users_in_current_institution' %}" class="card">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
-                                            <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
-                                        </svg>
-                                        <span>View Members</span>
-                                    </a>
+                                    <a href="{% url 'list_users_in_current_institution' %}">
+                                        View Members</a>
                                 </li>
                             </ul>
                         </div>
@@ -189,40 +185,33 @@
             </section>
             {% endif %}
             {% if request.session.is_logged_in and request.session.user_institution_subgroups %}
-            <div class="col-lg-12">
+            <section class="col-lg-5 py-0">
                 <div class="card">
-                    <div id="my-institutions-management" class="card-header fw-semibold text-center border-bottom-0">My Institutions</div>
+                    <div class="card-header text-center border-bottom-0">
+                        <h2 class="fs-6 fw-semibold mb-0">e-Science Centre Institutions</h2>
+                    </div>
                     <div class="card-body">
-                        <ul class="card-menu card-menu-hm list-unstyled">
+                        <ul class="mb-0">
                             <li>
-                                <a href="{{ create_institution_url }}" target="_blank" class="card">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building-add" viewBox="0 0 16 16">
-                                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Z"/>
-                                        <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1V1Z"/>
-                                        <path d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Z"/>
-                                    </svg>
-                                    <span>Register a New Institution</span>
-                                </a>
+                                <a href="{{ create_institution_url }}" target="_blank">
+                                    Register a New Institution</a>
                             </li>
                             <li>
-                                <a href="{% url 'list_joinable_perun_organisations' %}" class="card">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
-                                        <path d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Z"/>
-                                        <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V1Zm11 0H3v14h3v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V15h3V1Z"/>
-                                    </svg>
-                                    Join Another Institution
-                                </a>
+                                <a href="{% url 'list_joinable_perun_organisations' %}">
+                                    Join Another Institution</a>
                             </li>
                         </ul>
                     </div>
                 </div>
-            </div>
+            </section>
             {% endif %}
         </div>
     </div>
-    <div class="col-lg-3 fieldset-hm-foi">
+    <section class="col-lg-3 fieldset-hm-foi py-0">
         <div class="card" style="max-height: 100%;">
-            <div class="card-header fw-semibold text-center border-bottom-0">Features of Interest</div>
+            <div class="card-header fw-semibold text-center border-bottom-0">
+                <h2 class="fs-6 fw-semibold mb-0">Features of Interest</h2>
+            </div>
             <div class="card-body overflow-y-auto">
                 <p>
                     Real-world object that carries the property which is
@@ -252,7 +241,7 @@
                 </ul>
             </div>
         </div>
-    </div>
+    </section>
     <form action="{% url 'search:index' %}" method="POST" id="foi-search-form" class="d-none">
         {% csrf_token %}
     </form>
