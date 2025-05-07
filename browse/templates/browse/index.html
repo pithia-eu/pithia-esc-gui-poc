@@ -5,27 +5,21 @@
 {% endblock breadcrumbs %}
 {% block content %}
 <h1>{{ title }}</h1>
-<div class="card-menu">
-    <div class="card">
-        <div class="card-body">
-            <a href="{% url 'browse:data_collection_related_resource_types' %}">
-                {{ data_collection_related_resource_types_page_title }}
-            </a>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <a href="{% url 'browse:static_dataset_tree' %}">
-                Static Datasets
-            </a>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <a href="{% url 'browse:list_workflows' %}">
-                <span>Workflows</span>
-            </a>
-        </div>
-    </div>
-</div>
+<ul class="card-menu list-unstyled">
+    <li>
+        <a href="{% url 'browse:data_collection_related_resource_types' %}" class="card">
+            {{ data_collection_related_resource_types_page_title }}
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'browse:static_dataset_tree' %}" class="card">
+            Static Datasets
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'browse:list_workflows' %}" class="card">
+            <span>Workflows</span>
+        </a>
+    </li>
+</ul>
 {% endblock content %}

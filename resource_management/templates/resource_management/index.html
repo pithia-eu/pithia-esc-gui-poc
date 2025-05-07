@@ -5,27 +5,21 @@
 {% endblock breadcrumbs %}
 {% block content %}
 <h1>{{ title }}</h1>
-<div class="card-menu">
-    <div class="card">
-        <div class="card-body">
-            <a href="{% url 'resource_management:data_collection_related_metadata_index' %}">
-                {{ data_collection_related_index_page_title }}
-            </a>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <a href="{% url 'resource_management:static_dataset_related_metadata_index' %}">
-                Static Dataset-related Metadata
-            </a>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <a href="{% url 'resource_management:workflows' %}">
-                Workflows
-            </a>
-        </div>
-    </div>
-</div>
+<ul class="card-menu list-unstyled">
+    <li>
+        <a href="{% url 'resource_management:data_collection_related_metadata_index' %}" class="card">
+            {{ data_collection_related_index_page_title }}
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'resource_management:static_dataset_related_metadata_index' %}" class="card">
+            Static Dataset-related Metadata
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'resource_management:workflows' %}" class="card">
+            Workflows
+        </a>
+    </li>
+</ul>
 {% endblock content %}
