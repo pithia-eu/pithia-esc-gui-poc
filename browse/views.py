@@ -47,7 +47,7 @@ logger = logging.getLogger(__name__)
 
 _INDEX_PAGE_TITLE = 'All Scientific Metadata'
 _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Data Collection-related Metadata'
-_XML_SCHEMAS_PAGE_TITLE = 'Metadata Models'
+_XML_SCHEMAS_PAGE_TITLE = 'Space Physics Data Model'
 
 
 # Create your views here.
