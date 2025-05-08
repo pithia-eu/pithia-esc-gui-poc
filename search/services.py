@@ -18,18 +18,17 @@ from ontology.services import (
     get_feature_of_interest_ids_from_observed_property_id,
     get_graph_of_pithia_ontology_component,
     get_measurand_ids_from_observed_property_id,
-    get_observed_property_urls_from_feature_of_interest_urls,
     get_parent_node_ids_of_node_id,
     get_phenomenon_ids_from_observed_property_id,
 )
 
 
 def get_data_collections_for_search(
-        feature_of_interest_urls: list = [],
-        instrument_type_urls: list = [],
-        computation_type_urls: list = [],
-        annotation_type_urls: list = [],
-        observed_property_urls: list = []):
+        feature_of_interest_urls: list = list(),
+        instrument_type_urls: list = list(),
+        computation_type_urls: list = list(),
+        annotation_type_urls: list = list(),
+        observed_property_urls: list = list()):
     """Retrieves data collections based on selected features
     of interest, instrument types, computation types, annotation
     types and observed properties. Returns search results for the
