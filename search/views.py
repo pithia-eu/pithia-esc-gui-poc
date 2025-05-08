@@ -116,11 +116,6 @@ def index(request):
         'title': _INDEX_PAGE_TITLE
     })
 
-def results_from_foi(request):
-    feature_of_interest_url = request.GET.get('feature_of_interest')
-    request.session['features_of_interest'] = [feature_of_interest_url]
-    return HttpResponseRedirect(reverse('search:results'))
-
 def results(request):
     observed_property_urls = [f'{OBSERVED_PROPERTY_URL_BASE}/{op_localid}' for op_localid in request.session.get('observed_properties', [])]
     computation_type_urls = [f'{COMPUTATION_TYPE_URL_BASE}/{computation_type_localid}' for computation_type_localid in request.session.get('computation_types', [])]
