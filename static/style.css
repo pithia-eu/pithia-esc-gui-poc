@@ -654,25 +654,6 @@ header .login-link {
 
 /* || Home page */
 
-/* Home page - fieldset and legend */
-.fieldset-hm {
-    border: 1px solid var(--bs-border-color);
-    border-radius: var(--bs-border-radius);
-    padding: 1.5rem;
-}
-
-.fieldset-hm legend {
-    font-size: var(--fs-sm-2);
-    text-transform: uppercase;
-    font-weight: var(--fw-semibold);
-    float: none;
-    width: auto;
-    padding-inline: 1rem;
-    padding-block: 0;
-    margin-inline: auto;
-    margin-block: 0;
-}
-
 /* Home page - section */
 .section-hm {
     padding-block: 0;
