@@ -7,9 +7,13 @@
 <script type="module" src="{% static 'utils/home_page_foi_search.js' %}" defer></script>
 {% endblock scripts %}
 {% block content %}
-{% include 'home/institution_selection.html' %}
 <h1 class="mb-4">PITHIA e-Science Centre</h1>
-<div class="row g-5">
+<div class="row gx-lg-4 gy-4">
+    {% if request.session.is_logged_in and not request.session.institution_for_login_session %}
+    <div class="col-lg-12">
+        {% include 'home/institution_selection.html' %}
+    </div>
+    {% endif %}
     <div class="col-lg-8">
         <div class="row g-4">
             <section class="col-lg-7 section-hm">
