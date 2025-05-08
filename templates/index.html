@@ -4,7 +4,7 @@
 {% block scripts %}
 {{ data_collection_counts_by_fois|json_script:'data-collection-counts-by-foi' }}
 <script type="module" src="{% static 'help/home_menu_help_dialogs.js' %}" defer></script>
-<script type="module" src="{% static 'utils/home_page_foi_search.js' %}" defer></script>
+<script type="module" src="{% static 'utils/home_page_foi_search.js' %}?{% now 'U' %}" defer></script>
 {% endblock scripts %}
 {% block content %}
 <h1 class="mb-4">PITHIA e-Science Centre</h1>
