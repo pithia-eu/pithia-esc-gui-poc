@@ -7,7 +7,7 @@
 <script type="module" src="{% static 'utils/home_page_foi_search.js' %}?{% now 'U' %}" defer></script>
 {% endblock scripts %}
 {% block content %}
-<h1 class="mb-4">PITHIA e-Science Centre</h1>
+<h1 class="fs-4 mb-4">PITHIA e-Science Centre</h1>
 <div class="row gx-lg-4 gy-4">
     {% if request.session.is_logged_in and not request.session.institution_for_login_session %}
     <div class="col-lg-12">
@@ -154,7 +154,7 @@
                 </div>
             </section>
             {% if request.session.institution_for_login_session %}
-            <section class="col-lg-7 section-hm management-section-hm">
+            <section class="col-xl-7 section-hm management-section-hm">
                 <div class="card card-hm-container">
                     <div class="card-header">
                         <h2>
@@ -163,7 +163,7 @@
                     </div>
                     <div class="d-flex flex-column row-gap-4 card-body">
                         <div>
-                            <h3 class="fs-6 mb-1">Data Registration</h3>
+                            
                             <ul class="mb-0">
                                 <li>
                                     <a href="{% url 'resource_management:index' %}">
@@ -189,8 +189,8 @@
             </section>
             {% endif %}
             {% if request.session.is_logged_in and request.session.user_institution_subgroups %}
-            <section class="col-lg-5 section-hm management-section-hm">
-                <div class="card card-hm-container">
+            <section class="col-lg-auto flex-grow-1 section-hm management-section-hm">
+                <div class="card card-hm-container h-100">
                     <div class="card-header">
                         <h2>e-Science Centre Institutions</h2>
                     </div>
