@@ -614,7 +614,7 @@ header .login-link {
 .card-menu {
     display: grid;
     gap: 1.25rem;
-    grid-template-columns: repeat(auto-fit, 12rem);
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
     grid-auto-rows: 1fr;
 }
 
@@ -2059,6 +2059,10 @@ ul.tree ul {
 
     .resource-detail-top-section-extra-content > dl > div:not(.resource-detail-top-section-extra-content > dl > div:first-child) {
         max-width: 15rem;
+    }
+
+    .card-menu {
+        grid-template-columns: repeat(auto-fit, 12rem);
     }
 }
 
