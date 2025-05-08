@@ -680,6 +680,11 @@ header .login-link {
     font-size: var(--fs-sm-2);
 }
 
+/* Home page - management sections */
+.management-section-hm ul li + li {
+    padding-top: 0.25rem;
+}
+
 /* Home page - card menu variant */
 .card-menu.card-menu-hm {
     height: 100%;
