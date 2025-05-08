@@ -664,7 +664,7 @@ header .login-link {
 .fieldset-hm legend {
     font-size: var(--fs-sm-2);
     text-transform: uppercase;
-    font-weight: 600;
+    font-weight: var(--fw-semibold);
     float: none;
     width: auto;
     padding-inline: 1rem;
@@ -673,7 +673,28 @@ header .login-link {
     margin-block: 0;
 }
 
-/* FOI search section */
+/* Home page - section */
+.section-hm {
+    padding-block: 0;
+}
+
+/* Home page - card container */
+.card-hm-container .card-header {
+    text-align: center;
+    border-bottom: none;
+}
+
+.card-hm-container .card-header h2 {
+    font-size: var(--fs-base-2);
+    font-weight: var(--fw-semibold);
+    margin-bottom: 0;
+}
+
+/* Home page - feature of interest search section */
+.foi-hm-section .card-hm-container {
+    max-height: 100%;
+}
+
 .list-foi-search button {
     font-size: var(--fs-sm-2);
 }
@@ -840,8 +861,7 @@ header .login-link {
     padding-bottom: var(--resource-detail-top-section-padding);
 }
 
-/* font-size and font-weight is intended to be the same
-as Bootstrap styling. */
+/* Resource detail page - responsible parties section */
 #responsible-parties-top-section {
     font-size: var(--fs-sm-2);
     padding-top: 0.25rem;
@@ -854,11 +874,6 @@ as Bootstrap styling. */
     grid-auto-rows: 1fr;
     gap: 1.75rem;
     margin-block-end: 0;
-}
-
-#responsible-parties-top-section dt h3 {
-    font-size: var(--fs-sm-1);
-    font-weight: 700;
 }
 
 #responsible-parties-top-section dd {
@@ -1047,7 +1062,7 @@ as Bootstrap styling. */
 }
 
 .resource-detail-aside .resource-detail-aside-section > h2 {
-    font-weight: 600;
+    font-weight: var(--fw-semibold);
     margin-bottom: 1rem;
 }
 
@@ -1175,7 +1190,7 @@ details[name="details-permissions"][open] summary > span::after {
 
 .resource-detail-section .interaction-methods-subsection h3 {
     color: var(--bs-secondary-text-emphasis);
-    font-weight: 600 !important;
+    font-weight: var(--fw-semibold) !important;
     font-size: 1rem !important;
 }
 
@@ -1374,7 +1389,7 @@ section .keyword-list li:last-child:after {
 }
 
 .online-resource-files-list-wrapper.disabled {
-    font-weight: 600;
+    font-weight: var(--fw-semibold);
     background-color: var(--bs-light);
     border: 1px solid var(--bs-light);
     padding: 1rem;
@@ -1504,7 +1519,7 @@ label.required::after {
 
 .help-aside-section h2 {
     font-size: 1.25rem;
-    font-weight: normal;
+    font-weight: var(--fw-normal);
 }
 
 .responsive-help-section {
@@ -1525,7 +1540,7 @@ label.required::after {
 /* || Search by content page */
 #search-by-content-accordion legend h3 {
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: var(--fw-semibold);
     margin-top: 0.25rem;
     color: var(--bs-secondary-color);
 }
@@ -2025,7 +2040,7 @@ ul.tree ul {
         font-size: 1rem;
     }
 
-    .fieldset-hm-foi {
+    .foi-hm-section {
         contain: size;
         padding-inline: 0;
     }
@@ -2313,6 +2328,12 @@ ul.tree ul {
     --fs-sm-1: 0.875rem;
     --fs-sm-2: 0.925rem;
     --fs-base-2: 1.1rem;
+
+    /* Bootstrap font weight variables */
+    --fw-normal: 400;
+    --fw-medium: 500;
+    --fw-semibold: 600;
+    --fw-bold: 700;
 }
 
 @media (min-width: 768px) and (prefers-color-scheme: dark) {
