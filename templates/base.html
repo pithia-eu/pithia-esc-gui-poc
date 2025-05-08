@@ -43,6 +43,8 @@
     <script src="{% static 'utils/bs_component_colour_schemes_updater.js' %}" defer></script>
 </head>
 <body>
+    <!-- A handy skip link for keyboard users -->
+    <a href="#main" class="btn btn-light btn-light-togglable">Skip to main content</a>
     {% include 'header/header.html' %}
     <div class="container">
         {% if messages %}
@@ -99,8 +101,8 @@
         </div>
     </div>
     {% endblock breadcrumb_wrapper %}
-    <div class="container">
-        <main class="main-content">
+    <div id="main-container" class="container">
+        <main id="main">
             {% block content %}{% endblock content %}
         </main>
         {% include "footer.html" %}

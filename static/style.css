@@ -53,6 +53,19 @@ dialog .btn-close {
     flex-shrink: 0;
 }
 
+[href="#main"] {
+    position: absolute;
+    top: 0;
+    right: 100%; /* moves off screen */
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+[href="#main"]:focus {
+    right: auto;
+}
+
 
 /* || Heading styles */
 h1 {
@@ -2224,6 +2237,13 @@ ul.tree ul {
     }
 
     .show-all-dcs-button-container {
+        display: none;
+    }
+}
+
+@media print {
+    body > *:not(#main-container),
+    body > #main-container > *:not(main) {
         display: none;
     }
 }
