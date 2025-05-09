@@ -2,7 +2,7 @@
 <ul class="list-unstyled online-resource-list ps-0 pb-0 mb-0">
     {% for online_resource in online_resources|wrap_in_list_if_dict %}
     {% with forloop_counter_str=forloop.counter|stringformat:'s' %}
-    <li class="bg-body-tertiary rounded p-3">
+    <li class="bg-body-tertiary rounded px-xl-4 p-3">
         {% include 'browse/detail/components/online_resource.html' %}
     </li>
     {% endwith %}

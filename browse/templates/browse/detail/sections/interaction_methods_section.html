@@ -1,12 +1,14 @@
 {% if num_interaction_methods %}
 <section class="resource-detail-section">
-    <h2 class="mb-0">{{ section_heading|default:'Access the Data' }}</h2>
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column mb-1">
+        <h2 class="mb-0">{{ section_heading|default:'Access the Data' }}</h2>
         {% if num_interaction_methods > 1 %}
         <p class="interaction-methods-counter text-dark-emphasis fw-semibold mt-1 mb-0">
             {{ num_interaction_methods }} Links
         </p>
         {% endif %}
+    </div>
+    <div class="d-flex flex-column">
         {% for type, interaction_methods_for_type in interaction_methods_by_type.items %}
         {% if type == 'api' %}
         <section class="interaction-methods-subsection">

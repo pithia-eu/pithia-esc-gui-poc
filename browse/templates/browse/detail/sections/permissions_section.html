@@ -1,7 +1,7 @@
 {% load project_tags %}
 {% if resource.permission_urls %}
 <section id="permissions-section" class="resource-detail-section">
-    <h2 class="mb-0">Permissions</h2>
+    <h2 class="mb-2">Permissions</h2>
     <ul class="list-group list-group-flush">
         {% for p in resource.permission_urls %}
         {% with value=p|get_key_value:'@xlink:href' %}
