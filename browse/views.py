@@ -124,7 +124,7 @@ def static_dataset_tree(request):
         },
     })
     return render(request, 'browse/static_dataset_tree.html', {
-        'title': STATIC_DATASET_TYPE_PLURAL_READABLE.title(),
+        'title': f'All {STATIC_DATASET_TYPE_PLURAL_READABLE.title()}',
         'description': STATIC_DATASET_TYPE_DESCRIPTION,
         'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
         'resources': static_dataset_entries,
