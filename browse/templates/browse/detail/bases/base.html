@@ -19,8 +19,8 @@
 {% endblock breadcrumbs %}
 {% block content %}
 {% csrf_token %}
-<div class="row align-items-lg-baseline justify-content-between gx-md-5">
-    <div class="col-lg-8">
+<div class="row gx-md-5">
+    <div class="col-xl-9 col-lg-8">
         <div class="resource-detail-top-section">
             <div class="d-flex flex-column align-items-start row-gap-1 mb-2">
                 <h1 class="text-break mb-0">{{ resource.name }}</h1>
@@ -123,7 +123,7 @@
                     </section>
                     {% endif %}
                     <section id="metadata-information-section">
-                        <h3 class="fs-5">Metadata Information</h3>
+                        <h3>Metadata Information</h3>
                         <div class="table-responsive rounded">
                             <table class="table table-borderless resource-key-details mb-0 p-3">
                                 <tbody>
@@ -151,7 +151,7 @@
             </details>
         </section>
         {% if related_registrations %}
-        <section class="resource-detail-section">
+        <section id="related-metadata-section" class="resource-detail-section">
             <details>
                 <summary class="summary-marker-custom">
                     <h2 class="d-inline-block">Related Metadata</h2>
@@ -159,10 +159,10 @@
                 <ul class="list-group list-group-flush mb-0">
                     {% for heading_text, resource_url_list in related_registrations.items %}
                     <li class="list-group-item px-0 py-4 {% if forloop.last %}pb-0{% endif %}">
-                        <h3 class="fs-5 fw-semibold">{{ heading_text }}</h3>
-                        <ul class="list-group list-group-flush mt-2 mb-0">
+                        <h3 class="fw-semibold">{{ heading_text }}</h3>
+                        <ul class="mt-2 mb-0" style="list-style-type: disc;">
                             {% for resource_url in resource_url_list|wrap_in_list_if_dict %}
-                            <li class="list-group-item py-3 {% if forloop.last %}pb-0{% endif %}">
+                            <li class="py-1 {% if forloop.last %}pb-0{% endif %}">
                                 {% with value=resource_url %}
                                 {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
                                 {% endwith %}

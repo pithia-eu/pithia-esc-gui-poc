@@ -906,8 +906,14 @@ header .login-link {
 }
 
 .resource-detail-section h2:first-child,
-.resource-detail-aside h2:first-child {
-    font-size: 1.5rem;
+.resource-detail-aside h2:first-child,
+#further-information-section h3,
+#related-metadata-section h3 {
+    font-size: var(--fs-base-2);
+}
+
+#further-information-section h4 {
+    font-size: 1rem;
 }
 
 .resource-detail-section > h2 {
@@ -993,14 +999,6 @@ header .login-link {
 #further-information-section .resource-detail-section:first-child {
     border-top: none;
     padding-top: var(--resource-detail-section-padding);
-}
-
-#further-information-section h3 {
-    font-size: 1.35rem;
-}
-
-#further-information-section h4 {
-    font-size: 1.2rem;
 }
 
 .resource-detail-emphasised-section.resource-detail-section:first-of-type {
@@ -2072,6 +2070,18 @@ ul.tree ul {
     .breadcrumb-item + .breadcrumb-item::before {
         content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 12 12"><path fill-rule="evenodd" d="M3.4845 1.2345a.375.375 90 01.531 0l4.5 4.5a.375.375 90 010 .531l-4.5 4.5a.375.375 90 01-.531-.531L7.7197 6 3.4845 1.7655a.375.375 90 010-.531z"/></svg>') !important;
         padding-right: var(--bs-breadcrumb-item-padding-x);
+    }
+
+    .resource-detail-section h2:first-child {
+        font-size: 1.5rem;
+    }
+
+    #further-information-section h3 {
+        font-size: 1.25rem;
+    }
+
+    #related-metadata-section h3 {
+        font-size: var(--fs-base-2);
     }
 
     .resource-detail-top-section-extra-content > dl > div:not(.resource-detail-top-section-extra-content > dl > div:first-child) {
