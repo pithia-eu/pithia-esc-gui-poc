@@ -1,4 +1,7 @@
-<h2 class="{{ description_section_heading_extra_classes }}">{{ description_heading_text|default:'Description' }}</h2>
+<h2
+    {% if description_section_heading_extra_classes %}
+    class="{{ description_section_heading_extra_classes }}"
+    {% endif %}>{{ description_heading_text|default:'Description' }}</h2>
 <div class="{{ description_section_text_container_extra_classes|default:'' }}">
     {% with text_block_id='resource-description' text_block_paragraphs=resource_description_split %}
     {% include 'utils/expandable_text_block.html' %}
