@@ -71,7 +71,7 @@
                         <div>
                             <dt>Vector Representation</dt>
                             {% for vector_representation in cap.vector_representations %}
-                            <dd class="dd-list-item">
+                            <dd class="dd-comma-separated">
                                 {% with value=vector_representation %}
                                 {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
                                 {% endwith %}
@@ -103,7 +103,7 @@
                         <div>
                             <dt>Qualifiers</dt>
                             {% for qualifier in cap.qualifiers %}
-                            <dd class="dd-list-item">
+                            <dd class="dd-comma-separated">
                                 {% with value=qualifier %}
                                 {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
                                 {% endwith %}

@@ -1091,7 +1091,15 @@ header .login-link {
     display: list-item;
     list-style-type: disc;
     margin-block: 0;
-    margin-left: 2rem;
+    margin-left: 1.25rem;
+}
+
+.dd-comma-separated {
+    display: inline;
+}
+
+.dd-comma-separated:not(:last-child) span::after {
+    content: ', ';
 }
 
 .btn-expand-resource-description.btn-link {
