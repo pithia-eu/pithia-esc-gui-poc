@@ -82,38 +82,38 @@
                 </li>
                 {% if request.session.institution_for_login_session %}
                 <li class="nav-item">
-                    <a href="{% url 'resource_management:index' %}" class="nav-link link-plain-by-default">
-                        Manage Registrations</a>
-                </li>
-                {% endif %}
-                {% comment %} {% if request.session.institution_for_login_session %}
-                <li class="nav-item">
                     <div class="dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                            Registration Help</a>
-                        <ul class="dropdown-menu" data-bs-popper="static">
-                            <li>
-                                {% url 'ontology:index' as browse_ontology_url %}
-                                <a href="{{ browse_ontology_url }}" class="dropdown-item">
-                                    Data Collection Help
-                                </a>
-                            </li>
-                            <li>
-                                {% url 'ontology:index' as browse_ontology_url %}
-                                <a href="{{ browse_ontology_url }}" class="dropdown-item">
-                                    Workflow Help
-                                </a>
-                            </li>
-                            <li>
-                                {% url 'ontology:index' as browse_ontology_url %}
-                                <a href="{{ browse_ontology_url }}" class="dropdown-item">
-                                    Static Dataset Help
-                                </a>
-                            </li>
-                        </ul>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Manage Registrations</a>
+                            <ul class="dropdown-menu" data-bs-popper="static">
+                                {% comment %} <li>
+                                    <a href="#" class="dropdown-item">
+                                        Data Collection Help
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="dropdown-item">
+                                        Workflow Help
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="dropdown-item">
+                                        Static Dataset Help
+                                    </a>
+                                </li> {% endcomment %}
+                                <li>
+                                    <a href="{% url 'resource_registration_user_guide' %}" class="dropdown-item external-link">
+                                        Data Resource Registration Guide</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'resource_management:index' %}" class="dropdown-item">
+                                        Manage Registrations
+                                    </a>
+                                </li>
+                            </ul>
                     </div>
                 </li>
-                {% endif %} {% endcomment %}
+                {% endif %}
                 <li class="nav-item">
                     <a href="https://pithia-nrf.eu" class="nav-link link-plain-by-default">
                         About<span class="d-xxl-inline d-xl-none d-inline"> PITHIA-NRF</span>
