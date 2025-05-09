@@ -2141,7 +2141,7 @@ ul.tree ul {
     }
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1200px) {
     /* Navbar */
     .navbar .dropdown-menu:not(.user-dropdown .dropdown-menu) {
         background: transparent;
@@ -2153,7 +2153,9 @@ ul.tree ul {
     .navbar .dropdown-menu .dropdown-divider:not(.user-dropdown .dropdown-divider) {
         display: none;
     }
+}
 
+@media (max-width: 992px) {
     .resource-detail-aside {
         border-left-width: 0 !important;
     }
