@@ -392,21 +392,29 @@ class ResourceDetailView(TemplateView):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}description').text
 
     def get_related_registrations(self):
-        return {
-            'Organisations': self.resource.properties.organisation_urls,
-            'Individuals': self.resource.properties.individual_urls,
-            'Projects': self.resource.properties.project_urls,
-            'Platforms': self.resource.properties.platform_urls,
-            'Operations': self.resource.properties.operation_urls,
-            'Instruments': self.resource.properties.instrument_urls,
-            'Acquisition Capabilities': self.resource.properties.acquisition_capabilities_urls,
-            'Acquisitions': self.resource.properties.acquisition_urls,
-            'Computation Capabilities': self.resource.properties.computation_capabilities_urls,
-            'Computations': self.resource.properties.computation_urls,
-            'Processes': self.resource.properties.process_urls,
-            'Data Collections': self.resource.properties.data_collection_urls,
-            'Static Dataset Entries': self.resource.properties.static_dataset_entry_urls,
+        related_registrations = {
+            models.Organisation.type_plural_readable.title(): self.resource.properties.organisation_urls,
+            models.Individual.type_plural_readable.title(): self.resource.properties.individual_urls,
+            models.Project.type_plural_readable.title(): self.resource.properties.project_urls,
+            models.Platform.type_plural_readable.title(): self.resource.properties.platform_urls,
+            models.Operation.type_plural_readable.title(): self.resource.properties.operation_urls,
+            models.Instrument.type_plural_readable.title(): self.resource.properties.instrument_urls,
+            models.AcquisitionCapabilities.type_plural_readable.title(): self.resource.properties.acquisition_capabilities_urls,
+            models.Acquisition.type_plural_readable.title(): self.resource.properties.acquisition_urls,
+            models.ComputationCapabilities.type_plural_readable.title(): self.resource.properties.computation_capabilities_urls,
+            models.Computation.type_plural_readable.title(): self.resource.properties.computation_urls,
+            models.Process.type_plural_readable.title(): self.resource.properties.process_urls,
+            models.DataCollection.type_plural_readable.title(): self.resource.properties.data_collection_urls,
+            models.StaticDatasetEntry.type_plural_readable.title(): self.resource.properties.static_dataset_entry_urls,
+            models.DataSubset.type_plural_readable.title(): [],
+            models.Workflow.type_plural_readable.title(): [],
         }
+        metadata_dependents = self.resource.metadata_dependents
+        for md in metadata_dependents:
+            related_registrations.update({
+                md.type_plural_readable.title(): md.metadata_server_url,
+            })
+        return related_registrations
 
     def clean_related_registrations_dict(self, related_registrations_dict):
         cleaned_related_registrations_dict = {}
