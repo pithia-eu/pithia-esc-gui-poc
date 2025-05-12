@@ -50,24 +50,38 @@
                             </small>
                         </div>
                     </summary>
-                    <dl class="d-flex flex-column row-gap-4 p-3 pb-4">
+                    <dl class="d-flex flex-column row-gap-4 p-3 px-md-5 px-4 pb-4">
                         {% if cap_link.platforms %}
                         <div>
-                            <dt>Platforms</dt>
-                            {% for platform in cap_link.platforms %}
+                            <dt>
+                                {% if cap_link.platforms|length == 1 %}
+                                Platform
+                                {% else %}
+                                Platforms
+                                {% endif %}
+                            </dt>
+                            {% if cap_link.platforms|length == 1 %}
                             <dd>
+                                {% with value=cap_link.platforms.0 %}
+                                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                                {% endwith %}
+                            </dd>
+                            {% else %}
+                            {% for platform in cap_link.platforms %}
+                            <dd class="{% if forloop.first %}pt-2{% else %}border-top{% endif %} py-1">
                                 {% with value=platform %}
                                 {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
                                 {% endwith %}
                             </dd>
                             {% endfor %}
+                            {% endif %}
                         </div>
                         {% endif %}
                         {% if cap_link.standard_identifiers %}
                         <div>
                             <dt>Standard Platform Identifiers</dt>
                             {% for si in cap_link.standard_identifiers %}
-                            <dd class="dd-list-item">
+                            <dd class="dd-comma-separated">
                                 {{ si.value }} <span class="text-body-secondary">({{ si.authority }})</span>
                             </dd>
                             {% endfor %}
@@ -99,7 +113,7 @@
                             <dd>
                                 <dl class="list-group list-group-numbered list-group-flush">
                                     {% for time_span in cap_link.time_spans %}
-                                    <div class="d-inline-flex list-group-item px-0 py-3 {% if forloop.first %}pt-2{% endif %}">
+                                    <div class="d-inline-flex list-group-item bg-transparent px-0 py-3 {% if forloop.first %}pt-2{% endif %}">
                                         <dt class="visually-hidden">Time Span {{ forloop.counter }}</dt>
                                         <dd class="ps-2">
                                             <dl>
