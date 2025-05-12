@@ -165,16 +165,17 @@ class ScientificMetadata(models.Model):
     def _get_immediate_metadata_dependents_and_update_checked_metadata(
             self,
             checked_metadata: set = set(),
-            up_to_weight: int = -1) -> list:
+            up_to_weight: int = None) -> list:
         scientific_metadata_model_subclasses_sorted = sorted(
             list(ScientificMetadata.__subclasses__()),
             key=lambda subclass: subclass.weight
         )
-        if up_to_weight != -1:
+        scientific_metadata_models_in_range = scientific_metadata_model_subclasses_sorted[self.weight:]
+        if up_to_weight:
             up_to_weight += 1
-        scientific_metadata_models_in_range = scientific_metadata_model_subclasses_sorted[
-            self.weight:up_to_weight
-        ]
+            scientific_metadata_models_in_range = scientific_metadata_model_subclasses_sorted[
+                self.weight:up_to_weight
+            ]
         potential_dependents = []
         immediate_dependents = []
         for m in scientific_metadata_models_in_range:
@@ -194,7 +195,7 @@ class ScientificMetadata(models.Model):
             self,
             immediate_metadata_dependents: list,
             checked_metadata: set = set(),
-            up_to_weight: int = -1) -> list:
+            up_to_weight: int = None) -> list:
         all_dependents_of_dependents = []
         for imd in immediate_metadata_dependents:
             if any(str(imd.pk) == md_pk for md_pk in checked_metadata):
@@ -210,7 +211,7 @@ class ScientificMetadata(models.Model):
     def get_metadata_dependents_and_checked_metadata(
             self,
             checked_metadata: set = set(),
-            up_to_weight: int = -1) -> list:
+            up_to_weight: int = None) -> list:
         # Get the immediate metadata dependents first
         immediate_metadata_dependents = self._get_immediate_metadata_dependents_and_update_checked_metadata(
             checked_metadata=checked_metadata,
