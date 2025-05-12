@@ -411,9 +411,7 @@ class ResourceDetailView(TemplateView):
         }
         metadata_dependents = self.resource.metadata_dependents
         for md in metadata_dependents:
-            related_registrations.update({
-                md.type_plural_readable.title(): md.metadata_server_url,
-            })
+            related_registrations[md.type_plural_readable.title()].append(md.metadata_server_url)
         return related_registrations
 
     def clean_related_registrations_dict(self, related_registrations_dict):
