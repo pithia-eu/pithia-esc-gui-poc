@@ -955,6 +955,7 @@ class StaticDatasetEntryDetailView(ResourceDetailView):
                 'staticDatasetIdentifier',
                 'entryName',
                 'entryDescription',
+                'category',
                 'phenomenonTime',
             ]
         )
