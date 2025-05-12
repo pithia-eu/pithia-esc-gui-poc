@@ -180,6 +180,7 @@ a.nav-link:hover,
 a.nav-link:focus-visible,
 .navbar .dropdown-menu .dropdown-item:hover,
 .navbar .dropdown-menu .dropdown-item:focus-visible {
+    text-decoration-color: white;
     text-decoration: underline;
 }
 
