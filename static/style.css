@@ -979,6 +979,30 @@ header .login-link {
     border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color);
 }
 
+.resource-detail-section > details[name="details-capabilities"] > summary.summary-marker-custom,
+.resource-detail-section > details[name="details-capability-links"] > summary.summary-marker-custom {
+    border-radius: var(--bs-border-radius);
+}
+
+.resource-detail-section > details[name="details-capabilities"][open] > summary.summary-marker-custom,
+.resource-detail-section > details[name="details-capability-links"][open] > summary.summary-marker-custom {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.resource-detail-section > details[name="details-capabilities"][open] > div,
+.resource-detail-section > details[name="details-capabilities"][open] > div {
+    border-radius: var(--bs-border-radius);
+}
+
+.resource-detail-section > details[name="details-capabilities"][open]:has( > summary:hover) > div,
+.resource-detail-section > details[name="details-capabilities"][open]:has( > summary:focus-visible) > div,
+.resource-detail-section > details[name="details-capability-links"][open]:has( > summary:hover) > div,
+.resource-detail-section > details[name="details-capability-links"][open]:has( > summary:focus-visible) > div {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
 .resource-detail-subsection {
     margin: 0;
     padding: 1rem;

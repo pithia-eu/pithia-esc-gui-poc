@@ -1,7 +1,7 @@
 <details name="details-capability-links" {% if is_open %}open{% endif %}>
-    <summary class="summary-marker-custom summary-marker-custom-baseline summary-marker-custom-sm summary-marker-custom-highlight {% if forloop.first %}rounded-top{% endif %} p-3 px-0 mb-0">
+    <summary class="summary-marker-custom summary-marker-custom-baseline summary-marker-custom-sm p-3 px-0 mb-0">
         <div>
-            <h3 class="fs-base-2 mb-1">
+            <h3 class="fs-6 mb-1">
                 {# Computation capabilities #}
                 {% if cap_link.computation_capabilities %}
                 {% with value=cap_link.computation_capabilities %}
@@ -34,7 +34,7 @@
             </div>
         </div>
     </summary>
-    <div class="p-3 px-4 pb-4">
+    <div class="bg-body-tertiary p-3 px-4 pb-4 mb-4">
         <dl class="d-flex flex-column row-gap-4">
             {# Platforms #}
             {% if cap_link.platforms %}
@@ -65,7 +65,7 @@
             {% endif %}
             {# Standard platform identifiers #}
             {% if cap_link.standard_identifiers %}
-            <div class="fs-sm-2 mb-2">
+            <div class="fs-sm-2">
                 <dt class="text-secondary-emphasis">Standard Identifiers</dt>
                 {% for si in cap_link.standard_identifiers %}
                 <dd class="dd-comma-separated">
