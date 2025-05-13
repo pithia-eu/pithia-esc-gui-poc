@@ -1,5 +1,34 @@
 {% if resource.properties.capability_links %}
 <section class="resource-detail-section">
+    {# Determine if top-level disclosure widget needed or not #}
+    {% if resource.properties.capability_links|length == 1 %}
+    <h2 class="mb-1">Capability Links</h2>
+    {% include 'browse/detail/components/capability_links_help_button.html' %}
+    {% with cap_link=resource.properties.capability_links.0 %}
+    {# Determine if just capabilities or not #}
+    {% if cap_link.platform or cap_link.standard_identifiers or cap_link.time_spans %}
+    {% with is_open=True %}
+    {% include 'browse/detail/components/capability_link_details_component.html' %}
+    {% endwith %}
+    {% else %}
+    <div class="pt-2">
+        {# Computation capabilities #}
+        {% if cap_link.computation_capabilities %}
+        {% with value=cap_link.computation_capabilities %}
+        {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+        {% endwith %}
+        {% endif %}
+        {# Acquisition capabilities #}
+        {% if cap_link.acquisition_capabilities %}
+        {% with value=cap_link.acquisition_capabilities %}
+        {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+        {% endwith %}
+        {% endif %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    {% else %}
+    {# Top-level disclosure element not needed #}
     <details class="details-capability-links-top" open>
         <summary class="summary-marker-custom summary-marker-custom-baseline">
             <div class="d-inline-block">
@@ -7,133 +36,42 @@
                     Capability Links
                     <span class="text-body-secondary">({{ resource.properties.capability_links|length }})</span>
                 </h2>
-                <button
-                    tabindex="0"
-                    type="button"
-                    class="btn btn-link btn-sm text-start link-underline-by-default pithia-blue px-0"
-                    data-bs-toggle="popover"
-                    data-bs-content="The list below describes different &quot;links&quot; between the capabilities of this acquisition/computation and registered platforms."
-                    >
-                    What are capability links?
-                </button>
+                {% include 'browse/detail/components/capability_links_help_button.html' %}
             </div>
         </summary>
         <ul class="list-group list-group-flush">
             {% for cap_link in resource.properties.capability_links %}
+            {% if cap_link.platform or cap_link.standard_identifiers or cap_link.time_spans %}
             <li class="list-group-item p-0">
-                <details name="details-capability-links" {% if forloop.counter == 1 %}open{% endif %}>
-                    <summary class="summary-marker-custom summary-marker-custom-baseline summary-marker-custom-sm summary-marker-custom-highlight {% if forloop.first %}rounded-top{% endif %} p-3 mb-0">
-                        <div>
-                            <h3 class="fw-semibold fs-base-2 mb-1">
-                                Capability Link {{ forloop.counter }}
-                            </h3>
-                            {# Smaller details below capability link name #}
-                            <small class="d-flex flex-column text-body-secondary">
-                                {# Platforms #}
-                                {% if cap_link.platforms %}
-                                {% with value=cap_link.platforms.0 %}
-                                {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
-                                {% endwith %}
-                                {% endif %}
-                                {# Computation capabilities #}
-                                {% if cap_link.computation_capabilities %}
-                                {% with value=cap_link.computation_capabilities %}
-                                {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
-                                {% endwith %}
-                                {% endif %}
-                                {# Acquisition capabilities #}
-                                {% if cap_link.acquisition_capabilities %}
-                                {% with value=cap_link.acquisition_capabilities %}
-                                {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
-                                {% endwith %}
-                                {% endif %}
-                            </small>
-                        </div>
-                    </summary>
-                    <dl class="d-flex flex-column row-gap-4 p-3 px-md-5 px-4 pb-4">
-                        {% if cap_link.platforms %}
-                        <div>
-                            <dt>
-                                {% if cap_link.platforms|length == 1 %}
-                                Platform
-                                {% else %}
-                                Platforms
-                                {% endif %}
-                            </dt>
-                            {% if cap_link.platforms|length == 1 %}
-                            <dd>
-                                {% with value=cap_link.platforms.0 %}
-                                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                                {% endwith %}
-                            </dd>
-                            {% else %}
-                            {% for platform in cap_link.platforms %}
-                            <dd class="{% if forloop.first %}pt-2{% else %}border-top{% endif %} py-1">
-                                {% with value=platform %}
-                                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                                {% endwith %}
-                            </dd>
-                            {% endfor %}
-                            {% endif %}
-                        </div>
-                        {% endif %}
-                        {% if cap_link.standard_identifiers %}
-                        <div>
-                            <dt>Standard Platform Identifiers</dt>
-                            {% for si in cap_link.standard_identifiers %}
-                            <dd class="dd-comma-separated">
-                                {{ si.value }} <span class="text-body-secondary">({{ si.authority }})</span>
-                            </dd>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                        {% if cap_link.computation_capabilities %}
-                        <div>
-                            <dt>Computation Capabilities</dt>
-                            <dd>
-                                {% with value=cap_link.computation_capabilities %}
-                                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                                {% endwith %}
-                            </dd>
-                        </div>
-                        {% endif %}
-                        {% if cap_link.acquisition_capabilities %}
-                        <div>
-                            <dt>Acquisition Capabilities</dt>
-                            <dd>
-                                {% with value=cap_link.acquisition_capabilities %}
-                                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                                {% endwith %}
-                            </dd>
-                        </div>
-                        {% endif %}
-                        {% if cap_link.time_spans %}
-                        <div>
-                            <dt>Time Spans</dt>
-                            <dd>
-                                <dl class="list-group list-group-numbered list-group-flush">
-                                    {% for time_span in cap_link.time_spans %}
-                                    <div class="d-inline-flex list-group-item bg-transparent px-0 py-3 {% if forloop.first %}pt-2{% endif %}">
-                                        <dt class="visually-hidden">Time Span {{ forloop.counter }}</dt>
-                                        <dd class="ps-2">
-                                            <dl>
-                                                <dt>Begin Position</dt>
-                                                <dd>{{ time_span.begin_position }}</dd>
-                                                <dt>End Position (Indeterminate)</dt>
-                                                <dd>{{ time_span.end_position }}</dd>
-                                            </dl>
-                                        </dd>
-                                    </div>
-                                    {% endfor %}
-                                </dl>
-                            </dd>
-                        </div>
-                        {% endif %}
-                    </dl>
-                </details>
+                {% if forloop.counter == 1 %}
+                {% with is_open=True %}
+                {% include 'browse/detail/components/capability_link_details_component.html' %}
+                {% endwith %}
+                {% else %}
+                {% with is_open=False %}
+                {% include 'browse/detail/components/capability_link_details_component.html' %}
+                {% endwith %}
+                {% endif %}
             </li>
+            {% else %}
+            <li class="list-group-item py-3">
+                {# Computation capabilities #}
+                {% if cap_link.computation_capabilities %}
+                {% with value=cap_link.computation_capabilities %}
+                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                {% endwith %}
+                {% endif %}
+                {# Acquisition capabilities #}
+                {% if cap_link.acquisition_capabilities %}
+                {% with value=cap_link.acquisition_capabilities %}
+                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                {% endwith %}
+                {% endif %}
+            </li>
+            {% endif %}
             {% endfor %}
         </ul>
     </details>
+    {% endif %}
 </section>
 {% endif %}

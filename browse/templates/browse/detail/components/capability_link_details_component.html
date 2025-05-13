@@ -1,0 +1,116 @@
+<details name="details-capability-links" {% if is_open %}open{% endif %}>
+    <summary class="summary-marker-custom summary-marker-custom-baseline summary-marker-custom-sm summary-marker-custom-highlight {% if forloop.first %}rounded-top{% endif %} p-3 px-0 mb-0">
+        <div>
+            <h3 class="fs-base-2 mb-1">
+                {# Computation capabilities #}
+                {% if cap_link.computation_capabilities %}
+                {% with value=cap_link.computation_capabilities %}
+                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                {% endwith %}
+                {% endif %}
+                {# Acquisition capabilities #}
+                {% if cap_link.acquisition_capabilities %}
+                {% with value=cap_link.acquisition_capabilities %}
+                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                {% endwith %}
+                {% endif %}
+            </h3>
+            {# Smaller details below capability link name #}
+            <div class="d-flex flex-column text-body-secondary">
+                {# Platforms #}
+                {% if cap_link.platforms %}
+                <span>
+                    {% with value=cap_link.platforms.0 %}
+                    {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
+                    {% endwith %}
+                    {% if cap_link.platforms|length == 1 %}
+                    {% elif cap_link.platforms|length == 2 %}
+                    and {{ cap_link.platforms|length|add:-1 }} other platform
+                    {% else %}
+                    and {{ cap_link.platforms|length|add:-1 }} other platforms
+                    {% endif %}
+                </span>
+                {% endif %}
+            </div>
+        </div>
+    </summary>
+    <div class="p-3 px-4 pb-4">
+        <dl class="d-flex flex-column row-gap-4">
+            {# Platforms #}
+            {% if cap_link.platforms %}
+            <div>
+                <dt class="fs-base-2">
+                    {% if cap_link.platforms|length == 1 %}
+                    Platform
+                    {% else %}
+                    Platforms
+                    {% endif %}
+                </dt>
+                {% if cap_link.platforms|length == 1 %}
+                <dd>
+                    {% with value=cap_link.platforms.0 %}
+                    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                    {% endwith %}
+                </dd>
+                {% else %}
+                {% for platform in cap_link.platforms %}
+                <dd class="{% if forloop.first %}pt-2{% else %}border-top{% endif %} py-1">
+                    {% with value=platform %}
+                    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                    {% endwith %}
+                </dd>
+                {% endfor %}
+                {% endif %}
+            </div>
+            {% endif %}
+            {# Standard platform identifiers #}
+            {% if cap_link.standard_identifiers %}
+            <div class="fs-sm-2 mb-2">
+                <dt class="text-secondary-emphasis">Standard Identifiers</dt>
+                {% for si in cap_link.standard_identifiers %}
+                <dd class="dd-comma-separated">
+                    {{ si.value }} <span class="text-body-secondary">({{ si.authority }})</span>
+                </dd>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {# Time spans #}
+            {% if cap_link.time_spans %}
+            {% if cap_link.time_spans|length == 1 %}
+            <div>
+                <dt class="fs-base-2">Begin Date</dt>
+                <dd>{{ cap_link.time_spans.0.begin_position }}</dd>
+            </div>
+            <div>
+                <dt class="fs-base-2">End Date (Indeterminate)</dt>
+                <dd>{{ cap_link.time_spans.0.end_position|capfirst }}</dd>
+            </div>
+            {% else %}
+            <div>
+                <dt class="fs-base-2">Begin and End Dates</dt>
+                <dd>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="col-sm-6 fw-medium bg-transparent ps-0">Begin</th>
+                                    <th class="col-sm-6 fw-medium bg-transparent">End (Indeterminate)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for time_span in cap_link.time_spans %}
+                                <tr>
+                                    <td class="col-sm-6 bg-transparent ps-0">{{ time_span.begin_position }}</td>
+                                    <td class="col-sm-6 bg-transparent">{{ time_span.end_position|capfirst }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </dd>
+            </div>
+            {% endif %}
+            {% endif %}
+        </dl>
+    </div>
+</details>
