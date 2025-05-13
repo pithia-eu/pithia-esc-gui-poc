@@ -6,7 +6,7 @@
     <div class="mb-2">{% include 'browse/detail/components/capability_links_help_button.html' %}</div>
     {% with cap_link=resource.properties.capability_links.0 %}
     {# Determine if just capabilities or not #}
-    {% if cap_link.platform or cap_link.standard_identifiers or cap_link.time_spans %}
+    {% if cap_link.platforms or cap_link.standard_identifiers or cap_link.time_spans %}
     {% with is_open=True %}
     {% include 'browse/detail/components/capability_link_details_component.html' %}
     {% endwith %}
@@ -41,7 +41,7 @@
         </summary>
         <ul class="list-group list-group-flush">
             {% for cap_link in resource.properties.capability_links %}
-            {% if cap_link.platform or cap_link.standard_identifiers or cap_link.time_spans %}
+            {% if cap_link.platforms or cap_link.standard_identifiers or cap_link.time_spans %}
             <li class="list-group-item p-0">
                 {% if forloop.counter == 1 %}
                 {% with is_open=True %}
