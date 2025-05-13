@@ -66,7 +66,7 @@
             {# Standard platform identifiers #}
             {% if cap_link.standard_identifiers %}
             <div class="fs-sm-2 mb-2">
-                <dt class="fw-medium text-secondary-emphasis">Standard Identifiers</dt>
+                <dt class="text-secondary-emphasis">Standard Identifiers</dt>
                 {% for si in cap_link.standard_identifiers %}
                 <dd class="dd-comma-separated">
                     {{ si.value }} <span class="text-body-secondary">({{ si.authority }})</span>
