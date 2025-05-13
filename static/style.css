@@ -1003,6 +1003,10 @@ header .login-link {
     border-top-right-radius: 0;
 }
 
+#capability-links-help-button {
+    text-decoration-color: var(--bs-body-color);
+}
+
 .resource-detail-subsection {
     margin: 0;
     padding: 1rem;
