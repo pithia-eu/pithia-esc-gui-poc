@@ -949,6 +949,10 @@ header .login-link {
 
 .resource-detail-section > details:only-child summary.summary-marker-custom:hover,
 .resource-detail-section > details:only-child summary.summary-marker-custom:focus-visible,
+.resource-detail-section details[name="details-capabilities"] summary.summary-marker-custom:hover,
+.resource-detail-section details[name="details-capabilities"] summary.summary-marker-custom:focus-visible,
+.resource-detail-section details[name="details-capability-links"] summary.summary-marker-custom:hover,
+.resource-detail-section details[name="details-capability-links"] summary.summary-marker-custom:focus-visible,
 .resource-detail-section details[name="details-permissions"] summary.summary-marker-custom:hover,
 .resource-detail-section details[name="details-permissions"] summary.summary-marker-custom:focus-visible {
     background-color: var(--bs-tertiary-bg);
@@ -968,11 +972,6 @@ header .login-link {
 
 .resource-detail-section li:last-of-type details[name="details-permissions"] .permission-definition {
     padding-bottom: 0;
-}
-
-.resource-detail-section details[name="details-capabilities"][open],
-.resource-detail-section details[name="details-capability-links"][open] {
-    background-color: var(--bs-light-bg-subtle);
 }
 
 .resource-detail-section details.details-capabilities-top[open] > summary,
