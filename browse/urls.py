@@ -9,7 +9,6 @@ from datahub_management.views import (
 
 app_name = 'browse'
 urlpatterns = [
-    path('browse-metadata/', views.index, name='index'),
     path('data-collection-related-metadata/', views.data_collection_related_resource_types, name='data_collection_related_resource_types'),
     path('static-datasets/', views.static_dataset_tree, name='static_dataset_tree'),
     path('organisations/', views.OrganisationListView.as_view(), name='list_organisations'),

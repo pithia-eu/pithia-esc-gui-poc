@@ -45,18 +45,11 @@ from ontology.services import (
 
 logger = logging.getLogger(__name__)
 
-_INDEX_PAGE_TITLE = 'All Scientific Metadata'
 _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Data Collection-related Metadata'
 _XML_SCHEMAS_PAGE_TITLE = 'Space Physics Metadata Model'
 
 
 # Create your views here.
-def index(request):
-    return render(request, 'browse/index.html', {
-        'title': _INDEX_PAGE_TITLE,
-        'data_collection_related_resource_types_page_title': _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE,
-    })
-
 
 def data_collection_related_resource_types(request):
     """Acts as a centre point to all registration list pages
