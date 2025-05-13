@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% load project_tags %}
 {% block breadcrumbs %}
-{% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
 {% breadcrumb_item resource_type_list_page_breadcrumb_text 'browse:data_collection_related_resource_types' %}
 {% breadcrumb_item resource_list_page_breadcrumb_text 'browse:list_data_collections' %}
 {% breadcrumb_item scientific_metadata.name 'browse:data_collection_detail' scientific_metadata.id %}

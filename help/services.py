@@ -99,7 +99,7 @@ class DataCollectionsSimpleSearchHelpArticleContent(AbstractHelpArticleContent):
         ('Search Data Collections by Content', reverse_lazy('help:search_data_collections_by_content')),
     ]
     related_functionalities = [
-        ('All Scientific Metadata', reverse_lazy('browse:index')),
+        ('Data Collection-related Metadata', reverse_lazy('browse:data_collection_related_resource_types')),
     ]
     article_url = reverse_lazy('help:data_collection_simple_search')
     dialog_id = 'dialog-simple-search-help'
@@ -123,7 +123,7 @@ class SearchDataCollectionsByContentHelpArticleContent(AbstractHelpArticleConten
         ('Simple Search', reverse_lazy('help:data_collection_simple_search')),
     ]
     related_functionalities = [
-        ('All Scientific Metadata', reverse_lazy('browse:index')),
+        ('Data Collection-related Metadata', reverse_lazy('browse:data_collection_related_resource_types')),
         ('Space Physics Ontology', reverse_lazy('ontology:index')),
     ]
     article_url = reverse_lazy('help:search_data_collections_by_content')

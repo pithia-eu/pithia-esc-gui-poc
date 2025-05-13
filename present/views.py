@@ -13,10 +13,7 @@ from common.models import (
     Workflow,
     WorkflowAPIInteractionMethod,
 )
-from browse.views import (
-    _INDEX_PAGE_TITLE,
-    _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE,
-)
+from browse.views import _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE
 from user_management.services import get_institution_id_for_login_session
 
 
@@ -37,7 +34,6 @@ class APIInteractionMethodView(TemplateView):
         context['title'] = f'Interact with {self.scientific_metadata.name} via API'
         context['scientific_metadata'] = self.scientific_metadata
         context['api_specification_url'] = self.api_specification_url
-        context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         if (os.environ.get('API_INTERACTION_METHOD_DEV_GROUP')
             and os.environ.get('API_INTERACTION_METHOD_DEV_GROUP') == get_institution_id_for_login_session(self.request.session)):
             context['form'] = SwaggerViewModeForm(initial={'mode': 'dev'})

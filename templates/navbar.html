@@ -39,8 +39,9 @@
                                 <hr class="dropdown-divider">
                             </li>
                             <li>
-                                {% url 'browse:index' as browse_url %}
-                                <a href="{{ browse_url }}" class="dropdown-item">All Scientific Metadata</a>
+                                {% url 'browse:data_collection_related_resource_types' as data_collection_related_resource_types_url %}
+                                <a href="{{ data_collection_related_resource_types_url }}" class="dropdown-item">
+                                    Data Collection-related Metadata</a>
                             </li>
                         </ul>
                     </div>

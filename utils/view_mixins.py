@@ -1,4 +1,3 @@
-from browse.views import _INDEX_PAGE_TITLE as _BROWSE_INDEX_PAGE_TITLE
 from browse.views import (
     _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE,
 )
@@ -18,7 +17,6 @@ class ResourceXmlDownloadFromBrowsingViewMixin:
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['browse_index_page_breadcrumb_text'] = _BROWSE_INDEX_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_text'] = self.resource_type_list_page_breadcrumb_text
         context['resource_type_list_page_breadcrumb_url_name'] = 'browse:data_collection_related_resource_types'
         context['resource_list_page_breadcrumb_text'] = self.model.type_plural_readable.title()

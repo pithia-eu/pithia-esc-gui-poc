@@ -649,7 +649,7 @@ header .login-link {
     word-break: keep-all;
     hyphens: auto;
     overflow: hidden;
-    padding: 1.5rem;
+    padding: 1rem;
 }
 
 .card-menu a.card {
@@ -712,7 +712,7 @@ header .login-link {
     text-decoration-color: var(--bs-body-color);
     flex-direction: column;
     gap: 0.5rem;
-    font-size: var(--fs-sm-2);
+    font-size: var(--fs-sm-1);
 }
 
 .card-menu.card-menu-hm a.card:hover,

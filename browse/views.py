@@ -91,7 +91,6 @@ def data_collection_related_resource_types(request):
         'num_current_computations': num_current_computations,
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
-        'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
     })
 
 
@@ -126,7 +125,6 @@ def static_dataset_tree(request):
     return render(request, 'browse/static_dataset_tree.html', {
         'title': f'All {STATIC_DATASET_TYPE_PLURAL_READABLE.title()}',
         'description': STATIC_DATASET_TYPE_DESCRIPTION,
-        'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
         'resources': static_dataset_entries,
         'static_dataset_category_properties_by_iri': static_dataset_category_properties_by_iri,
         'type_readable': models.StaticDatasetEntry.type_readable,
@@ -166,7 +164,6 @@ class ResourceListView(ListView):
         context['type_plural_readable'] = self.model.type_plural_readable
         context['empty_resource_list_text'] = f'No {self.model.type_plural_readable.lower()} were found.'
         context['resource_detail_page_url_name'] = self.resource_detail_page_url_name
-        context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_text'] = _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_url_name'] = 'browse:data_collection_related_resource_types'
         return context
@@ -462,7 +459,6 @@ class ResourceDetailView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['title'] = self.title
         context['resource_description_split'] = self.resource_description_split
-        context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_text'] = _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_url_name'] = 'browse:data_collection_related_resource_types'
         context['resource_list_page_breadcrumb_text'] = self.model.type_plural_readable.title()
