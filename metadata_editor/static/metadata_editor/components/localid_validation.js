@@ -61,11 +61,14 @@ export async function setupLocalIdAndNamespaceRelatedEventListeners() {
     });
     
     organisationInput.addEventListener("input", () => {
-        const organisation = organisationInput.value;
-        if (organisation === "") {
+        const organisationUrl = organisationInput.value;
+        if (organisationUrl === "") {
             return namespaceInput.value = "";
         }
-        namespaceInput.value = namespacesByOrganisation[organisation].toLowerCase().replace(/\s/g, "");
+        if (organisationUrl === "pithia") {
+            return namespaceInput.value = "pithia";
+        }
+        namespaceInput.value = namespacesByOrganisation[organisationUrl].toLowerCase().replace(/\s/g, "");
         window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallySet"));
     });
 }
