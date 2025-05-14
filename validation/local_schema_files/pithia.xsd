@@ -13,5 +13,5 @@
     <include schemaLocation="procedure.xsd"/>  
     <include schemaLocation="collectionResults.xsd"/>
     <include schemaLocation="staticDataset.xsd"/>
-    <include schemaLocation="workflow.xsd"/>
+    <include schemaLocation="workflow.xsd"/>  
 </schema>
