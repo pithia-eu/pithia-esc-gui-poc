@@ -890,9 +890,13 @@ class StaticDatasetEntryEditorFormView(
             )
         metadata_editor.update_phenomenon_time(phenomenon_time_update)
 
+    def get_feature_of_interest_choices_for_form(self):
+        return self.get_choices_from_ontology_category('featureOfInterest')
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['static_dataset_category_choices'] = self.get_choices_from_ontology_category('staticDatasetCategory')
+        kwargs['feature_of_interest_choices'] = self.get_feature_of_interest_choices_for_form()
         return kwargs
 
 
@@ -998,6 +1002,9 @@ class DataSubsetEditorFormView(
             *choices_categorised,
         )
 
+    def get_feature_of_interest_choices_for_form(self):
+        return self.get_choices_from_ontology_category('featureOfInterest')
+
     def get_service_function_choices_for_form(self):
         return self.get_choices_from_ontology_category('serviceFunction')
 
@@ -1037,6 +1044,7 @@ class DataSubsetEditorFormView(
         kwargs['static_dataset_entry_choices'] = self.get_static_dataset_entry_choices_for_form()
         kwargs['data_level_choices'] = self.get_data_level_choices_for_form()
         kwargs['data_quality_flag_choices'] = self.get_data_quality_flag_choices_for_form()
+        kwargs['feature_of_interest_choices'] = self.get_feature_of_interest_choices_for_form()
         kwargs['metadata_quality_flag_choices'] = self.get_metadata_quality_flag_choices_for_form()
         # Sources
         kwargs['service_function_choices'] = self.get_service_function_choices_for_form()

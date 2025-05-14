@@ -481,6 +481,7 @@ class ProcessEditorForm(
 class DataCollectionEditorForm(
     BaseEditorForm,
     DataLevelFormComponent,
+    FeaturesOfInterestMetadataFormComponent,
     QualityAssessmentFormComponent,
     RelatedPartiesEditorFormComponent,
     SourceMetadataFormComponent):
@@ -490,7 +491,6 @@ class DataCollectionEditorForm(
             type_choices=(),
             project_choices=(),
             sub_collection_choices=(),
-            feature_of_interest_choices=(),
             permission_choices=(),
             process_choices=(),
             **kwargs):
@@ -498,7 +498,7 @@ class DataCollectionEditorForm(
         self.fields['types'].choices = type_choices
         self.fields['projects'].choices = project_choices
         self.fields['sub_collections'].choices = sub_collection_choices
-        self.fields['features_of_interest'].choices = feature_of_interest_choices
+        self.fields['features_of_interest'].required = False
         self.fields['permissions'].choices = permission_choices
         self.fields['process'].choices = process_choices
         self.fields['source_linkage'].required = True
@@ -530,15 +530,6 @@ class DataCollectionEditorForm(
             'class': 'form-select',
         }),
         help_text='Sub-collection of the collection.'
-    )
-
-    features_of_interest = forms.MultipleChoiceField(
-        label='Features of Interest (Named Regions)',
-        required=False,
-        widget=forms.SelectMultiple(attrs={
-            'class': 'form-select',
-        }),
-        help_text='Space region which is the feature of the interest of the observation or a sampled feature. This attribute takes values from a controlled vocabulary. '
     )
 
     permissions = forms.MultipleChoiceField(
@@ -580,6 +571,7 @@ class DataCollectionEditorForm(
 
 class StaticDatasetEntryEditorForm(
     BaseEditorForm,
+    FeaturesOfInterestMetadataFormComponent,
     TimePeriodDateTimeEditorFormComponent,
     TimePeriodValidationEditorFormComponent):
     def __init__(self, *args, static_dataset_category_choices=(), **kwargs):
@@ -601,6 +593,7 @@ class StaticDatasetEntryEditorForm(
 class DataSubsetForm(
     BaseEditorForm,
     DataLevelFormComponent,
+    FeaturesOfInterestMetadataFormComponent,
     QualityAssessmentFormComponent,
     SourceMetadataFormComponent,
     TimePeriodDateTimeEditorFormComponent):

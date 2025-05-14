@@ -651,3 +651,18 @@ class SourceMetadataFormComponent(forms.Form):
         initial=dict,
         widget=forms.HiddenInput()
     )
+
+
+class FeaturesOfInterestMetadataFormComponent(forms.Form):
+    def __init__(self, *args, feature_of_interest_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['features_of_interest'].choices = feature_of_interest_choices
+
+    features_of_interest = forms.MultipleChoiceField(
+        label='Features of Interest (Named Regions)',
+        required=True,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        }),
+        help_text='Space region which is the feature of the interest of the observation or a sampled feature. This attribute takes values from a controlled vocabulary. '
+    )

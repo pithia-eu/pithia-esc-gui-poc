@@ -29,6 +29,17 @@
 <hr class="my-5">
 {% include 'metadata_editor/components/description.html' %}
 <hr class="my-5">
+<section id="features-of-interest-section" class="row">
+    <div class="col-lg-12">
+        <h2 class="mb-4">Features of Interest</h2>
+    </div>
+    <div class="col-xl-9 col-lg-12">
+        {% with field=form.features_of_interest %}
+        {% include 'metadata_editor/components/form_field_template.html' %}
+        {% endwith %}
+    </div>
+</section>
+<hr class="my-5">
 {% include 'metadata_editor/components/static_dataset_entry/phenomenon_time.html' %}
 {% endblock form_content %}
 {% block table_of_contents %}
@@ -50,6 +61,11 @@
 <li class="list-group-item">
     <a href="#description-section">
         Description
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#features-of-interest-section">
+        Features of Interest
     </a>
 </li>
 <li class="list-group-item">
