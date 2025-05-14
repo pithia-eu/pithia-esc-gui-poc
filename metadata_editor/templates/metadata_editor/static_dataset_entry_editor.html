@@ -31,11 +31,21 @@
 <hr class="my-5">
 <section id="features-of-interest-section" class="row">
     <div class="col-lg-12">
-        <h2 class="mb-4">Features of Interest</h2>
+        <h2 class="mb-4">{{ form.features_of_interest.label_tag }}</h2>
     </div>
     <div class="col-xl-9 col-lg-12">
         {% with field=form.features_of_interest %}
-        {% include 'metadata_editor/components/form_field_template.html' %}
+        {{ field }}
+        {% if field.help_text %}
+        <div class="form-text">{{ field.help_text }}</div>
+        {% endif %}
+        <div id="invalid-feedback-{{ field.auto_id }}" class="invalid-feedback">
+            <ul class="d-flex-inline row-gap-1 list-unstyled field-error-list mb-0">
+                {% for error in field.errors %}
+                <li class="form-text text-danger">{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
         {% endwith %}
     </div>
 </section>
