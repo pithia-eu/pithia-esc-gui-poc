@@ -19,7 +19,7 @@
                 {% else %}
                 <li class="my-1">
                     <div class="d-inline-flex justify-content-between column-gap-4 w-100">
-                        {% with section_name=static_dataset_category.name|lower %}
+                        {% with section_name=static_dataset_category.name.split|join:'-'|lower %}
                         <a href="#{{ section_name }}-heading" class="link-plain-by-default">
                             {{ static_dataset_category.name }}
                         </a>
