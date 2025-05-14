@@ -131,6 +131,12 @@ class PithiaDoiMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
         }
 
 
+class PithiaFeaturesOfInterestMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
+    @property
+    def features_of_interest(self):
+        return self._get_elements_with_xpath_query('.//%s:namedRegion/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+
+
 class PithiaOntologyUrlsMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
     @property
     def ontology_urls(self):

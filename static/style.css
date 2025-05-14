@@ -1007,6 +1007,10 @@ header .login-link {
     text-decoration-color: var(--bs-body-color);
 }
 
+#result-times-table {
+    font-size: var(--fs-sm-2);
+}
+
 .resource-detail-subsection {
     margin: 0;
     padding: 1rem;
@@ -1069,7 +1073,7 @@ header .login-link {
 .resource-detail-aside {
     display: flex;
     flex-direction: column;
-    font-size: 0.875em;
+    font-size: var(--fs-sm-2);
 }
 
 .resource-detail-aside .resource-detail-aside-section {
@@ -2160,6 +2164,10 @@ ul.tree ul {
     
     .ontology-browser-terms ul.tree {
         --list-item-left-padding: 1em;
+    }
+
+    #result-times-table {
+        font-size: 1rem;
     }
 }
 

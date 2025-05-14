@@ -1,23 +1,59 @@
 {% extends 'browse/detail/bases/base_static_dataset_related.html' %}
 {% load project_tags %}
 
-{# Appears after the description #}
-{% block post_description_content %}
-{% with section_heading='Access This Data Subset' %}
-{% include 'browse/detail/sections/interaction_methods_section.html' %}
-{% endwith %}
-<div class="responsive-resource-detail-section resource-detail-section">
-    <h2>Result Time</h2>
-    {% include 'browse/detail/components/data_subset/result_time_section_content.html' %}
-</div>
+{# Appears before the description #}
+{% block pre_description_content %}
 {% if resource.properties.static_dataset_entry_urls %}
 <section class="responsive-resource-detail-section resource-detail-section">
-<h2 class="fs-6 fw-semibold mb-2">Static Dataset Entry</h2>
+<h2>Static Dataset Entry</h2>
     {% with value=resource.properties.static_dataset_entry_urls.0 %}
     {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
     {% endwith %}
 </section>
 {% endif %}
+{% endblock pre_description_content %}
+
+{# Appears after the description #}
+{% block post_description_content %}
+{% with section_heading='Access This Data Subset' %}
+{% include 'browse/detail/sections/interaction_methods_section.html' %}
+{% endwith %}
+{% include 'browse/detail/sections/features_of_interest_section.html' %}
+<div class="resource-detail-section">
+    <h2>Result Time</h2>
+    <div class="bg-body-tertiary rounded py-3 px-4">
+        <div class="table-responsive bg-body-tertiary">
+            <table id="result-times-table" class="table">
+                <thead>
+                    <tr>
+                        <th class="bg-body-tertiary pt-0">From</th>
+                        <th class="bg-body-tertiary pt-0">To</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result_time in resource.properties.result_times %}
+                    <tr>
+                        <td class="bg-body-tertiary {% if forloop.last %}border-bottom-0{% endif %}">
+                            {% if resource.properties.result_time.time_period.begin.time_position %}
+                            {{ resource.properties.result_time.time_period.begin.time_position|date:'M jS Y, H:i, e' }}
+                            {% else %}
+                            N/A
+                            {% endif %}
+                        </td>
+                        <td class="bg-body-tertiary {% if forloop.last %}border-bottom-0{% endif %}">
+                            {% if resource.properties.result_time.time_period.end.time_position %}
+                            {{ resource.properties.result_time.time_period.end.time_position|date:'M jS Y, H:i, e' }}
+                            {% else %}
+                            N/A
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock post_description_content %}
 
 {# Appears in the further information disclosure widget #}
@@ -44,10 +80,6 @@
 
 {# Appears in aside section #}
 {% block aside_extra_content_after_default %}
-<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <h2>Result Time</h2>
-    {% include 'browse/detail/components/data_subset/result_time_section_content.html' %}
-</section>
 {% if resource.properties.static_dataset_entry_urls %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Static Dataset Entry</h2>

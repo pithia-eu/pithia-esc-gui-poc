@@ -9,6 +9,7 @@ from .xml_metadata_mapping_shortcut_mixins import (
     PithiaDescriptionMetadataPropertiesMixin,
     PithiaDoiMetadataPropertiesMixin,
     PithiaDocumentationMetadataPropertiesMixin,
+    PithiaFeaturesOfInterestMetadataPropertiesMixin,
     PithiaInputOutputMetadataPropertiesMixin,
     PithiaOnlineResourceMetadataPropertiesMixin,
     PithiaOntologyUrlsMetadataPropertiesMixin,
@@ -252,15 +253,12 @@ class ProcessXmlMappingShortcuts(
 class DataCollectionXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaFeaturesOfInterestMetadataPropertiesMixin,
         PithiaOnlineResourceMetadataPropertiesMixin,
         PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin):
-    @property
-    def features_of_interest(self):
-        return self._get_elements_with_xpath_query('.//%s:namedRegion/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
-    
+        PithiaResourceUrlsMetadataPropertiesMixin):    
     @property
     def procedure(self):
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:procedure/@%s:href' % (NamespacePrefix.OM, NamespacePrefix.XLINK))
@@ -283,6 +281,7 @@ class StaticDatasetEntryXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         GmlTimePeriodMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaFeaturesOfInterestMetadataPropertiesMixin,
         PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
@@ -301,17 +300,22 @@ class DataSubsetXmlMappingShortcuts(
         GmlTimePeriodMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaDoiMetadataPropertiesMixin,
+        PithiaFeaturesOfInterestMetadataPropertiesMixin,
         PithiaOnlineResourceMetadataPropertiesMixin,
         PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
-    def result_time(self):
-        result_time_element = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:resultTime' % self.PITHIA_NSPREFIX_XPATH))
-        if not result_time_element:
-            return None
-        return self._gml_time_period(result_time_element)
+    def result_times(self):
+        result_time_elements = self._get_elements_with_xpath_query('.//%s:resultTime' % self.PITHIA_NSPREFIX_XPATH)
+        if not result_time_elements:
+            return []
+        return [
+            self._gml_time_period(result_time_element)
+            for result_time_element in result_time_elements
+            if result_time_element is not None
+        ]
     
     @property
     def online_resources(self):

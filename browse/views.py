@@ -943,6 +943,7 @@ class StaticDatasetEntryDetailView(ResourceDetailView):
                 'entryName',
                 'entryDescription',
                 'category',
+                'featureOfInterest',
                 'phenomenonTime',
             ]
         )
@@ -979,6 +980,7 @@ class DataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin):
                 'dataSubsetDescription',
                 'doi',
                 'entryIdentifier',
+                'featureOfInterest',
                 'qualityAssessment',
                 'resultTime',
                 'source',
