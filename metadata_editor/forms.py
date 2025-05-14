@@ -608,7 +608,7 @@ class DataSubsetForm(
 
     data_collection = forms.ChoiceField(
         label='Subset of Data Collection',
-        required=True,
+        required=False,
         widget=forms.Select(attrs={
             'class': 'form-select',
         }),
