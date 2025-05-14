@@ -688,6 +688,33 @@ class DocumentationMetadataEditor(CitationPropertyTypeMetadataEditor):
         self._update_citation_property_type_element('documentation', update_data)
 
 
+class FeaturesOfInterestMetadataEditor(BaseMetadataComponentEditor):
+    def _update_features_of_interest(
+            self,
+            update_data: list[str],
+            named_regions_container_element_key: str,
+            parent_element: dict = None):
+        if parent_element is None:
+            parent_element = self.metadata_dict
+        # Named regions container element
+        parent_element.setdefault(named_regions_container_element_key, {})
+        named_regions_container_element = parent_element[named_regions_container_element_key]
+        # Named regions
+        self.update_child_element_and_remove_if_empty(
+            named_regions_container_element,
+            'namedRegion',
+            [
+                self.get_as_xlink_href(ud)
+                for ud in update_data if ud.strip()
+            ]
+        )
+        # Clean up
+        self.remove_child_element_if_empty(
+            parent_element,
+            named_regions_container_element_key
+        )
+
+
 class InputOutputTypeMetadataEditor(BaseMetadataComponentEditor):
     GCO19115_NSPREFIX = 'gco19115'
 

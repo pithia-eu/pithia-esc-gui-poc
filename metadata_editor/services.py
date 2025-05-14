@@ -8,6 +8,7 @@ from .service_utils import (
     ContactInfoMetadataEditor,
     DataLevelMetadataEditor,
     DocumentationMetadataEditor,
+    FeaturesOfInterestMetadataEditor,
     InputOutputTypeMetadataEditor,
     LocationMetadataEditor,
     Namespace,
@@ -317,6 +318,7 @@ class ProcessEditor(
 class DataCollectionEditor(
         BaseMetadataEditor,
         DataLevelMetadataEditor,
+        FeaturesOfInterestMetadataEditor,
         QualityAssessmentMetadataEditor,
         RelatedPartiesMetadataEditor,
         SourcePropertyTypeEditor,
@@ -376,35 +378,22 @@ class DataCollectionEditor(
         if not process_url.strip():
             return
         self.metadata_dict['%s:procedure' % NamespacePrefix.OM] = self.get_as_xlink_href(process_url)
-            
 
     def update_features_of_interest(self, update_data: list[str]):
         # Feature of interest container element
         feature_of_interest_container_key = '%s:featureOfInterest' % NamespacePrefix.OM
         self.metadata_dict[feature_of_interest_container_key] = {}
         feature_of_interest_container_element = self.metadata_dict[feature_of_interest_container_key]
-        # Nested feature of interest container element
-        nested_feature_of_interest_container_key = 'FeatureOfInterest'
-        feature_of_interest_container_element.setdefault(nested_feature_of_interest_container_key, {})
-        nested_feature_of_interest_container_element = feature_of_interest_container_element[nested_feature_of_interest_container_key]
-        # Named regions
-        self.update_child_element_and_remove_if_empty(
-            nested_feature_of_interest_container_element,
-            'namedRegion',
-            [
-                self.get_as_xlink_href(ud)
-                for ud in update_data if ud.strip()
-            ]
-        )
-        # Clean up
-        self.remove_child_element_if_empty(
-            feature_of_interest_container_element,
-            nested_feature_of_interest_container_key
+        self._update_features_of_interest(
+            update_data,
+            'FeatureOfInterest',
+            parent_element=feature_of_interest_container_element
         )
 
 
 class StaticDatasetEntryEditor(
         BaseMetadataEditor,
+        FeaturesOfInterestMetadataEditor,
         TimePeriodMetadataEditor,
         XlinkHrefMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
@@ -433,14 +422,21 @@ class StaticDatasetEntryEditor(
             phenomenon_time_key
         )
 
+    def update_features_of_interest(self, update_data: list[str]):
+        self._update_features_of_interest(
+            update_data,
+            'featureOfInterest'
+        )
+
 
 class DataSubsetEditor(
-    BaseMetadataEditor,
-    DataLevelMetadataEditor,
-    QualityAssessmentMetadataEditor,
-    SourcePropertyTypeEditor,
-    TimePeriodMetadataEditor,
-    XlinkHrefMetadataEditor):
+        BaseMetadataEditor,
+        DataLevelMetadataEditor,
+        FeaturesOfInterestMetadataEditor,
+        QualityAssessmentMetadataEditor,
+        SourcePropertyTypeEditor,
+        TimePeriodMetadataEditor,
+        XlinkHrefMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
         super().__init__(models.DataSubset.root_element_name, xml_string)
 
@@ -476,6 +472,12 @@ class DataSubsetEditor(
 
     def update_sources(self, update_data: list[SourceMetadataUpdate]):
         return self._update_sources(self.metadata_dict, update_data)
+
+    def update_features_of_interest(self, update_data: list[str]):
+        self._update_features_of_interest(
+            update_data,
+            'featureOfInterest'
+        )
 
     def update_doi_kernel_metadata(self, update_data: DoiKernelMetadataUpdate):
         self.metadata_dict['doi'] = {

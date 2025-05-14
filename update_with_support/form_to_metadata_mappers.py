@@ -316,6 +316,13 @@ class StaticDatasetEntryFormFieldsToMetadataMapper(
         })
         return mappings
 
+    def get_basic_multiple_choice_form_field_to_xml_field_mappings(self):
+        mappings = super().get_basic_multiple_choice_form_field_to_xml_field_mappings()
+        mappings.update({
+            'features_of_interest': './/%s:featureOfInterest/%s:namedRegion/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+        })
+        return mappings
+
 
 class DataSubsetFormFieldsToMetadataMapper(
         QualityAssessmentFormFieldsToMetadataMixin,
@@ -354,6 +361,13 @@ class DataSubsetFormFieldsToMetadataMapper(
             'description': './/%s:dataSubsetDescription' % self.DEFAULT_XPATH_NSPREFIX,
             'entry_identifier': './/%s:entryIdentifier/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
             'name': './/%s:dataSubsetName' % self.DEFAULT_XPATH_NSPREFIX,
+        })
+        return mappings
+
+    def get_basic_multiple_choice_form_field_to_xml_field_mappings(self):
+        mappings = super().get_basic_multiple_choice_form_field_to_xml_field_mappings()
+        mappings.update({
+            'features_of_interest': './/%s:featureOfInterest/%s:namedRegion/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
         })
         return mappings
 
