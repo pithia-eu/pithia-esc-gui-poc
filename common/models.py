@@ -28,6 +28,10 @@ from .xml_metadata_mapping_shortcuts import (
     ProjectXmlMappingShortcuts,
     WorkflowXmlMappingShortcuts,
 )
+from .xml_metadata_utils import (
+    Namespace,
+    NamespacePrefix,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -182,7 +186,10 @@ class ScientificMetadata(models.Model):
             potential_dependents += list(m.objects.filter(xml__icontains=self.localid))
         for pd in potential_dependents:
             parsed_xml = etree.fromstring(pd.xml.encode('utf-8'))
-            url_mentions = parsed_xml.xpath(f"//*[contains(@xlink:href, '{self.metadata_server_url}')]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
+            url_mentions = parsed_xml.xpath(
+                '//*[@%s:href="%s"]' % (NamespacePrefix.XLINK, self.metadata_server_url),
+                namespaces={NamespacePrefix.XLINK: Namespace.XLINK}
+            )
             if pd.localid == self.localid:
                 continue
             if len(url_mentions) < 1:

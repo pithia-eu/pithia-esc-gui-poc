@@ -405,11 +405,10 @@ class ResourceDetailView(TemplateView):
         return related_registrations
 
     def clean_related_registrations_dict(self, related_registrations_dict):
+        # Removes empty categories from related registrations dict
         cleaned_related_registrations_dict = {}
         for key, value in related_registrations_dict.items():
             if not value:
-                continue
-            elif isinstance(value, dict) and not value.get('@xlink:href'):
                 continue
             cleaned_related_registrations_dict.update({
                 key: value
@@ -464,7 +463,12 @@ class ResourceDetailView(TemplateView):
             **self.map_server_urls_to_ids(self.ontology_server_urls),
             **self.map_server_urls_to_ids(self.resource_server_urls),
         }
-        context['related_registrations'] = self.clean_related_registrations_dict(self.get_related_registrations())
+        related_registrations = self.clean_related_registrations_dict(self.get_related_registrations())
+        num_related_registrations = 0
+        for rr_list in related_registrations.values():
+            num_related_registrations += len(rr_list)
+        context['related_registrations'] = related_registrations
+        context['num_related_registrations'] = num_related_registrations
         context['property_table_dict'] = self.property_table_dict
         context['scientific_metadata_creation_date_parsed'] = isoparse(self.resource.creation_date_json)
         context['scientific_metadata_last_modification_date_parsed'] = isoparse(self.resource.last_modification_date_json)

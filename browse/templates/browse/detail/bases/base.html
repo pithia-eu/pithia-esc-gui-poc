@@ -153,7 +153,10 @@
         <section id="related-metadata-section" class="resource-detail-section">
             <details>
                 <summary class="summary-marker-custom">
-                    <h2 class="d-inline-block">Related Metadata</h2>
+                    <h2 class="d-inline-block">
+                        Related Metadata
+                        <span class="text-body-secondary">({{ num_related_registrations }})</span>
+                    </h2>
                 </summary>
                 <ul class="list-group list-group-flush mb-0">
                     {% for heading_text, resource_url_list in related_registrations.items %}
