@@ -28,12 +28,12 @@
 {% if resource.abstract.strip|length > 0 %}
 <section class="resource-detail-section">
     <h2 class="mb-2">Abstract</h2>
-    {% with text_block_id='resource-abstract' text_block_paragraphs=project_abstract_split %}
+    {% with text_block_id='resource-abstract' text_block_paragraphs=project_abstract_split line_clamp_number='10' %}
     {% include 'utils/expandable_text_block.html' %}
     {% endwith %}
     {# Custom description implementation if abstract is present #}
     {% if resource.description and resource.description|cut:' ' != '' %}
-    <section class="mt-4">
+    <section class="mt-2">
         {# Displays additional information to abstract #}
         {% with description_heading_text='Additional Description' description_section_heading_extra_classes='fs-6 fw-semibold' description_section_text_container_extra_classes='bg-body-tertiary rounded p-3' text_block_font_size_class='fs-6' line_clamp_number='3' %}
         {% with expand_btn_type='sm btn-link' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
