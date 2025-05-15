@@ -20,7 +20,13 @@
 {% endwith %}
 {% include 'browse/detail/sections/features_of_interest_section.html' %}
 <div class="resource-detail-section">
-    <h2>Result Time</h2>
+    <h2>
+        {% if resource.properties.result_times|length == 1 %}
+        Result Time
+        {% else %}
+        Result Times
+        {% endif %}
+    </h2>
     <div class="bg-body-tertiary rounded py-3 px-4">
         <div class="table-responsive bg-body-tertiary">
             <table id="result-times-table" class="table">
@@ -34,15 +40,15 @@
                     {% for result_time in resource.properties.result_times %}
                     <tr>
                         <td class="bg-body-tertiary {% if forloop.last %}border-bottom-0{% endif %}">
-                            {% if resource.properties.result_time.time_period.begin.time_position %}
-                            {{ resource.properties.result_time.time_period.begin.time_position|date:'M jS Y, H:i, e' }}
+                            {% if result_time.time_period.begin.time_position %}
+                            {{ result_time.time_period.begin.time_position|date:'M jS Y, H:i, e' }}
                             {% else %}
                             N/A
                             {% endif %}
                         </td>
                         <td class="bg-body-tertiary {% if forloop.last %}border-bottom-0{% endif %}">
-                            {% if resource.properties.result_time.time_period.end.time_position %}
-                            {{ resource.properties.result_time.time_period.end.time_position|date:'M jS Y, H:i, e' }}
+                            {% if result_time.time_period.end.time_position %}
+                            {{ result_time.time_period.end.time_position|date:'M jS Y, H:i, e' }}
                             {% else %}
                             N/A
                             {% endif %}
