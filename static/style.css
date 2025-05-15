@@ -504,6 +504,10 @@ h3.opblock-tag p {
     -webkit-line-clamp: 5;
 }
 
+.line-clamp-10 {
+    -webkit-line-clamp: 10;
+}
+
 
 /* || Header */
 .header-logo {
