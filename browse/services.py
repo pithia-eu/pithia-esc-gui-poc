@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.html import urlize
 from operator import itemgetter
 from typing import Union
+from urllib.parse import unquote
 
 from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE
 from common.models import (
@@ -71,11 +72,13 @@ def map_ontology_server_urls_to_browse_urls(ontology_server_urls: list) -> list:
     converted_ontology_server_urls = []
     ontology_term_category_graphs = {}
 
-    for ontology_server_url in ontology_server_urls:
+    for encoded_ontology_server_url in ontology_server_urls:
+        ontology_server_url = unquote(encoded_ontology_server_url)
         converted_url = ontology_server_url
         converted_url_text = ontology_server_url
         if SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE not in ontology_server_url:
             converted_ontology_server_urls.append({
+                'encoded_original_server_url': encoded_ontology_server_url,
                 'original_server_url': ontology_server_url,
                 'converted_url': converted_url,
                 'converted_url_text': 'Unknown',
@@ -100,6 +103,7 @@ def map_ontology_server_urls_to_browse_urls(ontology_server_urls: list) -> list:
         except Exception as err:
             logger.exception(err)
         converted_ontology_server_urls.append({
+            'encoded_original_server_url': encoded_ontology_server_url,
             'original_server_url': ontology_server_url,
             'converted_url': converted_url,
             'converted_url_text': converted_url_text,
@@ -128,9 +132,11 @@ def map_metadata_server_urls_to_browse_urls(resource_server_urls: list) -> list:
         resource_server_urls
     )
 
-    for url in operational_mode_urls:
+    for encoded_url in operational_mode_urls:
+        url = unquote(encoded_url)
         url_without_op_mode_id, operational_mode_id = itemgetter('resource_url', 'op_mode_id')(divide_resource_url_from_op_mode_id(url))
         url_mapping = {
+            'encoded_original_server_url': encoded_url,
             'original_server_url': url,
             'converted_url': url,
             # Use the localID in the resource URL as a default in
@@ -153,8 +159,10 @@ def map_metadata_server_urls_to_browse_urls(resource_server_urls: list) -> list:
         url_mapping['converted_url_text'] = f'{instrument.name}#{operational_mode_name}'
         mapped_resource_server_urls.append(url_mapping)
 
-    for url in non_operational_mode_urls:
+    for encoded_url in non_operational_mode_urls:
+        url = unquote(encoded_url)
         url_mapping = {
+            'encoded_original_server_url': encoded_url,
             'original_server_url': url,
             'converted_url': url,
             # Use the localID in the resource URL as a default in

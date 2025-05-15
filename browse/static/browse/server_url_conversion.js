@@ -34,8 +34,8 @@ export class ServerURLConverter {
         return [];
     }
     
-    swapAnchorElementUrlsWithConvertedUrlInPage(originalServerUrl, convertedUrl, convertedUrlText) {
-        const anchorContainerElements = document.querySelectorAll(`.${this.serverUrlElementClassSelector}[data-metadata-server-url="${originalServerUrl}"]`);
+    swapAnchorElementUrlsWithConvertedUrlInPage(encodedOriginalServerUrl, originalServerUrl, convertedUrl, convertedUrlText) {
+        const anchorContainerElements = document.querySelectorAll(`.${this.serverUrlElementClassSelector}[data-metadata-server-url="${encodedOriginalServerUrl}"]`);
         for (const e of anchorContainerElements) {
             const metadataUrlTextElement = e.querySelector(".metadata-server-url-text");
             metadataUrlTextElement.textContent = convertedUrlText;
@@ -53,6 +53,7 @@ export class ServerURLConverter {
         const urlMappings = await this.getResourceServerUrlToDetailPageUrlMappings(urls);
         for (const urlMapping of urlMappings) {
             this.swapAnchorElementUrlsWithConvertedUrlInPage(
+                urlMapping.encoded_original_server_url,
                 urlMapping.original_server_url,
                 urlMapping.converted_url,
                 urlMapping.converted_url_text
