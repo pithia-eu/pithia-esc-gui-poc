@@ -1,97 +1,101 @@
 {% load project_tags %}
-<div class="d-flex flex-column align-items-start row-gap-3">
-    <div class="d-flex flex-column row-gap-2">
-        <div>
-            {% with online_resource_access_type=online_resource_access_type|default:'' %}
-            {% if online_resource_access_type %}
-            <div class="fw-semibold text-secondary-emphasis">
-                {{ online_resource_access_type }}
-            </div>
-            {% endif %}
-            {% endwith %}
-            <a href="{{ online_resource.linkage }}" class="align-items-start fs-base-2 fw-semibold link-underline-by-default" target="_blank" rel="noopener noreferrer">
-                {{ online_resource.name }}</a>
-        </div>
-        {% with service_functions=online_resource.service_functions %}
-        {% if service_functions %}
+<div class="bg-body-tertiary rounded">
+    <div class="px-4 py-2 bg-body-secondary rounded-top">
+        {% with online_resource_access_type=online_resource_access_type|default:'' %}
+        {% if online_resource_access_type %}
         <div class="fw-semibold">
-            {% if service_functions|length == 1 %}
-            <div>
-                {% with value=service_functions.0 %}
-                {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-                {% endwith %}
-            </div>
-            {% else %}
-            <details>
-                <summary>
-                    {% with value=service_functions.0 %}
-                    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-                    {% endwith %} and
-                    {% with num_remaining_service_functions=service_functions|length|add:-1 %}
-                    {{ num_remaining_service_functions }} other service function{% if num_remaining_service_functions > 1 %}s{% endif %}
-                    {% endwith %}
-                </summary>
-                <ul style="list-style-type: disc;">
-                    {% for service_function_url in service_functions %}
-                    <li>
-                        {% with value=service_function_url %}
-                        {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-                        {% endwith %}
-                    </li>
-                    {% endfor %}
-                </ul>
-            </details>
-            {% endif %}
+            {{ online_resource_access_type }}
         </div>
         {% endif %}
         {% endwith %}
     </div>
-    {% if online_resource.description.strip %}
-    <div class="online-resource-description">
-        {% with type_id=type|server_url_id|lower text_block_font_size_class='' line_clamp_number=3 %}
-        {% with text_block_paragraphs=online_resource.description|wrap_in_list_if_dict text_block_id='online-resource-description-'|add:type_id|add:'-'|add:forloop_counter_str expand_btn_type='sm btn-link' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
-        {% include 'utils/expandable_text_block.html' %}
-        {% endwith %}
-        {% endwith %}
+    <div class="d-flex flex-column align-items-start row-gap-3 px-xl-4 p-3 pt-2">
+        <div class="d-flex flex-column row-gap-2">
+            <div>
+                <a href="{{ online_resource.linkage }}" class="align-items-start fs-base-2 fw-semibold link-underline-by-default" target="_blank" rel="noopener noreferrer">
+                    {{ online_resource.name }}</a>
+            </div>
+            {% with service_functions=online_resource.service_functions %}
+            {% if service_functions %}
+            <div class="fw-semibold">
+                {% if service_functions|length == 1 %}
+                <div>
+                    {% with value=service_functions.0 %}
+                    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+                    {% endwith %}
+                </div>
+                {% else %}
+                <details>
+                    <summary>
+                        {% with value=service_functions.0 %}
+                        {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+                        {% endwith %} and
+                        {% with num_remaining_service_functions=service_functions|length|add:-1 %}
+                        {{ num_remaining_service_functions }} other service function{% if num_remaining_service_functions > 1 %}s{% endif %}
+                        {% endwith %}
+                    </summary>
+                    <ul style="list-style-type: disc;">
+                        {% for service_function_url in service_functions %}
+                        <li>
+                            {% with value=service_function_url %}
+                            {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+                            {% endwith %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </details>
+                {% endif %}
+            </div>
+            {% endif %}
+            {% endwith %}
+        </div>
+        {% if online_resource.description.strip %}
+        <div class="online-resource-description">
+            {% with type_id=type|server_url_id|lower text_block_font_size_class='' line_clamp_number=3 %}
+            {% with text_block_paragraphs=online_resource.description|wrap_in_list_if_dict text_block_id='online-resource-description-'|add:type_id|add:'-'|add:forloop_counter_str expand_btn_type='sm btn-link' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
+            {% include 'utils/expandable_text_block.html' %}
+            {% endwith %}
+            {% endwith %}
+        </div>
+        {% endif %}
+        {% if online_resource.protocol or online_resource.data_format %}
+        <details class="details-interaction-methods" name="details-collection-results">
+            <summary>
+                <span style="font-size: 0.975rem;">Additional details</span>
+            </summary>
+            <dl class="d-flex flex-column row-gap-2 my-2">
+                {% if online_resource.protocol %}
+                <div>
+                    <dt>Protocol</dt>
+                    <dd>{{ online_resource.protocol }}</dd>
+                </div>
+                {% endif %}
+                {% if online_resource.data_format %}
+                <div>
+                    <dt>Data Formats</dt>
+                    {% for data_format in online_resource.data_format|wrap_in_list_if_dict %}
+                    <dd class="dd-list-item">
+                        {% with value=data_format %}
+                        {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                        {% endwith %}
+                    </dd>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% if online_resource.service_functions %}
+                <div>
+                    <dt>Service Functions</dt>
+                    {% for service_function_url in online_resource.service_functions %}
+                    <dd class="dd-list-item">
+                        {% with value=service_function_url %}
+                        {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                        {% endwith %}
+                    </dd>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </dl>
+        </details>
+        {% endif %}
     </div>
-    {% endif %}
-    {% if online_resource.protocol or online_resource.data_format %}
-    <details class="details-interaction-methods" name="details-collection-results">
-        <summary>
-            <span style="font-size: 0.975rem;">Additional details</span>
-        </summary>
-        <dl class="d-flex flex-column row-gap-2 my-2">
-            {% if online_resource.protocol %}
-            <div>
-                <dt>Protocol</dt>
-                <dd>{{ online_resource.protocol }}</dd>
-            </div>
-            {% endif %}
-            {% if online_resource.data_format %}
-            <div>
-                <dt>Data Formats</dt>
-                {% for data_format in online_resource.data_format|wrap_in_list_if_dict %}
-                <dd class="dd-list-item">
-                    {% with value=data_format %}
-                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                    {% endwith %}
-                </dd>
-                {% endfor %}
-            </div>
-            {% endif %}
-            {% if online_resource.service_functions %}
-            <div>
-                <dt>Service Functions</dt>
-                {% for service_function_url in online_resource.service_functions %}
-                <dd class="dd-list-item">
-                    {% with value=service_function_url %}
-                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                    {% endwith %}
-                </dd>
-                {% endfor %}
-            </div>
-            {% endif %}
-        </dl>
-    </details>
-    {% endif %}
 </div>
