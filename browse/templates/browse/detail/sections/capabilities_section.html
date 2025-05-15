@@ -1,9 +1,12 @@
 {% if resource.properties.capabilities %}
 <section class="resource-detail-section">
     {% if resource.properties.capabilities|length == 1 %}
-    <h2 class="mb-2">Capabilities</h2>
-    {% with cap=resource.properties.capabilities.0 is_open=True %}
-    {% include 'browse/detail/components/capability_details_component.html' %}
+    <h2>
+        Capabilities
+        <span class="text-body-secondary">({{ resource.properties.capabilities|length }})</span>
+    </h2>
+    {% with cap=resource.properties.capabilities.0 %}
+    {% include 'browse/detail/components/capability_details_pane_component.html' %}
     {% endwith %}
     {% else %}
     <details class="details-capabilities-top" open>

@@ -2,14 +2,15 @@
 <section class="resource-detail-section">
     {# Determine if top-level disclosure widget needed or not #}
     {% if resource.properties.capability_links|length == 1 %}
-    <h2 class="mb-1">Capability Links</h2>
+    <h2 class="mb-2">
+        Capability Links
+        <span class="text-body-secondary">({{ resource.properties.capability_links|length }})</span>
+    </h2>
     <div class="mb-2">{% include 'browse/detail/components/capability_links_help_button.html' %}</div>
     {% with cap_link=resource.properties.capability_links.0 %}
     {# Determine if just capabilities or not #}
     {% if cap_link.platforms or cap_link.standard_identifiers or cap_link.time_spans %}
-    {% with is_open=True %}
-    {% include 'browse/detail/components/capability_link_details_component.html' %}
-    {% endwith %}
+    {% include 'browse/detail/components/capability_link_details_pane_component.html' %}
     {% else %}
     <div class="pt-2">
         {# Computation capabilities #}
