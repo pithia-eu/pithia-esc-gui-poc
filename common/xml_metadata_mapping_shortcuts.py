@@ -22,25 +22,28 @@ from .xml_metadata_mapping_shortcut_mixins import (
 )
 
 
+class ScientificMetadataXmlMappingShortcuts(
+        PithiaCoreMetadataPropertiesMixin,
+        PithiaOntologyUrlsMetadataPropertiesMixin,
+        PithiaResourceUrlsMetadataPropertiesMixin):
+    pass
+
+
 class OrganisationXmlMappingShortcuts(
         GmdContactInfoMetadataPropertiesMixin,
         GmdUrlMetadataPropertiesMixin,
-        PithiaCoreMetadataPropertiesMixin,
         PithiaDescriptionMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaOntologyUrlsMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin,
-        PithiaShortNameMetadataPropertiesMixin):
+        PithiaShortNameMetadataPropertiesMixin,
+        ScientificMetadataXmlMappingShortcuts):
     pass
 
 
 class IndividualXmlMappingShortcuts(
         GmdContactInfoMetadataPropertiesMixin,
         GmdUrlMetadataPropertiesMixin,
-        PithiaCoreMetadataPropertiesMixin,
-        PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin):
+        ScientificMetadataXmlMappingShortcuts):
     @property
     def position_name(self):
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:positionName' % self.PITHIA_NSPREFIX_XPATH)
@@ -52,12 +55,10 @@ class IndividualXmlMappingShortcuts(
 
 class ProjectXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
-        PithiaCoreMetadataPropertiesMixin,
         PithiaDocumentationMetadataPropertiesMixin,
-        PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin,
-        PithiaStatusMetadataPropertiesMixin):
+        PithiaStatusMetadataPropertiesMixin,
+        ScientificMetadataXmlMappingShortcuts):
     @property
     def keywords(self):
         keyword_elements = self._get_elements_with_xpath_query('.//%s:keyword/%s:CharacterString' % (NamespacePrefix.GMD, NamespacePrefix.GCO))
@@ -76,12 +77,10 @@ class ProjectXmlMappingShortcuts(
 
 class PlatformXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
-        PithiaCoreMetadataPropertiesMixin,
         PithiaDocumentationMetadataPropertiesMixin,
-        PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin,
-        PithiaStandardIdentifiersMetadataPropertiesMixin):
+        PithiaStandardIdentifiersMetadataPropertiesMixin,
+        ScientificMetadataXmlMappingShortcuts):
     @property
     def location(self):
         gml_point = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:geometryLocation' % (self.PITHIA_NSPREFIX_XPATH)))
@@ -105,12 +104,10 @@ class PlatformXmlMappingShortcuts(
 class OperationXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         GmlTimePeriodMetadataPropertiesMixin,
-        PithiaCoreMetadataPropertiesMixin,
         PithiaDocumentationMetadataPropertiesMixin,
-        PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin,
-        PithiaStatusMetadataPropertiesMixin):
+        PithiaStatusMetadataPropertiesMixin,
+        ScientificMetadataXmlMappingShortcuts):
     @property
     def operation_time(self):
         operation_time_element = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:operationTime' % self.PITHIA_NSPREFIX_XPATH))
@@ -123,11 +120,9 @@ class OperationXmlMappingShortcuts(
 
 class InstrumentXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
-        PithiaCoreMetadataPropertiesMixin,
         PithiaDocumentationMetadataPropertiesMixin,
-        PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin):
+        ScientificMetadataXmlMappingShortcuts):
     @property
     def instrument_version(self):
         return self._get_first_element_value_or_blank_string_with_xpath_query('/%s:Instrument/%s:version' % (self.PITHIA_NSPREFIX_XPATH, self.PITHIA_NSPREFIX_XPATH))
@@ -155,13 +150,11 @@ class InstrumentXmlMappingShortcuts(
 class AcquisitionCapabilitiesXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCapabilitiesMetadataPropertiesMixin,
-        PithiaCoreMetadataPropertiesMixin,
         PithiaDocumentationMetadataPropertiesMixin,
         PithiaInputOutputMetadataPropertiesMixin,
-        PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin):
+        ScientificMetadataXmlMappingShortcuts):
     @property
     def instrument_mode_pair(self):
         instrument_mode_pair_element = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:InstrumentOperationalModePair' % self.PITHIA_NSPREFIX_XPATH))
@@ -188,10 +181,8 @@ class AcquisitionCapabilitiesXmlMappingShortcuts(
 class AcquisitionXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCapabilityLinksMetadataPropertiesMixin,
-        PithiaCoreMetadataPropertiesMixin,
-        PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin):
+        ScientificMetadataXmlMappingShortcuts):
     capabilities_element_key_xml = 'acquisitionCapabilities'
     capabilities_element_key = 'acquisition_capabilities'
 
@@ -199,13 +190,11 @@ class AcquisitionXmlMappingShortcuts(
 class ComputationCapabilitiesXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCapabilitiesMetadataPropertiesMixin,
-        PithiaCoreMetadataPropertiesMixin,
         PithiaDocumentationMetadataPropertiesMixin,
         PithiaInputOutputMetadataPropertiesMixin,
-        PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin):
+        ScientificMetadataXmlMappingShortcuts):
     @property
     def computation_version(self):
         return self._get_first_element_value_or_blank_string_with_xpath_query('/%s:ComputationCapabilities/%s:version' % (self.PITHIA_NSPREFIX_XPATH, self.PITHIA_NSPREFIX_XPATH))
@@ -226,23 +215,19 @@ class ComputationCapabilitiesXmlMappingShortcuts(
 class ComputationXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCapabilityLinksMetadataPropertiesMixin,
-        PithiaCoreMetadataPropertiesMixin,
-        PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin):
+        ScientificMetadataXmlMappingShortcuts):
     capabilities_element_key_xml = 'computationCapabilities'
     capabilities_element_key = 'computation_capabilities'
 
 
 class ProcessXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
-        PithiaCoreMetadataPropertiesMixin,
         PithiaCapabilitiesMetadataPropertiesMixin,
         PithiaDocumentationMetadataPropertiesMixin,
-        PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin):
+        ScientificMetadataXmlMappingShortcuts):
     def acquisition_components(self):
         return self._get_elements_with_xpath_query('.//%s:acquisitionComponent/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
     
@@ -252,13 +237,11 @@ class ProcessXmlMappingShortcuts(
 
 class DataCollectionXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
-        PithiaCoreMetadataPropertiesMixin,
         PithiaFeaturesOfInterestMetadataPropertiesMixin,
         PithiaOnlineResourceMetadataPropertiesMixin,
-        PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin):    
+        ScientificMetadataXmlMappingShortcuts):
     @property
     def procedure(self):
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:procedure/@%s:href' % (NamespacePrefix.OM, NamespacePrefix.XLINK))
@@ -280,11 +263,9 @@ class DataCollectionXmlMappingShortcuts(
 class StaticDatasetEntryXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         GmlTimePeriodMetadataPropertiesMixin,
-        PithiaCoreMetadataPropertiesMixin,
         PithiaFeaturesOfInterestMetadataPropertiesMixin,
-        PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin):
+        ScientificMetadataXmlMappingShortcuts):
     @property
     def static_dataset_category(self):
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:category/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
@@ -298,14 +279,12 @@ class StaticDatasetEntryXmlMappingShortcuts(
 class DataSubsetXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         GmlTimePeriodMetadataPropertiesMixin,
-        PithiaCoreMetadataPropertiesMixin,
         PithiaDoiMetadataPropertiesMixin,
         PithiaFeaturesOfInterestMetadataPropertiesMixin,
         PithiaOnlineResourceMetadataPropertiesMixin,
-        PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin):
+        ScientificMetadataXmlMappingShortcuts):
     @property
     def result_times(self):
         result_time_elements = self._get_elements_with_xpath_query('.//%s:resultTime' % self.PITHIA_NSPREFIX_XPATH)
@@ -324,10 +303,8 @@ class DataSubsetXmlMappingShortcuts(
 
 class WorkflowXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
-        PithiaCoreMetadataPropertiesMixin,
-        PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin):
+        ScientificMetadataXmlMappingShortcuts):
     @property
     def workflow_details_url(self):
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:workflowDetails/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))

@@ -26,6 +26,7 @@ from .xml_metadata_mapping_shortcuts import (
     PlatformXmlMappingShortcuts,
     ProcessXmlMappingShortcuts,
     ProjectXmlMappingShortcuts,
+    ScientificMetadataXmlMappingShortcuts,
     WorkflowXmlMappingShortcuts,
 )
 from .xml_metadata_utils import (
@@ -134,6 +135,10 @@ class ScientificMetadata(models.Model):
         return self.pithia_identifier['lastModificationDate']
 
     # Helper properties
+    @property
+    def properties(self):
+        return ScientificMetadataXmlMappingShortcuts(self.xml)
+
     @property
     def type_in_metadata_server_url(self):
         pass
