@@ -4,7 +4,10 @@ import json
 import logging
 import re
 from dateutil.parser import isoparse
-from django.http import JsonResponse
+from django.http import (
+    HttpResponseBadRequest,
+    JsonResponse,
+)
 from django.utils.http import urlencode
 from django.views.decorators.http import require_POST
 from django.shortcuts import (
@@ -18,7 +21,9 @@ from django.views.generic import (
 )
 from lxml import etree
 from openapi_spec_validator import validate_spec_url
+from urllib.parse import quote
 
+from .forms import RelatedMetadataForm
 from .services import (
     get_properties_for_ontology_server_urls,
     map_metadata_server_urls_to_browse_urls,
@@ -380,41 +385,6 @@ class ResourceDetailView(TemplateView):
 
     def get_description_from_xml(self, resource):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}description').text
-
-    def get_related_registrations(self):
-        related_registrations = {
-            models.Organisation.type_plural_readable.title(): self.resource.properties.organisation_urls,
-            models.Individual.type_plural_readable.title(): self.resource.properties.individual_urls,
-            models.Project.type_plural_readable.title(): self.resource.properties.project_urls,
-            models.Platform.type_plural_readable.title(): self.resource.properties.platform_urls,
-            models.Operation.type_plural_readable.title(): self.resource.properties.operation_urls,
-            models.Instrument.type_plural_readable.title(): self.resource.properties.instrument_urls,
-            models.AcquisitionCapabilities.type_plural_readable.title(): self.resource.properties.acquisition_capabilities_urls,
-            models.Acquisition.type_plural_readable.title(): self.resource.properties.acquisition_urls,
-            models.ComputationCapabilities.type_plural_readable.title(): self.resource.properties.computation_capabilities_urls,
-            models.Computation.type_plural_readable.title(): self.resource.properties.computation_urls,
-            models.Process.type_plural_readable.title(): self.resource.properties.process_urls,
-            models.DataCollection.type_plural_readable.title(): self.resource.properties.data_collection_urls,
-            models.StaticDatasetEntry.type_plural_readable.title(): self.resource.properties.static_dataset_entry_urls,
-            models.DataSubset.type_plural_readable.title(): [],
-            models.Workflow.type_plural_readable.title(): [],
-        }
-        metadata_dependents = self.resource.metadata_dependents
-        for md in metadata_dependents:
-            related_registrations[md.type_plural_readable.title()].append(md.metadata_server_url)
-        return related_registrations
-
-    def clean_related_registrations_dict(self, related_registrations_dict):
-        # Removes empty categories from related registrations dict
-        cleaned_related_registrations_dict = {}
-        for key, value in related_registrations_dict.items():
-            if not value:
-                continue
-            cleaned_related_registrations_dict.update({
-                key: value
-            })
-        return cleaned_related_registrations_dict
-        
     
     def format_and_split_string_by_multi_newlines(self, description):
         try:
@@ -463,12 +433,7 @@ class ResourceDetailView(TemplateView):
             **self.map_server_urls_to_ids(self.ontology_server_urls),
             **self.map_server_urls_to_ids(self.resource_server_urls),
         }
-        related_registrations = self.clean_related_registrations_dict(self.get_related_registrations())
-        num_related_registrations = 0
-        for rr_list in related_registrations.values():
-            num_related_registrations += len(rr_list)
-        context['related_registrations'] = related_registrations
-        context['num_related_registrations'] = num_related_registrations
+        context['related_metadata_url'] = f"{reverse('browse:related_metadata')}?resource_id={quote(self.resource_id)}"
         context['property_table_dict'] = self.property_table_dict
         context['scientific_metadata_creation_date_parsed'] = isoparse(self.resource.creation_date_json)
         context['scientific_metadata_last_modification_date_parsed'] = isoparse(self.resource.last_modification_date_json)
@@ -1116,3 +1081,87 @@ def map_ontology_server_urls_to_corresponding_properties(request):
         properties_to_get
     )
     return JsonResponse(properties_for_ontology_server_urls)
+
+
+class RelatedRegistrationsTemplateView(TemplateView):
+    """Returns a list of metadata registrations
+    related to a resource ID."""
+    template_name = 'browse/detail/components/related_metadata_list.html'
+
+    def _get_related_registrations_from_references(self):
+        return {
+            models.Organisation._type: list(models.Organisation.objects.get_by_metadata_server_urls(self.resource.properties.organisation_urls)),
+            models.Individual._type: list(models.Individual.objects.get_by_metadata_server_urls(self.resource.properties.individual_urls)),
+            models.Project._type: list(models.Project.objects.get_by_metadata_server_urls(self.resource.properties.project_urls)),
+            models.Platform._type: list(models.Platform.objects.get_by_metadata_server_urls(self.resource.properties.platform_urls)),
+            models.Operation._type: list(models.Operation.objects.get_by_metadata_server_urls(self.resource.properties.operation_urls)),
+            models.Instrument._type: list(models.Instrument.objects.get_by_metadata_server_urls(self.resource.properties.instrument_urls)),
+            models.AcquisitionCapabilities._type: list(models.AcquisitionCapabilities.objects.get_by_metadata_server_urls(self.resource.properties.acquisition_capabilities_urls)),
+            models.Acquisition._type: list(models.Acquisition.objects.get_by_metadata_server_urls(self.resource.properties.acquisition_urls)),
+            models.ComputationCapabilities._type: list(models.ComputationCapabilities.objects.get_by_metadata_server_urls(self.resource.properties.computation_capabilities_urls)),
+            models.Computation._type: list(models.Computation.objects.get_by_metadata_server_urls(self.resource.properties.computation_urls)),
+            models.Process._type: list(models.Process.objects.get_by_metadata_server_urls(self.resource.properties.process_urls)),
+            models.DataCollection._type: list(models.DataCollection.objects.get_by_metadata_server_urls(self.resource.properties.data_collection_urls)),
+            models.StaticDatasetEntry._type: list(models.StaticDatasetEntry.objects.get_by_metadata_server_urls(self.resource.properties.static_dataset_entry_urls)),
+            # XML schemas don't currently allow for references
+            # to data subsets or workflows.
+        }
+
+    def _get_related_registrations_from_metadata_dependents(self):
+        related_registrations = {}
+        for md in list(self.resource.metadata_dependents):
+            if md._type not in related_registrations:
+                related_registrations.update({
+                    md._type: [],
+                })
+            related_registrations[md._type].append(md)
+        return related_registrations
+
+    def get_related_registrations(self):
+        related_registrations_from_references = self._get_related_registrations_from_references()
+        related_registrations_from_metadata_dependents = self._get_related_registrations_from_metadata_dependents()
+        return {
+            models.Organisation.type_plural_readable.title(): related_registrations_from_references.get(models.Organisation._type) + related_registrations_from_metadata_dependents.get(models.Organisation._type, []),
+            models.Individual.type_plural_readable.title(): related_registrations_from_references.get(models.Individual._type) + related_registrations_from_metadata_dependents.get(models.Individual._type, []),
+            models.Project.type_plural_readable.title(): related_registrations_from_references.get(models.Project._type) + related_registrations_from_metadata_dependents.get(models.Project._type, []),
+            models.Platform.type_plural_readable.title(): related_registrations_from_references.get(models.Platform._type) + related_registrations_from_metadata_dependents.get(models.Platform._type, []),
+            models.Operation.type_plural_readable.title(): related_registrations_from_references.get(models.Operation._type) + related_registrations_from_metadata_dependents.get(models.Operation._type, []),
+            models.Instrument.type_plural_readable.title(): related_registrations_from_references.get(models.Instrument._type) + related_registrations_from_metadata_dependents.get(models.Instrument._type, []),
+            models.AcquisitionCapabilities.type_plural_readable.title(): related_registrations_from_references.get(models.AcquisitionCapabilities._type) + related_registrations_from_metadata_dependents.get(models.AcquisitionCapabilities._type, []),
+            models.Acquisition.type_plural_readable.title(): related_registrations_from_references.get(models.Acquisition._type) + related_registrations_from_metadata_dependents.get(models.Acquisition._type, []),
+            models.ComputationCapabilities.type_plural_readable.title(): related_registrations_from_references.get(models.ComputationCapabilities._type) + related_registrations_from_metadata_dependents.get(models.ComputationCapabilities._type, []),
+            models.Computation.type_plural_readable.title(): related_registrations_from_references.get(models.Computation._type) + related_registrations_from_metadata_dependents.get(models.Computation._type, []),
+            models.Process.type_plural_readable.title(): related_registrations_from_references.get(models.Process._type) + related_registrations_from_metadata_dependents.get(models.Process._type, []),
+            models.DataCollection.type_plural_readable.title(): related_registrations_from_references.get(models.DataCollection._type) + related_registrations_from_metadata_dependents.get(models.DataCollection._type, []),
+            models.StaticDatasetEntry.type_plural_readable.title(): related_registrations_from_references.get(models.StaticDatasetEntry._type) + related_registrations_from_metadata_dependents.get(models.StaticDatasetEntry._type, []),
+            models.DataSubset.type_plural_readable.title(): related_registrations_from_metadata_dependents.get(models.DataSubset._type, []),
+            models.Workflow.type_plural_readable.title(): related_registrations_from_metadata_dependents.get(models.Workflow._type, []),
+        }
+
+    def clean_related_registrations_dict(self, related_registrations_dict):
+        # Removes empty categories from related registrations dict
+        cleaned_related_registrations_dict = {}
+        for key, value in related_registrations_dict.items():
+            if not value:
+                continue
+            cleaned_related_registrations_dict.update({
+                key: value
+            })
+        return cleaned_related_registrations_dict
+
+    def get(self, request, *args, **kwargs):
+        form = RelatedMetadataForm(request.GET)
+        if not form.is_valid():
+            return HttpResponseBadRequest('The submitted form was invalid.')
+        print("form.cleaned_data.get('resource_id')", form.cleaned_data.get('resource_id'))
+        self.resource_unclassed = get_object_or_404(
+            models.ScientificMetadata,
+            pk=form.cleaned_data.get('resource_id')
+        )
+        self.resource = self.resource_unclassed.get_subclass_instance()
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['related_registrations'] = self.clean_related_registrations_dict(self.get_related_registrations())
+        return context

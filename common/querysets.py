@@ -28,8 +28,8 @@ class ScientificMetadataQuerySet(models.QuerySet, AbstractMetadataDatabaseQuerie
             return self.none()
         query = Q()
         for url in metadata_server_urls:
-            namespace, localid = get_namespace_and_localid_from_resource_url(url)
-            query |= Q(json__identifier__PITHIA_Identifier__namespace=namespace, json__identifier__PITHIA_Identifier__localID=localid)
+            localid = url.split('/')[-1]
+            query |= Q(pk=localid)
         return self.filter(query)
 
     def delete_by_metadata_server_urls(self, metadata_server_urls: list):

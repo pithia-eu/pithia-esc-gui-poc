@@ -166,6 +166,17 @@ class ScientificMetadata(models.Model):
     def root_element_name(self):
         return None
 
+    def get_subclass_instance(self):
+        try:
+            subclasses = {
+                subclass._type: subclass
+                for subclass in list(ScientificMetadata.__subclasses__())
+            }
+            return subclasses[self.type].objects.get(pk=self.pk)
+        except Exception:
+            logger.exception('Could not get subclass instance.')
+        return None
+
     def _get_immediate_metadata_dependents_and_update_checked_metadata(
             self,
             checked_metadata: set = set(),
@@ -390,6 +401,7 @@ class HandleURLMapping(models.Model):
 
 # Proxy models
 class Organisation(ScientificMetadata):
+    _type = ScientificMetadata.ORGANISATION
     type_in_metadata_server_url = 'organisation'
     localid_base = 'Organisation'
     weight = 0
@@ -413,6 +425,7 @@ class Organisation(ScientificMetadata):
         proxy = True
 
 class Individual(ScientificMetadata):
+    _type = ScientificMetadata.INDIVIDUAL
     type_in_metadata_server_url = 'individual'
     localid_base = 'Individual'
     weight = 1
@@ -440,6 +453,7 @@ class Individual(ScientificMetadata):
         proxy = True
 
 class Project(ScientificMetadata):
+    _type = ScientificMetadata.PROJECT
     type_in_metadata_server_url = 'project'
     localid_base = 'Project'
     weight = 2
@@ -464,6 +478,7 @@ class Project(ScientificMetadata):
         proxy = True
 
 class Platform(ScientificMetadata):
+    _type = ScientificMetadata.PLATFORM
     type_in_metadata_server_url = 'platform'
     localid_base = 'Platform'
     weight = 3
@@ -484,6 +499,7 @@ class Platform(ScientificMetadata):
         proxy = True
 
 class Operation(ScientificMetadata):
+    _type = ScientificMetadata.OPERATION
     type_in_metadata_server_url = 'operation'
     localid_base = 'Operation'
     weight = 4
@@ -504,6 +520,7 @@ class Operation(ScientificMetadata):
         proxy = True
 
 class Instrument(ScientificMetadata):
+    _type = ScientificMetadata.INSTRUMENT
     type_in_metadata_server_url = 'instrument'
     localid_base = 'Instrument'
     weight = 5
@@ -546,6 +563,7 @@ class Instrument(ScientificMetadata):
         proxy = True
 
 class AcquisitionCapabilities(ScientificMetadata):
+    _type = ScientificMetadata.ACQUISITION_CAPABILITIES
     type_in_metadata_server_url = 'acquisitionCapabilities'
     localid_base = 'AcquisitionCapabilities'
     weight = 6
@@ -573,6 +591,7 @@ class AcquisitionCapabilities(ScientificMetadata):
         proxy = True
 
 class Acquisition(ScientificMetadata):
+    _type = ScientificMetadata.ACQUISITION
     type_in_metadata_server_url = 'acquisition'
     localid_base = 'Acquisition'
     weight = 7
@@ -593,6 +612,7 @@ class Acquisition(ScientificMetadata):
         proxy = True
 
 class ComputationCapabilities(ScientificMetadata):
+    _type = ScientificMetadata.COMPUTATION_CAPABILITIES
     type_in_metadata_server_url = 'computationCapabilities'
     localid_base = 'ComputationCapabilities'
     weight = 8
@@ -627,6 +647,7 @@ class ComputationCapabilities(ScientificMetadata):
         proxy = True
 
 class Computation(ScientificMetadata):
+    _type = ScientificMetadata.COMPUTATION
     type_in_metadata_server_url = 'computation'
     localid_base = 'Computation'
     weight = 9
@@ -647,6 +668,7 @@ class Computation(ScientificMetadata):
         proxy = True
 
 class Process(ScientificMetadata):
+    _type = ScientificMetadata.PROCESS
     type_in_metadata_server_url = 'process'
     localid_base = 'CompositeProcess'
     weight = 10
@@ -667,6 +689,7 @@ class Process(ScientificMetadata):
         proxy = True
 
 class DataCollection(ScientificMetadata):
+    _type = ScientificMetadata.DATA_COLLECTION
     type_in_metadata_server_url = 'collection'
     localid_base = 'DataCollection'
     weight = 11
@@ -731,6 +754,7 @@ class StaticDatasetTypeDescriptionMixin:
 
 
 class StaticDatasetEntry(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
+    _type = ScientificMetadata.STATIC_DATASET_ENTRY
     type_in_metadata_server_url = 'staticDataset'
     localid_base = 'StaticDatasetEntry'
     weight = 12
@@ -777,6 +801,7 @@ class StaticDatasetEntry(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
         proxy = True
 
 class DataSubset(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
+    _type = ScientificMetadata.DATA_SUBSET
     type_in_metadata_server_url = 'staticDataset'
     localid_base = 'DataSubset'
     weight = 13
@@ -824,6 +849,7 @@ class DataSubset(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
 
 
 class Workflow(ScientificMetadata):
+    _type = ScientificMetadata.WORKFLOW
     type_in_metadata_server_url = 'workflow'
     localid_base = 'Workflow'
     weight = 14

@@ -43,4 +43,5 @@ urlpatterns = [
     path('workflows/<workflow_id>/details/', get_workflow_details_file, name='workflow_details_file'),
     path('utils/convert/urls/', views.get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls, name='convert_server_urls'),
     path('utils/map/ontology-urls-to-properties/', views.map_ontology_server_urls_to_corresponding_properties, name='ontology_node_properties_mapping_url'),
+    path('related-metadata/', views.RelatedRegistrationsTemplateView.as_view(), name='related_metadata'),
 ]

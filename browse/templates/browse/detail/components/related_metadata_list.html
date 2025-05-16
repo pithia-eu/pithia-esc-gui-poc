@@ -1,0 +1,18 @@
+{% if not related_registrations %}
+<p>This registration has no related metadata.</p>
+{% else %}
+<ul class="list-group list-group-flush mb-0">
+    {% for heading_text, resource_list in related_registrations.items %}
+    <li class="list-group-item px-0 py-4 {% if forloop.last %}pb-0{% endif %}">
+        <h3 class="fw-semibold">{{ heading_text }}</h3>
+        <ul class="mt-2 mb-0" style="list-style-type: disc;">
+            {% for resource in resource_list %}
+            <li class="related-metadata-list-item py-1 {% if forloop.last %}pb-0{% endif %}">
+                <a href="{{ resource.get_absolute_url }}" class="link-underline-by-default">{{ resource.name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}

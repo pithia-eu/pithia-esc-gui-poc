@@ -3,6 +3,8 @@
 {% load static %}
 {% block scripts %}
 {{ server_url_conversion_url|json_script:'server-url-conversion-url' }}
+{{ related_metadata_url|json_script:'related-metadata-url' }}
+<script src="{% static 'browse/related_metadata.js' %}" type="module"></script>
 <script src="{% static 'browse/resource_url_conversion.js' %}" type="module"></script>
 <script src="{% static 'browse/ontology_url_conversion.js' %}" type="module"></script>
 <script src="{% static 'browse/detail.js' %}" type="module"></script>
@@ -149,34 +151,35 @@
                 </div>
             </details>
         </section>
-        {% if related_registrations %}
         <section id="related-metadata-section" class="resource-detail-section">
             <details>
                 <summary class="summary-marker-custom">
-                    <h2 class="d-inline-block">
+                    <h2 class="d-inline-block text-nowrap">
                         Related Metadata
-                        <span class="text-body-secondary">({{ num_related_registrations }})</span>
+                        <span id="related-metadata-num" class="text-body-secondary">
+                            <span class="placeholder placeholder-lg col-2 bg-body-secondary align-text-bottom rounded ms-1"></span>
+                        </span>
                     </h2>
                 </summary>
-                <ul class="list-group list-group-flush mb-0">
-                    {% for heading_text, resource_url_list in related_registrations.items %}
-                    <li class="list-group-item px-0 py-4 {% if forloop.last %}pb-0{% endif %}">
-                        <h3 class="fw-semibold">{{ heading_text }}</h3>
-                        <ul class="mt-2 mb-0" style="list-style-type: disc;">
-                            {% for resource_url in resource_url_list|wrap_in_list_if_dict %}
-                            <li class="py-1 {% if forloop.last %}pb-0{% endif %}">
-                                {% with value=resource_url %}
-                                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                                {% endwith %}
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    {% endfor %}
-                </ul>
+                <div id="related-metadata-list-wrapper">
+                    <div class="d-flex flex-column row-gap-2 pt-4 pb-4">
+                        <div class="placeholder placeholder-lg col-lg-4 bg-body-secondary rounded mb-2"></div>
+                        <div class="placeholder placeholder-lg col-lg-6 bg-body-secondary rounded"></div>
+                        <div class="placeholder placeholder-lg col-lg-6 bg-body-secondary rounded"></div>
+                    </div>
+                    <div class="d-flex flex-column row-gap-2 border-top py-4">
+                        <div class="placeholder placeholder-lg col-lg-4 bg-body-secondary rounded mb-2"></div>
+                        <div class="placeholder placeholder-lg col-lg-6 bg-body-secondary rounded"></div>
+                        <div class="placeholder placeholder-lg col-lg-6 bg-body-secondary rounded"></div>
+                    </div>
+                    <div class="d-flex flex-column row-gap-2 border-top pt-4">
+                        <div class="placeholder placeholder-lg col-lg-4 bg-body-secondary rounded mb-2"></div>
+                        <div class="placeholder placeholder-lg col-lg-6 bg-body-secondary rounded"></div>
+                        <div class="placeholder placeholder-lg col-lg-6 bg-body-secondary rounded"></div>
+                    </div>
+                </div>
             </details>
         </section>
-        {% endif %}
     </div>
     <aside class="col-xl-3 col-lg-4 resource-detail-aside border-start">
         {% block aside_extra_content_before_default %}{% endblock aside_extra_content_before_default %}
