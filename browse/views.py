@@ -1088,54 +1088,69 @@ class RelatedRegistrationsTemplateView(TemplateView):
     related to a resource ID."""
     template_name = 'browse/detail/components/related_metadata_list.html'
 
+    def _get_immediate_related_registrations_from_references(self, resource):
+        if not resource.properties.resource_urls:
+            return []
+        return list(models.ScientificMetadata.objects.get_by_metadata_server_urls(resource.properties.resource_urls))
+
+    def _get_related_registrations_from_following_references_for_resource(self, resource):
+        related_registrations = []
+        immediate_related_registrations = self._get_immediate_related_registrations_from_references(resource)
+        related_registrations += immediate_related_registrations
+        for registration in immediate_related_registrations:
+            related_registrations += self._get_related_registrations_from_following_references_for_resource(registration)
+        return related_registrations
+
     def _get_related_registrations_from_references(self):
-        return {
-            models.Organisation._type: list(models.Organisation.objects.get_by_metadata_server_urls(self.resource.properties.organisation_urls)),
-            models.Individual._type: list(models.Individual.objects.get_by_metadata_server_urls(self.resource.properties.individual_urls)),
-            models.Project._type: list(models.Project.objects.get_by_metadata_server_urls(self.resource.properties.project_urls)),
-            models.Platform._type: list(models.Platform.objects.get_by_metadata_server_urls(self.resource.properties.platform_urls)),
-            models.Operation._type: list(models.Operation.objects.get_by_metadata_server_urls(self.resource.properties.operation_urls)),
-            models.Instrument._type: list(models.Instrument.objects.get_by_metadata_server_urls(self.resource.properties.instrument_urls)),
-            models.AcquisitionCapabilities._type: list(models.AcquisitionCapabilities.objects.get_by_metadata_server_urls(self.resource.properties.acquisition_capabilities_urls)),
-            models.Acquisition._type: list(models.Acquisition.objects.get_by_metadata_server_urls(self.resource.properties.acquisition_urls)),
-            models.ComputationCapabilities._type: list(models.ComputationCapabilities.objects.get_by_metadata_server_urls(self.resource.properties.computation_capabilities_urls)),
-            models.Computation._type: list(models.Computation.objects.get_by_metadata_server_urls(self.resource.properties.computation_urls)),
-            models.Process._type: list(models.Process.objects.get_by_metadata_server_urls(self.resource.properties.process_urls)),
-            models.DataCollection._type: list(models.DataCollection.objects.get_by_metadata_server_urls(self.resource.properties.data_collection_urls)),
-            models.StaticDatasetEntry._type: list(models.StaticDatasetEntry.objects.get_by_metadata_server_urls(self.resource.properties.static_dataset_entry_urls)),
-            # XML schemas don't currently allow for references
-            # to data subsets or workflows.
-        }
+        if not self.resource.properties.resource_urls:
+            return {}
+        related_registrations = list(set(self._get_related_registrations_from_following_references_for_resource(self.resource)))
+        related_registrations_categorised = {}
+        for registration_unclassed in related_registrations:
+            registration = registration_unclassed.get_subclass_instance()
+            key = registration.type_plural_readable.title()
+            if key not in related_registrations_categorised:
+                related_registrations_categorised[key] = []
+            related_registrations_categorised[key].append(registration)
+        return related_registrations_categorised
 
     def _get_related_registrations_from_metadata_dependents(self):
         related_registrations = {}
         for md in list(self.resource.metadata_dependents):
-            if md._type not in related_registrations:
+            key = md.type_plural_readable.title()
+            if key not in related_registrations:
                 related_registrations.update({
-                    md._type: [],
+                    key: [],
                 })
-            related_registrations[md._type].append(md)
+            related_registrations[key].append(md)
         return related_registrations
 
     def get_related_registrations(self):
+        related_registrations = {
+            models.Organisation.type_plural_readable.title(): [],
+            models.Individual.type_plural_readable.title(): [],
+            models.Project.type_plural_readable.title(): [],
+            models.Platform.type_plural_readable.title(): [],
+            models.Operation.type_plural_readable.title(): [],
+            models.Instrument.type_plural_readable.title(): [],
+            models.AcquisitionCapabilities.type_plural_readable.title(): [],
+            models.Acquisition.type_plural_readable.title(): [],
+            models.ComputationCapabilities.type_plural_readable.title(): [],
+            models.Computation.type_plural_readable.title(): [],
+            models.Process.type_plural_readable.title(): [],
+            models.DataCollection.type_plural_readable.title(): [],
+            models.StaticDatasetEntry.type_plural_readable.title(): [],
+            models.DataSubset.type_plural_readable.title(): [],
+            models.Workflow.type_plural_readable.title(): [],
+        }
         related_registrations_from_references = self._get_related_registrations_from_references()
         related_registrations_from_metadata_dependents = self._get_related_registrations_from_metadata_dependents()
+        for key in related_registrations.keys():
+            related_registrations[key] = related_registrations_from_references.get(key, []) \
+                                        + related_registrations_from_metadata_dependents.get(key, [])
         return {
-            models.Organisation.type_plural_readable.title(): related_registrations_from_references.get(models.Organisation._type) + related_registrations_from_metadata_dependents.get(models.Organisation._type, []),
-            models.Individual.type_plural_readable.title(): related_registrations_from_references.get(models.Individual._type) + related_registrations_from_metadata_dependents.get(models.Individual._type, []),
-            models.Project.type_plural_readable.title(): related_registrations_from_references.get(models.Project._type) + related_registrations_from_metadata_dependents.get(models.Project._type, []),
-            models.Platform.type_plural_readable.title(): related_registrations_from_references.get(models.Platform._type) + related_registrations_from_metadata_dependents.get(models.Platform._type, []),
-            models.Operation.type_plural_readable.title(): related_registrations_from_references.get(models.Operation._type) + related_registrations_from_metadata_dependents.get(models.Operation._type, []),
-            models.Instrument.type_plural_readable.title(): related_registrations_from_references.get(models.Instrument._type) + related_registrations_from_metadata_dependents.get(models.Instrument._type, []),
-            models.AcquisitionCapabilities.type_plural_readable.title(): related_registrations_from_references.get(models.AcquisitionCapabilities._type) + related_registrations_from_metadata_dependents.get(models.AcquisitionCapabilities._type, []),
-            models.Acquisition.type_plural_readable.title(): related_registrations_from_references.get(models.Acquisition._type) + related_registrations_from_metadata_dependents.get(models.Acquisition._type, []),
-            models.ComputationCapabilities.type_plural_readable.title(): related_registrations_from_references.get(models.ComputationCapabilities._type) + related_registrations_from_metadata_dependents.get(models.ComputationCapabilities._type, []),
-            models.Computation.type_plural_readable.title(): related_registrations_from_references.get(models.Computation._type) + related_registrations_from_metadata_dependents.get(models.Computation._type, []),
-            models.Process.type_plural_readable.title(): related_registrations_from_references.get(models.Process._type) + related_registrations_from_metadata_dependents.get(models.Process._type, []),
-            models.DataCollection.type_plural_readable.title(): related_registrations_from_references.get(models.DataCollection._type) + related_registrations_from_metadata_dependents.get(models.DataCollection._type, []),
-            models.StaticDatasetEntry.type_plural_readable.title(): related_registrations_from_references.get(models.StaticDatasetEntry._type) + related_registrations_from_metadata_dependents.get(models.StaticDatasetEntry._type, []),
-            models.DataSubset.type_plural_readable.title(): related_registrations_from_metadata_dependents.get(models.DataSubset._type, []),
-            models.Workflow.type_plural_readable.title(): related_registrations_from_metadata_dependents.get(models.Workflow._type, []),
+            key: sorted(registration_list, key=lambda rl: rl.name.lower())
+            for key, registration_list in related_registrations.items()
         }
 
     def clean_related_registrations_dict(self, related_registrations_dict):
