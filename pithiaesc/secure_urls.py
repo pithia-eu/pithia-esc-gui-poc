@@ -1,7 +1,6 @@
 from django.urls import include, path
 
 from . import views
-from browse.views import schemas
 from user_management import views as user_management_views
 
 urlpatterns = [
@@ -11,7 +10,6 @@ urlpatterns = [
     path('', include('utils.secure_urls')),
     path('manage/', include('resource_management.urls')),
     path('register/', include('register.urls')),
-    path('schemas/', schemas, name='schemas'),
     path('validate/', include('validation.urls')),
     path('institutions/', user_management_views.list_joinable_perun_organisations, name='list_joinable_perun_organisations'),
     path('institutions/<institution_id>/', user_management_views.list_joinable_perun_organisation_subgroups, name='list_joinable_perun_organisation_subgroups'),

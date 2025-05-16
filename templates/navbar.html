@@ -57,9 +57,7 @@
                 <li class="nav-item">
                     <div class="dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                            Space Physics Ontology
-                            {% if request.session.institution_for_login_session %}
-                            <span>and Metadata Model</span>{% endif %}</a>
+                            Space Physics Ontology and Metadata Model</a>
                         <ul class="dropdown-menu" data-bs-popper="static">
                             <li>
                                 {% url 'ontology:guide' as ontology_guide_url %}
@@ -71,13 +69,11 @@
                                 <a href="{{ browse_ontology_url }}" class="dropdown-item">
                                     Space Physics Ontology</a>
                             </li>
-                            {% if request.session.institution_for_login_session %}
                             <li>
                                 {% url 'schemas' as schemas_url %}
                                 <a href="{{ schemas_url }}" class="dropdown-item">
                                     Space Physics Metadata Model</a>
                             </li>
-                            {% endif %}
                         </ul>
                     </div>
                 </li>

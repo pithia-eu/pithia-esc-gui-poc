@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.urls import include, path
 from . import views
 
+from browse.views import schemas
+
 urlpatterns = [
     path('', views.index, name='home'),
     path('logout/', views.logout, name='logout'),
@@ -15,6 +17,7 @@ urlpatterns = [
     path('simple-search/', include('simple_search.urls')),
     path('help/', include('help.urls')),
     path('admin/', admin.site.urls),
+    path('schemas/', schemas, name='schemas'),
     path('data-resource-registration-guide', views.resource_registration_user_guide, name='resource_registration_user_guide'),
     path('terms-of-use', views.terms_of_use, name='terms_of_use'),
     path('privacy-policy', views.privacy_policy, name='privacy_policy'),
