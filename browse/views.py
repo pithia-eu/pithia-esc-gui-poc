@@ -1090,23 +1090,26 @@ class RelatedRegistrationsTemplateView(TemplateView):
 
     def _get_immediate_related_registrations_from_references(self, resource):
         if not resource.properties.resource_urls:
-            return list()
-        return list(models.ScientificMetadata.objects.get_by_metadata_server_urls(resource.properties.resource_urls))
+            return set()
+        return set(models.ScientificMetadata.objects.get_by_metadata_server_urls(resource.properties.resource_urls))
 
     def _get_related_registrations_from_following_references_for_resource(self, resource):
-        related_registrations = list()
+        related_registrations = set()
         immediate_related_registrations = self._get_immediate_related_registrations_from_references(resource)
-        for registration in immediate_related_registrations:
-            if registration in related_registrations:
+        for imm_rel_reg in immediate_related_registrations:
+            if imm_rel_reg in related_registrations:
                 continue
-            related_registrations += self._get_related_registrations_from_following_references_for_resource(registration)
-            related_registrations.append(registration)
+            if imm_rel_reg.pk == self.resource.pk:
+                continue
+            related_registrations_from_imm_rel_reg = self._get_related_registrations_from_following_references_for_resource(imm_rel_reg)
+            related_registrations = related_registrations.union(related_registrations_from_imm_rel_reg)
+            related_registrations.add(imm_rel_reg)
         return related_registrations
 
     def _get_related_registrations_from_references(self):
         if not self.resource.properties.resource_urls:
             return {}
-        related_registrations = list(set(self._get_related_registrations_from_following_references_for_resource(self.resource)))
+        related_registrations = list(self._get_related_registrations_from_following_references_for_resource(self.resource))
         related_registrations_categorised = {}
         for registration_unclassed in related_registrations:
             registration = registration_unclassed.get_subclass_instance()
