@@ -1090,11 +1090,11 @@ class RelatedRegistrationsTemplateView(TemplateView):
 
     def _get_immediate_related_registrations_from_references(self, resource):
         if not resource.properties.resource_urls:
-            return []
+            return list()
         return list(models.ScientificMetadata.objects.get_by_metadata_server_urls(resource.properties.resource_urls))
 
     def _get_related_registrations_from_following_references_for_resource(self, resource):
-        related_registrations = []
+        related_registrations = list()
         immediate_related_registrations = self._get_immediate_related_registrations_from_references(resource)
         for registration in immediate_related_registrations:
             if registration in related_registrations:
