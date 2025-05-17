@@ -1173,7 +1173,6 @@ class RelatedRegistrationsTemplateView(TemplateView):
         form = RelatedMetadataForm(request.GET)
         if not form.is_valid():
             return HttpResponseBadRequest('The submitted form was invalid.')
-        print("form.cleaned_data.get('resource_id')", form.cleaned_data.get('resource_id'))
         self.resource_unclassed = get_object_or_404(
             models.ScientificMetadata,
             pk=form.cleaned_data.get('resource_id')
