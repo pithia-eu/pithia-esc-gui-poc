@@ -1096,9 +1096,11 @@ class RelatedRegistrationsTemplateView(TemplateView):
     def _get_related_registrations_from_following_references_for_resource(self, resource):
         related_registrations = []
         immediate_related_registrations = self._get_immediate_related_registrations_from_references(resource)
-        related_registrations += immediate_related_registrations
         for registration in immediate_related_registrations:
+            if registration in related_registrations:
+                continue
             related_registrations += self._get_related_registrations_from_following_references_for_resource(registration)
+            related_registrations.append(registration)
         return related_registrations
 
     def _get_related_registrations_from_references(self):
