@@ -1099,7 +1099,7 @@ class RelatedRegistrationsTemplateView(TemplateView):
         for imm_rel_reg in immediate_related_registrations:
             if imm_rel_reg in related_registrations:
                 continue
-            if imm_rel_reg.pk == self.resource.pk:
+            if imm_rel_reg.pk == resource.pk:
                 continue
             related_registrations_from_imm_rel_reg = self._get_related_registrations_from_following_references_for_resource(imm_rel_reg)
             related_registrations = related_registrations.union(related_registrations_from_imm_rel_reg)
