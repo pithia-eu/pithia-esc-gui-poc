@@ -2,12 +2,12 @@
     <dl class="d-flex flex-column row-gap-4">
         {% if resource.properties.location.name %}
         <div>
-            <dt class="fs-6 visually-hidden">Name</dt>
-            <dd class="fw-semibold">{{ resource.properties.location.name }}</dd>
+            <dt>Name</dt>
+            <dd>{{ resource.properties.location.name }}</dd>
         </div>
         {% endif %}
         <div>
-            <dt class="fs-6">Point</dt>
+            <dt>Point</dt>
             <dd>
                 <dl>
                     <div class="mb-3">
@@ -15,7 +15,7 @@
                         <dd>{{ resource.properties.location.point.id }}</dd>
                     </div>
                     <div class="mb-3">
-                        <dt>SRS Name</dt>
+                        <dt class="fw-medium">SRS Name</dt>
                         <dd>
                             {% with value=resource.properties.location.point.srs_name %}
                             {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
@@ -23,7 +23,7 @@
                         </dd>
                     </div>
                     <div>
-                        <dt>Position</dt>
+                        <dt class="fw-medium">Position</dt>
                         <dd>{{ resource.properties.location.point.pos }}</dd>
                     </div>
                 </dl>
