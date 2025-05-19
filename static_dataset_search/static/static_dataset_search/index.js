@@ -25,3 +25,11 @@ async function fetchAndSetupFeatureOfInterestForm() {
 document.getElementById("search-script").addEventListener("load", async event => {
     await fetchAndSetupFeatureOfInterestForm();
 });
+
+document.getElementById("ontology-search-form").addEventListener("submit", event => {
+    const checkedCheckboxes = document.querySelectorAll("#ontology-search-form input[type=checkbox].search-term-checkbox:checked");
+    if (checkedCheckboxes.length === 0) {
+        event.preventDefault();
+        return alert('Select at least one Feature of Interest.');
+    }
+});

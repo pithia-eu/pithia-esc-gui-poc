@@ -489,6 +489,19 @@ class AbstractDataCollectionDatabaseQueries(ABC):
 
 class AbstractStaticDatasetEntryDatabaseQueries(ABC):
     @abstractmethod
+    def referencing_feature_of_interest_urls(self, feature_of_interest_urls: list):
+        """Static Dataset Entries referencing at least one URL
+        from a list of Feature of Interest URLs.
+        """
+        pass
+
+    @abstractmethod
+    def for_search(self, feature_of_interest_urls: list):
+        """Static Dataset Entries referencing at least one URL
+        from a list of Feature of Interest URLs."""
+        pass
+
+    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """Static Dataset Entries referencing a URL corresponding
         to a metadata registration that is planned for

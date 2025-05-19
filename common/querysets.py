@@ -529,6 +529,17 @@ class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionD
 
 
 class StaticDatasetEntryQuerySet(ScientificMetadataQuerySet, AbstractStaticDatasetEntryDatabaseQueries):
+    def referencing_feature_of_interest_urls(self, feature_of_interest_urls: list):
+        if not feature_of_interest_urls:
+            return self.none()
+        query = Q()
+        for url in feature_of_interest_urls:
+            query |= Q(**{'json__featureOfInterest__namedRegion__contains': [{'@xlink:href': url}]})
+        return self.filter(query)
+
+    def for_search(self, feature_of_interest_urls: list):
+        return self.referencing_feature_of_interest_urls(feature_of_interest_urls)
+
     def for_delete_chain(self, metadata_server_url: str):
         return []
 

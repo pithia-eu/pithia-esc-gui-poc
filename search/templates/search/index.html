@@ -5,9 +5,10 @@
 {% endblock breadcrumbs %}
 {% load static %}
 {% block scripts %}
-<script type="module" src="{% static "search/foisearch.js" %}" id="foisearch-script" defer></script>
-<script type="module" src="{% static "search/typesearch.js" %}" id="typesearch-script" defer></script>
-<script type="module" src="{% static "search/opsearch.js" %}" id="opsearch-script" defer></script>
+<script type="module" src="{% static "search/foisearch.js" %}" id="foisearch-script"></script>
+<script type="module" src="{% static "search/typesearch.js" %}" id="typesearch-script"></script>
+<script type="module" src="{% static "search/opsearch.js" %}" id="opsearch-script"></script>
+<script type="module" src="{% static "search/search_setup.js" %}"></script>
 {% endblock scripts %}
 {% block content %}
 <hgroup>

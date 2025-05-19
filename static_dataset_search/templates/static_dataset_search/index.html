@@ -18,7 +18,7 @@
             A <a href="{% url 'ontology:index' %}" class="link-underline-by-default">vocabulary-based</a> search tool for static datasets in the PITHIA e-Science Centre.
         </p>
     </div>
-    <form action="{% url 'search:index' %}" method="post" id="ontology-search-form">
+    <form action="{% url 'static_dataset_search:index' %}" method="post" id="ontology-search-form">
         {% csrf_token %}
         <div class="row gy-4">
             <div class="col-xl-7 col-lg-9">
@@ -31,25 +31,19 @@
                 </p>
             </div>
             <div class="col-lg-12">
-                <div class="accordion" id="search-by-content-accordion">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-features-of-interest" aria-expanded="true" aria-controls="accordion-features-of-interest">
-                                Features of Interest
-                            </button>
-                        </h2>
-                        <div id="accordion-features-of-interest" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#search-by-content-accordion">
-                            <div class="accordion-body">
-                                {% include 'search/foi_form_section.html' %}
-                            </div>
-                        </div>
+                <div class="card border">
+                    <h2 class="card-header fs-6 fw-normal bg-primary-subtle border-bottom-0 p-3 mb-0">
+                        Features of Interest
+                    </h2>
+                    <div class="card-body">
+                        {% with ontology_component="features-of-interest" search_input_col_width="col-lg-4" %}
+                        {% include "search/ontology_tree_container_template.html" %}
+                        {% endwith %}
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
-                <div class="d-flex flex-column align-items-lg-start">
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </div>
+            <div class="d-flex flex-column col-lg-4 col">
+                <button type="submit" class="btn btn-primary me-lg-auto me-0">Search</button>
             </div>
         </div>
     </form>
