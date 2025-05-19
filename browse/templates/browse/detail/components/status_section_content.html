@@ -1,6 +1,8 @@
-<h2 class="mb-3">Status</h2>
-<div class="d-inline-block bg-body-tertiary rounded p-2">
-    {% with value=resource.properties.status url_text_extra_classes='text-secondary-emphasis' %}
-    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-    {% endwith %}
+<div>
+    <h2 class="fs-6 bg-body-secondary rounded-top px-3 py-2 mb-0">Status</h2>
+    <div class="fw-medium bg-body-tertiary rounded-bottom px-3 py-2">
+        {% with value=resource.properties.status url_text_extra_classes='text-secondary-emphasis' %}
+        {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+        {% endwith %}
+    </div>
 </div>

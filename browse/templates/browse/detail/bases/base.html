@@ -44,9 +44,9 @@
             <h2>Type</h2>
             {% load project_tags %}
             {% if 'type' in resource.json %}
-            <ul class="d-flex flex-column row-gap-1 list-unstyled bg-body-tertiary rounded p-3 mb-0">
+            <ul class="list-group list-group-flush bg-body-tertiary rounded px-3 py-2 mb-0">
                 {% for type in resource.json.type|wrap_in_list_if_dict %}
-                <li class="fw-semibold">
+                <li class="list-group-item bg-transparent px-0">
                     {% with value=type|get_key_value:'@xlink:href' %}
                     {% block metadata_type_main %}
                     {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
@@ -187,9 +187,9 @@
         <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
             <h2>Type</h2>
             {% if 'type' in resource.json %}
-            <ul class="d-flex flex-column row-gap-2 list-unstyled type-badge-list bg-body-tertiary rounded p-3 mb-0">
+            <ul class="list-group list-group-flush bg-body-tertiary rounded px-3 py-2 mb-0">
                 {% for type in resource.json.type|wrap_in_list_if_dict %}
-                <li>
+                <li class="list-group-item bg-transparent px-0">
                     {% with value=type|get_key_value:'@xlink:href' pill_type='none' %}
                     {% block metadata_type_aside %}
                     {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}

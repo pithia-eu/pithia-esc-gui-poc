@@ -2,14 +2,16 @@
 {% if 'dataLevel' in resource.json %}
 <section class="responsive-resource-detail-section resource-detail-section">
     <h2>Data Levels</h2>
-    <ul>
-        {% for data_level in resource.json.dataLevel|wrap_in_list_if_dict %}
-        <li>
-            {% with value=data_level|get_key_value:'@xlink:href' %}
-            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-            {% endwith %}
-        </li>
-        {% endfor %}
-    </ul>
+    <div class="bg-body-tertiary rounded p-3">
+        <ul class="list-group list-group-flush mb-0">
+            {% for data_level in resource.json.dataLevel|wrap_in_list_if_dict %}
+            <li class="list-group-item bg-transparent px-0">
+                {% with value=data_level|get_key_value:'@xlink:href' %}
+                {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                {% endwith %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
 </section>
 {% endif %}

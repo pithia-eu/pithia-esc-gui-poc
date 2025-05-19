@@ -1,8 +1,8 @@
 <section class="resource-detail-section">
     <h2>{{ io_section_heading_text }}</h2>
-    <dl class="d-flex flex-column row-gap-3 fs-base-2">
+    <dl class="d-flex flex-column row-gap-3">
         {% for io in io_data %}
-        <div>
+        <div class="bg-body-tertiary rounded p-3">
             {% with forloop_counter_str=forloop.counter|stringformat:'s' %}
             {% with default_io_name=io_name|title|add:' '|add:forloop_counter_str %}
             <dt>{{ io.name|default:default_io_name }}</dt>

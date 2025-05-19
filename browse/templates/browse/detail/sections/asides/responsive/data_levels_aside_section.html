@@ -2,9 +2,9 @@
 {% if 'dataLevel' in resource.json %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Data Levels</h2>
-    <ul class="list-group list-group-flush">
+    <ul class="list-group list-group-flush bg-body-tertiary rounded px-3 py-2 mb-0">
         {% for data_level in resource.json.dataLevel|wrap_in_list_if_dict %}
-        <li class="list-group-item px-0">
+        <li class="list-group-item bg-transparent px-0">
             {% with value=data_level|get_key_value:'@xlink:href' %}
             {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
             {% endwith %}

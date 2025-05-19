@@ -1,6 +1,7 @@
 {% if resource.properties.gmd_url.strip %}
-<address class="d-flex align-items-center column-gap-2">
-    <a href="{{ resource.properties.gmd_url }}" id="resource-detail-url-top-section" class="link-underline-by-default text-truncate">
-        <span class="url-text-wrapper">{{ resource.properties.gmd_url }}</span></a>
-</address>
+<a
+    href="{{ resource.properties.gmd_url }}"
+    id="resource-detail-url-top-section"
+    class="d-block bg-body-tertiary rounded link-underline-by-default text-truncate px-3 py-2">
+    <span class="url-text-wrapper">{{ resource.properties.gmd_url }}</span></a>
 {% endif %}

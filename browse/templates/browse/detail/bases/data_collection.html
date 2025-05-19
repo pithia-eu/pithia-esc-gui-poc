@@ -75,15 +75,13 @@
 {% if resource.permission_urls %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Permissions</h2>
-    <ul class="d-flex flex-column row-gap-2 list-unstyled bg-body-tertiary rounded p-3">
+    <ul class="list-group list-group-flush bg-body-tertiary rounded px-3 py-2 mb-0">
         {% for permission_url in resource.permission_urls %}
         {% with value=permission_url|get_key_value:'@xlink:href' %}
-        <li>
-            <div class="d-flex align-items-baseline column-gap-2">
-                <a href="#permission_{{ value|server_url_id|lower }}" class="link-underline-by-default">
-                    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-                </a>
-            </div>
+        <li class="list-group-item bg-transparent px-0">
+            <a href="#permission_{{ value|server_url_id|lower }}" class="link-underline-by-default">
+                {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+            </a>
         </li>
         {% endwith %}
         {% endfor %}
