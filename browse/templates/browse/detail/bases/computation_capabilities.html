@@ -46,13 +46,15 @@
 {% endblock post_description_content %}
 
 {# Appears in the aside section #}
-{% block aside_extra_content_after_default %}
+{% block aside_extra_content_before_default %}
 {% if resource.properties.computation_version %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <h2>Version</h2>
-    <p>{{ resource.properties.computation_version }}</p>
+    <div>
+        <h2 class="fs-6 bg-body-secondary rounded-top px-3 py-2 mb-0">Version</h2>
+        <p class="bg-body-tertiary rounded-bottom px-3 py-2">{{ resource.properties.computation_version }}</p>
+    </div>
 </section>
 {% endif %}
 {% include 'browse/detail/sections/asides/responsive/data_levels_aside_section.html' %}
 {% include 'browse/detail/sections/asides/responsive/quality_assessment_aside_section.html' %}
-{% endblock aside_extra_content_after_default %}
+{% endblock aside_extra_content_before_default %}
