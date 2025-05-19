@@ -4,8 +4,10 @@
 {% block pre_description_content %}
 {% if resource.properties.computation_version %}
 <section class="responsive-resource-detail-section resource-detail-section">
-    <h2>Version</h2>
-    <p>{{ resource.properties.computation_version }}</p>
+    <div>
+        <h2 class="fs-6 bg-body-secondary rounded-top px-3 py-2 mb-0">Version</h2>
+        <p class="bg-body-tertiary rounded-bottom px-3 py-2">{{ resource.properties.computation_version }}</p>
+    </div>
 </section>
 {% endif %}
 {% if resource.properties.child_computations %}
