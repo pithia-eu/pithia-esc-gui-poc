@@ -521,6 +521,8 @@ class AcquisitionEditorFormView(
             'metadata_editor/components/acquisition_and_computation/capability_link_time_span_row_content_template.html',
             context=context
         )
+        context['capability_links_section_help_text'] = '''Links to the capabilities of this Acquisition,
+        each link connects platform and Acquisition Capabilities.'''
         return context
 
     def get_form_kwargs(self):
@@ -647,6 +649,9 @@ class ComputationEditorFormView(
             'metadata_editor/components/acquisition_and_computation/capability_link_time_span_row_content_template.html',
             context=context
         )
+        context['capability_links_section_help_text'] = '''Links to the capabilities of this Computation.
+        Each item provides a specific Computation Capabilities description and optionally links it to a
+        Platform.'''
         return context
 
     def get_form_kwargs(self):
