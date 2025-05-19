@@ -19,9 +19,7 @@
     {% for r in results %}
     <div class="list-group-item">
         {% with pithia_identifier=r.identifier.PITHIA_Identifier %}
-        <a href="{% url 'browse:data_collection_detail' r.id %}" class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{{ r.name }}</h5>
-        </a>
+        <a href="{% url 'browse:data_collection_detail' r.id %}" class="fs-base-2 fw-medium">{{ r.name }}</a>
         {% endwith %}
         <p class="search-result-description line-clamp line-clamp-3 mb-1">
             {% if r.description %}
