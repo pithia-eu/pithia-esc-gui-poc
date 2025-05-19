@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'register_with_support.apps.RegisterWithSupportConfig',
     'resource_management.apps.ResourceManagementConfig',
     'search.apps.SearchConfig',
+    'static_dataset_search.apps.StaticDatasetSearchConfig',
     'simple_search.apps.SimpleSearchConfig',
     'update.apps.UpdateConfig',
     'update_with_support.apps.UpdateWithSupportConfig',
