@@ -1,4 +1,4 @@
-<ul class="list-unstyled standard-identifier-list">
+<ul class="d-block bg-body-tertiary list-unstyled rounded standard-identifier-list p-3">
     {% for standard_identifier in resource.properties.standard_identifiers %}
     <li>
         {{ standard_identifier.value }} <span class="text-body-secondary">({{ standard_identifier.authority }})</span></li>
