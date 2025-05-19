@@ -17,7 +17,7 @@
         </div>
         {% if not quality_assessment_required %}
         <div class="col-xl-9 col-lg-12">
-            {% with custom_summary_text='Adding information on quality assessment is optional. If you would like to add this, at least one data quality flag must be selected.' %}
+            {% with custom_summary_text='Adding information on quality assessment is optional. If you would like to add this, select at least one data quality flag below.' %}
             {% include 'metadata_editor/components/conditional_required_field_info_template.html' %}
             {% endwith %}
         </div>
