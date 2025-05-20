@@ -1,7 +1,7 @@
 import {
     fetchSearchFormComponent,
     setupSearchFormComponent
-} from "./search.js";
+} from "/static/search/search.js";
 
 const FEATURES_OF_INTEREST_TREE_CONTAINER_ID = "features-of-interest-tree-search-container";
 

@@ -26,8 +26,7 @@ from .utils import (
 
 from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
 from pithiaesc.settings import BASE_DIR
-from search.services import (
-    get_parents_of_registered_ontology_terms,
+from data_collection_search.services import (
     get_registered_computation_types,
     get_registered_features_of_interest,
     get_registered_instrument_types,
@@ -35,6 +34,7 @@ from search.services import (
     get_registered_observed_properties,
     get_registered_phenomenons
 )
+from search.services import get_parents_of_registered_ontology_terms
 from utils.string_helpers import split_camel_case
 from utils.url_helpers import create_ontology_term_detail_url_from_ontology_term_server_url
 from utils.html_helpers import create_anchor_tag_html_from_ontology_term_details

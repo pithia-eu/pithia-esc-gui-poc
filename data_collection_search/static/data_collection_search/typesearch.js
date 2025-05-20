@@ -8,7 +8,7 @@ import {
     addTreeContainerIdToClearInputsButton,
     fetchSearchFormComponent,
     setupSearchFormComponent
-} from "./search.js";
+} from "/static/search/search.js";
 
 const COMPUTATION_TYPES_TREE_CONTAINER_ID = "computation-types-tree-search-container";
 const INSTRUMENT_TYPES_TREE_CONTAINER_ID = "instrument-types-tree-search-container";

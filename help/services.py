@@ -117,7 +117,7 @@ class GgusRaiseATicketHelpArticleContent(AbstractHelpArticleContent):
 
 class SearchDataCollectionsByContentHelpArticleContent(AbstractHelpArticleContent):
     title = 'Search Data Collections by Content'
-    functionality = ('Search Data Collections by Content', reverse_lazy('search:index'))
+    functionality = ('Search Data Collections by Content', reverse_lazy('data_collection_search:index'))
     hover_text = 'Search relevant Data Collections by selecting desired data content (feature of interest, instrument, model or annotation type, observed property).'
     closely_related_links = [
         ('Simple Search', reverse_lazy('help:data_collection_simple_search')),

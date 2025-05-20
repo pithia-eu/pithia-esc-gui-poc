@@ -9,7 +9,7 @@ import {
     getSelectAllCheckboxForTreeContainerId,
     removeCheckboxFiltersFromLiNodes,
     setupSearchFormComponent,
-} from "./search.js";
+} from "/static/search/search.js";
 
 // op, OP = Observed Property
 const OBSERVED_PROPERTIES_TREE_CONTAINER_ID = "observed-properties-tree-search-container";

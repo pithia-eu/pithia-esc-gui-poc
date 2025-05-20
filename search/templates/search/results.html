@@ -1,15 +1,8 @@
 {% extends 'base.html' %}
 {% load project_tags %}
-{% block breadcrumbs %}
-{% breadcrumb_item search_index_page_breadcrumb_text 'search:index' %}
-{% breadcrumb_item_active title %}
-{% endblock breadcrumbs %}
 {% block content %}
 <h1 class="pb-3">{{ title }}</h1>
 {% block search_again_section %}
-<p>
-    <a href="{% url 'search:index' %}">Start new search</a>
-</p>
 {% endblock search_again_section %}
 {% block num_search_results_found %}
 <p>Found {{ results|length }} results.</p>
@@ -18,9 +11,7 @@
 <ul class="list-group">
     {% for r in results %}
     <div class="list-group-item">
-        {% with pithia_identifier=r.identifier.PITHIA_Identifier %}
-        <a href="{% url 'browse:data_collection_detail' r.id %}" class="fs-base-2 fw-medium">{{ r.name }}</a>
-        {% endwith %}
+        <a href="{{ r.get_absolute_url }}" class="fs-base-2 fw-medium">{{ r.name }}</a>
         <p class="search-result-description line-clamp line-clamp-3 mb-1">
             {% if r.description %}
             {{ r.description }}

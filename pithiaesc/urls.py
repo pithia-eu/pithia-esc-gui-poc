@@ -13,7 +13,7 @@ urlpatterns = [
     path('', include('user_management.urls')),
     path('', include('utils.urls')),
     path('ontology/', include('ontology.urls')),
-    path('search/', include('search.urls')),
+    path('search/', include('data_collection_search.urls')),
     path('simple-search/', include('simple_search.urls')),
     path('static-dataset-search/', include('static_dataset_search.urls')),
     path('help/', include('help.urls')),

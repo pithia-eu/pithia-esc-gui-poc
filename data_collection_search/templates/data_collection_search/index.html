@@ -21,7 +21,7 @@
             A <a href="{% url 'ontology:index' %}" class="link-underline-by-default">vocabulary-based</a> search tool for data collections in the PITHIA e-Science Centre.
         </p>
     </div>
-    <form action="{% url 'search:index' %}" method="post" id="ontology-search-form">
+    <form action="{% url 'data_collection_search:index' %}" method="post" id="ontology-search-form">
         {% csrf_token %}
         <div class="row gy-4">
             <div class="col-xl-7 col-lg-9">
