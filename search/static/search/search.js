@@ -501,13 +501,13 @@ async function parseResponseText(response) {
     return response.text();
 }
 
-export async function fetchSearchFormComponent(ontologyComponent) {
+export async function fetchSearchFormComponent(searchFormComponentUrl) {
     const fetchParams = { method: "GET" };
 
-    return fetch(`/search/templates/form/component/${ontologyComponent}/`, fetchParams)
+    return fetch(searchFormComponentUrl, fetchParams)
         .then(parseResponseText)
         .catch (error => {
-            console.error(`Unable to fetch ${ontologyComponent} search form.`);
+            console.error(`Unable to fetch search form from ${searchFormComponentUrl}.`);
             console.error(error);
         });
 }

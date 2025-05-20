@@ -27,6 +27,7 @@ def index(request):
         return HttpResponseRedirect(reverse('static_dataset_search:results'))
     return render(request, 'static_dataset_search/index.html', {
         'title': _INDEX_PAGE_TITLE,
+        'feature_of_interest_form_url': reverse('static_dataset_search:foi_form_template'),
     })
 
 

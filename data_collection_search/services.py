@@ -212,7 +212,7 @@ def get_registered_observed_properties():
     return list(set(registered_observed_property_ids))
 
 
-def get_registered_features_of_interest(registered_observed_property_ids):
+def get_registered_features_of_interest(registered_observed_property_ids: list =list()):
     feature_of_interest_ids = []
     g_op = get_graph_of_pithia_ontology_component('observedProperty')
     for id in registered_observed_property_ids:
