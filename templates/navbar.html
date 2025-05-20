@@ -47,8 +47,21 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    {% url 'browse:list_workflows' as workflows_url %}
-                    <a href="{{ workflows_url }}" class="nav-link link-plain-by-default">Workflows</a>
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                            Workflows</a>
+                        <ul class="dropdown-menu" data-bs-popper="static">
+                            <li>
+                                {% url 'browse:list_workflows' as workflows_url %}
+                                <a href="{{ workflows_url }}" class="dropdown-item">All Workflows</a>
+                            </li>
+                            <li>
+                                {% url 'workflow_search:index' as workflow_search_url %}
+                                <a href="{{ workflow_search_url }}" class="dropdown-item">
+                                    Search by Content</a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <div class="dropdown">

@@ -16,6 +16,7 @@ urlpatterns = [
     path('search/', include('search.urls')),
     path('simple-search/', include('simple_search.urls')),
     path('static-dataset-search/', include('static_dataset_search.urls')),
+    path('workflow-search/', include('workflow_search.urls')),
     path('help/', include('help.urls')),
     path('admin/', admin.site.urls),
     path('schemas/', schemas, name='schemas'),
