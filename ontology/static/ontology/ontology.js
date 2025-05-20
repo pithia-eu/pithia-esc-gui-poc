@@ -162,10 +162,11 @@ async function parseResponseText(response) {
     return response.text();
 }
 
-export async function fetchSearchFormComponent(ontologyComponent) {
+async function fetchTermsListForOntologyCategory() {
+    const categoryListUrl = JSON.parse(document.querySelector("#category-list-url").textContent);
     const fetchParams = { method: "GET" };
 
-    return fetch(`/ontology/categories/${ontologyComponent}/terms/`, fetchParams)
+    return fetch(categoryListUrl, fetchParams)
         .then(parseResponseText)
         .catch (error => {
             console.error(`Unable to fetch "${ontologyComponent}" terms list.`);
@@ -174,7 +175,7 @@ export async function fetchSearchFormComponent(ontologyComponent) {
 }
 
 document.getElementById("ontology-script").addEventListener("load", async event => {
-    const ontology_category = JSON.parse(document.getElementById("category").textContent);
-    const termsList = await fetchSearchFormComponent(ontology_category);
-    setupSearchFormComponent(termsList, `${ontology_category}-tree-search-container`);
+    const category = JSON.parse(document.querySelector("#category").textContent);
+    const termsList = await fetchTermsListForOntologyCategory();
+    setupSearchFormComponent(termsList, `${category}-tree-search-container`);
 });

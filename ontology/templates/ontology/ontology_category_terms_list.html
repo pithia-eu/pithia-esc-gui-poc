@@ -6,6 +6,7 @@
 {% endblock breadcrumbs %}
 {% load static %}
 {% block scripts %}
+{{ category_list_url|json_script:"category-list-url" }}
 {{ category|json_script:"category" }}
 <script type="module" src="{% static "ontology/ontology.js" %}" id="ontology-script" defer></script>
 <script src="{% static 'utils/expandable_text_block.js' %}" type="module"></script>

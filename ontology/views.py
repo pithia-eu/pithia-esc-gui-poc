@@ -6,6 +6,7 @@ from django.http import (
     HttpResponseNotFound,
 )
 from django.shortcuts import render
+from django.urls import reverse
 from django.views.generic import TemplateView
 from rdflib import URIRef
 from rdflib.resource import Resource
@@ -67,6 +68,7 @@ def ontology_category_terms_list(request, category):
     xml_for_ontology_category = get_ontology_category_terms_in_xml_format(category)
     ontology_category_metadata = OntologyCategoryMetadata(xml_for_ontology_category)
     return render(request, 'ontology/ontology_category_terms_list.html', {
+        'category_list_url': reverse('ontology:ontology_category_terms_list_only', kwargs={'category': category}),
         'category': category,
         'category_description': ontology_category_metadata.description,
         'title': _get_ontology_category_term_list_page_title_from_category(category),
