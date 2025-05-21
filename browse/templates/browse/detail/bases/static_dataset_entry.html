@@ -23,7 +23,7 @@
 {% if resource.properties.static_dataset_category %}
 <section class="responsive-resource-detail-section resource-detail-section">
     <h2>Category</h2>
-    <div class="fw-semibold">
+    <div class="bg-body-tertiary rounded p-3">
         {% with value=resource.properties.static_dataset_category %}
         {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
         {% endwith %}
@@ -48,9 +48,11 @@
 {% if resource.properties.static_dataset_category %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Category</h2>
-    {% with value=resource.properties.static_dataset_category %}
-    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-    {% endwith %}
+    <div class="bg-body-tertiary rounded p-3">
+        {% with value=resource.properties.static_dataset_category %}
+        {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+        {% endwith %}
+    </div>
 </section>
 {% endif %}
 {% if resource.properties.phenomenon_time.time_period.begin.time_position and resource.properties.phenomenon_time.time_period.end.time_position %}
