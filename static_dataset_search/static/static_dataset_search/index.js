@@ -2,6 +2,7 @@ import {
     setupSearchFormComponent
 } from "/static/search/search.js";
 
+const featureOfInterestFormUrl = JSON.parse(document.querySelector("#feature-of-interest-form-url").textContent);
 const FEATURES_OF_INTEREST_TREE_CONTAINER_ID = "features-of-interest-tree-search-container";
 
 
@@ -9,7 +10,7 @@ async function fetchFeatureOfInterestForm() {
     const fetchParams = { method: "GET" };
 
     try {
-        const response = await fetch(`/static-dataset-search/templates/foi-form/`, fetchParams)
+        const response = await fetch(featureOfInterestFormUrl, fetchParams)
         return response.text();
     } catch (error) {
         console.error(`Unable to fetch search form.`);

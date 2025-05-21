@@ -9,8 +9,12 @@ import {
     getSelectAllCheckboxForTreeContainerId,
     removeCheckboxFiltersFromLiNodes,
     setupSearchFormComponent,
-} from "./search.js";
+} from "/static/search/search.js";
 
+
+const observedPropertyFormUrl = JSON.parse(document.querySelector("#observed-property-form-url").textContent);
+const measurandFormUrl = JSON.parse(document.querySelector("#measurand-form-url").textContent);
+const phenomenonFormUrl = JSON.parse(document.querySelector("#phenomenon-form-url").textContent);
 // op, OP = Observed Property
 const OBSERVED_PROPERTIES_TREE_CONTAINER_ID = "observed-properties-tree-search-container";
 const MEASURANDS_TREE_CONTAINER_ID = "measurands-tree-search-container";
@@ -19,11 +23,12 @@ const INSTRUMENT_TYPES_TREE_CONTAINER_ID = "instrument-types-tree-search-contain
 const COMPUTATION_TYPES_TREE_CONTAINER_ID = "computation-types-tree-search-container";
 const clearObservedPropertiesInputsButton = document.querySelector(".btn-clear-op-inputs");
 
+
 async function fetchAndSetupSearchFormComponents() {
     const searchFormComponents = await Promise.all([
-        fetchSearchFormComponent("observedProperty"),
-        fetchSearchFormComponent("measurand"),
-        fetchSearchFormComponent("phenomenon"),
+        fetchSearchFormComponent(observedPropertyFormUrl),
+        fetchSearchFormComponent(measurandFormUrl),
+        fetchSearchFormComponent(phenomenonFormUrl),
     ]);
     setupSearchFormComponent(searchFormComponents[0], OBSERVED_PROPERTIES_TREE_CONTAINER_ID, () => {
         addTreeContainerIdToClearInputsButton(OBSERVED_PROPERTIES_TREE_CONTAINER_ID, clearObservedPropertiesInputsButton);

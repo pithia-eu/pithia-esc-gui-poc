@@ -1,0 +1,10 @@
+from django.urls import include, path
+
+from . import views
+
+app_name = 'data_collection_search'
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('results/', views.results, name='results'),
+    path('form-templates/', include('data_collection_search.form_urls'))
+]

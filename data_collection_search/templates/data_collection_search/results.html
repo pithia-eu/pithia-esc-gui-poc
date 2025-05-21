@@ -1,11 +1,11 @@
 {% extends 'search/results.html' %}
 {% load project_tags %}
 {% block breadcrumbs %}
-{% breadcrumb_item search_index_page_breadcrumb_text 'static_dataset_search:index' %}
+{% breadcrumb_item search_index_page_breadcrumb_text 'data_collection_search:index' %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block search_again_section %}
 <p>
-    <a href="{% url 'static_dataset_search:index' %}">Start new search</a>
+    <a href="{% url 'data_collection_search:index' %}">Start new search</a>
 </p>
 {% endblock search_again_section %}

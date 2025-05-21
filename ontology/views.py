@@ -6,6 +6,7 @@ from django.http import (
     HttpResponseNotFound,
 )
 from django.shortcuts import render
+from django.urls import reverse
 from django.views.generic import TemplateView
 from rdflib import URIRef
 from rdflib.resource import Resource
@@ -26,8 +27,7 @@ from .utils import (
 
 from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
 from pithiaesc.settings import BASE_DIR
-from search.services import (
-    get_parents_of_registered_ontology_terms,
+from data_collection_search.services import (
     get_registered_computation_types,
     get_registered_features_of_interest,
     get_registered_instrument_types,
@@ -35,6 +35,7 @@ from search.services import (
     get_registered_observed_properties,
     get_registered_phenomenons
 )
+from search.services import get_parents_of_registered_ontology_terms
 from utils.string_helpers import split_camel_case
 from utils.url_helpers import create_ontology_term_detail_url_from_ontology_term_server_url
 from utils.html_helpers import create_anchor_tag_html_from_ontology_term_details
@@ -67,6 +68,7 @@ def ontology_category_terms_list(request, category):
     xml_for_ontology_category = get_ontology_category_terms_in_xml_format(category)
     ontology_category_metadata = OntologyCategoryMetadata(xml_for_ontology_category)
     return render(request, 'ontology/ontology_category_terms_list.html', {
+        'category_list_url': reverse('ontology:ontology_category_terms_list_only', kwargs={'category': category}),
         'category': category,
         'category_description': ontology_category_metadata.description,
         'title': _get_ontology_category_term_list_page_title_from_category(category),

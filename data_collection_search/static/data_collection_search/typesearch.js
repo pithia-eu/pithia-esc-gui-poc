@@ -1,15 +1,19 @@
-import {
-    setupCheckboxesForTreeContainerIdToFilterOPTerms,
-    setupSelectAllButtonForTreeContainerId,
-    activateDeselectAllButtonForTreeContainerId,
-} from "/static/search/opsearch.js";
+// import {
+//     setupCheckboxesForTreeContainerIdToFilterOPTerms,
+//     setupSelectAllButtonForTreeContainerId,
+//     activateDeselectAllButtonForTreeContainerId,
+// } from "/static/search/opsearch.js";
 
 import {
     addTreeContainerIdToClearInputsButton,
     fetchSearchFormComponent,
     setupSearchFormComponent
-} from "./search.js";
+} from "/static/search/search.js";
 
+
+const computationTypeFormUrl = JSON.parse(document.querySelector("#computation-type-form-url").textContent);
+const instrumentTypeFormUrl = JSON.parse(document.querySelector("#instrument-type-form-url").textContent);
+const annotationTypeFormUrl = JSON.parse(document.querySelector("#annotation-type-form-url").textContent);
 const COMPUTATION_TYPES_TREE_CONTAINER_ID = "computation-types-tree-search-container";
 const INSTRUMENT_TYPES_TREE_CONTAINER_ID = "instrument-types-tree-search-container";
 const ANNOTATION_TYPES_TREE_CONTAINER_ID = "annotation-types-tree-search-container";
@@ -18,9 +22,9 @@ const clearTypeInputsButton = document.querySelector(".btn-clear-type-inputs");
 
 async function fetchAndSetupSearchFormComponents() {
     const searchFormComponents = await Promise.all([
-        fetchSearchFormComponent("computationType"),
-        fetchSearchFormComponent("instrumentType"),
-        fetchSearchFormComponent("annotationType"),
+        fetchSearchFormComponent(computationTypeFormUrl),
+        fetchSearchFormComponent(instrumentTypeFormUrl),
+        fetchSearchFormComponent(annotationTypeFormUrl),
     ]);
     setupSearchFormComponent(searchFormComponents[0], COMPUTATION_TYPES_TREE_CONTAINER_ID, () => {
         // setupCheckboxesForTreeContainerIdToFilterOPTerms(COMPUTATION_TYPES_TREE_CONTAINER_ID);
