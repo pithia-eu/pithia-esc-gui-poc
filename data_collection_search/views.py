@@ -11,8 +11,6 @@ from .services import (
     get_registered_measurands,
     get_registered_observed_properties,
     get_registered_phenomenons,
-    setup_computation_types_for_observed_property_search_form,
-    setup_instrument_types_for_observed_property_search_form,
 )
 
 from common.constants import (
@@ -63,12 +61,6 @@ class MeasurandSearchByContentTemplateView(BaseMeasurandSearchByContentTemplateV
 
 
 class ObservedPropertySearchByContentTemplateView(BaseObservedPropertySearchByContentTemplateView):
-    def get_dict_of_ontology_branch(self):
-        return super().get_dict_of_ontology_branch(
-            instrument_types_grouped_by_observed_property=setup_instrument_types_for_observed_property_search_form(),
-            computation_types_grouped_by_observed_property=setup_computation_types_for_observed_property_search_form()
-        )
-
     def get_registered_ontology_terms(self):
         return get_registered_observed_properties()
 
