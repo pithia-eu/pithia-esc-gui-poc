@@ -1,0 +1,18 @@
+<h2 class="fw-semibold fs-5 mb-3">In This Page</h2>
+<ul class="list-unstyled bg-body-tertiary text-secondary-emphasis rounded browse-toc px-4 py-2 mb-0">
+    {% for iri, static_dataset_category in static_dataset_category_properties_by_iri.items %}
+    {% if iri == 'other' and not static_dataset_category.entries %}
+    {% else %}
+    <li class="my-2">
+        <div class="d-inline-flex justify-content-between column-gap-4 w-100">
+            {% with section_name=static_dataset_category.name.split|join:'-'|lower %}
+            <a href="#{{ section_name }}-section" class="link-plain-by-default">
+                {{ static_dataset_category.name }}
+            </a>
+            {% endwith %}
+            <span class="text-body-secondary">{{ static_dataset_category.entries|length }}</span>
+        </div>
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>

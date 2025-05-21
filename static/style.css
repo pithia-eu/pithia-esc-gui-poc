@@ -845,6 +845,11 @@ header .login-link {
     border-bottom: none;
 }
 
+/* Metadata browsing - TOC */
+.browse-toc {
+    min-width: 20rem;
+}
+
 
 /* || Resource detail page */
 .interaction-method-table td:first-child,
