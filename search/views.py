@@ -3,7 +3,11 @@ from django.http import HttpResponseServerError
 from django.template.loader import render_to_string
 from django.views.generic import TemplateView
 
-from .services import get_parents_of_registered_ontology_terms
+from .services import (
+    get_parents_of_registered_ontology_terms,
+    setup_computation_types_for_observed_property_search_form,
+    setup_instrument_types_for_observed_property_search_form,
+)
 
 from ontology.services import (
     categorise_observed_property_dict_by_top_level_phenomenons,
@@ -113,14 +117,24 @@ class BaseObservedPropertySearchByContentTemplateView(SearchByContentTemplateVie
     template_name = 'search/observed_property_tree_categories_template.html'
 
     def get_dict_of_ontology_branch(self, **kwargs):
-        return categorise_observed_property_dict_by_top_level_phenomenons(create_dictionary_from_pithia_ontology_component(
-            self.ontology_branch_name,
-            **kwargs
-        ))
+        return categorise_observed_property_dict_by_top_level_phenomenons(
+            create_dictionary_from_pithia_ontology_component(
+                self.ontology_branch_name,
+                instrument_types_grouped_by_observed_property=setup_instrument_types_for_observed_property_search_form(),
+                computation_types_grouped_by_observed_property=setup_computation_types_for_observed_property_search_form()
+            )
+        )
 
     def get(self, request, *args, **kwargs):
         self.ontology_branch_name = 'observedProperty'
         return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'observed_property_categories': self.ontology_branch_dict,
+        })
+        return context
 
 
 class BasePhenomenonSearchByContentTemplateView(SearchByContentTemplateView):
