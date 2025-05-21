@@ -1,6 +1,5 @@
 import logging
 from django.http import HttpResponseServerError
-from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.views.generic import TemplateView
 
