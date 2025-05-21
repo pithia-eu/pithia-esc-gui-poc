@@ -5,10 +5,17 @@
 {% endblock breadcrumbs %}
 {% load static %}
 {% block scripts %}
+{{ annotation_type_form_url|json_script:'annotation-type-form-url' }}
+{{ computation_type_form_url|json_script:'computation-type-form-url' }}
+{{ feature_of_interest_form_url|json_script:'feature-of-interest-form-url' }}
+{{ instrument_type_form_url|json_script:'instrument-type-form-url' }}
+{{ measurand_form_url|json_script:'measurand-form-url' }}
+{{ observed_property_form_url|json_script:'observed-property-form-url' }}
+{{ phenomenon_form_url|json_script:'phenomenon-form-url' }}
 <script type="module" src="{% static "search/foisearch.js" %}" id="foisearch-script"></script>
 <script type="module" src="{% static "search/typesearch.js" %}" id="typesearch-script"></script>
 <script type="module" src="{% static "search/opsearch.js" %}" id="opsearch-script"></script>
-<script type="module" src="{% static "search/search_setup.js" %}"></script>
+<script type="module" src="{% static "data_collection_search/search_setup.js" %}"></script>
 {% endblock scripts %}
 {% block content %}
 <hgroup>
@@ -21,7 +28,7 @@
             A <a href="{% url 'ontology:index' %}" class="link-underline-by-default">vocabulary-based</a> search tool for workflows in the PITHIA e-Science Centre.
         </p>
     </div>
-    <form action="{% url 'search:index' %}" method="post" id="ontology-search-form">
+    <form action="{% url 'workflow_search:index' %}" method="post" id="ontology-search-form">
         {% csrf_token %}
         <div class="row gy-4">
             <div class="col-xl-7 col-lg-9">

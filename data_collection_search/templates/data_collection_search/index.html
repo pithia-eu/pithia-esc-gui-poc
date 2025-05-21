@@ -12,9 +12,9 @@
 {{ measurand_form_url|json_script:'measurand-form-url' }}
 {{ observed_property_form_url|json_script:'observed-property-form-url' }}
 {{ phenomenon_form_url|json_script:'phenomenon-form-url' }}
-<script type="module" src="{% static "data_collection_search/foisearch.js" %}" id="foisearch-script"></script>
-<script type="module" src="{% static "data_collection_search/typesearch.js" %}" id="typesearch-script"></script>
-<script type="module" src="{% static "data_collection_search/opsearch.js" %}" id="opsearch-script"></script>
+<script type="module" src="{% static "search/foisearch.js" %}" id="foisearch-script"></script>
+<script type="module" src="{% static "search/typesearch.js" %}" id="typesearch-script"></script>
+<script type="module" src="{% static "search/opsearch.js" %}" id="opsearch-script"></script>
 <script type="module" src="{% static "data_collection_search/search_setup.js" %}"></script>
 {% endblock scripts %}
 {% block content %}

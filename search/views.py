@@ -41,10 +41,10 @@ class SearchByContentTemplateView(TemplateView):
         try:
             self.ontology_branch_dict = self.get_dict_of_ontology_branch()
         except FileNotFoundError:
-            logger.exception('An error occurred attempting to load from an ontology file.')
+            logger.exception(f'An error occurred attempting to load from the {self.ontology_branch_name} ontology file.')
             return self._on_server_error()
         except Exception:
-            logger.exception('An error occurred whilst loading an ontology branch.')
+            logger.exception(f'An error occurred whilst attempting to load the {self.ontology_branch_name} ontology branch.')
             return self._on_server_error()
 
         # Get the terms registered with whatever is being searched
@@ -52,7 +52,7 @@ class SearchByContentTemplateView(TemplateView):
         try:
             self.registered_ontology_terms = self.get_registered_ontology_terms()
         except FileNotFoundError:
-            logger.exception('An error occurred attempting to load from an ontology file.')
+            logger.exception(f'An error occurred attempting to load from the {self.ontology_branch_name} ontology file.')
             return self._on_server_error()
         except Exception:
             logger.exception(f'An error occurred whilst getting registered {self.ontology_branch_name} terms.')
