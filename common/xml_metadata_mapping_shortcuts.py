@@ -19,6 +19,8 @@ from .xml_metadata_mapping_shortcut_mixins import (
     PithiaShortNameMetadataPropertiesMixin,
     PithiaStandardIdentifiersMetadataPropertiesMixin,
     PithiaStatusMetadataPropertiesMixin,
+    PithiaTypeMetadataPropertiesMixin,
+    PithiaTypesMetadataPropertiesMixin,
 )
 
 
@@ -80,6 +82,7 @@ class PlatformXmlMappingShortcuts(
         PithiaDocumentationMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaStandardIdentifiersMetadataPropertiesMixin,
+        PithiaTypeMetadataPropertiesMixin,
         ScientificMetadataXmlMappingShortcuts):
     @property
     def location(self):
@@ -122,6 +125,7 @@ class InstrumentXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaDocumentationMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
+        PithiaTypeMetadataPropertiesMixin,
         ScientificMetadataXmlMappingShortcuts):
     @property
     def instrument_version(self):
@@ -194,6 +198,7 @@ class ComputationCapabilitiesXmlMappingShortcuts(
         PithiaInputOutputMetadataPropertiesMixin,
         PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
+        PithiaTypesMetadataPropertiesMixin,
         ScientificMetadataXmlMappingShortcuts):
     @property
     def computation_version(self):
@@ -241,6 +246,7 @@ class DataCollectionXmlMappingShortcuts(
         PithiaOnlineResourceMetadataPropertiesMixin,
         PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
+        PithiaTypesMetadataPropertiesMixin,
         ScientificMetadataXmlMappingShortcuts):
     @property
     def procedure(self):

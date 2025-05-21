@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.urls import reverse
 
-from .services import get_registered_features_of_interest
+from .services import OntologyTermsRegisteredWithWorkflows
 
 from search.views import (
     BaseAnnotationTypeSearchByContentTemplateView,
@@ -50,7 +50,7 @@ class ComputationTypeSearchByContentTemplateView(BaseComputationTypeSearchByCont
 
 class FeatureOfInterestSearchByContentTemplateView(BaseFeatureOfInterestSearchByContentTemplateView):
     def get_registered_ontology_terms(self):
-        return get_registered_features_of_interest()
+        return OntologyTermsRegisteredWithWorkflows.get_registered_features_of_interest()
 
 
 class InstrumentTypeSearchByContentTemplateView(BaseInstrumentTypeSearchByContentTemplateView):

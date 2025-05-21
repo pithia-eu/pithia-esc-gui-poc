@@ -439,6 +439,18 @@ class PithiaStatusMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:status/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
 
+class PithiaTypeMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
+    @property
+    def type(self):
+        return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:type/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+
+
+class PithiaTypesMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
+    @property
+    def types(self):
+        return self._get_elements_with_xpath_query('.//%s:type/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+
+
 class GmdContactInfoMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
     @property
     def phone(self):
