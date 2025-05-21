@@ -685,6 +685,13 @@ class Process(ScientificMetadata):
     root_element_name = 'CompositeProcess'
 
     @property
+    def observed_property_urls(self):
+        try:
+            return [process_capability['observedProperty']['@xlink:href'] for process_capability in self.json['capabilities']['processCapability']]
+        except KeyError:
+            return []
+
+    @property
     def properties(self):
         return ProcessXmlMappingShortcuts(self.xml)
 

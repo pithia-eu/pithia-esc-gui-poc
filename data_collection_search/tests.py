@@ -11,6 +11,7 @@ from .views import (
 )
 
 from common.models import (
+    Process,
     DataCollection,
 )
 from common.test_setup import (
@@ -21,6 +22,10 @@ from common.test_setup import (
     register_data_collection_for_test,
     register_instrument_for_test,
     register_process_for_test,
+)
+from common.test_xml_files import (
+    PROCESS_FULL_METADATA_XML,
+    DATA_COLLECTION_METADATA_XML
 )
 
 # For tests where ownership data is required
@@ -138,19 +143,39 @@ class SearchFormSetupTestCase(TestCase):
 
 
 class RegisteredOntologyTermsTestCase(TestCase):
-    def test_registered_observed_properties_are_correct(self):
+    def setUp(self) -> None:
+        # Register a process referencing observed
+        # properties
+        PROCESS_FULL_METADATA_XML.seek(0)
+        Process.objects.create_from_xml_string(
+            PROCESS_FULL_METADATA_XML.read(),
+            SAMPLE_INSTITUTION_ID,
+            SAMPLE_USER_ID
+        )
+        # Register a data collection referencing
+        # features of interest.
+        DATA_COLLECTION_METADATA_XML.seek(0)
+        DataCollection.objects.create_from_xml_string(
+            DATA_COLLECTION_METADATA_XML.read(),
+            SAMPLE_INSTITUTION_ID,
+            SAMPLE_USER_ID
+        )
+        return super().setUp()
+
+    def test_get_registered_observed_properties(self):
         """Returns a list of observed properties mentioned
         in registered metadata.
         """
         registered_observed_properties = get_registered_observed_properties()
         # print('registered_observed_properties', registered_observed_properties)
         self.assertTrue(isinstance(registered_observed_properties, list))
+        self.assertGreater(len(registered_observed_properties), 0)
 
-    def test_registered_features_of_interest_are_correct(self):
+    def test_get_registered_features_of_interest(self):
         """Returns a list of features of interest mentioned
         in registered metadata.
         """
-        registered_observed_property_ids = get_registered_observed_properties()
-        registered_features_of_interest = get_registered_features_of_interest(registered_observed_property_ids)
+        registered_features_of_interest = get_registered_features_of_interest()
         # print('registered_features_of_interest', registered_features_of_interest)
         self.assertTrue(isinstance(registered_features_of_interest, list))
+        self.assertGreater(len(registered_features_of_interest), 0)
