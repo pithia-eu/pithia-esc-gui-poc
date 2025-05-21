@@ -15,7 +15,6 @@ from common.models import (
     Process,
 )
 from ontology.services import (
-    get_feature_of_interest_ids_from_observed_property_id,
     get_graph_of_pithia_ontology_component,
     get_measurand_ids_from_observed_property_id,
     get_phenomenon_ids_from_observed_property_id,
@@ -165,11 +164,8 @@ def get_registered_observed_properties():
     return list(set(registered_observed_property_ids))
 
 
-def get_registered_features_of_interest(registered_observed_property_ids: list =list()):
+def get_registered_features_of_interest():
     feature_of_interest_ids = []
-    g_op = get_graph_of_pithia_ontology_component('observedProperty')
-    for id in registered_observed_property_ids:
-        get_feature_of_interest_ids_from_observed_property_id(id, g_op, feature_of_interest_ids)
     registered_data_collections = list(DataCollection.objects.all())
     feature_of_interest_ids_from_data_collections = [extract_localid_from_xlink_href(url) for dc in registered_data_collections for url in dc.feature_of_interest_urls]
     feature_of_interest_ids.extend(feature_of_interest_ids_from_data_collections)

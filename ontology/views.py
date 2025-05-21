@@ -86,8 +86,7 @@ def ontology_category_terms_list_only(request, category):
         registered_ontology_terms = get_registered_observed_properties()
         parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, [])
     elif category.lower() == 'featureofinterest':
-        registered_observed_property_ids = get_registered_observed_properties()
-        registered_ontology_terms = get_registered_features_of_interest(registered_observed_property_ids)
+        registered_ontology_terms = get_registered_features_of_interest()
         parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, [])
     elif category.lower() == 'instrumenttype':
         registered_ontology_terms = get_registered_instrument_types()
