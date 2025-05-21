@@ -385,6 +385,7 @@ class ProcessQuerySet(ScientificMetadataQuerySet, AbstractProcessDatabaseQueries
         query = Q()
         for url in observed_property_urls:
             query |= Q(**{'json__capabilities__processCapability__contains': [{'observedProperty': {'@xlink:href': url}}]})
+            query |= Q(**{'json__capabilities__processCapability__observedProperty__@xlink:href': url})
         return self.filter(query)
 
     def for_search_by_instrument_type_urls(self, acquisition_urls: list):

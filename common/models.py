@@ -687,7 +687,14 @@ class Process(ScientificMetadata):
     @property
     def observed_property_urls(self):
         try:
-            return [process_capability['observedProperty']['@xlink:href'] for process_capability in self.json['capabilities']['processCapability']]
+            return [
+                process_capability['observedProperty']['@xlink:href']
+                for process_capability in self.json['capabilities']['processCapability']
+            ]
+        except TypeError:
+            return [
+                self.json['capabilities']['processCapability']['observedProperty']['@xlink:href']
+            ]
         except KeyError:
             return []
 
