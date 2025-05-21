@@ -519,13 +519,6 @@ class AbstractDataSubsetDatabaseQueries(ABC):
         pass
 
     @abstractmethod
-    def referencing_static_dataset_entry_id(self, static_dataset_entry_id: str):
-        """Data Subsets referencing a given Static Dataset
-        Entry's local ID.
-        """
-        pass
-
-    @abstractmethod
     def referencing_data_collection_url(self, data_collection_url: str):
         """Data Subsets referencing a given Data
         Collection URL.

@@ -792,7 +792,7 @@ class StaticDatasetEntry(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
 
     @property
     def data_subsets(self):
-        return DataSubset.objects.referencing_static_dataset_entry_id(self.localid)
+        return DataSubset.objects.referencing_static_dataset_entry_url(self.metadata_server_url)
 
     @property
     def _static_dataset_category_localid(self):

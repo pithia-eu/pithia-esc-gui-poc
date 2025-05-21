@@ -556,10 +556,10 @@ class StaticDatasetEntryQuerySet(ScientificMetadataQuerySet, AbstractStaticDatas
 
 class DataSubsetQuerySet(ScientificMetadataQuerySet, AbstractDataSubsetDatabaseQueries):
     def referencing_static_dataset_entry_url(self, static_dataset_entry_url: str):
-        return self.filter(**{'json__entryIdentifier__@xlink:href': static_dataset_entry_url})
-
-    def referencing_static_dataset_entry_id(self, static_dataset_entry_id: str):
-        return self.filter(**{'json__entryIdentifier__@xlink:href__endswith': static_dataset_entry_id})
+        query = Q()
+        query |= Q(**{'json__entryIdentifier__@xlink:href': static_dataset_entry_url})
+        query |= Q(**{'json__entryIdentifier__contains': [{'@xlink:href': static_dataset_entry_url}]})
+        return self.filter(query)
 
     def referencing_data_collection_url(self, data_collection_url: str):
         return self.filter(**{'json__dataCollection__@xlink:href': data_collection_url})
