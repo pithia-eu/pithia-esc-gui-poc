@@ -448,18 +448,24 @@ class DataSubsetEditor(
     def update_description(self, description):
         self.metadata_dict['dataSubsetDescription'] = description
 
-    def update_entry_identifier(self, entry_url: str):
+    def update_entry_identifiers(self, entry_urls: str):
         self.update_child_element_and_remove_if_empty(
             self.metadata_dict,
             'entryIdentifier',
-            self.get_as_xlink_href(entry_url)
+            [
+                self.get_as_xlink_href(url)
+                for url in entry_urls if url.strip()
+            ]
         )
 
-    def update_data_collection(self, data_collection_url: str):
+    def update_data_collections(self, data_collection_urls: list[str]):
         self.update_child_element_and_remove_if_empty(
             self.metadata_dict,
             'dataCollection',
-            self.get_as_xlink_href(data_collection_url)
+            [
+                self.get_as_xlink_href(url)
+                for url in data_collection_urls if url.strip()
+            ]
         )
 
     def update_result_time(self, update_data: ResultTimeMetadataUpdate):

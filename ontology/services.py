@@ -311,11 +311,6 @@ def get_observed_property_urls_from_feature_of_interest_urls(feature_of_interest
             op_urls.append(str(s))
     return op_urls
 
-def get_feature_of_interest_ids_from_observed_property_id(observed_property_id, g, feature_of_interest_ids):
-    for s, p, o in g.triples((URIRef(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/observedProperty/{observed_property_id}'), PITHIA.featureOfInterest, None)):
-        feature_of_interest_ids.append(o.split('/')[-1])
-    return feature_of_interest_ids
-
 def get_phenomenon_ids_from_observed_property_id(observed_property_id, g, phenomenon_ids):
     for s, p, o in g.triples((URIRef(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/observedProperty/{observed_property_id}'), PITHIA.phenomenon, None)):
         phenomenon_ids.append(o.split('/')[-1])

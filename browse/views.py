@@ -105,7 +105,11 @@ def static_dataset_tree(request):
             value.update({
                 'entries': [],
             })
-        entries_for_category = [entry for entry in static_dataset_entries if entry.static_dataset_category == key]
+        entries_for_category = [
+            entry
+            for entry in static_dataset_entries
+            if entry.static_dataset_category == key
+        ]
         value.update({
             'entries': entries_for_category,
         })

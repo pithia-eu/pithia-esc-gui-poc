@@ -356,10 +356,8 @@ class DataSubsetFormFieldsToMetadataMapper(
     def get_basic_form_field_to_xml_field_mappings(self):
         mappings = super().get_basic_form_field_to_xml_field_mappings()
         mappings.update({
-            'data_collection': './/%s:dataCollection/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
             'data_levels': './/%s:dataLevel/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
             'description': './/%s:dataSubsetDescription' % self.DEFAULT_XPATH_NSPREFIX,
-            'entry_identifier': './/%s:entryIdentifier/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
             'name': './/%s:dataSubsetName' % self.DEFAULT_XPATH_NSPREFIX,
         })
         return mappings
@@ -367,6 +365,8 @@ class DataSubsetFormFieldsToMetadataMapper(
     def get_basic_multiple_choice_form_field_to_xml_field_mappings(self):
         mappings = super().get_basic_multiple_choice_form_field_to_xml_field_mappings()
         mappings.update({
+            'data_collections': './/%s:dataCollection/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+            'entry_identifiers': './/%s:entryIdentifier/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
             'features_of_interest': './/%s:featureOfInterest/%s:namedRegion/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
         })
         return mappings

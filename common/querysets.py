@@ -379,15 +379,25 @@ class ProcessQuerySet(ScientificMetadataQuerySet, AbstractProcessDatabaseQueries
             query |= Q(**{'json__computationComponent__contains': [{'@xlink:href': url}]})
         return self.filter(query)
 
+    def referencing_observed_property_urls(self, observed_property_urls: list):
+        if not observed_property_urls:
+            return self.none()
+        query = Q()
+        for url in observed_property_urls:
+            query |= Q(**{'json__capabilities__processCapability__contains': [{'observedProperty': {'@xlink:href': url}}]})
+            query |= Q(**{'json__capabilities__processCapability__observedProperty__@xlink:href': url})
+        return self.filter(query)
+
     def for_search_by_instrument_type_urls(self, acquisition_urls: list):
         return self.referencing_acquisition_urls(acquisition_urls)
 
     def for_search_by_computation_type_urls(self, computation_urls: list):
         return self.referencing_computation_urls(computation_urls)
 
-    def for_search_by_observed_property_urls(self, acquisition_urls: list, computation_urls: list):
+    def for_search_by_observed_property_urls(self, acquisition_urls: list, computation_urls: list, observed_property_urls: list):
         return self.referencing_acquisition_urls(acquisition_urls) \
-            | self.referencing_computation_urls(computation_urls)
+            | self.referencing_computation_urls(computation_urls) \
+            | self.referencing_observed_property_urls(observed_property_urls)
 
     def for_search(self, acquisition_urls: list, computation_urls: list):
         return self.referencing_acquisition_urls(acquisition_urls) \
@@ -546,10 +556,10 @@ class StaticDatasetEntryQuerySet(ScientificMetadataQuerySet, AbstractStaticDatas
 
 class DataSubsetQuerySet(ScientificMetadataQuerySet, AbstractDataSubsetDatabaseQueries):
     def referencing_static_dataset_entry_url(self, static_dataset_entry_url: str):
-        return self.filter(**{'json__entryIdentifier__@xlink:href': static_dataset_entry_url})
-
-    def referencing_static_dataset_entry_id(self, static_dataset_entry_id: str):
-        return self.filter(**{'json__entryIdentifier__@xlink:href__endswith': static_dataset_entry_id})
+        query = Q()
+        query |= Q(**{'json__entryIdentifier__@xlink:href': static_dataset_entry_url})
+        query |= Q(**{'json__entryIdentifier__contains': [{'@xlink:href': static_dataset_entry_url}]})
+        return self.filter(query)
 
     def referencing_data_collection_url(self, data_collection_url: str):
         return self.filter(**{'json__dataCollection__@xlink:href': data_collection_url})

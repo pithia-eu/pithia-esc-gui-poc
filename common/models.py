@@ -685,6 +685,20 @@ class Process(ScientificMetadata):
     root_element_name = 'CompositeProcess'
 
     @property
+    def observed_property_urls(self):
+        try:
+            return [
+                process_capability['observedProperty']['@xlink:href']
+                for process_capability in self.json['capabilities']['processCapability']
+            ]
+        except TypeError:
+            return [
+                self.json['capabilities']['processCapability']['observedProperty']['@xlink:href']
+            ]
+        except KeyError:
+            return []
+
+    @property
     def properties(self):
         return ProcessXmlMappingShortcuts(self.xml)
 
@@ -778,7 +792,7 @@ class StaticDatasetEntry(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
 
     @property
     def data_subsets(self):
-        return DataSubset.objects.referencing_static_dataset_entry_id(self.localid)
+        return DataSubset.objects.referencing_static_dataset_entry_url(self.metadata_server_url)
 
     @property
     def _static_dataset_category_localid(self):

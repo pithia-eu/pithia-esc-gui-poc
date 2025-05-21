@@ -599,26 +599,26 @@ class DataSubsetForm(
     TimePeriodDateTimeEditorFormComponent):
     def __init__(self, *args, data_collection_choices=(), static_dataset_entry_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['data_collection'].choices = data_collection_choices
-        self.fields['entry_identifier'].choices = static_dataset_entry_choices
+        self.fields['data_collections'].choices = data_collection_choices
+        self.fields['entry_identifiers'].choices = static_dataset_entry_choices
         self.fields['description'].help_text = 'A free-text description of the data subset contents.'
         self.fields['data_quality_flags'].required = True
         self.fields['time_instant_begin_position'].required = True
         self.fields['time_instant_end_position'].required = True
 
-    data_collection = forms.ChoiceField(
-        label='Subset of Data Collection',
+    data_collections = forms.MultipleChoiceField(
+        label='Data Collections',
         required=False,
-        widget=forms.Select(attrs={
+        widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
         }),
         help_text='The PITHIA Data Collection that holds metadata for this subset.'
     )
 
-    entry_identifier = forms.ChoiceField(
+    entry_identifiers = forms.MultipleChoiceField(
         label='Static Dataset Entry',
         required=True,
-        widget=forms.Select(attrs={
+        widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
         }),
         help_text='The static dataset entry that this data subset belongs to.'
