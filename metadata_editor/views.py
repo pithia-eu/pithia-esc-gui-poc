@@ -945,8 +945,8 @@ class DataSubsetEditorFormView(
     def add_form_data_to_metadata_editor(self, metadata_editor: DataSubsetEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
         metadata_editor.update_description(form_cleaned_data.get('description'))
-        metadata_editor.update_entry_identifier(form_cleaned_data.get('entry_identifier'))
-        metadata_editor.update_data_collection(form_cleaned_data.get('data_collection'))
+        metadata_editor.update_entry_identifiers(form_cleaned_data.get('entry_identifiers'))
+        metadata_editor.update_data_collections(form_cleaned_data.get('data_collections'))
         metadata_editor.update_features_of_interest(form_cleaned_data.get('features_of_interest'))
         metadata_editor.update_result_times(map_time_periods_to_dataclasses(form_cleaned_data))
         metadata_editor.update_data_levels([form_cleaned_data.get('data_levels')])
