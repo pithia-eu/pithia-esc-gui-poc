@@ -52,7 +52,7 @@ class HandleRegistrationProcessForDataSubset:
         self.data_subset = data_subset
         self.owner_id = owner_id
         try:
-            self.data_collection = DataCollection.objects.get_by_metadata_server_url(self.data_subset.data_collection_url)
+            self.data_collection = DataCollection.objects.get_by_metadata_server_url(next(iter(self.data_subset.properties.data_collection_urls), None))
         except DataCollection.DoesNotExist:
             pass
         except KeyError:
