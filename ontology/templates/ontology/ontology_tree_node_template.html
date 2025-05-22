@@ -37,7 +37,7 @@
     {% endif %}
     {% if node.prefLabel %}
     <small>
-        {% with ontology_iri=node.iri %}
+        {% with ontology_iri=node.iri btn_extra_classes='btn-sm' %}
         {% include 'ontology/ontology_iri.html' %}
         {% endwith %}
     </small>
