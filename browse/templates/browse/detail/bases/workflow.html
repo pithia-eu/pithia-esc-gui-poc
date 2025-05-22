@@ -29,9 +29,9 @@
                     <span class="text-body-secondary fw-semibold">({{ resource.properties.data_collection_urls|length }})</span>
                 </h3>
             </summary>
-            <ul class="list-group list-group-flush mt-2">
+            <ul class="list-group list-group-flush bg-body-tertiary rounded px-3 py-2 mt-3">
                 {% for data_collection_url in resource.properties.data_collection_urls %}
-                <li class="list-group-item px-0">
+                <li class="list-group-item bg-transparent px-0">
                     {% with value=data_collection_url url_text_extra_classes='link-plain-by-default' %}
                     {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
                     {% endwith %}
