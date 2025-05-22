@@ -37,11 +37,13 @@
         {% if ontology_term_metadata.definition %}
         <section class="resource-detail-section">
             <h2>Definition</h2>
-            <p>
-                {% block term_definition %}
-                {{ ontology_term_metadata.definition }}
-                {% endblock term_definition %}
-            </p>
+            <div class="bg-body-tertiary rounded px-4 py-3">
+                <p>
+                    {% block term_definition %}
+                    {{ ontology_term_metadata.definition }}
+                    {% endblock term_definition %}
+                </p>
+            </div>
         </section>
         {% endif %}
 
