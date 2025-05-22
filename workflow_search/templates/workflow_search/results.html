@@ -1,0 +1,11 @@
+{% extends 'search/results.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item search_index_page_breadcrumb_text 'workflow_search:index' %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
+{% block search_again_section %}
+<p>
+    <a href="{% url 'workflow_search:index' %}">Start new search</a>
+</p>
+{% endblock search_again_section %}

@@ -15,7 +15,33 @@ from common.models import (
     Process,
     Workflow,
 )
+from data_collection_search.services import get_data_collections_for_search
 from ontology.services import ObservedPropertyMetadataService
+
+
+class WorkflowSearchService:
+    @classmethod
+    def search(
+            cls,
+            feature_of_interest_urls: list[str],
+            annotation_type_urls: list[str],
+            computation_type_urls: list[str],
+            instrument_type_urls: list[str],
+            observed_property_urls: list[str]):
+        data_collections = get_data_collections_for_search(
+            feature_of_interest_urls=feature_of_interest_urls,
+            annotation_type_urls=annotation_type_urls,
+            computation_type_urls=computation_type_urls,
+            instrument_type_urls=instrument_type_urls,
+            observed_property_urls=observed_property_urls,
+        )
+        data_collection_urls = [
+            data_collection.metadata_server_url
+            for data_collection in data_collections
+        ]
+        return Workflow.objects.referencing_data_collection_urls(
+            data_collection_urls
+        )
 
 
 class OntologyTermsRegisteredWithWorkflows:

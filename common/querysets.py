@@ -571,7 +571,13 @@ class DataSubsetQuerySet(ScientificMetadataQuerySet, AbstractDataSubsetDatabaseQ
 
 
 class WorkflowQuerySet(ScientificMetadataQuerySet, AbstractWorkflowDatabaseQueries):
-    pass
+    def referencing_data_collection_urls(self, data_collection_urls: list[str]):
+        if not data_collection_urls:
+            return self.none()
+        query = Q()
+        for url in data_collection_urls:
+            query |= Q(**{'json__dataCollection__contains': [{'@xlink:href': url}]})
+        return self.filter(query)
 
 
 class HandleURLMappingQuerySet(AbstractHandleURLMappingDatabaseQueries, models.QuerySet):
