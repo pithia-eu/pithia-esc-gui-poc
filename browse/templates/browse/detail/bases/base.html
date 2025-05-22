@@ -28,17 +28,12 @@
                 {% if 'shortName' in resource.json and resource.json.shortName %}
                 <span class="text-body-secondary">({{ resource.json.shortName }})</span>
                 {% endif %}
-                {% block pre_last_modified_date_content %}{% endblock pre_last_modified_date_content %}
             </div>
-            <div class="d-flex flex-column row-gap-4">
-                <p class="text-secondary-emphasis mb-0">Last modified on {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y, H:i e' }}</p>
-                {% block top_section_website %}{% endblock top_section_website %}
-            </div>
-            {% block top_section_extra_content %}{% endblock top_section_extra_content %}
+            <p class="text-secondary-emphasis mb-0">
+                Last modified on {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y, H:i e' }}
+            </p>
         </div>
-        {% block pre_related_parties_section %}{% endblock pre_related_parties_section %}
         {% include 'browse/detail/sections/top/responsible_parties_top_section.html' %}
-        {% block pre_type_content %}{% endblock pre_type_content %}
         {% if 'type' in resource.json %}
         <section class="responsive-resource-detail-section resource-detail-section">
             <h2>Type</h2>
