@@ -40,12 +40,12 @@ def results(request):
 
 class AnnotationTypeSearchByContentTemplateView(BaseAnnotationTypeSearchByContentTemplateView):
     def get_registered_ontology_terms(self):
-        return []
+        return OntologyTermsRegisteredWithWorkflows.get_registered_annotation_types()
 
 
 class ComputationTypeSearchByContentTemplateView(BaseComputationTypeSearchByContentTemplateView):
     def get_registered_ontology_terms(self):
-        return []
+        return OntologyTermsRegisteredWithWorkflows.get_registered_computation_types()
 
 
 class FeatureOfInterestSearchByContentTemplateView(BaseFeatureOfInterestSearchByContentTemplateView):
@@ -55,7 +55,7 @@ class FeatureOfInterestSearchByContentTemplateView(BaseFeatureOfInterestSearchBy
 
 class InstrumentTypeSearchByContentTemplateView(BaseInstrumentTypeSearchByContentTemplateView):
     def get_registered_ontology_terms(self):
-        return []
+        return OntologyTermsRegisteredWithWorkflows.get_registered_instrument_types()
 
 
 class MeasurandSearchByContentTemplateView(BaseMeasurandSearchByContentTemplateView):
