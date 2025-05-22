@@ -60,15 +60,15 @@ class InstrumentTypeSearchByContentTemplateView(BaseInstrumentTypeSearchByConten
 
 class MeasurandSearchByContentTemplateView(BaseMeasurandSearchByContentTemplateView):
     def get_registered_ontology_terms(self):
-        return []
+        return OntologyTermsRegisteredWithWorkflows.get_registered_measurands()
 
 
 class ObservedPropertySearchByContentTemplateView(BaseObservedPropertySearchByContentTemplateView):
     def get_registered_ontology_terms(self):
-        return []
+        return OntologyTermsRegisteredWithWorkflows.get_registered_observed_properties()
 
 
 class PhenomenonSearchByContentTemplateView(BasePhenomenonSearchByContentTemplateView):
     def get_registered_ontology_terms(self):
-        return []
+        return OntologyTermsRegisteredWithWorkflows.get_registered_phenomenons()
 

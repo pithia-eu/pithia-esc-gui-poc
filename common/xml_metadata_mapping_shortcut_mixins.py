@@ -137,6 +137,12 @@ class PithiaFeaturesOfInterestMetadataPropertiesMixin(BaseMetadataPropertiesShor
         return self._get_elements_with_xpath_query('.//%s:namedRegion/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
 
+class PithiaObservedPropertiesMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
+    @property
+    def observed_property_urls(self):
+        return self._get_elements_with_xpath_query('.//%s:observedProperty/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+
+
 class PithiaOntologyUrlsMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
     @property
     def ontology_urls(self):

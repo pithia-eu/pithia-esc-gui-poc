@@ -11,6 +11,7 @@ from .xml_metadata_mapping_shortcut_mixins import (
     PithiaDocumentationMetadataPropertiesMixin,
     PithiaFeaturesOfInterestMetadataPropertiesMixin,
     PithiaInputOutputMetadataPropertiesMixin,
+    PithiaObservedPropertiesMetadataPropertiesMixin,
     PithiaOnlineResourceMetadataPropertiesMixin,
     PithiaOntologyUrlsMetadataPropertiesMixin,
     PithiaQualityAssessmentMetadataPropertiesMixin,
@@ -156,6 +157,7 @@ class AcquisitionCapabilitiesXmlMappingShortcuts(
         PithiaCapabilitiesMetadataPropertiesMixin,
         PithiaDocumentationMetadataPropertiesMixin,
         PithiaInputOutputMetadataPropertiesMixin,
+        PithiaObservedPropertiesMetadataPropertiesMixin,
         PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
         ScientificMetadataXmlMappingShortcuts):
@@ -196,6 +198,7 @@ class ComputationCapabilitiesXmlMappingShortcuts(
         PithiaCapabilitiesMetadataPropertiesMixin,
         PithiaDocumentationMetadataPropertiesMixin,
         PithiaInputOutputMetadataPropertiesMixin,
+        PithiaObservedPropertiesMetadataPropertiesMixin,
         PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaTypesMetadataPropertiesMixin,
@@ -230,6 +233,7 @@ class ProcessXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCapabilitiesMetadataPropertiesMixin,
         PithiaDocumentationMetadataPropertiesMixin,
+        PithiaObservedPropertiesMetadataPropertiesMixin,
         PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
         ScientificMetadataXmlMappingShortcuts):

@@ -86,6 +86,26 @@ class OntologyCategoryMetadataService:
             namespaces=self.namespaces
         )
 
+    def _create_base_xpath_query_selector_for_iris(self, iris: list[str]):
+        attribute_xpath_selector_condition = ''
+        for counter, observed_property_url in enumerate(iris):
+            if counter != 0:
+                attribute_xpath_selector_condition += ' or '
+            attribute_xpath_selector_condition += "@%s:about='%s'" % (
+                PithiaOntologyNamespacePrefix.RDF,
+                observed_property_url
+            )
+        return './/%s:Concept[%s]' % (
+            PithiaOntologyNamespacePrefix.SKOS,
+            attribute_xpath_selector_condition,
+        )
+
+    def _get_term_elements_with_iris(self, iris: list[str]):
+        selector_for_elements_with_iris = self._create_base_xpath_query_selector_for_iris(
+            iris
+        )
+        return self._get_elements_by_xpath_query(selector_for_elements_with_iris)
+
     def _get_immediate_descendents_by_skos_narrower_for_ontology_term(self, url_of_ontology_term: str) -> set:
         return set(self._get_elements_by_xpath_query(
             './/%s:Concept[@%s:about="%s"]/%s:narrower/@%s:resource' % (
@@ -239,6 +259,36 @@ class OntologyCategoryMetadataService:
             ))
 
         return first_layer_terms_by_url | second_layer_terms_by_url
+
+
+class ObservedPropertyMetadataService(OntologyCategoryMetadataService):
+    def __init__(self) -> None:
+        xml_of_observed_property_terms = get_ontology_category_terms_in_xml_format('observedProperty')
+        super().__init__(xml_of_observed_property_terms)
+
+    def get_measurands_from_observed_properties(self, observed_property_urls: list[str]):
+        base_xpath_selector = self._create_base_xpath_query_selector_for_iris(
+            observed_property_urls
+        )
+        return list(set(self._get_elements_by_xpath_query(
+            '%s/%s:measurand/@%s:resource' % (
+                base_xpath_selector,
+                PithiaOntologyNamespacePrefix.PITHIA,
+                PithiaOntologyNamespacePrefix.RDF,
+            )
+        )))
+
+    def get_phenomenons_from_observed_properties(self, observed_property_urls: list[str]):
+        base_xpath_selector = self._create_base_xpath_query_selector_for_iris(
+            observed_property_urls
+        )
+        return list(set(self._get_elements_by_xpath_query(
+            '%s/%s:phenomenon/@%s:resource' % (
+                base_xpath_selector,
+                PithiaOntologyNamespacePrefix.PITHIA,
+                PithiaOntologyNamespacePrefix.RDF,
+            )
+        )))
 
 
 def get_xml_of_ontology_category_terms_remotely(ontology_category):
