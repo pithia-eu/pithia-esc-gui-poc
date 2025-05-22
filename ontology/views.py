@@ -41,7 +41,7 @@ from utils.url_helpers import create_ontology_term_detail_url_from_ontology_term
 from utils.html_helpers import create_anchor_tag_html_from_ontology_term_details
 
 
-_ONTOLOGY_INDEX_PAGE_TITLE = 'Space Physics Ontology'
+_ONTOLOGY_INDEX_PAGE_TITLE = 'Space Physics Ontology Browser'
 
 
 # Create your views here.
