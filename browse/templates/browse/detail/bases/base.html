@@ -21,7 +21,7 @@
 {% block content %}
 {% csrf_token %}
 <div class="row gx-md-5">
-    <div class="col-xl-9 col-lg-8">
+    <div class="col-lg-9">
         <div class="resource-detail-top-section">
             <div class="d-flex flex-column align-items-start row-gap-1 mb-2">
                 <h1 class="text-break mb-0">{{ resource.name }}</h1>
@@ -181,7 +181,7 @@
             </details>
         </section>
     </div>
-    <aside class="col-xl-3 col-lg-4 resource-detail-aside border-start">
+    <aside class="col-lg-3 resource-detail-aside border-start">
         {% block aside_extra_content_before_default %}{% endblock aside_extra_content_before_default %}
         {% if 'type' in resource.json %}
         <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
