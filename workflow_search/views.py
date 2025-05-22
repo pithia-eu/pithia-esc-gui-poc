@@ -129,7 +129,7 @@ def results(request):
     )
     print('results', results)
     return render(request, 'workflow_search/results.html', {
-        'title': 'Workflow Search Results',
+        'title': 'Workflow Search by Content Results',
         'results': results,
         'search_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
     })

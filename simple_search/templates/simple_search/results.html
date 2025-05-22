@@ -8,6 +8,12 @@
 {% breadcrumb_item simple_search_index_page_breadcrumb_text 'simple_search:index' %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
+{% block title %}
+<hgroup class="d-flex flex-column-reverse pb-3">
+    <h1 class="text-body">Results</h1>
+    <p class="fs-3 text-body-secondary mb-0">Data Collection Simple Search</p>
+</hgroup>
+{% endblock title %}
 {% block search_again_section %}
 {% include 'simple_search/search_form.html' %}
 {% endblock search_again_section %}

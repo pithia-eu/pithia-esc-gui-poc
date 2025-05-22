@@ -102,7 +102,7 @@ def results(request):
     )
 
     return render(request, 'data_collection_search/results.html', {
-        'title': 'Search Results',
+        'title': 'Data Collection Search by Content Results',
         'results': data_collections,
         'search_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
     })

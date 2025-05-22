@@ -38,7 +38,7 @@ def results(request):
     ]
     results = StaticDatasetEntry.objects.for_search(feature_of_interest_urls)
     return render(request, 'static_dataset_search/results.html', {
-        'title': 'Search Results',
+        'title': 'Static Dataset Search by Content Results',
         'results': results,
         'search_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
     })

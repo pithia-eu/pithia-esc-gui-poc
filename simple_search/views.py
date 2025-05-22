@@ -41,7 +41,7 @@ def results(request):
         results = find_data_collections_for_simple_search(query, exact=exact)
 
     return render(request, 'simple_search/results.html', {
-        'title': 'Results',
+        'title': 'Data Collection Simple Search Results',
         'results': results,
         'form': form,
         'query': query,
