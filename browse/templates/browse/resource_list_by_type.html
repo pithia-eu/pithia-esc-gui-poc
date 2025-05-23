@@ -37,6 +37,7 @@
                 {% endblock resource_count %}
             </p>
             {% block search %}
+            <label for="resource-name-search" class="visually-hidden">Search by name</label>
             <input id="resource-name-search" type="search" class="form-control" placeholder="Search by name...">
             {% endblock search %}
             {% block resource_list_outer %}
