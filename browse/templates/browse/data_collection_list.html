@@ -16,11 +16,9 @@ Unlike <a href="{% url 'browse:static_dataset_tree' %}" class="link-underline-by
 {% endif %}
 {% endblock resource_count %}
 {% block aside %}
-<div class="d-xl-block d-none col-xl-4 col-lg-3">
+<div class="d-xl-block d-none col-xl-4 col-lg-3 border-start">
     <section class="d-flex flex-column pt-0">
-        <div class="mx-auto">
-            {% include 'browse/toc/data_collection_toc_content.html' %}
-        </div>
+        {% include 'browse/toc/data_collection_toc_content.html' %}
     </section>
 </div>
 {% endblock aside %}
