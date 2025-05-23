@@ -86,7 +86,7 @@ class OntologyCategoryMetadataService:
             namespaces=self.namespaces
         )
 
-    def _create_base_xpath_query_selector_for_iris(self, iris: list[str]):
+    def _create_base_xpath_query_selector_for_iris(self, iris: list[str] | set[str]):
         attribute_xpath_selector_condition = ''
         for counter, observed_property_url in enumerate(iris):
             if counter != 0:
@@ -266,7 +266,7 @@ class ObservedPropertyMetadataService(OntologyCategoryMetadataService):
         xml_of_observed_property_terms = get_ontology_category_terms_in_xml_format('observedProperty')
         super().__init__(xml_of_observed_property_terms)
 
-    def get_measurands_from_observed_properties(self, observed_property_urls: list[str]):
+    def get_measurands_from_observed_properties(self, observed_property_urls: list[str] | set[str]):
         base_xpath_selector = self._create_base_xpath_query_selector_for_iris(
             observed_property_urls
         )
@@ -278,7 +278,7 @@ class ObservedPropertyMetadataService(OntologyCategoryMetadataService):
             )
         )))
 
-    def get_phenomenons_from_observed_properties(self, observed_property_urls: list[str]):
+    def get_phenomenons_from_observed_properties(self, observed_property_urls: list[str] | set[str]):
         base_xpath_selector = self._create_base_xpath_query_selector_for_iris(
             observed_property_urls
         )
