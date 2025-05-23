@@ -74,10 +74,58 @@ class OntologyTermsRegisteredWithWorkflowsTestCase(TestCase):
             SAMPLE_USER_ID
         )
 
-    def test_get_metadata_urls_of_type_from_registrations(self):
-        """Returns a list of type IDs taken from type ontology IRIs
-        that are registered with workflows.
+    def test_get_registered_features_of_interest(self):
+        """Returns a list of feature of interest IDs taken
+        from ontology IRIs registered with workflows.
         """
-        print('OntologyTermsRegisteredWithWorkflows', OntologyTermsRegisteredWithWorkflows)
-        type_ids = OntologyTermsRegisteredWithWorkflows._get_type_urls_from_workflow_data_collections()
-        print('type_ids', type_ids)
+        foi_ids = OntologyTermsRegisteredWithWorkflows.get_registered_features_of_interest()
+        self.assertIsInstance(foi_ids, list)
+        self.assertGreater(len(foi_ids), 0)
+        
+    def test_get_registered_annotation_types(self):
+        """Returns a list of annotation type IDs taken
+        from ontology IRIs registered with workflows."""
+        annotation_type_ids = OntologyTermsRegisteredWithWorkflows.get_registered_annotation_types()
+        self.assertIsInstance(annotation_type_ids, list)
+        self.assertEqual(len(annotation_type_ids), 0)
+
+
+    def test_get_registered_computation_types(self):
+        """Returns a list of type computation IDs taken
+        from ontology IRIs registered with workflows."""
+        computation_type_ids = OntologyTermsRegisteredWithWorkflows.get_registered_computation_types()
+        self.assertIsInstance(computation_type_ids, list)
+        self.assertGreater(len(computation_type_ids), 0)
+
+
+    def test_get_registered_instrument_types(self):
+        """Returns a list of instrument type IDs taken
+        from ontology IRIs registered with workflows."""
+        instrument_type_ids = OntologyTermsRegisteredWithWorkflows.get_registered_instrument_types()
+        self.assertIsInstance(instrument_type_ids, list)
+        self.assertGreater(len(instrument_type_ids), 0)
+
+
+    def test_get_registered_observed_properties(self):
+        """Returns a list of observed property IDs taken
+        from ontology IRIs registered with workflows."""
+        observed_property_ids = OntologyTermsRegisteredWithWorkflows.get_registered_observed_properties()
+        self.assertIsInstance(observed_property_ids, list)
+        self.assertGreater(len(observed_property_ids), 0)
+
+
+    def test_get_registered_measurands(self):
+        """Returns a list of tymeasurandpe IDs taken
+        from ontology IRIs registered with workflows."""
+        measurand_ids = OntologyTermsRegisteredWithWorkflows.get_registered_measurands()
+        self.assertIsInstance(measurand_ids, list)
+        self.assertGreater(len(measurand_ids), 0)
+
+
+    def test_get_registered_phenomenons(self):
+        """Returns a list of phenomenon IDs taken from
+        ontology IRIs registered with workflows."""
+        phenomenon_ids = OntologyTermsRegisteredWithWorkflows.get_registered_phenomenons()
+        self.assertIsInstance(phenomenon_ids, list)
+        self.assertGreater(len(phenomenon_ids), 0)
+
