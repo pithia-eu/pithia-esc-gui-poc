@@ -1,4 +1,4 @@
-const COPY_BUTTON_TOOLTIP_COPIED_TEXT = 'Copied';
+const COPY_BUTTON_TOOLTIP_COPIED_TEXT = 'Copied IRI';
 let ontologyIriCopyButtonTimeout;
 
 
@@ -15,8 +15,10 @@ export async function setupOntologyIriCopyButtons() {
             }
             ontologyIriCopyButtonTimeout = window.setTimeout(() => {
                 buttonSpan.textContent = buttonDefaultText;
+                button.removeAttribute("disabled");
             }, 1500);
             buttonSpan.textContent = COPY_BUTTON_TOOLTIP_COPIED_TEXT;
+            button.setAttribute("disabled", "true");
         });
     }
 }
