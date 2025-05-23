@@ -1,5 +1,5 @@
 const COPY_BUTTON_TOOLTIP_COPIED_TEXT = 'Copied IRI';
-let ontologyIriCopyButtonTimeout;
+const ontologyIriCopyButtonTimeouts = {};
 
 
 export async function setupOntologyIriCopyButtons() {
@@ -10,10 +10,11 @@ export async function setupOntologyIriCopyButtons() {
         button.addEventListener("click", async () => {
             const ontologyIri = button.dataset.ontologyIri;
             await navigator.clipboard.writeText(ontologyIri);
-            if (ontologyIriCopyButtonTimeout) {
-                window.clearTimeout(ontologyIriCopyButtonTimeout);
+            if (ontologyIri in ontologyIriCopyButtonTimeouts) {
+                window.clearTimeout(ontologyIriCopyButtonTimeouts[ontologyIri]);
+                delete ontologyIriCopyButtonTimeouts[ontologyIri];
             }
-            ontologyIriCopyButtonTimeout = window.setTimeout(() => {
+            ontologyIriCopyButtonTimeouts[ontologyIri] = window.setTimeout(() => {
                 buttonSpan.textContent = buttonDefaultText;
                 button.removeAttribute("disabled");
             }, 1500);
