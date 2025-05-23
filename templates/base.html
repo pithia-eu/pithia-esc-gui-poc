@@ -47,7 +47,7 @@
     <!-- A handy skip link for keyboard users -->
     <a href="#main" class="btn btn-light btn-light-togglable">Skip to main content</a>
     {% include 'header/header.html' %}
-    <div class="container-xxl gx-5">
+    <div class="container-xxl gx-sm-5 gx-4">
         {% if messages %}
         <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
             <symbol id="check-circle-fill" viewBox="0 0 16 16">
@@ -85,7 +85,7 @@
         {% endif %}
     </div>
     {% block breadcrumb_wrapper %}
-    <div class="container-xxl gx-5">
+    <div class="container-xxl gx-sm-5 gx-4">
         <div class="breadcrumb-wrapper pt-3">
             {% url 'home' as base_url %}
             {% if not request.path == base_url %}
@@ -102,7 +102,7 @@
         </div>
     </div>
     {% endblock breadcrumb_wrapper %}
-    <div id="main-container" class="container-xxl gx-5">
+    <div id="main-container" class="container-xxl gx-sm-5 gx-4">
         <main id="main">
             {% block content %}{% endblock content %}
         </main>
