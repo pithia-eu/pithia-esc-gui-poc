@@ -4,6 +4,7 @@
  */
 
 
+// Utils
 function updateLightButtonColourSchemes(isDarkMode) {
     const lightButtons = document.querySelectorAll(".btn-light-togglable");
     if (isDarkMode) {
@@ -37,10 +38,29 @@ function updateBootstrapComponentColourSchemes(isDarkMode) {
     updateDarkOutlineButtonColourSchemes(isDarkMode);
 }
 
-if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    updateBootstrapComponentColourSchemes(true);
+function trackColourSchemePreference(event) {
+    updateBootstrapComponentColourSchemes(event.matches);
 }
 
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-    updateBootstrapComponentColourSchemes(event.matches);
+function disableColourSchemePreferenceTracking() {
+    window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', trackColourSchemePreference);
+}
+
+
+// Event listeners
+window.addEventListener("lightSiteThemeSet", () => {
+    disableColourSchemePreferenceTracking();
+    updateBootstrapComponentColourSchemes(false);
+});
+
+window.addEventListener("darkSiteThemeSet", () => {
+    disableColourSchemePreferenceTracking();
+    updateBootstrapComponentColourSchemes(true);
+});
+
+window.addEventListener("autoSiteThemeSet", () => {
+    if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        updateBootstrapComponentColourSchemes(true);
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', trackColourSchemePreference);
 });
