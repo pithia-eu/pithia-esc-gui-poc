@@ -76,10 +76,8 @@ function setDarkSiteTheme() {
 
 function setAutoSiteTheme() {
     window.localStorage.setItem(SITE_THEME_LOCAL_STORAGE_KEY, AUTO_SITE_THEME);
-    if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        switchBootstrapTheme(true);
-    }
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', trackColourSchemePreference);
+    switchBootstrapTheme(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
     updateSiteThemePickerUi(AUTO_SITE_THEME);
     window.dispatchEvent(new CustomEvent("autoSiteThemeSet"));
     
