@@ -627,8 +627,12 @@ header .login-link {
 
 
 /* Footer */
-.footer-link-separator {
-    color: #dee2e6;
+footer .nav-item .nav-link {
+    padding-block: 0;
+}
+
+footer .nav-item:not(:last-child) {
+    border-inline-end: var(--bs-border-color) var(--bs-border-width) var(--bs-border-style);
 }
 
 
