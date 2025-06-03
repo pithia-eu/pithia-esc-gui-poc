@@ -3,8 +3,10 @@
 {% load static %}
 {% block scripts %}
 {{ server_url_conversion_url|json_script:'server-url-conversion-url' }}
+{% if related_metadata_url %}
 {{ related_metadata_url|json_script:'related-metadata-url' }}
 <script src="{% static 'browse/related_metadata.js' %}" type="module"></script>
+{% endif %}
 <script src="{% static 'browse/resource_url_conversion.js' %}" type="module"></script>
 <script src="{% static 'browse/ontology_url_conversion.js' %}" type="module"></script>
 <script src="{% static 'browse/detail.js' %}?{% now 'U' %}" type="module"></script>
@@ -146,6 +148,7 @@
                 </div>
             </details>
         </section>
+        {% if related_metadata_url %}
         <section id="related-metadata-section" class="resource-detail-section">
             <details>
                 <summary class="summary-marker-custom">
@@ -175,6 +178,7 @@
                 </div>
             </details>
         </section>
+        {% endif %}
     </div>
     <aside class="col-xl-3 col-lg-4 resource-detail-aside border-start">
         {% block aside_extra_content_before_default %}{% endblock aside_extra_content_before_default %}

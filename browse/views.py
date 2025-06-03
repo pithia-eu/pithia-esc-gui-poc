@@ -437,7 +437,9 @@ class ResourceDetailView(TemplateView):
             **self.map_server_urls_to_ids(self.ontology_server_urls),
             **self.map_server_urls_to_ids(self.resource_server_urls),
         }
-        context['related_metadata_url'] = f"{reverse('browse:related_metadata')}?resource_id={quote(self.resource_id)}"
+        if (self.resource._immediate_metadata_dependents
+            or self.resource.properties.resource_urls):
+            context['related_metadata_url'] = f"{reverse('browse:related_metadata')}?resource_id={quote(self.resource_id)}"
         context['property_table_dict'] = self.property_table_dict
         context['scientific_metadata_creation_date_parsed'] = isoparse(self.resource.creation_date_json)
         context['scientific_metadata_last_modification_date_parsed'] = isoparse(self.resource.last_modification_date_json)
