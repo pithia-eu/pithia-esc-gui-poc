@@ -40,8 +40,8 @@
         /* To prevent Firefox FOUC, this must be here */
         let FF_FOUC_FIX;
     </script>
-    <script src="{% static 'utils/bs_theme_updater.js' %}" defer></script>
-    <script src="{% static 'utils/bs_component_colour_schemes_updater.js' %}" defer></script>
+    <script src="{% static 'utils/bs_theme_updater.js' %}?{% now 'U' %}" defer></script>
+    <script src="{% static 'utils/bs_component_colour_schemes_updater.js' %}?{% now 'U' %}" defer></script>
 </head>
 <body>
     <!-- A handy skip link for keyboard users -->
