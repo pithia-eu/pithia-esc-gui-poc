@@ -627,11 +627,15 @@ header .login-link {
 
 
 /* Footer */
+footer .nav-item:not(:has(button.dropdown-toggle)) {
+    padding-block: 0.5em;
+}
+
 footer .nav-item .nav-link {
     padding-block: 0;
 }
 
-footer .nav-item:not(:last-child) {
+footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
     border-inline-end: var(--bs-border-color) var(--bs-border-width) var(--bs-border-style);
 }
 
