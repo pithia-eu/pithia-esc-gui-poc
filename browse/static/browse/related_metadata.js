@@ -4,6 +4,9 @@ const relatedMetadataListPlaceholder = document.querySelector("#related-metadata
 
 
 export async function loadRelatedMetadata() {
+    if (!relatedMetadataUrl) {
+        return;
+    }
     const response = await fetch(relatedMetadataUrl);
     if (!response.ok) {
         const loadingErrorMessage = document.createElement("P");
