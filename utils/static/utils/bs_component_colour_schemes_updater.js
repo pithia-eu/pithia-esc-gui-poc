@@ -59,8 +59,8 @@ window.addEventListener("darkSiteThemeSet", () => {
 });
 
 window.addEventListener("autoSiteThemeSet", () => {
-    if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        updateBootstrapComponentColourSchemes(true);
-    }
+    updateBootstrapComponentColourSchemes(
+        window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+    );
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', trackColourSchemePreference);
 });
