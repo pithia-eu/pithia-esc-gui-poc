@@ -33,7 +33,7 @@ function disableColourSchemePreferenceTracking() {
 }
 
 function updateSiteThemePickerUi(siteThemeSetting) {
-    const siteThemeIcon = siteThemePicker.querySelector(".dropdown-toggle > svg > use");
+    const siteThemeIcon = siteThemePicker.querySelector(".dropdown-toggle svg > use");
     switch (siteThemeSetting) {
         case LIGHT_SITE_THEME:
             lightSiteThemeOption.classList.add("active");
