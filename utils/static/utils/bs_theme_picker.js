@@ -1,6 +1,7 @@
 import {
     AUTO_SITE_THEME,
     DARK_SITE_THEME,
+    getSiteThemeFromLocalStorage,
     LIGHT_SITE_THEME,
     setAutoSiteTheme,
     setDarkSiteTheme,
@@ -59,3 +60,18 @@ autoSiteThemeOption.addEventListener("click", () => {
     setAutoSiteTheme();
     updateSiteThemePickerUi(AUTO_SITE_THEME);
 });
+
+window.addEventListener("load", () => {
+    const siteThemeFromLocalStorage = getSiteThemeFromLocalStorage();
+    switch (siteThemeFromLocalStorage) {
+        case LIGHT_SITE_THEME:
+            updateSiteThemePickerUi(LIGHT_SITE_THEME);
+            break;
+        case DARK_SITE_THEME:
+            updateSiteThemePickerUi(DARK_SITE_THEME);
+            break;
+        default:
+            updateSiteThemePickerUi(AUTO_SITE_THEME);
+            break;
+    }
+})

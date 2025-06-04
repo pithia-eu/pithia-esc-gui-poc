@@ -55,7 +55,7 @@ export function setAutoSiteTheme() {
 
 
 // Set event listeners
-function getSiteThemeFromLocalStorage() {
+export function getSiteThemeFromLocalStorage() {
     const siteThemeFromLocalStorage = window.localStorage.getItem(SITE_THEME_LOCAL_STORAGE_KEY);
     if (!siteThemeFromLocalStorage) {
         return AUTO_SITE_THEME;
