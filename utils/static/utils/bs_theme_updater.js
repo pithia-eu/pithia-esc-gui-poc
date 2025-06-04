@@ -3,8 +3,8 @@ const SITE_THEME_LOCAL_STORAGE_KEY = "theme";
 const LIGHT_SITE_THEME = "light";
 const DARK_SITE_THEME = "dark";
 const AUTO_SITE_THEME = "auto";
-const META_THEME_COLOUR_LIGHT_HEX = "rgba(233, 236 ,239, 0.5)";
-const META_THEME_COLOUR_DARK_HEX = "rgba(52, 58, 64, 0.5)";
+const META_THEME_COLOUR_LIGHT_HEX = "rgb(233 236 239 / 50%)";
+const META_THEME_COLOUR_DARK_HEX = "rgb(52 58 64 / 50%)";
 
 // Query selectors
 const htmlElement = document.querySelector("html");
