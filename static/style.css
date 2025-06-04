@@ -1977,6 +1977,13 @@ ul.tree ul {
 
 
 /* || Tom select customisation */
+.ts-control,
+.ts-control input,
+.ts-dropdown,
+.ts-dropdown-content {
+    color: var(--bs-body-color);
+}
+
 .ts-wrapper.multi .ts-control > div {
     display: inline-block;
     word-break: break-word;
@@ -2440,53 +2447,48 @@ ul.tree ul {
     --fw-bold: 700;
 }
 
-@media (min-width: 768px) and (prefers-color-scheme: dark) {
+
+/* || Dark mode styles */
+@media (min-width: 768px) {
     html[data-bs-theme="dark"] .breadcrumb-item + .breadcrumb-item::before {
         content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="white" class="bi bi-chevron-right" viewBox="0 0 12 12"><path fill-rule="evenodd" d="M3.4845 1.2345a.375.375 90 01.531 0l4.5 4.5a.375.375 90 010 .531l-4.5 4.5a.375.375 90 01-.531-.531L7.7197 6 3.4845 1.7655a.375.375 90 010-.531z"/></svg>') !important;
     }
 }
 
-@media (prefers-color-scheme: dark) {
-    html[data-bs-theme="dark"] .breadcrumb-item + .breadcrumb-item::before {
-        content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/></svg>');
-    }
+html[data-bs-theme="dark"] .breadcrumb-item + .breadcrumb-item::before {
+    content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/></svg>');
+}
 
-    /* Tom Select */
-    html[data-bs-theme="dark"] .ts-control,
-    html[data-bs-theme="dark"] .ts-control input,
-    html[data-bs-theme="dark"] .ts-dropdown-content {
-        color: var(--bs-body-color);
-    }
+/* Tom select - dark mode styles */
+html[data-bs-theme="dark"] .ts-control input::placeholder {
+    color: var(--bs-secondary-color);
+}
 
-    html[data-bs-theme="dark"] .ts-control input::placeholder {
-        color: var(--bs-secondary-color);
-    }
+html[data-bs-theme="dark"] .external-link::after {
+    /* Match pithia colour scheme */
+    filter: invert(64%) sepia(37%) saturate(2304%) hue-rotate(167deg) brightness(94%) contrast(91%);
+}
 
-    html[data-bs-theme="dark"] .external-link::after {
-        /* Match pithia colour scheme */
-        filter: invert(64%) sepia(37%) saturate(2304%) hue-rotate(167deg) brightness(94%) contrast(91%);
-    }
+html[data-bs-theme="dark"] .navbar a.dropdown-item.external-link::after {
+    /* Match body text colour */
+    filter: invert(90%) sepia(17%) saturate(55%) hue-rotate(169deg) brightness(102%) contrast(85%);
+}
 
-    html[data-bs-theme="dark"] .navbar a.dropdown-item.external-link::after {
-        /* Match body text colour */
-        filter: invert(90%) sepia(17%) saturate(55%) hue-rotate(169deg) brightness(102%) contrast(85%);
-    }
+html[data-bs-theme="dark"] .navbar a.dropdown-item.external-link:active::after {
+    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(227deg) brightness(104%) contrast(101%);
+}
 
-    html[data-bs-theme="dark"] .navbar a.dropdown-item.external-link:active::after {
-        filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(227deg) brightness(104%) contrast(101%);
-    }
+html[data-bs-theme="dark"] .header-logo-light {
+    display: none;
+}
 
-    html[data-bs-theme="dark"] .header-logo-light {
-        display: none;
-    }
+html[data-bs-theme="dark"] .header-logo-dark {
+    display: inline;
+}
 
-    html[data-bs-theme="dark"] .header-logo-dark {
-        display: inline;
-    }
-
-    :root[data-bs-theme="dark"] {
-        --pithia-blue: #33AEE4;
-        --pithia-blue-2: #3B9FD6;
-        --skeleton-colour: var(--bs-secondary-color);
-    }
+/* Dark mode variables */
+[data-bs-theme="dark"] {
+    --pithia-blue: #33AEE4;
+    --pithia-blue-2: #3B9FD6;
+    --skeleton-colour: var(--bs-secondary-color);
 }
