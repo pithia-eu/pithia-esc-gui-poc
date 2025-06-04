@@ -3,9 +3,12 @@ const SITE_THEME_LOCAL_STORAGE_KEY = "theme";
 const LIGHT_SITE_THEME = "light";
 const DARK_SITE_THEME = "dark";
 const AUTO_SITE_THEME = "auto";
+const META_THEME_COLOUR_LIGHT_HEX = "#E9ECEF";
+const META_THEME_COLOUR_DARK_HEX = "#343A40";
 
 // Query selectors
 const htmlElement = document.querySelector("html");
+const metaThemeColourElement = document.querySelector("meta[name='theme-color']");
 const siteThemePicker = document.querySelector("#theme-picker");
 const lightSiteThemeOption = document.querySelector("#option-theme-light");
 const darkSiteThemeOption = document.querySelector("#option-theme-dark");
@@ -19,8 +22,10 @@ const autoSiteThemeIconSelector = "#circle-half";
 // Utils
 function switchBootstrapTheme(isDarkMode) {
     if (isDarkMode) {
+        metaThemeColourElement.setAttribute("content", META_THEME_COLOUR_DARK_HEX);
         return htmlElement.setAttribute("data-bs-theme", "dark");
     }
+    metaThemeColourElement.setAttribute("content", META_THEME_COLOUR_LIGHT_HEX);
     return htmlElement.setAttribute("data-bs-theme", "light");
 }
 
