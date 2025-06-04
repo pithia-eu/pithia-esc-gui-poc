@@ -33,14 +33,15 @@
     <meta name="theme-color" content="#e9ecef">
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}?{% now 'U' %}">
     <script src="{% static 'utils/custom_select_initialiser.js' %}" type="module" defer></script>
+    <script type="module" src="{% static 'utils/bs_theme_updater.js' %}?{% now 'U' %}" async></script>
+    <script type="module" src="{% static 'utils/bs_theme_picker.js' %}?{% now 'U' %}"></script>
+    <script type="module" src="{% static 'utils/bs_component_colour_schemes_updater.js' %}?{% now 'U' %}"></script>
     {% block styles %}{% endblock styles %}
     {% block scripts %}{% endblock scripts %}
     <script>
         /* To prevent Firefox FOUC, this must be here */
         let FF_FOUC_FIX;
     </script>
-    <script src="{% static 'utils/bs_theme_updater.js' %}?{% now 'U' %}" defer></script>
-    <script src="{% static 'utils/bs_component_colour_schemes_updater.js' %}?{% now 'U' %}" defer></script>
 </head>
 <body>
     <!-- A handy skip link for keyboard users -->
