@@ -707,8 +707,22 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
     max-height: 100%;
 }
 
+.list-foi-search {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    row-gap: 0.25rem;
+}
+
 .list-foi-search button {
     font-size: var(--fs-sm-2);
+    text-decoration: none;
+}
+
+.list-foi-search button:hover :not(:last-child),
+.list-foi-search button:focus :not(:last-child),
+.list-foi-search button:active :not(:last-child) {
+    text-decoration: underline;
 }
 
 /* Home page - management sections */
@@ -2490,5 +2504,7 @@ html[data-bs-theme="dark"] .header-logo-dark {
 [data-bs-theme="dark"] {
     --pithia-blue: #33AEE4;
     --pithia-blue-2: #3B9FD6;
+    --pithia-blue-rgb: 51, 174, 228;
+    --pithia-blue-2-rgb: 59, 159, 214;
     --skeleton-colour: var(--bs-secondary-color);
 }

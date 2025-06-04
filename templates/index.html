@@ -242,24 +242,24 @@
                     Real-world object that carries the property which is
                     observed or modelled to produce a Data Collection.
                 </p>
-                <ul class="list-group list-group-flush list-foi-search">
+                <ul class="list-unstyled list-foi-search">
                     {% for foi_url, foi_properties in data_collection_counts_by_fois.items %}
                     {% if foi_properties.count %}
                     <li class="list-group-item">
-                        <span class="d-inline-flex flex-column align-items-start">
-                            <button
-                                type="button"
-                                class="btn btn-link btn-foi-search link-plain-by-default text-start p-0"
-                                data-foi-url="{{ foi_url }}">{{ foi_properties.name }}</button>
-                            <small class="text-body-secondary">
+                        <button
+                            type="button"
+                            class="d-inline-flex flex-column btn btn-link btn-foi-search text-start bg-body-tertiary rounded px-3 py-2 mt-2 w-100"
+                            data-foi-url="{{ foi_url }}">
+                            <span>{{ foi_properties.name }}</span>
+                            <span class="text-body-secondary">
                                 {{ foi_properties.count }}
                                 {% if foi_properties.count == 1 %}
                                 Data Collection
                                 {% else %}
                                 Data Collections
                                 {% endif %}
-                            </small>
-                        </span>
+                            </span>
+                        </button>
                     </li>
                     {% endif %}
                     {% endfor %}
