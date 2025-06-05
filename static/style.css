@@ -1297,6 +1297,11 @@ details[name="details-permissions"][open] summary > span::after {
 
 .online-resource-list > li {
     padding-block: 1.5rem;
+    border-inline-start: var(--bs-border-style) var(--bs-border-color) 1rem;
+}
+
+.online-resource-list > li.api {
+    border-color: var(--bs-border-color);
 }
 
 .online-resource-list > li:not(li:first-of-type) {
