@@ -4,6 +4,7 @@ import {
 
 const SEARCH_BOX_INPUT_FILTER_CLASS = "search-no-match";
 const noSearchMatchesFound = document.getElementById("no-search-results-msg");
+const numberOfVisibleTermsElement = document.querySelector("#number-of-terms");
 
 
 // Utility functions
@@ -69,48 +70,53 @@ function filterTreeContainerIdBySearchBoxInput(treeContainerId) {
         const hiddenLisForTreeContainer = getLiNodesHiddenBySearchBoxInputFilterForTreeContainerId(treeContainerId);
         removeSearchBoxInputFiltersFromLiNodes(hiddenLisForTreeContainer);
         setDetailsNodeOpenStatesForTreeContainerId(treeContainerId, false);
-    } else {
-        let liNodesToShow = [], liNodesToHide = [];
-        keywordSearchableElems.forEach(elem => {
-            // AND match
-            let numInputMatchesFound = 0;
-            searchBoxInputSplit.forEach(inputTerm => {
-                if (elem.innerHTML.toLowerCase().includes(inputTerm.toLowerCase())) {
-                    numInputMatchesFound++;
-                }
-            });
-            const enclosingLiNode = getEnclosingLiNode(elem);
-            if (numInputMatchesFound === searchBoxInputSplit.length) {
-                liNodesToShow.push(enclosingLiNode);
-                const childNodeDivs = enclosingLiNode.getElementsByTagName("div");
-                if (childNodeDivs.length > 0) {
-                    const firstChildNodeDiv = childNodeDivs[0];
-                    const parentNodeElems = getParentNodeElems(firstChildNodeDiv);
-                    parentNodeElems.forEach(div => {
-                        const enclosingLiNodeOfParentNodeCheckbox = getEnclosingLiNode(div);
-                        liNodesToShow.push(enclosingLiNodeOfParentNodeCheckbox);
-                    });
-                }
-            } else {
-                liNodesToHide.push(enclosingLiNode);
-            }
-        });
-        liNodesToHide = Array.from(new Set(liNodesToHide));
-        liNodesToShow = Array.from(new Set(liNodesToShow));
-        addSearchBoxInputFiltersToLiNodes(liNodesToHide);
-        removeSearchBoxInputFiltersFromLiNodes(liNodesToShow);
-        liNodesToShow.forEach(liNode => {
-            const detailsNodes = liNode.querySelectorAll("details");
-            detailsNodes.forEach(detailsNode => {
-                detailsNode.open = true;
-            });
-        });
-        noSearchMatchesFound.classList.add("d-none");
-        if (liNodesToShow.length === 0) {
-            noSearchMatchesFound.classList.remove("d-none");
-            noSearchMatchesFound.querySelector("span").textContent = searchBoxInput;
-        }
+        return numberOfVisibleTermsElement.textContent = document.querySelectorAll(`#${treeContainerId} .tree-search-terms .ontology-term`).length;
     }
+
+    let liNodesToShow = [], liNodesToHide = [];
+    keywordSearchableElems.forEach(elem => {
+        // AND match
+        let numInputMatchesFound = 0;
+        searchBoxInputSplit.forEach(inputTerm => {
+            if (!elem.textContent.toLowerCase().includes(inputTerm.toLowerCase())) {
+                return;
+            }
+            numInputMatchesFound++;
+        });
+
+        const enclosingLiNode = getEnclosingLiNode(elem);
+        if (numInputMatchesFound !== searchBoxInputSplit.length) {
+            return liNodesToHide.push(enclosingLiNode);
+        }
+        liNodesToShow.push(enclosingLiNode);
+        const childNodeDivs = enclosingLiNode.getElementsByTagName("div");
+        if (childNodeDivs.length === 0) {
+            return;
+        }
+        const firstChildNodeDiv = childNodeDivs[0];
+        const parentNodeElems = getParentNodeElems(firstChildNodeDiv);
+        parentNodeElems.forEach(div => {
+            const enclosingLiNodeOfParentNodeCheckbox = getEnclosingLiNode(div);
+            liNodesToShow.push(enclosingLiNodeOfParentNodeCheckbox);
+        });
+    });
+    liNodesToHide = Array.from(new Set(liNodesToHide));
+    liNodesToShow = Array.from(new Set(liNodesToShow));
+    addSearchBoxInputFiltersToLiNodes(liNodesToHide);
+    removeSearchBoxInputFiltersFromLiNodes(liNodesToShow);
+    liNodesToShow.forEach(liNode => {
+        const detailsNodes = liNode.querySelectorAll("details");
+        detailsNodes.forEach(detailsNode => {
+            detailsNode.open = true;
+        });
+    });
+    noSearchMatchesFound.classList.add("d-none");
+    if (liNodesToShow.length === 0) {
+        noSearchMatchesFound.classList.remove("d-none");
+        noSearchMatchesFound.querySelector("span").textContent = searchBoxInput;
+    }
+    // Update number of terms still visible
+    return numberOfVisibleTermsElement.textContent = liNodesToShow.length;
 }
 
 function setDetailsNodeOpenStatesForTreeContainerId(treeContainerId, isEachFilteredDetailsNodeOpen) {
@@ -181,6 +187,7 @@ document.getElementById("ontology-script").addEventListener("load", async event 
         termsList,
         `${category}-tree-search-container`,
         () => {
+            numberOfVisibleTermsElement.textContent = document.querySelectorAll(`#${category}-tree-search-container .tree-search-terms .ontology-term`).length;
             window.dispatchEvent(new CustomEvent("contentLoadedAsynchronously"));
         }
     );

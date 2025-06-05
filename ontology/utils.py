@@ -62,6 +62,14 @@ class OntologyCategoryMetadata(OntologyXmlMixin):
         )
 
     @property
+    def number_of_terms(self) -> int:
+        try:
+            return int(self._get_elements_with_xpath_query('count(.//%s:Concept)' % NamespacePrefix.SKOS))
+        except Exception:
+            logger.exception('Could not get number of terms for ontology category.')
+            return 0
+
+    @property
     def description(self):
         try:
             return self._get_first_element_value_or_blank_string_with_xpath_query(

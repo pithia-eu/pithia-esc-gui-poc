@@ -71,6 +71,7 @@ def ontology_category_terms_list(request, category):
         'category_list_url': reverse('ontology:ontology_category_terms_list_only', kwargs={'category': category}),
         'category': category,
         'category_description': ontology_category_metadata.description,
+        'number_of_terms': ontology_category_metadata.number_of_terms,
         'title': _get_ontology_category_term_list_page_title_from_category(category),
         'ontology_index_page_breadcrumb_text': _ONTOLOGY_INDEX_PAGE_TITLE,
     })

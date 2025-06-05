@@ -88,6 +88,17 @@ class OntologyCategoryMetadataTestCase(SimpleTestCase):
         print('xml_for_electron_density_term', xml_for_electron_density_term)
         self.assertIsNot(xml_for_electron_density_term, '')
 
+    def test_number_of_terms_property(self):
+        """Returns the number of terms in an ontology category.
+        """
+        ontology_category = 'observedProperty'
+        xml_for_ontology_category = get_xml_of_ontology_category_terms_locally(ontology_category)
+        observed_property_terms = OntologyCategoryMetadata(xml_for_ontology_category)
+        number_of_observed_property_terms = observed_property_terms.number_of_terms
+        print('number_of_observed_property_terms', number_of_observed_property_terms)
+        self.assertGreater(number_of_observed_property_terms, 0)
+        self.assertIsInstance(number_of_observed_property_terms, int)
+
 
 class OntologyCategoryMetadataServiceTestCase(SimpleTestCase):
     def test_get_immediate_descendents_by_skos_narrower_for_ontology_term(self):
