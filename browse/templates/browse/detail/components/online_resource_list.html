@@ -5,7 +5,7 @@
     <li
         {% with online_resource_access_type=online_resource_access_type|default:'' %}
         class="bg-body-tertiary rounded {% if online_resource_access_type %}api{% endif %} py-0"
-        {% endwith %}">
+        {% endwith %}>
         {% include 'browse/detail/components/online_resource.html' %}
     </li>
     {% endwith %}

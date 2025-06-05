@@ -1325,6 +1325,10 @@ details[name="details-permissions"][open] summary > span::after {
     color: var(--bs-secondary-text-emphasis);
 }
 
+.online-resource-list .summary-service-functions .loading {
+    margin-inline-end: 0.5em;
+}
+
 section .keyword-list {
     display: inline;
     padding-inline-start: 0;
