@@ -14,11 +14,11 @@ const metaThemeColourElement = document.querySelector("meta[name='theme-color']"
 // Utils
 function switchBootstrapTheme(isDarkMode) {
     if (isDarkMode) {
-        metaThemeColourElement.setAttribute("content", META_THEME_COLOUR_DARK_HEX);
-        return htmlElement.setAttribute("data-bs-theme", "dark");
+        htmlElement.setAttribute("data-bs-theme", "dark");
+        return metaThemeColourElement.setAttribute("content", META_THEME_COLOUR_DARK_HEX);
     }
-    metaThemeColourElement.setAttribute("content", META_THEME_COLOUR_LIGHT_HEX);
-    return htmlElement.setAttribute("data-bs-theme", "light");
+    htmlElement.setAttribute("data-bs-theme", "light");
+    return metaThemeColourElement.setAttribute("content", META_THEME_COLOUR_LIGHT_HEX);
 }
 
 function trackColourSchemePreference(event) {
@@ -32,23 +32,23 @@ function disableColourSchemePreferenceTracking() {
 
 // Theme setters
 export function setLightSiteTheme() {
-    window.localStorage.setItem(SITE_THEME_LOCAL_STORAGE_KEY, LIGHT_SITE_THEME);
-    disableColourSchemePreferenceTracking();
     switchBootstrapTheme(false);
+    disableColourSchemePreferenceTracking();
+    window.localStorage.setItem(SITE_THEME_LOCAL_STORAGE_KEY, LIGHT_SITE_THEME);
     window.dispatchEvent(new CustomEvent("lightSiteThemeSet"));
 }
 
 export function setDarkSiteTheme() {
-    window.localStorage.setItem(SITE_THEME_LOCAL_STORAGE_KEY, DARK_SITE_THEME);
-    disableColourSchemePreferenceTracking();
     switchBootstrapTheme(true);
+    disableColourSchemePreferenceTracking();
+    window.localStorage.setItem(SITE_THEME_LOCAL_STORAGE_KEY, DARK_SITE_THEME);
     window.dispatchEvent(new CustomEvent("darkSiteThemeSet"));
 }
 
 export function setAutoSiteTheme() {
-    window.localStorage.setItem(SITE_THEME_LOCAL_STORAGE_KEY, AUTO_SITE_THEME);
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', trackColourSchemePreference);
     switchBootstrapTheme(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', trackColourSchemePreference);
+    window.localStorage.setItem(SITE_THEME_LOCAL_STORAGE_KEY, AUTO_SITE_THEME);
     window.dispatchEvent(new CustomEvent("autoSiteThemeSet"));
     
 }

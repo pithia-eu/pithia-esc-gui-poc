@@ -20,7 +20,7 @@ const darkSiteThemeIconSelector = "#moon-fill";
 const autoSiteThemeIconSelector = "#circle-half";
 
 
-// Util
+// Utils
 function updateSiteThemePickerUi(siteThemeSetting) {
     switch (siteThemeSetting) {
         case LIGHT_SITE_THEME:
@@ -74,4 +74,4 @@ window.addEventListener("load", () => {
             updateSiteThemePickerUi(AUTO_SITE_THEME);
             break;
     }
-})
+});
