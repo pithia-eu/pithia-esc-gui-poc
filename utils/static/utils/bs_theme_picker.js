@@ -21,24 +21,45 @@ const autoSiteThemeIconSelector = "#circle-half";
 
 
 // Utils
+function setActiveThemeOptionUi(activeThemeOption, inactiveThemeOptions) {
+    activeThemeOption.classList.add("active");
+    activeThemeOption.classList.add("fw-semibold");
+    for (const inactiveOption of inactiveThemeOptions) {
+        inactiveOption.classList.remove("active");
+        inactiveOption.classList.remove("fw-semibold");
+    }
+}
+
 function updateSiteThemePickerUi(siteThemeSetting) {
     switch (siteThemeSetting) {
         case LIGHT_SITE_THEME:
-            lightSiteThemeOption.classList.add("active");
-            darkSiteThemeOption.classList.remove("active");
-            autoSiteThemeOption.classList.remove("active");
+            setActiveThemeOptionUi(
+                lightSiteThemeOption,
+                [
+                    darkSiteThemeOption,
+                    autoSiteThemeOption,
+                ]
+            );
             siteThemeIcon.setAttribute("xlink:href", lightSiteThemeIconSelector);
             break;
         case DARK_SITE_THEME:
-            lightSiteThemeOption.classList.remove("active");
-            darkSiteThemeOption.classList.add("active");
-            autoSiteThemeOption.classList.remove("active");
+            setActiveThemeOptionUi(
+                darkSiteThemeOption,
+                [
+                    lightSiteThemeOption,
+                    autoSiteThemeOption,
+                ]
+            );
             siteThemeIcon.setAttribute("xlink:href", darkSiteThemeIconSelector);
             break;
         default:
-            lightSiteThemeOption.classList.remove("active");
-            darkSiteThemeOption.classList.remove("active");
-            autoSiteThemeOption.classList.add("active");
+            setActiveThemeOptionUi(
+                autoSiteThemeOption,
+                [
+                    lightSiteThemeOption,
+                    darkSiteThemeOption,
+                ]
+            );
             siteThemeIcon.setAttribute("xlink:href", autoSiteThemeIconSelector);
             break;
     }
