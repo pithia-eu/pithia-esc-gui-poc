@@ -6,8 +6,8 @@
         <!-- Link to term detail page -->
         {% if node.prefLabel %}
         <a
-          href="{% url 'ontology:ontology_term_detail' category node.value %}"
-          class="d-flex align-items-center fw-semibold keyword-searchable">
+            href="{% url 'ontology:ontology_term_detail' category node.value %}"
+            class="d-flex align-items-center fw-semibold keyword-searchable">
             {{ node.prefLabel|default:node.value }} {% if node.altLabel %}({{ node.altLabel }}){% endif %}
         </a>
         {% elif node.value %}
@@ -36,7 +36,7 @@
     </div>
     {% endif %}
     {% if node.prefLabel %}
-    <small>
+    <small class="d-inline-block pt-2">
         {% with ontology_iri=node.iri btn_extra_classes='btn-sm' %}
         {% include 'ontology/ontology_iri.html' %}
         {% endwith %}

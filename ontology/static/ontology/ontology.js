@@ -177,5 +177,11 @@ async function fetchTermsListForOntologyCategory() {
 document.getElementById("ontology-script").addEventListener("load", async event => {
     const category = JSON.parse(document.querySelector("#category").textContent);
     const termsList = await fetchTermsListForOntologyCategory();
-    setupSearchFormComponent(termsList, `${category}-tree-search-container`);
+    await setupSearchFormComponent(
+        termsList,
+        `${category}-tree-search-container`,
+        () => {
+            window.dispatchEvent(new CustomEvent("contentLoadedAsynchronously"));
+        }
+    );
 });
