@@ -715,8 +715,15 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
 }
 
 .list-foi-search button {
+    background-color: var(--bs-tertiary-bg);
     font-size: var(--fs-sm-2);
     text-decoration: none;
+}
+
+.list-foi-search button:hover,
+.list-foi-search button:focus,
+.list-foi-search button:active {
+    background-color: rgba(var(--bs-tertiary-bg-rgb), 0.5);
 }
 
 .list-foi-search button:hover :not(:last-child),
