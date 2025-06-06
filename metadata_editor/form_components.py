@@ -1,10 +1,15 @@
+import logging
 from django import forms
 from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django_countries import countries
 from phonenumber_field.formfields import PhoneNumberField
 
-# Base components
 
+logger = logging.getLogger(__name__)
+
+
+# Base components
 class OrganisationSelect(forms.Select):
     def create_option(self, *args, **kwargs):
         option = super().create_option(*args, **kwargs)
@@ -51,6 +56,18 @@ class BaseEditorForm(forms.Form):
 
 # Other components
 class ContactInfoEditorFormComponent(forms.Form):
+    def clean(self):
+        cleaned_data = super().clean()
+        email_addresses = cleaned_data.get('email_addresses_json')
+        for email_address in email_addresses:
+            try:
+                validate_email(email_address)
+            except ValidationError:
+                logger.exception('Bad email')
+                self.add_error('email_addresses_json', ValidationError(f'"{email_address}" is not a valid email.'))
+                
+        return cleaned_data
+
     phone = PhoneNumberField(
         label='Phone',
         required=False,
@@ -121,6 +138,12 @@ class ContactInfoEditorFormComponent(forms.Form):
         label='Email Address',
         required=False,
         widget=forms.EmailInput()
+    )
+
+    email_addresses_json = forms.JSONField(
+        required=False,
+        initial=list,
+        widget=forms.HiddenInput()
     )
 
 

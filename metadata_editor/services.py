@@ -1,3 +1,4 @@
+import validators
 from lxml import etree
 
 from .service_utils import (
@@ -56,6 +57,8 @@ class IndividualEditor(
         super().__init__(models.Individual.root_element_name, xml_string=xml_string)
 
     def update_organisation(self, organisation_url: str):
+        if not validators.url(organisation_url):
+            return
         organisation_key = 'organisation'
         self.metadata_dict[organisation_key] = {'@%s:href' % NamespacePrefix.XLINK: organisation_url}
         self.remove_child_element_if_empty(

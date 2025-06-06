@@ -5,9 +5,24 @@
             <h2>Contact Info</h2>
         </div>
         <div class="col-xl-9 col-lg-12">
-            {% with field=form.email_address %}
-            {% include 'metadata_editor/components/form_field_template.html' %}
-            {% endwith %}
+            <div id="invalid-feedback-{{ form.email_addresses_json.auto_id }}" class="invalid-feedback">
+                <ul class="d-flex-inline row-gap-1 list-unstyled field-error-list mb-0">
+                    {% for error in form.email_addresses_json.errors %}
+                    <li class="form-text text-danger">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <ul id="email-address-input-list" class="d-flex flex-column row-gap-3 list-unstyled mb-3">
+                <li>
+                    {% with disabled=True %}
+                    {% include 'metadata_editor/components/ci_email_address_field_content_template.html' %}
+                    {% endwith %}
+                </li>
+            </ul>
+            <button id="add-email-address-btn" class="btn btn-light btn-light-togglable" type="button">
+                <span class="me-2">+</span>Add another email address
+            </button>
+            {{ form.email_addresses_json }}
         </div>
         <div class="col-xl-5 col-lg-8">
             <div class="d-flex flex-column">

@@ -515,13 +515,13 @@ class ContactInfoMetadataEditor(
         ci_contact.setdefault(address_key, {ci_address_key: {}})
         ci_address = ci_contact[address_key][ci_address_key]
         delivery_point, city, administrative_area, \
-        postal_code, country, electronic_mail_address = attrgetter(
+        postal_code, country, electronic_mail_addresses = attrgetter(
             'delivery_point',
             'city',
             'administrative_area',
             'postal_code',
             'country',
-            'electronic_mail_address')(update_data)
+            'electronic_mail_addresses')(update_data)
         # deliveryPoint can occur more than once.
         delivery_point_key = '%s:deliveryPoint' % NamespacePrefix.GMD
         ci_address.setdefault(delivery_point_key, [])
@@ -558,14 +558,15 @@ class ContactInfoMetadataEditor(
             self.get_as_gco_character_string(country)
         )
         # electronicMailAddress can occur more than once.
-        electronic_mail_address_key = '%s:electronicMailAddress' % NamespacePrefix.GMD
-        ci_address.setdefault(electronic_mail_address_key, [])
-        self.update_list_element_and_pop_if_empty(
-            ci_address[electronic_mail_address_key],
-            0,
-            self.get_as_gco_character_string(electronic_mail_address)
+        self.update_child_element_and_remove_if_empty(
+            ci_address,
+            '%s:electronicMailAddress' % NamespacePrefix.GMD,
+            [
+                self.get_as_gco_character_string(electronic_mail_address)
+                for electronic_mail_address in electronic_mail_addresses 
+                if electronic_mail_address.strip()
+            ]
         )
-        self.remove_child_element_if_empty(ci_address, electronic_mail_address_key)
 
         # Clean up
         self.remove_child_element_if_empty(ci_contact, address_key)

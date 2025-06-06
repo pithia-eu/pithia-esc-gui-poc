@@ -55,7 +55,7 @@ class ContactInfoViewMixin:
             administrative_area=form_cleaned_data.get('administrative_area'),
             postal_code=form_cleaned_data.get('postal_code'),
             country=unidecode(form_cleaned_data.get('country')),
-            electronic_mail_address=form_cleaned_data.get('email_address')
+            electronic_mail_addresses=form_cleaned_data.get('email_addresses_json')
         )
         contact_info_update = ContactInfoMetadataUpdate(
             phone=get_phone_field_string_value(form_cleaned_data),
@@ -74,6 +74,14 @@ class ContactInfoViewMixin:
         except ValueError:
             return
         return initial.update({'country': list(countries)[selected_country_decoded_index]})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['email_address_field_content_template'] = render_to_string(
+            'metadata_editor/components/ci_email_address_field_content_template.html',
+            context=context
+        )
+        return context
 
 
 class DocumentationViewMixin:

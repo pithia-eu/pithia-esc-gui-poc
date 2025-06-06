@@ -201,6 +201,14 @@ function setupEventListeners() {
     window.addEventListener("wizardFieldProgrammaticallySet", () => {
         saveWizardDataToLocalStorage();
     });
+    
+    window.addEventListener("wizardFieldProgrammaticallyAdded", () => {
+        saveWizardDataToLocalStorage();
+    });
+    
+    window.addEventListener("wizardFieldProgrammaticallyRemoved", () => {
+        saveWizardDataToLocalStorage();
+    });
 
     window.addEventListener("xmlRegisteredSuccessfully", () => {
         removePastWizardData();

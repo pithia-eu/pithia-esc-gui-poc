@@ -1,6 +1,7 @@
 {% extends 'metadata_editor/components/base_editor.html' %}
 {% load static %}
 {% block extra_scripts %}
+{{ email_address_field_content_template|json_script:'email-address-field-template' }}
 <script src="{% static 'metadata_editor/individual_editor.js' %}" type="module" defer></script>
 <script src="{% static 'metadata_editor/components/contact_info.js' %}" type="module" defer></script>
 {% endblock extra_scripts %}

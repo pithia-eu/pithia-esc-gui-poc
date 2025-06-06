@@ -130,8 +130,8 @@ class ResourceEditorFormView(
 
 
 class OrganisationEditorFormView(
-    ResourceEditorFormView,
-    ContactInfoViewMixin):
+    ContactInfoViewMixin,
+    ResourceEditorFormView):
     form_class = OrganisationEditorForm
     template_name = 'metadata_editor/organisation_editor.html'
 
@@ -149,8 +149,8 @@ class OrganisationEditorFormView(
 
 
 class IndividualEditorFormView(
-    ResourceEditorFormView,
-    ContactInfoViewMixin):
+    ContactInfoViewMixin,
+    ResourceEditorFormView):
     form_class = IndividualEditorForm
     template_name = 'metadata_editor/individual_editor.html'
 

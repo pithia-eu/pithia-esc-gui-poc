@@ -42,6 +42,7 @@ def get_phone_field_string_value(form_cleaned_data):
         phone = phone.as_international
     return phone
 
+
 # Capabilities field
 def map_process_capabilities_to_dataclasses(form_cleaned_data):
     return [
@@ -59,6 +60,7 @@ def map_process_capabilities_to_dataclasses(form_cleaned_data):
         )
     for pc in form_cleaned_data.get('capabilities_json')]
 
+
 # Capability Links
 def map_capability_links_to_dataclasses(form_cleaned_data):
     return [
@@ -73,6 +75,7 @@ def map_capability_links_to_dataclasses(form_cleaned_data):
         )
     for cap_link in form_cleaned_data.get('capability_links_json')]
 
+
 # Input descriptions
 def map_input_descriptions_to_dataclasses(form_cleaned_data):
     return [
@@ -81,6 +84,7 @@ def map_input_descriptions_to_dataclasses(form_cleaned_data):
             description=input_description.get('description')
         )
     for input_description in form_cleaned_data.get('input_descriptions_json')]
+
 
 # Processing inputs
 def map_processing_inputs_to_dataclasses(form_cleaned_data):
@@ -91,6 +95,7 @@ def map_processing_inputs_to_dataclasses(form_cleaned_data):
         )
     for proc_input in form_cleaned_data.get('processing_inputs_json')]
 
+
 # Related parties
 def map_related_parties_to_dataclasses(form_cleaned_data):
     return [
@@ -99,6 +104,7 @@ def map_related_parties_to_dataclasses(form_cleaned_data):
             parties=rp.get('parties')
         )
     for rp in form_cleaned_data.get('related_parties_json')]
+
 
 # Sources
 def map_sources_to_dataclasses(form_cleaned_data):
@@ -140,6 +146,7 @@ def map_data_subset_sources_with_existing_data_hub_files_to_dataclasses(form_cle
             datahub_file_name=s.get('dataHubFileName'),
         )
     for s in form_cleaned_data.get('sources_json')]
+
 
 # Time periods
 def map_time_periods_to_dataclasses(form_cleaned_data):

@@ -40,7 +40,7 @@ class ContactInfoAddressMetadataUpdate:
     administrative_area: Optional[str] = None
     postal_code: Optional[str] = None
     country: Optional[str] = None
-    electronic_mail_address: Optional[str] = None
+    electronic_mail_addresses: Optional[list[str]] = field(default_factory=list)
 
 
 @dataclass(kw_only=True)
