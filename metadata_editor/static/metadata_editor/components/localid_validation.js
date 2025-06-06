@@ -66,10 +66,11 @@ export async function setupLocalIdAndNamespaceRelatedEventListeners() {
             return namespaceInput.value = "";
         }
         if (organisationUrl === "pithia") {
-            return namespaceInput.value = "pithia";
+            namespaceInput.value = "pithia";
+            return window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallySet"));
         }
         namespaceInput.value = namespacesByOrganisation[organisationUrl].toLowerCase().replace(/\s/g, "");
-        window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallySet"));
+        return window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallySet"));
     });
 }
 
