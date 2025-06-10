@@ -6,8 +6,8 @@ import {
     setupCapabilitiesTab,
 } from "/static/metadata_editor/components/capabilities_tab.js";
 import {
-    setupCitationSection,
-} from "/static/metadata_editor/components/citation_section.js";
+    setupCitationsTab,
+} from "/static/metadata_editor/components/citations_tab.js";
 import {
     checkAndSetRequiredAttributesForFields,
 } from "/static/metadata_editor/components/conditional_required_fields.js";
@@ -74,7 +74,7 @@ editorForm.addEventListener("submit", async e => {
 window.addEventListener("load", async () => {
     setupWizardManualAndAutoSave();
     setupSoftwareReferenceSection();
-    setupCitationSection();
+    setupCitationsTab();
     relatedPartiesTable = setupRelatedPartiesTable();
     processingInputsTable = setupProcessingInputsTable();
     setupCapabilitiesTab();

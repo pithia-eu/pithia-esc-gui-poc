@@ -99,6 +99,14 @@ class DocumentationViewMixin:
             logger.exception(err)
             messages.error(request, 'Could not add documentation metadata due to an error. Please try again later.')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['citations_tab_content_template'] = render_to_string(
+            'metadata_editor/components/citations_tab_content_template.html',
+            context=context
+        )
+        return context
+
 
 class LocationViewMixin:
     def update_location_with_metadata_editor(self, request, metadata_editor: PlatformEditor, form_cleaned_data):

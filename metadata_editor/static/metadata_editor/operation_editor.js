@@ -3,8 +3,8 @@ import {
     validateAndRegister,
 } from "/static/metadata_editor/components/base_editor.js";
 import {
-    setupCitationSection,
-} from "/static/metadata_editor/components/citation_section.js";
+    setupCitationsTab,
+} from "/static/metadata_editor/components/citations_tab.js";
 import {
     setupWizardManualAndAutoSave,
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
@@ -38,7 +38,7 @@ editorForm.addEventListener("submit", async e => {
 
 window.addEventListener("load", () => {
     setupWizardManualAndAutoSave();
-    setupCitationSection();
+    setupCitationsTab();
     setupGeometryLocationSection();
     setupOperationTimeSection();
     setupTimePeriodElements("input[name='time_instant_begin_position']", "input[name='time_instant_end_position']");

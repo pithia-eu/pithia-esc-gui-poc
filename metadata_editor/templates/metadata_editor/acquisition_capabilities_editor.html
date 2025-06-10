@@ -4,6 +4,7 @@
 {{ related_parties_row_content_template|json_script:'related-parties-row-content-template' }}
 {{ capabilities_tab_content_template|json_script:'capabilities-tab-content-template' }}
 {{ input_description_row_content_template|json_script:'input-description-row-content-template' }}
+{{ citations_tab_content_template|json_script:'citations-tab-content-template' }}
 <script src="{% static 'metadata_editor/acquisition_capabilities_editor.js' %}" type="module" defer></script>
 {% endblock extra_scripts %}
 {% block form_content %}
@@ -25,7 +26,7 @@
 <hr class="my-5">
 {% include 'metadata_editor/components/related_parties.html' %}
 <hr class="my-5">
-{% include 'metadata_editor/components/citation.html' %}
+{% include 'metadata_editor/components/citations_section.html' %}
 {% endblock form_content %}
 {% block table_of_contents %}
 <li class="list-group-item">

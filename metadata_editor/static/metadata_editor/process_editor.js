@@ -6,8 +6,8 @@ import {
     setupCapabilitiesTab,
 } from "/static/metadata_editor/components/capabilities_tab.js";
 import {
-    setupCitationSection,
-} from "/static/metadata_editor/components/citation_section.js";
+    setupCitationsTab,
+} from "/static/metadata_editor/components/citations_tab.js";
 import {
     setupWizardManualAndAutoSave,
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
@@ -33,7 +33,7 @@ editorForm.addEventListener("submit", async e => {
 
 window.addEventListener("load", () => {
     setupWizardManualAndAutoSave();
-    setupCitationSection();
+    setupCitationsTab();
     relatedPartiesTable = setupRelatedPartiesTable();
     setupCapabilitiesTab();
     setupQualityAssessmentSection();

@@ -185,6 +185,20 @@ class CitationDocumentationEditorFormComponent(forms.Form):
         })
     )
 
+    citations_json = forms.JSONField(
+        required=False,
+        initial=list,
+        widget=forms.HiddenInput()
+    )
+
+    citations_extra_json = forms.JSONField(
+        required=False,
+        initial=dict,
+        widget=forms.HiddenInput()
+    )
+
+
+
 
 class RelatedPartiesEditorFormComponent(forms.Form):
     def __init__(self, *args, related_party_role_choices=(), related_party_choices=(), **kwargs):
