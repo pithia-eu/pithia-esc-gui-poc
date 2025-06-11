@@ -504,6 +504,49 @@ class CitationPropertyTypeMetadataEditor(
             element_key
         )
 
+    def _update_multiple_citations_for_citation_property_type_element(
+            self,
+            element_key,
+            update_data: list[CitationPropertyTypeMetadataUpdate]):
+        if not update_data:
+            return
+        citations = []
+        for ud in update_data:
+            if _is_metadata_component_empty(asdict(ud)):
+                continue
+
+            # Citation properties
+            citation_title, citation_publication_date, \
+            citation_doi, citation_url, other_citation_details = attrgetter(
+                'citation_title',
+                'citation_publication_date',
+                'citation_doi',
+                'citation_url',
+                'other_citation_details'
+            )(ud)
+            citation = {}
+            self.update_child_element_and_remove_if_empty(
+                citation,
+                '%s:title' % NamespacePrefix.GMD,
+                self.get_as_gco_character_string(citation_title)
+            )
+            # Citation date
+            self._update_publication_date_in_first_citation(citation, citation_publication_date)
+            # Citation identifier
+            self._update_identifier_in_first_citation(citation, citation_doi)
+            # Citation online resource
+            self._update_online_resource_in_first_citation(citation, citation_url)
+            # Citation other details
+            self._update_other_details_in_first_citation(citation, other_citation_details)
+            citations.append({
+                'Citation': citation,
+            })
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            element_key,
+            citations
+        )
+
 
 # Shared XML component editors
 class ContactInfoMetadataEditor(
@@ -685,8 +728,8 @@ class DataLevelMetadataEditor(BaseMetadataComponentEditor):
 
 
 class DocumentationMetadataEditor(CitationPropertyTypeMetadataEditor):
-    def update_documentation(self, update_data: CitationPropertyTypeMetadataUpdate):
-        self._update_citation_property_type_element('documentation', update_data)
+    def update_documentations(self, update_data: list[CitationPropertyTypeMetadataUpdate]):
+        self._update_multiple_citations_for_citation_property_type_element('documentation', update_data)
 
 
 class FeaturesOfInterestMetadataEditor(BaseMetadataComponentEditor):

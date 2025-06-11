@@ -190,7 +190,7 @@ class ProjectEditorFormView(
         metadata_editor.update_status(form_cleaned_data.get('status'))
         metadata_editor.update_url(form_cleaned_data.get('url'))
         self.update_related_parties_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
-        self.update_documentation_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+        self.update_documentations_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -233,7 +233,7 @@ class PlatformEditorFormView(
         metadata_editor.update_standard_identifiers(metadata_editor.metadata_dict, [StandardIdentifierMetadataUpdate(**si) for si in form_cleaned_data.get('standard_identifiers_json')])
         self.update_location_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
         self.update_related_parties_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
-        self.update_documentation_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+        self.update_documentations_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
 
     def get_type_choices_for_form(self):
         return self.get_choices_from_ontology_category('platformType')
@@ -307,7 +307,7 @@ class OperationEditorFormView(
         metadata_editor.update_operation_time(operation_time_update)
         self.update_location_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
         self.update_related_parties_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
-        self.update_documentation_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+        self.update_documentations_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
     
     def get_child_operation_choices_for_form(self):
         return self.get_resource_choices_with_model(models.Operation)
@@ -355,7 +355,7 @@ class InstrumentEditorFormView(
         metadata_editor.update_members(form_cleaned_data.get('members'))
         metadata_editor.update_operational_modes(form_cleaned_data.get('operational_modes_json'))
         self.update_related_parties_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
-        self.update_documentation_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+        self.update_documentations_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
 
     def get_member_choices_for_form(self):
         return self.get_resource_choices_with_model(models.Instrument)
@@ -415,7 +415,7 @@ class AcquisitionCapabilitiesEditorFormView(
             metadata_editor,
             form_cleaned_data
         )
-        self.update_documentation_with_metadata_editor(
+        self.update_documentations_with_metadata_editor(
             self.request,
             metadata_editor,
             form_cleaned_data
@@ -571,7 +571,7 @@ class ComputationCapabilitiesEditorFormView(
             other_citation_details=form_cleaned_data.get('software_reference_other_citation_details')
         )
         metadata_editor.update_software_reference(software_reference_update)
-        self.update_documentation_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+        self.update_documentations_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
         self.update_related_parties_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
         self.update_capabilities_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
 
@@ -689,7 +689,7 @@ class ProcessEditorFormView(
             form_cleaned_data.get('metadata_quality_flags')
         )
         metadata_editor.update_data_levels(form_cleaned_data.get('data_levels'))
-        self.update_documentation_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+        self.update_documentations_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
         self.update_related_parties_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
         self.update_capabilities_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
 

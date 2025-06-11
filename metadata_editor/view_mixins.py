@@ -18,6 +18,7 @@ from .form_utils import (
     get_hours_of_service_from_form,
     get_phone_field_string_value,
     map_capability_links_to_dataclasses,
+    map_citations_to_dataclasses,
     map_process_capabilities_to_dataclasses,
     map_related_parties_to_dataclasses,
 )
@@ -85,19 +86,13 @@ class ContactInfoViewMixin:
 
 
 class DocumentationViewMixin:
-    def update_documentation_with_metadata_editor(self, request, metadata_editor: BaseMetadataEditor, form_cleaned_data):
+    def update_documentations_with_metadata_editor(self, request, metadata_editor: BaseMetadataEditor, form_cleaned_data):
+        documentations_update = map_citations_to_dataclasses(form_cleaned_data)
         try:
-            documentation_update = CitationPropertyTypeMetadataUpdate(
-                citation_title=form_cleaned_data.get('citation_title'),
-                citation_publication_date=form_cleaned_data.get('citation_publication_date'),
-                citation_doi=form_cleaned_data.get('citation_doi'),
-                citation_url=form_cleaned_data.get('citation_linkage_url'),
-                other_citation_details=form_cleaned_data.get('other_citation_details')
-            )
-            metadata_editor.update_documentation(documentation_update)
+            metadata_editor.update_documentations(documentations_update)
         except BaseException as err:
             logger.exception(err)
-            messages.error(request, 'Could not add documentation metadata due to an error. Please try again later.')
+            messages.error(request, 'Could not update documentations due to an error. Please try again later.')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

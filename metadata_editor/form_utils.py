@@ -5,6 +5,7 @@ from datetime import timezone
 
 from .editor_dataclasses import (
     CapabilityLinkMetadataUpdate,
+    CitationPropertyTypeMetadataUpdate,
     DataSubsetSourceMetadataUpdate,
     DataSubsetSourceWithExistingDataHubFileMetadataUpdate,
     InputOutputMetadataUpdate,
@@ -74,6 +75,19 @@ def map_capability_links_to_dataclasses(form_cleaned_data):
             ) for ts in json.loads(cap_link.get('timeSpans', []))]
         )
     for cap_link in form_cleaned_data.get('capability_links_json')]
+
+
+# Citations
+def map_citations_to_dataclasses(form_cleaned_data):
+    return [
+        CitationPropertyTypeMetadataUpdate(
+            citation_title=citation.get('title'),
+            citation_publication_date=citation.get('publicationDate'),
+            citation_doi=citation.get('doi'),
+            citation_url=citation.get('linkageUrl'),
+            other_citation_details=citation.get('otherCitationDetails'),
+        )
+    for citation in form_cleaned_data.get('citations_json')]
 
 
 # Input descriptions

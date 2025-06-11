@@ -286,6 +286,31 @@ class DocumentationFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMixi
         })
         return mappings
 
+    def get_initial_values_with_custom_mappings(self):
+        initial_values = super().get_initial_values_with_custom_mappings()
+        documentation_citations = []
+        documentation_citation_elements = self.xml_string_parsed.xpath('.//%s:documentation/%s:Citation' % (
+            self.DEFAULT_XPATH_NSPREFIX,
+            self.DEFAULT_XPATH_NSPREFIX
+        ), namespaces=self.namespaces)
+        for element in documentation_citation_elements:
+            titles = element.xpath('.//%s:title/%s:CharacterString' % (NamespacePrefix.GMD, NamespacePrefix.GCO), namespaces=self.namespaces)
+            publication_dates = element.xpath('.//%s:date/%s:CI_Date/%s:date/%s:Date' % (NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GCO), namespaces=self.namespaces)
+            dois = element.xpath('.//%s:identifier/%s:MD_Identifier/%s:code/%s:CharacterString' % (NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GCO), namespaces=self.namespaces)
+            other_citation_details = element.xpath('.//%s:otherCitationDetails/%s:CharacterString' % (NamespacePrefix.GMD, NamespacePrefix.GCO), namespaces=self.namespaces)
+            linkage_urls = element.xpath('.//%s:onlineResource/%s:CI_OnlineResource/%s:linkage/%s:URL' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GMD), namespaces=self.namespaces)
+            documentation_citations.append({
+                'title': self._get_element_text_or_blank_string(self._get_first_element_from_list(titles)),
+                'publicationDate': self._get_element_text_or_blank_string(self._get_first_element_from_list(publication_dates)),
+                'doi': self._get_element_text_or_blank_string(self._get_first_element_from_list(dois)),
+                'otherCitationDetails': self._get_element_text_or_blank_string(self._get_first_element_from_list(other_citation_details)),
+                'linkageUrl': self._get_element_text_or_blank_string(self._get_first_element_from_list(linkage_urls)),
+            })
+        initial_values.update({
+            'citations_json': documentation_citations,
+        })
+        return initial_values
+
 
 class InputOutputFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMixin):
     def _map_input_outputs_to_form(self, input_outputs_container_element_name):

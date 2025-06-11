@@ -228,7 +228,7 @@ class ProjectEditorTestCase(SimpleTestCase):
             citation_url='https://www.example.com/',
             other_citation_details=''
         )
-        project_editor.update_documentation(documentation_update)
+        project_editor.update_documentations([documentation_update])
         related_parties = [
             RelatedPartyMetadataUpdate(
                 role='https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
@@ -256,7 +256,7 @@ class ProjectEditorTestCase(SimpleTestCase):
             citation_title='hello',
             citation_publication_date='11/07/24'
         )
-        project_editor.update_documentation(documentation_update)
+        project_editor.update_documentations([documentation_update])
         xml = project_editor.to_xml()
         print('xml', xml)
 
@@ -332,7 +332,7 @@ class OperationEditorTestCase(SimpleTestCase):
             citation_url='https://www.example.com/',
             other_citation_details='Other citation details'
         )
-        operation_editor.update_documentation(documentation)
+        operation_editor.update_documentations([documentation])
         xml = operation_editor.to_xml()
         print('xml', xml)
 
@@ -738,7 +738,7 @@ class ComputationCapabilitiesEditorTestCase(SimpleTestCase):
             citation_url='https://www.example.com/',
             other_citation_details='Other citation details'
         )
-        computation_capabilities_editor.update_documentation(documentation)
+        computation_capabilities_editor.update_documentations([documentation])
         xml = computation_capabilities_editor.to_xml()
         print('xml', xml)
 
@@ -884,7 +884,7 @@ class ProcessEditorTestCase(SimpleTestCase):
             citation_url='https://www.example.com/',
             other_citation_details='Other citation details'
         )
-        process_editor.update_documentation(documentation)
+        process_editor.update_documentations([documentation])
         xml = process_editor.to_xml()
         print('xml', xml)
 
