@@ -907,8 +907,6 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
 /* Resource detail page - responsible parties section */
 #responsible-parties-top-section {
     font-size: var(--fs-sm-2);
-    padding-top: 0.25rem;
-    padding-bottom: 1.5rem;
 }
 
 #responsible-parties-top-section dl {
