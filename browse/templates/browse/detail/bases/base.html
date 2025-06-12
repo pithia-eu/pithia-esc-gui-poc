@@ -35,15 +35,6 @@
         {% block pre_responsible_parties_content %}{% endblock pre_responsible_parties_content %}
         {# Responsible parties section #}
         {% include 'browse/detail/sections/top/responsible_parties_top_section.html' %}
-        {# Status section #}
-        {% if resource.properties.status %}
-        <section class="resource-detail-section">
-            <h2 class="mb-2">Status</h2>
-            {% with value=resource.properties.status url_text_extra_classes='text-secondary-emphasis' %}
-            {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-            {% endwith %}
-        </section>
-        {% endif %}
         {# Type section #}
         {% if 'type' in resource.json %}
         <section class="responsive-resource-detail-section resource-detail-section">

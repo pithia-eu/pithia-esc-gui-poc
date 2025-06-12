@@ -1,7 +1,7 @@
 {% extends 'browse/detail/bases/base.html' %}
 
-{# Appears after the last modified date, before the description #}
-{% block pre_description_content %}
+{# Appears before the responsible parties section #}
+{% block pre_responsible_parties_content %}
 {% if resource.properties.sub_projects %}
 <section class="resource-detail-section">
     <details>
@@ -21,6 +21,18 @@
             {% endfor %}
         </ul>
     </details>
+</section>
+{% endif %}
+{% endblock pre_responsible_parties_content %}
+
+{# Appears after the last modified date, before the description #}
+{% block pre_description_content %}
+{% if resource.properties.status %}
+<section class="resource-detail-section">
+    <h2 class="mb-2">Status</h2>
+    {% with value=resource.properties.status url_text_extra_classes='text-secondary-emphasis' %}
+    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+    {% endwith %}
 </section>
 {% endif %}
 {% if resource.abstract.strip|length > 0 %}
