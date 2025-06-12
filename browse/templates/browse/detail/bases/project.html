@@ -23,8 +23,6 @@
     </details>
 </section>
 {% endif %}
-{% include 'browse/detail/sections/responsive/status_section.html' %}
-{% include 'browse/detail/sections/responsive/website_section.html' %}
 {% if resource.abstract.strip|length > 0 %}
 <section class="resource-detail-section">
     <h2 class="mb-2">Abstract</h2>
@@ -54,6 +52,12 @@
 {% endif %}
 {% endblock description_section %}
 
+{# Appears after the description #}
+{% block post_description_content %}
+{% include 'browse/detail/sections/website_section.html' %}
+{% include 'browse/detail/sections/documentations_section.html' %}
+{% endblock post_description_content %}
+
 {# Appears in the further information disclosure widget #}
 {% block further_information_extra_sections %}
 {% if resource.properties.keywords %}
@@ -63,9 +67,3 @@
 </section>
 {% endif %}
 {% endblock further_information_extra_sections %}
-
-{# Appears in the aside section #}
-{% block aside_extra_content_after_default %}
-{% include 'browse/detail/sections/asides/responsive/status_aside_section.html' %}
-{% include 'browse/detail/sections/asides/responsive/website_aside_section.html' %}
-{% endblock aside_extra_content_after_default %}

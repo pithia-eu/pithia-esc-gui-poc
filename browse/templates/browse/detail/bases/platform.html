@@ -8,14 +8,8 @@
 {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
 {% endblock metadata_type_aside %}
 
-{# Appears before the description #}
-{% block pre_description_content %}
-{% if resource.properties.standard_identifiers %}
-<div class="responsive-resource-detail-section resource-detail-section">
-    <h2 class="fs-6 fw-semibold">Standard Identifiers</h2>
-    {% include 'browse/detail/components/platform/standard_identifier_section_content.html' %}
-</div>
-{% endif %}
+{# Appears before the responsible parties section #}
+{% block pre_responsible_parties_content %}
 {% if resource.properties.child_platforms %}
 <section class="resource-detail-section">
     <details>
@@ -34,17 +28,28 @@
     </details>
 </section>
 {% endif %}
-{% include 'browse/detail/sections/responsive/website_section.html' %}
+{% endblock pre_responsible_parties_content %}
+
+{# Appears before the description #}
+{% block pre_description_content %}
+{% if resource.properties.standard_identifiers %}
+<div class="responsive-resource-detail-section resource-detail-section">
+    <h2 class="fs-6 fw-semibold">Standard Identifiers</h2>
+    {% include 'browse/detail/components/platform/standard_identifier_section_content.html' %}
+</div>
+{% endif %}
 {% endblock pre_description_content %}
 
 {# Appears after the description #}
 {% block post_description_content %}
+{% include 'browse/detail/sections/website_section.html' %}
 {% if resource.properties.location %}
 <section class="resource-detail-section">
     <h2 class="mb-2">Location</h2>
     {% include 'browse/detail/components/platform/location_section_content.html' %}
 </section>
 {% endif %}
+{% include 'browse/detail/sections/documentations_section.html' %}
 {% endblock post_description_content %}
 
 {# Appears before default content in the aside section #}
@@ -55,5 +60,4 @@
     {% include 'browse/detail/components/platform/standard_identifier_section_content.html' %}
 </div>
 {% endif %}
-{% include 'browse/detail/sections/asides/responsive/website_aside_section.html' %}
 {% endblock aside_extra_content_after_default %}

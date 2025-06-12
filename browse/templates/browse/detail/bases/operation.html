@@ -2,11 +2,11 @@
 
 {# Appears after the description #}
 {% block post_description_content %}
-{% include 'browse/detail/sections/responsive/status_section.html' %}
 <section class="responsive-resource-detail-section resource-detail-section">
     <h2>Operation Time</h2>
     {% include 'browse/detail/components/operation/operation_time_section_content.html' %}
 </section>
+{% include 'browse/detail/sections/documentations_section.html' %}
 {% if resource.properties.platforms %}
 <section class="resource-detail-section">
     <details>
@@ -29,7 +29,6 @@
 
 {# Appears in the aside section #}
 {% block aside_extra_content_after_default %}
-{% include 'browse/detail/sections/asides/responsive/status_aside_section.html' %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Operation Time</h2>
     {% include 'browse/detail/components/operation/operation_time_section_content.html' %}
