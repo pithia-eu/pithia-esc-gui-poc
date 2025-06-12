@@ -1268,6 +1268,19 @@ details[name="details-permissions"][open] summary > span::after {
     content: 'Hide full description';
 }
 
+details.details-documentation summary > span::after {
+    font-size: var(--fs-sm-1);
+    color: var(--bs-secondary-color);
+}
+
+details.details-documentation:not([open]) summary > span::after {
+    content: 'Show details';
+}
+
+details.details-documentation[open] summary > span::after {
+    content: 'Hide details';
+}
+
 .interaction-methods-subsection {
     padding-block: 0;
     padding-top: 1rem;

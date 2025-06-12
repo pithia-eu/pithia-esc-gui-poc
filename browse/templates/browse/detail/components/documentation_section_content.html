@@ -1,35 +1,44 @@
-<div class="d-flex flex-column row-gap-2">
-    <div class="d-flex flex-column-reverse row-gap-1">
-        <h3 class="fw-medium fs-6 mb-0">
-            {% if documentation.online_resource %}
-            <a href="{{ documentation.online_resource }}" class="link-underline-by-default">
-                {% if documentation.title %}{{ documentation.title }}{% else %}<i>{{ documentation.online_resource }}</i>{% endif %}</a>
-            {% else %}
-            {% if documentation.title %}
-            {{ documentation.title }}
-            {% else %}
-            <i class="text-body-secondary">Unnamed Documentation</i>
-            {% endif %}
-            {% endif %}
-        </h3>
-    </div>
-    {% if documentation.other_documentation_details %}
-    <p class="text-body-secondary mb-0">{{ documentation.other_documentation_details }}</p>
-    {% endif %}
-    {% if documentation.date %}
-    <p class="fs-sm-2 fw-medium text-body-secondary mb-0">
-        {% if documentation.date_type|cut:' '|lower == 'publicationdate' %}
-        Published {{ documentation.date|date:'SHORT_DATE_FORMAT' }}
-        {% else %}
-        {{ documentation.date|date }} ({{ documentation.date_type }})
+<details class="details-documentation">
+    <summary class="summary-marker-custom summary-marker-custom-sm summary-marker-custom-baseline">
+        <span class="d-inline-flex flex-column">
+            <div class="d-inline mb-1">
+                <h3 class="d-inline fw-medium fs-6">
+                    {% if documentation.online_resource %}
+                    <a href="{{ documentation.online_resource }}" class="link-underline-by-default">
+                        {% if documentation.title %}{{ documentation.title }}{% else %}<i>{{ documentation.online_resource }}</i>{% endif %}</a>
+                    {% else %}
+                    {% if documentation.title %}
+                    {{ documentation.title }}
+                    {% else %}
+                    <i class="text-body-secondary">Unnamed Documentation</i>
+                    {% endif %}
+                    {% endif %}
+                </h3>
+                {% if documentation.date %}
+                <span class="fs-sm-2 text-body-secondary"> — {{ documentation.date|date:'Y' }}</span>
+                {% endif %}
+            </div>
+        </span>
+    </summary>
+    <div class="d-flex flex-column row-gap-2">
+        {% if documentation.other_documentation_details %}
+        <p class="text-body-secondary mb-0">{{ documentation.other_documentation_details }}</p>
         {% endif %}
-    </p>
-    {% endif %}
-    {% if documentation.identifier %}
-    <div class="fs-sm-2">
-        <h4 class="d-inline fs-sm-2 bg-body-secondary rounded p-1 px-2 mb-1">
-            {% if 'doi' in documentation.identifier|lower %}DOI{% else %}Identifier{% endif %}</h4>
-        <span class="text-wrap text-break">{{ documentation.identifier|urlize }}</span>
+        {% if documentation.date %}
+        <p class="fs-sm-2 fw-medium text-body-secondary mb-0">
+            {% if documentation.date_type|cut:' '|lower == 'publicationdate' %}
+            Published {{ documentation.date|date:'SHORT_DATE_FORMAT' }}
+            {% else %}
+            {{ documentation.date|date }} ({{ documentation.date_type }})
+            {% endif %}
+        </p>
+        {% endif %}
+        {% if documentation.identifier %}
+        <div class="fs-sm-2">
+            <h4 class="d-inline fs-sm-2 bg-body-secondary rounded p-1 px-2 mb-1">
+                {% if 'doi' in documentation.identifier|lower %}DOI{% else %}Identifier{% endif %}</h4>
+            <span class="text-wrap text-break">{{ documentation.identifier|urlize }}</span>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
-</div>
+</details>
