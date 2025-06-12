@@ -36,23 +36,22 @@
         {# Responsible parties section #}
         {% include 'browse/detail/sections/top/responsible_parties_top_section.html' %}
         {# Type section #}
-        {% if 'type' in resource.json %}
-        <section class="responsive-resource-detail-section resource-detail-section">
-            <h2>Type</h2>
-            {% load project_tags %}
-            {% if 'type' in resource.json %}
-            <ul class="list-group list-group-flush bg-body-tertiary rounded px-3 py-2 mb-0">
-                {% for type in resource.json.type|wrap_in_list_if_dict %}
-                <li class="list-group-item bg-transparent px-0">
-                    {% with value=type|get_key_value:'@xlink:href' %}
-                    {% block metadata_type_main %}
-                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                    {% endblock metadata_type_main %}
-                    {% endwith %}
-                </li>
-                {% endfor %}
-            </ul>
+        {% if resource.properties.type or resource.properties.types %}
+        <section class="resource-detail-section">
+            <h2 class="mb-1">Type</h2>
+            {% block type_list_include %}
+            {% if resource.properties.type %}
+            {# Type (only one allowed) #}
+            {% with types=resource.properties.type %}
+            {% include 'browse/detail/components/type_section_list.html' %}
+            {% endwith %}
+            {% elif resource.properties.types %}
+            {# Type (multiple allowed) #}
+            {% with types=resource.properties.types %}
+            {% include 'browse/detail/components/type_section_list.html' %}
+            {% endwith %}
             {% endif %}
+            {% endblock type_list_include %}
         </section>
         {% endif %}
         {% block pre_description_content %}{% endblock pre_description_content %}
@@ -174,24 +173,6 @@
     </div>
     <aside class="col-xl-3 col-lg-4 resource-detail-aside border-start">
         {% block aside_extra_content_before_default %}{% endblock aside_extra_content_before_default %}
-        {% if 'type' in resource.json %}
-        <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-            <h2>Type</h2>
-            {% if 'type' in resource.json %}
-            <ul class="list-group list-group-flush bg-body-tertiary rounded px-3 py-2 mb-0">
-                {% for type in resource.json.type|wrap_in_list_if_dict %}
-                <li class="list-group-item bg-transparent px-0">
-                    {% with value=type|get_key_value:'@xlink:href' pill_type='none' %}
-                    {% block metadata_type_aside %}
-                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                    {% endblock metadata_type_aside %}
-                    {% endwith %}
-                </li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-        </section>
-        {% endif %}
         {% block aside_extra_content_after_default %}{% endblock aside_extra_content_after_default %}
         <section class="resource-detail-aside-section">
             <h2 class="fs-6 text-body-secondary">

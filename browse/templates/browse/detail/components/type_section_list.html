@@ -1,0 +1,12 @@
+{% load project_tags %}
+<ul class="list-group list-group-flush mb-0">
+    {% for type in types|wrap_in_list_if_dict %}
+    <li class="list-group-item bg-transparent px-0">
+        {% with value=type %}
+        {% block ontology_placeholder_include %}
+        {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+        {% endblock ontology_placeholder_include %}
+        {% endwith %}
+    </li>
+    {% endfor %}
+</ul>
