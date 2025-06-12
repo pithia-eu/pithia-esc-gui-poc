@@ -1,59 +1,35 @@
-<div class="d-inline-flex flex-column row-gap-1 mb-2">
-    <div>
-        {% if documentation.online_resource %}
-        <a href="{{ documentation.online_resource }}" class="link-underline-by-default">
-            {% if documentation.title %}{{ documentation.title }}{% else %}<i>{{ documentation.online_resource }}</i>{% endif %}</a>
-        {% else %}
-        {% if documentation.title %}
-        {{ documentation.title }}
-        {% else %}
-        <i class="text-body-secondary">Unnamed Documentation</i>
-        {% endif %}
-        {% endif %}
+<div class="d-flex flex-column row-gap-2">
+    <div class="d-flex flex-column-reverse row-gap-1">
+        <h3 class="fw-medium fs-6 mb-0">
+            {% if documentation.online_resource %}
+            <a href="{{ documentation.online_resource }}" class="link-underline-by-default">
+                {% if documentation.title %}{{ documentation.title }}{% else %}<i>{{ documentation.online_resource }}</i>{% endif %}</a>
+            {% else %}
+            {% if documentation.title %}
+            {{ documentation.title }}
+            {% else %}
+            <i class="text-body-secondary">Unnamed Documentation</i>
+            {% endif %}
+            {% endif %}
+        </h3>
     </div>
+    {% if documentation.other_documentation_details %}
+    <p class="text-body-secondary mb-0">{{ documentation.other_documentation_details }}</p>
+    {% endif %}
     {% if documentation.date %}
-    <small class="text-body-secondary">
+    <p class="fs-sm-2 fw-medium text-body-secondary mb-0">
         {% if documentation.date_type|cut:' '|lower == 'publicationdate' %}
-        Published on {{ documentation.date|date }}
+        Published {{ documentation.date|date:'SHORT_DATE_FORMAT' }}
         {% else %}
         {{ documentation.date|date }} ({{ documentation.date_type }})
         {% endif %}
-    </small>
+    </p>
+    {% endif %}
+    {% if documentation.identifier %}
+    <div class="fs-sm-2">
+        <h4 class="d-inline fs-sm-2 bg-body-secondary rounded p-1 px-2 mb-1">
+            {% if 'doi' in documentation.identifier|lower %}DOI{% else %}Identifier{% endif %}</h4>
+        <span class="text-wrap text-break">{{ documentation.identifier|urlize }}</span>
+    </div>
     {% endif %}
 </div>
-{% if documentation.online_resource or documentation.identifier or documentation.other_documentation_details %}
-<details class="text-body-secondary">
-    <summary>
-        More details
-    </summary>
-    <dl class="d-flex flex-column row-gap-3 mt-3" style="font-size: 0.875rem;">
-        {% if documentation.online_resource %}
-        <div>
-            <dt>Link to Documentation</dt>
-            <dd>
-                <a href="{{ documentation.online_resource }}" class="link-underline-by-default">
-                    {{ documentation.online_resource }}</a>
-            </dd>
-        </div>
-        {% endif %}
-        {% if documentation.identifier %}
-        <div>
-            <dt>
-                {% if 'doi' in documentation.identifier|lower %}
-                DOI
-                {% else %}
-                Identifier
-                {% endif %}
-            </dt>
-            <dd>{{ documentation.identifier|urlize }}</dd>
-        </div>
-        {% endif %}
-        {% if documentation.other_documentation_details %}
-        <div>
-            <dt>Full Citation</dt>
-            <dd>{{ documentation.other_documentation_details }}</dd>
-        </div>
-        {% endif %}
-    </dl>
-</details>
-{% endif %}

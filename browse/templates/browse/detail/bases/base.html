@@ -57,6 +57,18 @@
         {% include 'browse/detail/sections/description_section.html' %}
         {% endblock description_section %}
         {% block post_description_content %}{% endblock post_description_content %}
+        {% if resource.properties.documentations %}
+        <section class="resource-detail-section">
+            <h2>Documentation</h2>
+            <ul class="d-flex flex-column list-group list-group-flush">
+                {% for documentation in resource.properties.documentations %}
+                <li class="list-group-item px-0 {% if forloop.first %}pb-3{% elif forloop.last %}pt-3{% else %}py-3{% endif %}">
+                    {% include 'browse/detail/components/documentation_section_content.html' %}
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
         <section id="further-information-section" class="resource-detail-section">
             <details>
                 <summary class="summary-marker-custom">
@@ -71,14 +83,6 @@
                             </svg>Metadata File (XML)
                         </a>
                     </section>
-                    {% if resource.properties.documentation %}
-                    {% with documentation=resource.properties.documentation %}
-                    <section class="resource-detail-section">
-                        <h2>Documentation</h2>
-                        {% include 'browse/detail/components/documentation_section_content.html' %}
-                    </section>
-                    {% endwith %}
-                    {% endif %}
                     {% block further_information_extra_sections %}{% endblock further_information_extra_sections %}
                     {% if property_table_dict.items|length > 0 %}
                     <section>
