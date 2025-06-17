@@ -6,7 +6,7 @@
 <section class="d-flex flex-column row-gap-4 resource-detail-section">
     {% if resource.properties.acquisition_components %}
     <div>
-        <h2>Acquisition Components</h2>
+        <h2 id="acquisitions">Acquisition Components</h2>
         <ul class="list-group list-group-flush">
             {% for acquisition_url in resource.properties.acquisition_components %}
             <li class="list-group-item px-0">
@@ -20,7 +20,7 @@
     {% endif %}
     {% if resource.properties.computation_components %}
     <div>
-        <h2>Computation Components</h2>
+        <h2 id="computations">Computation Components</h2>
         <ul class="list-group list-group-flush">
             {% for computation_url in resource.properties.computation_components %}
             <li class="list-group-item px-0">
@@ -35,13 +35,11 @@
 </section>
 {% endif %}
 {% include 'browse/detail/sections/capabilities_section.html' %}
-{% include 'browse/detail/sections/data_levels_section.html' %}
-{% include 'browse/detail/sections/quality_assessment_section.html' %}
 {% include 'browse/detail/sections/documentations_section.html' %}
 {% endblock post_description_content %}
 
-{# Appears in the aside section #}
-{% block aside_extra_content_after_default %}
-{% include 'browse/detail/sections/asides/responsive/data_levels_aside_section.html' %}
-{% include 'browse/detail/sections/asides/responsive/quality_assessment_aside_section.html' %}
-{% endblock aside_extra_content_after_default %}
+{# Appears in the further information disclosure widget #}
+{% block further_information_extra_sections %}
+{% include 'browse/detail/sections/bottom/quality_assessment_bottom_section.html' %}
+{% include 'browse/detail/sections/bottom/data_levels_bottom_section.html' %}
+{% endblock further_information_extra_sections %}

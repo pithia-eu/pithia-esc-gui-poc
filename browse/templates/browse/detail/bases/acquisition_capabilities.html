@@ -3,11 +3,9 @@
 {# Appears after the description #}
 {% block post_description_content %}
 {% include 'browse/detail/sections/capabilities_section.html' %}
-{% include 'browse/detail/sections/data_levels_section.html' %}
-{% include 'browse/detail/sections/quality_assessment_section.html' %}
 {% if resource.properties.instrument_mode_pair %}
 <section class="resource-detail-section">
-    <h2>Instrument Mode Pair</h2>
+    <h2 id="instrument-mode-pair">Instrument Mode Pair</h2>
     {% with instrument_mode_pair=resource.properties.instrument_mode_pair %}
     <dl class="d-flex flex-column row-gap-3">
         <div>
@@ -43,8 +41,8 @@
 {% include 'browse/detail/sections/documentations_section.html' %}
 {% endblock post_description_content %}
 
-{# Appears in the aside section #}
-{% block aside_extra_content_after_default %}
-{% include 'browse/detail/sections/asides/responsive/data_levels_aside_section.html' %}
-{% include 'browse/detail/sections/asides/responsive/quality_assessment_aside_section.html' %}
-{% endblock aside_extra_content_after_default %}
+{# Appears in the further information disclosure widget #}
+{% block further_information_extra_sections %}
+{% include 'browse/detail/sections/bottom/quality_assessment_bottom_section.html' %}
+{% include 'browse/detail/sections/bottom/data_levels_bottom_section.html' %}
+{% endblock further_information_extra_sections %}
