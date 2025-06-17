@@ -11,6 +11,7 @@ export function loadTableOfContents() {
         }
         anchorElement.textContent = h2Element.textContent.trim();
         anchorElement.classList.add("fs-6");
+        anchorElement.classList.add("px-0");
         anchorElement.classList.add("link-plain-by-default");
         anchorElement.classList.add("list-group-item");
         anchorElement.classList.add("list-group-item-action");
