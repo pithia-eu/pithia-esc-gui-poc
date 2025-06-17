@@ -144,6 +144,14 @@ a.alert-link:hover,
     text-decoration: none;
 }
 
+a.text-body-secondary {
+    text-decoration-color: var(--bs-secondary-color) !important;
+}
+
+a.text-body {
+    text-decoration-color: var(--bs-body-color) !important;
+}
+
 /* Link styles - navigation elements */
 /* Header logo */
 a.header-logo-link {
