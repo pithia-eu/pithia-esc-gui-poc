@@ -18,7 +18,6 @@ from .services import (
     get_ontology_category_terms_in_xml_format,
 )
 from .utils import (
-    get_ontology_category_terms_in_xml_format,
     LicenceOntologyTermMetadata,
     ObservedPropertyOntologyTermMetadata,
     OntologyCategoryMetadata,
