@@ -1357,14 +1357,6 @@ section .keyword-list li:last-child:after {
     content: '';
 }
 
-.responsive-resource-detail-section {
-    display: block;
-}
-
-.responsive-resource-detail-aside-section {
-    display: none;
-}
-
 
 /* || Resource management list page */
 .resource-management-table td:first-child {
@@ -2131,14 +2123,6 @@ ul.tree ul {
     #further-information-section .resource-detail-section.d-lg-none:first-child + .resource-detail-section {
         border-top: none;
         padding-top: var(--resource-detail-section-padding);
-    }
-
-    .responsive-resource-detail-section {
-        display: none;
-    }
-    
-    .responsive-resource-detail-aside-section {
-        display: block;
     }
 
     /* Help page */
