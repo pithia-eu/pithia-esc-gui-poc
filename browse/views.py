@@ -20,6 +20,7 @@ from django.views.generic import (
     TemplateView,
 )
 from lxml import etree
+from lxml.etree import XMLSyntaxError
 from openapi_spec_validator import validate_spec_url
 from urllib.parse import quote
 
@@ -44,6 +45,7 @@ from common.xml_metadata_mapping_shortcuts import DoiKernelMetadataMappingShortc
 from handle_management.services import HandleClient
 from ontology.services import (
     get_ontology_category_terms_in_xml_format,
+    get_xml_of_ontology_category_terms_locally,
     OntologyCategoryMetadataService,
 )
 
@@ -97,7 +99,11 @@ def static_dataset_tree(request):
     in a categorised tree view.
     """
     xml_of_static_dataset_categories = get_ontology_category_terms_in_xml_format('staticDatasetCategory')
-    static_dataset_categories = OntologyCategoryMetadataService(xml_of_static_dataset_categories)
+    try:
+        static_dataset_categories = OntologyCategoryMetadataService(xml_of_static_dataset_categories)
+    except XMLSyntaxError:
+        logger.exception('Encountered a syntax error whilst parsing the XML for the Static Dataset Category ontology branch. Using local version.')
+        static_dataset_categories = OntologyCategoryMetadataService(get_xml_of_ontology_category_terms_locally('staticDatasetCategory'))
     static_dataset_category_properties_by_iri = static_dataset_categories.get_name_and_definition_of_ontology_terms_by_iri()
     static_dataset_entries = set(models.StaticDatasetEntry.objects.all())
     for key, value in static_dataset_category_properties_by_iri.items():
