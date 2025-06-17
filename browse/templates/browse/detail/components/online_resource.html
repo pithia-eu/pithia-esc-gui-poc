@@ -1,7 +1,7 @@
 {% load project_tags %}
-<div class="d-flex flex-column align-items-start row-gap-3 px-xl-4 p-3 pt-3">
+<div class="d-flex flex-column align-items-start row-gap-3 px-0 p-3">
     <div class="d-flex flex-column row-gap-2">
-        <a href="{{ online_resource.linkage }}" class="align-items-start fs-base-2 fw-semibold link-underline-by-default" target="_blank" rel="noopener noreferrer">
+        <a href="{{ online_resource.linkage }}" class="text-body align-items-start fs-base-2 fw-semibold link-underline-by-default" target="_blank" rel="noopener noreferrer">
             {{ online_resource.name }}</a>
         {% with service_functions=online_resource.service_functions %}
         {% if service_functions %}

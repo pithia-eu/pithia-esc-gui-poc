@@ -8,10 +8,46 @@
 <script src="{% static 'browse/data_collection.js' %}" defer></script>
 {% endblock extra_scripts %}
 
+{# Appears after the last modified date #}
+{% block post_last_modified_date_content %}
+{# Permissions #}
+{% if resource.properties.permissions %}
+<ul class="d-flex flex-wrap row-gap-1 column-gap-1 list-unstyled text-body-secondary pt-3 mb-0">
+    <li>
+        <span>Permissions</span>
+        <span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-sm-1 bi bi-dot" viewBox="0 0 16 16">
+                <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+            </svg>
+        </span>
+    </li>
+    {% for permission in resource.properties.permissions|wrap_in_list_if_dict %}
+    <li>
+        {% with value=permission url_text_extra_classes='fs-sm-2 text-body-secondary' %}
+        <span class="d-inline-flex align-items-center column-gap-1">
+            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+            {% if not forloop.last %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-sm-1 bi bi-dot" viewBox="0 0 16 16">
+                <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+            </svg>
+            {% endif %}
+        </span>
+        {% endwith %}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% if resource.properties.types %}
+{# Types #}
+{% with types=resource.properties.types %}
+{% include 'browse/detail/components/type_section_list.html' %}
+{% endwith %}
+{% endif %}
+{% endblock post_last_modified_date_content %}
+
 {# Appears after the description #}
 {% block post_description_content %}
 {% include 'browse/detail/sections/interaction_methods_section.html' %}
-{% include 'browse/detail/sections/permissions_section.html' %}
 {% endblock post_description_content %}
 
 {# Appears in the further information disclosure widget #}
@@ -69,23 +105,3 @@
 {% include 'browse/detail/sections/bottom/quality_assessment_bottom_section.html' %}
 {% include 'browse/detail/sections/bottom/data_levels_bottom_section.html' %}
 {% endblock further_information_extra_sections %}
-
-{# Appears in the aside section #}
-{% block aside_extra_content_before_default %}
-{% if resource.permission_urls %}
-<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <h2>Permissions</h2>
-    <ul class="list-group list-group-flush bg-body-tertiary rounded px-3 py-2 mb-0">
-        {% for permission_url in resource.permission_urls %}
-        {% with value=permission_url|get_key_value:'@xlink:href' %}
-        <li class="list-group-item bg-transparent px-0">
-            <a href="#permission_{{ value|server_url_id|lower }}" class="link-underline-by-default">
-                {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-            </a>
-        </li>
-        {% endwith %}
-        {% endfor %}
-    </ul>
-</section>
-{% endif %}
-{% endblock aside_extra_content_before_default %}

@@ -1,11 +1,20 @@
 {% extends 'browse/detail/bases/base.html' %}
 {% load project_tags %}
 
+{# Appears after the last modified date #}
+{% block post_last_modified_date_content %}
+{% if resource.properties.type %}
+{% with types=resource.properties.type %}
+{% include 'browse/detail/components/type_section_list.html' %}
+{% endwith %}
+{% endif %}
+{% endblock post_last_modified_date_content %}
+
 {# Appears before the description #}
 {% block pre_description_content %}
 {% if resource.properties.instrument_version %}
 <section class="responsive-resource-detail-section resource-detail-section">
-    <h2>Version</h2>
+    <h2 id="version">Version</h2>
     <p>{{ resource.properties.instrument_version }}</p>
 </section>
 {% endif %}
@@ -16,7 +25,7 @@
 {% include 'browse/detail/sections/website_section.html' %}
 {% if resource.properties.operational_modes %}
 <section class="resource-detail-section">
-    <h2>Operational Modes</h2>
+    <h2 id="operational-modes">Operational Modes</h2>
     <ul class="list-group list-group-flush">
         {% for operational_mode in resource.properties.operational_modes %}
         <li class="list-group-item p-0">
@@ -46,7 +55,7 @@
 {% endif %}
 {% if resource.properties.members %}
 <section class="resource-detail-section">
-    <h2>Members</h2>
+    <h2 id="members">Members</h2>
     <ul>
         {% for member_url in resource.properties.members %}
         <li>

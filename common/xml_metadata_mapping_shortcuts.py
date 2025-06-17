@@ -269,6 +269,10 @@ class DataCollectionXmlMappingShortcuts(
         collection_results_element = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:collectionResults' % self.PITHIA_NSPREFIX_XPATH))
         return self._get_online_resources(collection_results_element)
 
+    @property
+    def permissions(self):
+        return self._get_elements_with_xpath_query('.//%s:permission/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+
 
 class StaticDatasetEntryXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,

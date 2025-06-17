@@ -1,13 +1,13 @@
 {% extends 'browse/detail/bases/base.html' %}
 
-{# Type list #}
-{% block type_list_include %}
+{# Appears after the last modified date #}
+{% block post_last_modified_date_content %}
 {% if resource.properties.type %}
 {% with types=resource.properties.type %}
 {% include 'browse/detail/components/platform/platform_type_section_list.html' %}
 {% endwith %}
 {% endif %}
-{% endblock type_list_include %}
+{% endblock post_last_modified_date_content %}
 
 {# Appears before the responsible parties section #}
 {% block pre_responsible_parties_content %}
@@ -15,7 +15,7 @@
 <section class="resource-detail-section">
     <details>
         <summary class="summary-marker-custom">
-            <h2 class="fs-6">Child Platforms <span class="text-body-secondary">({{ resource.properties.child_platforms|length }})</span></h2>
+            <h2 id="child-platforms" class="fs-6">Child Platforms <span class="text-body-secondary">({{ resource.properties.child_platforms|length }})</span></h2>
         </summary>
         <ul class="list-group list-group-flush">
             {% for platform_url in resource.properties.child_platforms %}
@@ -36,14 +36,14 @@
 {% include 'browse/detail/sections/website_section.html' %}
 {% if resource.properties.location %}
 <section class="resource-detail-section">
-    <h2 class="mb-2">Location</h2>
+    <h2 id="location" class="mb-2">Location</h2>
     {% include 'browse/detail/components/platform/location_section_content.html' %}
 </section>
 {% endif %}
 {% include 'browse/detail/sections/documentations_section.html' %}
 {% if resource.properties.standard_identifiers %}
 <div class="responsive-resource-detail-section resource-detail-section">
-    <h2 class="fs-6 fw-semibold">Standard Identifiers</h2>
+    <h2 id="standard-identifiers" class="fs-6 fw-semibold">Standard Identifiers</h2>
     {% include 'browse/detail/components/platform/standard_identifier_section_content.html' %}
 </div>
 {% endif %}

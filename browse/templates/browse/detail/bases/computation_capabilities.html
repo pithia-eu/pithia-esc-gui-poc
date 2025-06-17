@@ -1,11 +1,20 @@
 {% extends 'browse/detail/bases/base.html' %}
 
+{# Appears after the last modified date #}
+{% block post_last_modified_date_content %}
+{% if resource.properties.types %}
+{% with types=resource.properties.types %}
+{% include 'browse/detail/components/type_section_list.html' %}
+{% endwith %}
+{% endif %}
+{% endblock post_last_modified_date_content %}
+
 {# Appears before the description #}
 {% block pre_description_content %}
 {% if resource.properties.computation_version %}
 <section class="responsive-resource-detail-section resource-detail-section">
     <div>
-        <h2 class="fs-6 bg-body-secondary rounded-top px-3 py-2 mb-0">Version</h2>
+        <h2 id="version" class="fs-6 bg-body-secondary rounded-top px-3 py-2 mb-0">Version</h2>
         <p class="bg-body-tertiary rounded-bottom px-3 py-2">{{ resource.properties.computation_version }}</p>
     </div>
 </section>
@@ -14,7 +23,7 @@
 <section class="resource-detail-section">
     <details>
         <summary class="summary-marker-custom">
-            <h2 class="fs-6">Child Computations <span class="text-body-secondary">({{ resource.properties.child_computations|length }})</span></h2>
+            <h2 id="child-computations" class="fs-6">Child Computations <span class="text-body-secondary">({{ resource.properties.child_computations|length }})</span></h2>
         </summary>
         <ul class="list-group list-group-flush">
             {% for child_computation_url in resource.properties.child_computations %}

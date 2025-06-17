@@ -29,31 +29,13 @@
                 {% endif %}
             </div>
             <p class="text-secondary-emphasis mb-0">
-                Last modified on {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y, H:i e' }}
+                Last modified on {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y' }}
             </p>
+            {% block post_last_modified_date_content %}{% endblock post_last_modified_date_content %}
         </div>
         {% block pre_responsible_parties_content %}{% endblock pre_responsible_parties_content %}
         {# Responsible parties section #}
         {% include 'browse/detail/sections/top/responsible_parties_top_section.html' %}
-        {# Type section #}
-        {% if resource.properties.type or resource.properties.types %}
-        <section class="resource-detail-section">
-            <h2 class="mb-1">Type</h2>
-            {% block type_list_include %}
-            {% if resource.properties.type %}
-            {# Type (only one allowed) #}
-            {% with types=resource.properties.type %}
-            {% include 'browse/detail/components/type_section_list.html' %}
-            {% endwith %}
-            {% elif resource.properties.types %}
-            {# Type (multiple allowed) #}
-            {% with types=resource.properties.types %}
-            {% include 'browse/detail/components/type_section_list.html' %}
-            {% endwith %}
-            {% endif %}
-            {% endblock type_list_include %}
-        </section>
-        {% endif %}
         {% block pre_description_content %}{% endblock pre_description_content %}
         {% block description_section %}
         {% include 'browse/detail/sections/description_section.html' %}
@@ -62,7 +44,7 @@
         <section id="further-information-section" class="resource-detail-section">
             <details>
                 <summary class="summary-marker-custom">
-                    <h2>Resources and Further Information</h2>
+                    <h2 id="resources-and-further-information">Resources and Further Information</h2>
                 </summary>
                 <div class="d-flex flex-column">
                     <section class="resource-detail-section">
@@ -143,7 +125,7 @@
         <section id="related-metadata-section" class="resource-detail-section">
             <details>
                 <summary class="summary-marker-custom">
-                    <h2 class="d-inline-block text-nowrap">
+                    <h2 id="related-metadata" class="d-inline-block text-nowrap">
                         Related Metadata
                         <span id="related-metadata-num" class="text-body-secondary">
                             <span class="placeholder placeholder-lg col-2 bg-body-secondary align-text-bottom rounded ms-1"></span>

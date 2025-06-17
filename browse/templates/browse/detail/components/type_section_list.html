@@ -1,11 +1,18 @@
 {% load project_tags %}
-<ul class="list-group list-group-flush mb-0">
+<ul class="d-flex flex-wrap row-gap-1 column-gap-1 list-unstyled pt-3 mb-0">
     {% for type in types|wrap_in_list_if_dict %}
-    <li class="list-group-item bg-transparent px-0">
-        {% with value=type %}
-        {% block ontology_placeholder_include %}
-        {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-        {% endblock ontology_placeholder_include %}
+    <li>
+        {% with value=type url_text_extra_classes='fs-sm-2 text-body' %}
+        <span class="d-inline-flex align-items-center column-gap-1">
+            {% block ontology_placeholder_include %}
+            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+            {% endblock ontology_placeholder_include %}
+            {% if not forloop.last %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-sm-1 bi bi-dot" viewBox="0 0 16 16">
+                <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+            </svg>
+            {% endif %}
+        </span>
         {% endwith %}
     </li>
     {% endfor %}
