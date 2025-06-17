@@ -2,10 +2,37 @@
 
 {# Appears after the last modified date #}
 {% block post_last_modified_date_content %}
+{# Types #}
 {% if resource.properties.type %}
 {% with types=resource.properties.type %}
 {% include 'browse/detail/components/platform/platform_type_section_list.html' %}
 {% endwith %}
+{% endif %}
+{# Standard identifiers #}
+{% if resource.properties.standard_identifiers %}
+<ul class="d-flex flex-wrap row-gap-1 column-gap-1 list-unstyled fs-sm-2 text-body-secondary pt-3 mb-0">
+    <li>
+        <h2 class="d-inline fs-sm-2 mb-0">Standard Identifiers</h2>
+        <span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-sm-1 bi bi-dot" viewBox="0 0 16 16">
+                <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+            </svg>
+        </span>
+    </li>
+    {% for standard_identifier in resource.properties.standard_identifiers %}
+    <li>
+        <span class="d-inline-flex align-items-center column-gap-1">
+            {{ standard_identifier.value }}
+            <span class="text-body-secondary">({{ standard_identifier.authority }})</span>
+            {% if not forloop.last %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-sm-1 bi bi-dot" viewBox="0 0 16 16">
+                <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+            </svg>
+            {% endif %}
+        </span>
+    </li>
+    {% endfor %}
+</ul>
 {% endif %}
 {% endblock post_last_modified_date_content %}
 
@@ -41,20 +68,4 @@
 </section>
 {% endif %}
 {% include 'browse/detail/sections/documentations_section.html' %}
-{% if resource.properties.standard_identifiers %}
-<div class="responsive-resource-detail-section resource-detail-section">
-    <h2 id="standard-identifiers" class="fs-6 fw-semibold">Standard Identifiers</h2>
-    {% include 'browse/detail/components/platform/standard_identifier_section_content.html' %}
-</div>
-{% endif %}
 {% endblock post_description_content %}
-
-{# Appears before default content in the aside section #}
-{% block aside_extra_content_after_default %}
-{% if resource.properties.standard_identifiers %}
-<div class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <h2>Standard Identifiers</h2>
-    {% include 'browse/detail/components/platform/standard_identifier_section_content.html' %}
-</div>
-{% endif %}
-{% endblock aside_extra_content_after_default %}

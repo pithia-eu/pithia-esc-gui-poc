@@ -1,23 +1,24 @@
 {% extends 'browse/detail/bases/base.html' %}
 
+{# Appears after the last modified date #}
+{% block post_last_modified_date_content %}
+{# Status #}
+{% if resource.properties.status %}
+<section class="d-flex align-items-center flex-wrap row-gap-1 column-gap-1 fs-sm-2 text-body-secondary pt-3 pb-0">
+    <h2 id="status" class="d-inline fs-sm-2 mb-0">Status:</h2>
+    {% with value=resource.properties.status url_text_extra_classes='text-secondary-emphasis' %}
+    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+    {% endwith %}
+</section>
+{% endif %}
+{% endblock post_last_modified_date_content %}
+
 {# Appears before the description #}
 {% block pre_description_content %}
-{% if resource.properties.status or resource.properties.operation_time.time_period.begin.time_position or resource.properties.operation_time.time_period.end.time_position %}
-<section class="d-flex flex-column row-gap-4 resource-detail-section">
-    {% if resource.properties.status %}
-    <div>
-        <h2 class="mb-2">Status</h2>
-        {% with value=resource.properties.status url_text_extra_classes='text-secondary-emphasis' %}
-        {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-        {% endwith %}
-    </div>
-    {% endif %}
-    {% if resource.properties.operation_time.time_period.begin.time_position or resource.properties.operation_time.time_period.end.time_position %}
-    <div>
-        <h2 class="mb-2">Operation Time</h2>
-        {% include 'browse/detail/components/operation/operation_time_section_content.html' %}
-    </div>
-    {% endif %}
+{% if resource.properties.operation_time.time_period.begin.time_position or resource.properties.operation_time.time_period.end.time_position %}
+<section class="resource-detail-section">
+    <h2 id="operation-time" class="mb-2">Operation Time</h2>
+    {% include 'browse/detail/components/operation/operation_time_section_content.html' %}
 </section>
 {% endif %}
 {% endblock pre_description_content %}
@@ -29,7 +30,7 @@
 <section class="resource-detail-section">
     <details>
         <summary class="summary-marker-custom">
-            <h2>Platforms <span class="text-body-secondary">({{ resource.properties.platforms|length }})</span></h2>
+            <h2 id="platforms">Platforms <span class="text-body-secondary">({{ resource.properties.platforms|length }})</span></h2>
         </summary>
         <ul class="list-group list-group-flush">
             {% for platform_url in resource.properties.platforms %}

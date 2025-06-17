@@ -2,6 +2,14 @@
 
 {# Appears after the last modified date #}
 {% block post_last_modified_date_content %}
+{# Version #}
+{% if resource.properties.computation_version %}
+<div class="d-flex align-items-center flex-wrap row-gap-1 column-gap-1 fs-sm-2 text-body-secondary pt-3">
+    <h2 id="version" class="d-inline fs-sm-2 text-body-secondary mb-0">Version:</h2>
+    <p class="mb-0">{{ resource.properties.computation_version }}</p>
+</div>
+{% endif %}
+{# Types #}
 {% if resource.properties.types %}
 {% with types=resource.properties.types %}
 {% include 'browse/detail/components/type_section_list.html' %}
@@ -11,14 +19,6 @@
 
 {# Appears before the description #}
 {% block pre_description_content %}
-{% if resource.properties.computation_version %}
-<section class="responsive-resource-detail-section resource-detail-section">
-    <div>
-        <h2 id="version" class="fs-6 bg-body-secondary rounded-top px-3 py-2 mb-0">Version</h2>
-        <p class="bg-body-tertiary rounded-bottom px-3 py-2">{{ resource.properties.computation_version }}</p>
-    </div>
-</section>
-{% endif %}
 {% if resource.properties.child_computations %}
 <section class="resource-detail-section">
     <details>
@@ -59,14 +59,6 @@
 
 {# Appears in the aside section #}
 {% block aside_extra_content_before_default %}
-{% if resource.properties.computation_version %}
-<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <div>
-        <h2 class="fs-6 bg-body-secondary rounded-top px-3 py-2 mb-0">Version</h2>
-        <p class="bg-body-tertiary rounded-bottom px-3 py-2">{{ resource.properties.computation_version }}</p>
-    </div>
-</section>
-{% endif %}
 {% include 'browse/detail/sections/asides/responsive/data_levels_aside_section.html' %}
 {% include 'browse/detail/sections/asides/responsive/quality_assessment_aside_section.html' %}
 {% endblock aside_extra_content_before_default %}

@@ -1,12 +1,25 @@
 {% extends 'browse/detail/bases/base.html' %}
 
+{# Appears after the last modified date #}
+{% block post_last_modified_date_content %}
+{# Status #}
+{% if resource.properties.status %}
+<section class="d-flex align-items-center flex-wrap row-gap-1 column-gap-1 fs-sm-2 text-body-secondary pt-3 pb-0">
+    <h2 id="status" class="d-inline fs-sm-2 mb-0">Status:</h2>
+    {% with value=resource.properties.status url_text_extra_classes='text-secondary-emphasis' %}
+    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+    {% endwith %}
+</section>
+{% endif %}
+{% endblock post_last_modified_date_content %}
+
 {# Appears before the responsible parties section #}
 {% block pre_responsible_parties_content %}
 {% if resource.properties.sub_projects %}
 <section class="resource-detail-section">
     <details>
         <summary class="summary-marker-custom">
-            <h2 class="fs-6">
+            <h2 id="sub-projects" class="fs-6">
                 Sub-projects
                 <span class="text-body-secondary">({{ resource.properties.sub_projects|length }})</span>
             </h2>
@@ -27,17 +40,9 @@
 
 {# Appears after the last modified date, before the description #}
 {% block pre_description_content %}
-{% if resource.properties.status %}
-<section class="resource-detail-section">
-    <h2 class="mb-2">Status</h2>
-    {% with value=resource.properties.status url_text_extra_classes='text-secondary-emphasis' %}
-    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-    {% endwith %}
-</section>
-{% endif %}
 {% if resource.abstract.strip|length > 0 %}
 <section class="resource-detail-section">
-    <h2 class="mb-2">Abstract</h2>
+    <h2 id="abstract" class="mb-2">Abstract</h2>
     {% with text_block_id='resource-abstract' text_block_paragraphs=project_abstract_split larger_paragraph_spacing=True line_clamp_number='10' %}
     {% include 'utils/expandable_text_block.html' %}
     {% endwith %}
