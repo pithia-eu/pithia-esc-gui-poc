@@ -43,9 +43,15 @@
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">The planet Earth</skos:definition>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Surface"/>
-                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Atmosphere"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_LowerAtmosphere"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Thermosphere"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Plasmasphere"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Magnetosphere"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_EquatorialAndLowLatitude"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_SouthAtlanticAnomaly"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_MiddleLatitude"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_HighLatitude"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
@@ -58,25 +64,15 @@
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Atmosphere">
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_LowerAtmosphere">
                 <skos:prefLabel xml:lang="en">Atmosphere</skos:prefLabel>
                 <dc:date>2022-06-29 14:14:00.0</dc:date>
                 <owlxml:versionInfo>0.2</owlxml:versionInfo>
                 <skos:definition xml:lang="en"></skos:definition>
                 <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth"/>
-                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Atmosphere_Thermosphere"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Atmosphere_Mesosphere"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Atmosphere_Stratosphere"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Atmosphere_Troposphere"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Atmosphere_Thermosphere">
-                <skos:prefLabel xml:lang="en">Thermosphere</skos:prefLabel>
-                <dc:date>2022-06-29 14:14:00.0</dc:date>
-                <owlxml:versionInfo>0.2</owlxml:versionInfo>
-                <skos:definition xml:lang="en"></skos:definition>
-                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Atmosphere"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
@@ -104,6 +100,15 @@
                 <owlxml:versionInfo>0.2</owlxml:versionInfo>
                 <skos:definition xml:lang="en"></skos:definition>
                 <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Atmosphere"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Thermosphere">
+                <skos:prefLabel xml:lang="en">Thermosphere</skos:prefLabel>
+                <dc:date>2022-06-29 14:14:00.0</dc:date>
+                <owlxml:versionInfo>0.2</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
@@ -154,7 +159,7 @@
                 <skos:prefLabel xml:lang="en">Es-Layer</skos:prefLabel>
                 <dc:date>2022-06-29 14:14:00.0</dc:date>
                 <owlxml:versionInfo>0.2</owlxml:versionInfo>
-                <skos:definition xml:lang="en"></skos:definition>
+                <skos:definition xml:lang="en">Sporadic E layer</skos:definition>
                 <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_E-Region"/>
             </skos:Concept>
         </skos:member>
@@ -163,7 +168,7 @@
                 <skos:prefLabel xml:lang="en">Ea-Layer</skos:prefLabel>
                 <dc:date>2022-06-29 14:14:00.0</dc:date>
                 <owlxml:versionInfo>0.2</owlxml:versionInfo>
-                <skos:definition xml:lang="en"></skos:definition>
+                <skos:definition xml:lang="en">Sub-category of the particle sporadic E layer at auroral latitudes</skos:definition>
                 <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_E-Region"/>
             </skos:Concept>
         </skos:member>
@@ -236,6 +241,15 @@
             </skos:Concept>
         </skos:member>
         <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Plasmasphere">
+                <skos:prefLabel xml:lang="en">Plasmasphere</skos:prefLabel>
+                <dc:date>2022-06-29 14:14:00.0</dc:date>
+                <owlxml:versionInfo>0.2</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Magnetosphere">
                 <skos:prefLabel xml:lang="en">Magnetosphere</skos:prefLabel>
                 <dc:date>2022-06-29 14:14:00.0</dc:date>
@@ -268,18 +282,8 @@
                 <owlxml:versionInfo>0.2</owlxml:versionInfo>
                 <skos:definition xml:lang="en"></skos:definition>
                 <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Magnetosphere"/>
-                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Magnetosphere_Plasmasphere"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Magnetosphere_Radiation-Belt"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Magnetosphere_Ring-Current"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Magnetosphere_Plasmasphere">
-                <skos:prefLabel xml:lang="en">Plasmasphere</skos:prefLabel>
-                <dc:date>2022-06-29 14:14:00.0</dc:date>
-                <owlxml:versionInfo>0.2</owlxml:versionInfo>
-                <skos:definition xml:lang="en"></skos:definition>
-                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Magnetosphere_Inner"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
@@ -373,6 +377,73 @@
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Heliosphere_Outer"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Heliosphere_Near-Earth"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Heliosphere_Remote-1AU"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Heliosphere_Beyond-1AU"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_EquatorialAndLowLatitude">
+                <skos:prefLabel xml:lang="en">Equatorial and Low Latitude</skos:prefLabel>
+                <dc:date>2025-05-02 15:11:00.0</dc:date>
+                <owlxml:versionInfo>0.2</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_SouthAtlanticAnomaly">
+                <skos:prefLabel xml:lang="en">South-Atlantic Anomaly</skos:prefLabel>
+                <dc:date>2025-05-02 15:11:00.0</dc:date>
+                <owlxml:versionInfo>0.2</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_MidLatitude">
+                <skos:prefLabel xml:lang="en">Middle Latitude</skos:prefLabel>
+                <dc:date>2025-05-02 15:11:00.0</dc:date>
+                <owlxml:versionInfo>0.2</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_HighLatitude">
+                <skos:prefLabel xml:lang="en">High Latitude</skos:prefLabel>
+                <dc:date>2025-05-02 15:11:00.0</dc:date>
+                <owlxml:versionInfo>0.2</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_HighLatitude_Subauroral"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_HighLatitude_Auroral"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_HighLatitude_PolarCap"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_HighLatitude_Subauroral">
+                <skos:prefLabel xml:lang="en">Subauroral</skos:prefLabel>
+                <dc:date>2025-05-02 15:11:00.0</dc:date>
+                <owlxml:versionInfo>0.2</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_HighLatitude"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_HighLatitude_Auroral">
+                <skos:prefLabel xml:lang="en">Auroral</skos:prefLabel>
+                <dc:date>2025-05-02 15:11:00.0</dc:date>
+                <owlxml:versionInfo>0.2</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_HighLatitude"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_HighLatitude_PolarCap">
+                <skos:prefLabel xml:lang="en">Polar Cap</skos:prefLabel>
+                <dc:date>2025-05-02 15:11:00.0</dc:date>
+                <owlxml:versionInfo>0.2</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_HighLatitude"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
@@ -422,8 +493,17 @@
             </skos:Concept>
         </skos:member>
         <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Heliosphere_Beyond-1AU">
+                <skos:prefLabel xml:lang="en">Beyond 1AU Heliosphere</skos:prefLabel>
+                <dc:date>2025-05-20 01:04:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Heliosphere"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Interplanetary-Medium">
-                <skos:prefLabel xml:lang="en">Interplanetary Medium</skos:prefLabel>
+                <skos:prefLabel xml:lang="en">DEPRECATED: Interplanetary Medium</skos:prefLabel>
                 <dc:date>2012-10-02 12:00:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en"></skos:definition>

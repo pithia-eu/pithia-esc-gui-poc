@@ -410,9 +410,19 @@ multiple frequencies of the GNSS signal.
                 <owlxml:versionInfo>0.2</owlxml:versionInfo>
                 <skos:definition xml:lang="en">An in situ instrument that measures the ambient magnetic field.</skos:definition>
                 <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituSensor"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/VectorMagnetometer"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/ScalarMagnetometer"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/VectorMagnetometer">
+                <skos:prefLabel xml:lang="en">Vector Magnetometer</skos:prefLabel>
+                <dc:date>2025-04-15 07:50:00.0</dc:date>
+                <owlxml:versionInfo>0.2</owlxml:versionInfo>
+                <skos:definition xml:lang="en">An in situ instrument that measures the 3-component vector ambient magnetic field.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituMagnetometer"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/FluxgateVectorMagnetometer"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/SearchCoilVectorMagnetometer"/>
-                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/AbsoluteScalarMagnetometer"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
@@ -443,7 +453,7 @@ magnetometers for space science applications often employ mean geomagnetic
 field compensation circuits and return only the superimposed magnetic field 
 variations. 
                 </skos:definition>
-                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituMagnetometer"/>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/VectorMagnetometer"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
@@ -467,12 +477,12 @@ But three-axis search coil magnetometers were also constructed and
 successfully employed for full vector measurements of geomagnetic field 
 variations. 
                 </skos:definition>
-                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituMagnetometer"/>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/VectorMagnetometer"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/AbsoluteScalar">
-                <skos:prefLabel xml:lang="en">Absolute Scalar Magnetometer</skos:prefLabel>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/ScalarMagnetometer">
+                <skos:prefLabel xml:lang="en">Scalar Magnetometer</skos:prefLabel>
                 <dc:date>2024-10-31 07:00:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">

@@ -9,8 +9,8 @@
         <skos:prefLabel xml:lang="en">PITHIA Annotation Type</skos:prefLabel>
         <dc:description>
 This vocabulary describes explanatory/descriptive/classifying information that 
-annotates (highlights) significant periods and locations from the associated PITHIA 
-resource, most commonly a Data Collection. Unlike Data Collection, Annotation 
+annotates (highlights) significant periods and locations interest in the associated 
+PITHIA resource, most commonly a Data Collection. Unlike Data Collection, Annotation 
 admits the temporal/spatial extents, i.e., it includes specific time and location 
 attributes. Annotations are compiled in a list (in a tabular form), with each 
 line having a timestamp and then some other properties (category classifiers, 
@@ -21,12 +21,12 @@ ratings, evaluations, free-text comments.)
         <dc:publisher>PITHIA</dc:publisher>
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/annotationType/Event">
-                <skos:prefLabel xml:lang="en">Event List</skos:prefLabel>
+                <skos:prefLabel xml:lang="en">Event Catalogue</skos:prefLabel>
                 <skos:definition xml:lang="en">
-A list of events: significant occurrences of defined categories in the physical world,
+A catalogue of events: significant occurrences of defined categories in the physical world,
 such as solar flares, coronal mass ejections, geomagnetic storms, volcano eruptions,
-etc. The data provider manages the list: most importantly, new events are appended 
-to the list as they occur.
+etc. The data provider manages the list: most importantly, appends new events to the 
+list as they occur.
                 </skos:definition>
                 <dc:date>2024-11-04 21:22:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
@@ -45,12 +45,11 @@ adversely affected, resulting in missing or corrupted measurement/model data.
         </skos:member>
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/annotationType/Feature">
-                <skos:prefLabel xml:lang="en">Feature List</skos:prefLabel>
+                <skos:prefLabel xml:lang="en">Feature Catalogue</skos:prefLabel>
                 <skos:definition xml:lang="en">
-A list of prominent, persistent, distinctive data subsets from the underlying 
+A catalogue of prominent, persistent, distinctive data subsets from the underlying 
 Data Collection in a specific category of their characteristics that make each
 feature stand out from otherwise unremarkable typical behavior.
-
                 </skos:definition>
                 <dc:date>2024-11-04 21:22:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>

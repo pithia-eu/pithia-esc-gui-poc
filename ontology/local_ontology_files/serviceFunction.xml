@@ -98,7 +98,19 @@ interface. Note: this function is sometimes referred to simply as API; however,
 API is a wider concept covering other, non-standard and standard ways of accessing 
 data resources. Using Swagger UI to build the actual user interface based on the 
 OpenAPI definition is a common solution.
-
+                </skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Educational">
+                <skos:prefLabel xml:lang="en">Online resource holding textual/visual materials for training purpose</skos:prefLabel>
+                <dc:date>2025-04-09 10:07:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">
+An online resource with textual or visual material produced for educational purpose.
+Common examples of such service function would be training webinar recordings
+or downloadable powerpoint presentations from capacity-building workshops or 
+training schools.
                 </skos:definition>
             </skos:Concept>
         </skos:member>
