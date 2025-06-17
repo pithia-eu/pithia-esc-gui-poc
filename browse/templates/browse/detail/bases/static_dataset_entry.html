@@ -19,7 +19,7 @@
         </summary>
         <ol class="list-group list-group-flush my-2">
             {% for data_subset in resource.data_subsets %}
-            <li class="list-group-item ps-0">
+            <li class="list-group-item px-0">
                 {% with value=data_subset.metadata_server_url %}
                 {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
                 {% endwith %}
