@@ -1,23 +1,17 @@
 {% extends 'browse/detail/bases/base_static_dataset_related.html' %}
 {% load project_tags %}
 
-{# Appears before the description #}
-{% block pre_description_content %}
-{% if resource.properties.static_dataset_entry_urls %}
-<section class="responsive-resource-detail-section resource-detail-section">
-    <h2>Static Dataset Entries</h2>
-    <ul class="list-group list-group-flush bg-body-tertiary rounded px-3 py-2">
-        {% for url in resource.properties.static_dataset_entry_urls %}
-        <li class="list-group-item bg-transparent px-0">
-            {% with value=url %}
-            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-            {% endwith %}
-        </li>
-        {% endfor %}
-    </ul>
-</section>
+{# Appears after the last modified date #}
+{% block post_last_modified_date_content %}
+{% if resource.properties.doi_kernel_metadata.referent_doi_name %}
+<div class="d-flex align-items-center flex-wrap row-gap-1 column-gap-1 fs-sm-2 text-body-secondary pt-3">
+    <h2 class="d-inline fs-sm-2 mb-0">DOI:</h2>
+    <p class="mb-0">
+        {{ resource.properties.doi_kernel_metadata.referent_doi_name|urlize }}
+    </p>
+</div>
 {% endif %}
-{% endblock pre_description_content %}
+{% endblock post_last_modified_date_content %}
 
 {# Appears after the description #}
 {% block post_description_content %}
@@ -26,7 +20,7 @@
 {% endwith %}
 {% include 'browse/detail/sections/features_of_interest_section.html' %}
 <div class="resource-detail-section">
-    <h2>
+    <h2 id="result-time">
         {% if resource.properties.result_times|length == 1 %}
         Result Time
         {% else %}
@@ -66,64 +60,56 @@
         </div>
     </div>
 </div>
+{% if resource.properties.static_dataset_entry_urls %}
+<section class="resource-detail-section">
+    <details>
+        <summary class="summary-marker-custom">
+            <h2>
+                Static Dataset Entries
+                <span class="text-body-secondary">({{ resource.properties.static_dataset_entry_urls|length }})</span>
+            </h2>
+        </summary>
+        <ul class="list-group list-group-flush my-2">
+            {% for url in resource.properties.static_dataset_entry_urls %}
+            <li class="list-group-item px-0">
+                {% with value=url %}
+                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                {% endwith %}
+            </li>
+            {% endfor %}
+        </ul>
+    </details>
+</section>
+{% endif %}
+{% if resource.properties.data_collection_urls %}
+<section class="resource-detail-section">
+    <details>
+        <summary class="summary-marker-custom">
+            <h2>
+                Data Collections
+                <span class="text-body-secondary">({{ resource.properties.data_collection_urls|length }})</span>
+            </h2>
+        </summary>
+        <ul class="list-group list-group-flush my-2">
+            {% for url in resource.properties.data_collection_urls %}
+            <li class="list-group-item px-0">
+                {% with value=url %}
+                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                {% endwith %}
+            </li>
+            {% endfor %}
+        </ul>
+    </details>
+</section>
+{% endif %}
 {% endblock post_description_content %}
 
 {# Appears in the further information disclosure widget #}
 {% block further_information_extra_sections %}
 {% include 'browse/detail/sections/bottom/quality_assessment_bottom_section.html' %}
 {% include 'browse/detail/sections/bottom/data_levels_bottom_section.html' %}
-{% if resource.properties.doi_kernel_metadata.referent_doi_name %}
-<section class="resource-detail-section">
-    <h3>DOI</h3>
-    <p>
-        {{ resource.properties.doi_kernel_metadata.referent_doi_name|urlize }}
-    </p>
-</section>
-{% endif %}
-{% if resource.properties.data_collection_urls %}
-<section class="responsive-resource-detail-section resource-detail-section">
-    <h2>Data Collections</h2>
-    <ul class="list-group list-group-flush bg-body-tertiary rounded px-3 py-2">
-        {% for url in resource.properties.data_collection_urls %}
-        <li class="list-group-item bg-transparent px-0">
-            {% with value=url %}
-            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-            {% endwith %}
-        </li>
-        {% endfor %}
-    </ul>
-</section>
-{% endif %}
 {% endblock further_information_extra_sections %}
 
 {# Appears in aside section #}
 {% block aside_extra_content_after_default %}
-{% if resource.properties.static_dataset_entry_urls %}
-<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <h2>Static Dataset Entries</h2>
-    <ul class="list-group list-group-flush bg-body-tertiary rounded px-3 py-2">
-        {% for url in resource.properties.static_dataset_entry_urls %}
-        <li class="list-group-item bg-transparent px-0">
-            {% with value=url %}
-            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-            {% endwith %}
-        </li>
-        {% endfor %}
-    </ul>
-</section>
-{% endif %}
-{% if resource.properties.data_collection_urls %}
-<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <h2>Data Collections</h2>
-    <ul class="list-group list-group-flush bg-body-tertiary rounded px-3 py-2">
-        {% for url in resource.properties.data_collection_urls %}
-        <li class="list-group-item bg-transparent px-0">
-            {% with value=url %}
-            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-            {% endwith %}
-        </li>
-        {% endfor %}
-    </ul>
-</section>
-{% endif %}
 {% endblock aside_extra_content_after_default %}
