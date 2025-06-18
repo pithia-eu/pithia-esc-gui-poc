@@ -3,14 +3,18 @@
 
 {# Appears after the last modified date #}
 {% block post_last_modified_date_content %}
-{% if resource.properties.doi_kernel_metadata.referent_doi_name %}
+{% with doi_name=resource.properties.doi_kernel_metadata.referent_doi_name %}
+{% if doi_name %}
 <div class="d-flex align-items-center flex-wrap row-gap-1 column-gap-1 fs-sm-2 text-body-secondary pt-3">
     <h2 class="d-inline fs-sm-2 mb-0">DOI:</h2>
     <p class="mb-0">
-        {{ resource.properties.doi_kernel_metadata.referent_doi_name|urlize }}
+        {% with doi_url='https://doi.org/'|add:doi_name %}
+        <a href="{{ doi_url }}" class="text-body-secondary">{{ doi_url }}</a>
+        {% endwith %}
     </p>
 </div>
 {% endif %}
+{% endwith %}
 {% endblock post_last_modified_date_content %}
 
 {# Appears after the description #}
