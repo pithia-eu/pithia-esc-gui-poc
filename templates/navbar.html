@@ -103,40 +103,57 @@
                         </ul>
                     </div>
                 </li>
-                {% if request.session.institution_for_login_session %}
                 <li class="nav-item">
                     <div class="dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        {% if request.session.institution_for_login_session %}
+                        <a
+                            href="#"
+                            class="nav-link dropdown-toggle"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
                             Manage Registrations</a>
-                            <ul class="dropdown-menu" data-bs-popper="static">
-                                {% comment %} <li>
-                                    <a href="#" class="dropdown-item">
-                                        Data Collection Help
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="dropdown-item">
-                                        Workflow Help
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="dropdown-item">
-                                        Static Dataset Help
-                                    </a>
-                                </li> {% endcomment %}
-                                <li>
-                                    <a href="{% url 'resource_registration_user_guide' %}" class="dropdown-item external-link">
-                                        Data Resource Registration Guide</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'resource_management:index' %}" class="dropdown-item">
-                                        Manage Registrations
-                                    </a>
-                                </li>
-                            </ul>
+                        <ul class="dropdown-menu" data-bs-popper="static">
+                            {% comment %} <li>
+                                <a href="#" class="dropdown-item">
+                                    Data Collection Help
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="dropdown-item">
+                                    Workflow Help
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="dropdown-item">
+                                    Static Dataset Help
+                                </a>
+                            </li> {% endcomment %}
+                            <li>
+                                <a href="{% url 'resource_registration_user_guide' %}" class="dropdown-item external-link">
+                                    Data Resource Registration Guide</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'resource_management:index' %}" class="dropdown-item">
+                                    Manage Registrations
+                                </a>
+                            </li>
+                        </ul>
+                        {% else %}
+                        <a
+                            href="#"
+                            class="nav-link dropdown-toggle"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Registration Help</a>
+                        <ul class="dropdown-menu" data-bs-popper="static">
+                            <li>
+                                <a href="{% url 'resource_registration_user_guide' %}" class="dropdown-item external-link">
+                                    Data Resource Registration Guide</a>
+                            </li>
+                        </ul>
+                        {% endif %}
                     </div>
                 </li>
-                {% endif %}
                 <li class="nav-item">
                     <a href="https://pithia-nrf.eu" class="nav-link link-plain-by-default">
                         About<span class="d-xxl-inline d-xl-none d-inline"> PITHIA-NRF</span>
