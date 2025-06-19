@@ -1,0 +1,14 @@
+{% load project_tags %}
+<div class="fs-sm-1 text-body-secondary bg-body-tertiary rounded p-3">
+    <h2 class="fs-sm-1 text-secondary-emphasis">{{ resource_type_plural.title }}</h2>
+    {% if description %}
+    <div class="mb-3">
+        {% with description_urlized=description|urlize %}
+        {% with text_block_paragraphs=description_urlized|wrap_in_list_if_dict text_block_id=text_block_id|default:'type-description' expand_btn_type='sm btn-link' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
+        {% include 'utils/expandable_text_block.html' %}
+        {% endwith %}
+        {% endwith %}
+    </div>
+    {% endif %}
+    <p class="fw-semibold mb-0">{{ resources|length }} registered</p>
+</div>

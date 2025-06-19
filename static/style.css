@@ -465,6 +465,10 @@ h3.opblock-tag p {
     margin-bottom: 0.5rem;
 }
 
+.page-info-aside {
+    border-inline-start: none;
+}
+
 .page-info-lg {
     font-size: var(--fs-base-2);
 }
@@ -1359,10 +1363,6 @@ section .keyword-list li:last-child:after {
 
 
 /* || Resource management list pages */
-.registration-process-info {
-    border-inline-start: none;
-}
-
 .resource-management-table td:first-child {
     width: 40%;
 }
@@ -2141,7 +2141,7 @@ ul.tree ul {
         padding-top: var(--resource-detail-section-padding);
     }
 
-    .registration-process-info {
+    .page-info-aside {
         border-inline-start: var(--bs-border-color) var(--bs-border-style) var(--bs-border-width);
     }
 

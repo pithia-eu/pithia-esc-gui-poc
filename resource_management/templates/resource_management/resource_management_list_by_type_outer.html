@@ -8,60 +8,65 @@
 {% endblock breadcrumbs %}
 {% block scripts %}
 <script src="{% static 'resource_management/resource_management.js' %}" defer></script>
+<script src="{% static 'utils/expandable_text_block.js' %}" type="module"></script>
 {% endblock scripts %}
 {% block content %}
-<hgroup class="d-flex flex-column-reverse row-gap-1 mb-4">
-    <h1>{{ title }}</h1>
-    <p class="fs-base-2 line-clamp line-clamp-2 text-body-secondary mb-0">
-        {% if request.session.institution_for_login_session %}
-        {{ request.session.institution_for_login_session }}
-        {% else %}
-        Unknown Institution
-        {% endif %}
-    </p>
-</hgroup>
-<div class="row flex-column mt-4">
-    {% if description %}
-    <div class="col-xl-7 col-lg-8 mb-2">
-        <p class="page-info">
-            {{ description }}
-            {% block extra_description_content %}{% endblock extra_description_content %}
-        </p>
-    </div>
-    {% endif %}
-    <div class="col-lg-12 mt-4 mb-4">
-        <div class="d-flex flex-md-row flex-column column-gap-3 row-gap-3">
-            <a href="{% url resource_register_page_url_name %}" class="btn btn-outline-dark btn-outline-dark-togglable">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-up me-2" viewBox="0 0 16 16">
-                    <path d="M8.5 11.5a.5.5 0 0 1-1 0V7.707L6.354 8.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 7.707z"/>
-                    <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
-                </svg>Register via File Upload
-            </a>
-            {% if resource_register_with_editor_name %}
-            <a href="{% url resource_register_with_editor_name %}" class="btn btn-primary fw-bold">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-2" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-                </svg>Register with Wizard
-            </a>
-            {% else %}
-            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" title="This feature is not yet available for this metadata type">
-                <a href="" class="btn btn-primary fw-bold w-100 disabled" tabindex="-1" aria-disabled="true">
+<div class="row align-items-start gx-lg-5 gx-0 gy-4">
+    <div class="col-lg-9">
+        <hgroup class="d-flex flex-column-reverse row-gap-1 mb-4">
+            <h1>{{ title }}</h1>
+            <p class="fs-base-2 line-clamp line-clamp-2 text-body-secondary mb-0">
+                {% if request.session.institution_for_login_session %}
+                {{ request.session.institution_for_login_session }}
+                {% else %}
+                Unknown Institution
+                {% endif %}
+            </p>
+        </hgroup>
+        <div class="d-flex flex-column row-gap-4">
+            <div class="d-lg-none d-block">
+                {% include 'resource_management/resource_management_info_section.html' %}
+            </div>
+            <div class="d-flex flex-md-row flex-wrap column-gap-3 row-gap-3">
+                <a href="{% url resource_register_page_url_name %}" class="btn btn-outline-dark btn-outline-dark-togglable flex-lg-grow-0 flex-grow-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-up me-2" viewBox="0 0 16 16">
+                        <path d="M8.5 11.5a.5.5 0 0 1-1 0V7.707L6.354 8.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 7.707z"/>
+                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
+                    </svg>Register via File Upload
+                </a>
+                {% if resource_register_with_editor_name %}
+                <a href="{% url resource_register_with_editor_name %}" class="btn btn-primary fw-bold flex-lg-grow-0 flex-grow-1">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-2" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
                     </svg>Register with Wizard
                 </a>
-            </span>
-            {% endif %}
+                {% else %}
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" title="This feature is not yet available for this metadata type">
+                    <a href="" class="btn btn-primary fw-bold w-100 disabled" tabindex="-1" aria-disabled="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-2" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                        </svg>Register with Wizard
+                    </a>
+                </span>
+                {% endif %}
+            </div>
+            <div>
+                {% if not resources %}
+                <p>{{ empty_resource_list_text }}</p>
+                {% else %}
+                {% block resource_list_inner %}
+                {% with resource_list=resources %}
+                {% include 'resource_management/resource_management_list_by_type_inner.html' %}
+                {% endwith %}
+                {% endblock resource_list_inner %}
+                {% endif %}
+            </div>
         </div>
     </div>
+    <div class="d-lg-block d-none page-info-aside col-lg-3">
+        {% with text_block_id='type-description-aside' %}
+        {% include 'resource_management/resource_management_info_section.html' %}
+        {% endwith %}
+    </div>
 </div>
-{% if not resources %}
-<p>{{ empty_resource_list_text }}</p>
-{% else %}
-{% block resource_list_inner %}
-{% with resource_list=resources %}
-{% include 'resource_management/resource_management_list_by_type_inner.html' %}
-{% endwith %}
-{% endblock resource_list_inner %}
-{% endif %}
 {% endblock content %}

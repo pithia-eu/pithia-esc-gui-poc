@@ -2,20 +2,26 @@
 {% load project_tags %}
 {% load static %}
 {% block resource_list_inner %}
-<h2 class="mt-5">Platform Networks</h2>
-{% with resource_list=pithia_platforms %}
-{% if not resource_list %}
-<p>{{ no_platform_networks_message }}</p>
-{% else %}
-{% include 'resource_management/resource_management_list_by_type_inner.html' %}
-{% endif %}
-{% endwith %}
-<h2 class="mt-5">Individual Platforms</h2>
-{% with resource_list=non_pithia_platforms %}
-{% if not resource_list %}
-<p>{{ no_platforms_message }}</p>
-{% else %}
-{% include 'resource_management/resource_management_list_by_type_inner.html' %}
-{% endif %}
-{% endwith %}
+<div class="d-flex flex-column row-gap-4 mt-4">
+    <div>
+        <h2 class="fs-5">Platform Networks</h2>
+        {% with resource_list=pithia_platforms %}
+        {% if not resource_list %}
+        <p>{{ no_platform_networks_message }}</p>
+        {% else %}
+        {% include 'resource_management/resource_management_list_by_type_inner.html' %}
+        {% endif %}
+        {% endwith %}
+    </div>
+    <div>
+        <h2 class="fs-5">Individual Platforms</h2>
+        {% with resource_list=non_pithia_platforms %}
+        {% if not resource_list %}
+        <p>{{ no_platforms_message }}</p>
+        {% else %}
+        {% include 'resource_management/resource_management_list_by_type_inner.html' %}
+        {% endif %}
+        {% endwith %}
+    </div>
+</div>
 {% endblock resource_list_inner %}
