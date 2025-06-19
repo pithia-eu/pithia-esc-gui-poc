@@ -9,9 +9,18 @@
 {% endblock scripts %}
 {% block content %}
 <div class="col-xl-7 col-lg-9 d-flex flex-column row-gap-2">
-    <h1 class="fs-2">
-        {{ title }}
-    </h1>
+    <hgroup class="d-flex flex-column row-gap-1 mb-3">
+        <h1>
+            {{ title }}
+        </h1>
+        <p class="fs-base-2 line-clamp line-clamp-2 text-body-secondary mb-0">
+            {% if request.session.institution_for_login_session %}
+            {{ request.session.institution_for_login_session }}
+            {% else %}
+            Unknown Institution
+            {% endif %}
+        </p>
+    </hgroup>
     <section>
         <h2 class="fs-4">Admins</h2>
         {% if not admins %}

@@ -1358,7 +1358,11 @@ section .keyword-list li:last-child:after {
 }
 
 
-/* || Resource management list page */
+/* || Resource management list pages */
+.registration-process-info {
+    border-inline-start: none;
+}
+
 .resource-management-table td:first-child {
     width: 40%;
 }
@@ -2052,6 +2056,7 @@ ul.tree ul {
 
 
 /* || Media queries */
+/* xl-width screens */
 @media (min-width: 1200px) {
     .table-dynamic thead {
         display: table-header-group;
@@ -2104,6 +2109,7 @@ ul.tree ul {
     }
 }
 
+/* lg-width screens */
 @media (min-width: 992px) {
     .user-dropdown {
         text-align: end;
@@ -2135,6 +2141,10 @@ ul.tree ul {
         padding-top: var(--resource-detail-section-padding);
     }
 
+    .registration-process-info {
+        border-inline-start: var(--bs-border-color) var(--bs-border-style) var(--bs-border-width);
+    }
+
     /* Help page */
     .help-aside-section {
         display: block;
@@ -2162,6 +2172,7 @@ ul.tree ul {
     }
 }
 
+/* md-width screens */
 @media (min-width: 768px) {
     input[name="api_specification_url"]:not(#workflow-openapi-spec-url-update-form input[name="api_specification_url"]) {
         max-width: 45ch;
@@ -2213,6 +2224,7 @@ ul.tree ul {
     }
 }
 
+/* sm-width screens */
 @media (min-width: 576px) {
     .action-buttons {
         grid-template-columns: 1fr 1fr;

@@ -6,74 +6,86 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<div class="col-xl-7 col-lg-9">
-    <hgroup class="d-flex flex-column-reverse row-gap-1 mb-4">
-        <h1>{{ title }}</h1>
-        <p class="fs-base-2 line-clamp line-clamp-2 text-body-secondary mb-0">
-            {% if request.session.institution_for_login_session %}
-            {{ request.session.institution_for_login_session }}
-            {% else %}
-            Unknown Institution
-            {% endif %}
-        </p>
-    </hgroup>
-    <p class="d-block page-info page-info-emphasised my-4">
-        Registering a data collection involves registering <strong>
-        up to 12 types of metadata</strong>, registered in the order
-        presented below.
-        Information on what to include for each type can be
-        found in the
-        <a href="{% url 'resource_registration_user_guide' %}#page=8" target="_blank" class="link-underline-by-default">data resource registration guide</a>.
-    </p>
-    <ol class="list-group list-group-numbered">
-        <li class="list-group-item">
-            <a href="{% url 'resource_management:organisations' %}">Organisations</a>
-            <span class="text-body-secondary">{{ num_current_organisations }}</span>
-        </li>
-        <li class="list-group-item">
-            <a href="{% url 'resource_management:individuals' %}">Individuals</a>
-            <span class="text-body-secondary">{{ num_current_individuals }}</span>
-        </li>
-        <li class="list-group-item">
-            <a href="{% url 'resource_management:projects' %}">Projects</a>
-            <span class="text-body-secondary">{{ num_current_projects }}</span>
-        </li>
-        <li class="list-group-item">
-            <a href="{% url 'resource_management:platforms' %}">Platforms</a>
-            <span class="text-body-secondary">{{ num_current_platforms }}</span>
-        </li>
-        <li class="list-group-item">
-            <a href="{% url 'resource_management:operations' %}">Operations</a>
-            <span class="text-body-secondary">{{ num_current_operations }}</span>
-        </li>
-        <li class="list-group-item">
-            <a href="{% url 'resource_management:instruments' %}">Instruments</a>
-            <span class="text-body-secondary">{{ num_current_instruments }}</span>
-        </li>
-        <li class="list-group-item">
-            <a href="{% url 'resource_management:acquisition_capability_sets' %}">Acquisition Capabilities</a>
-            <span class="text-body-secondary">{{ num_current_acquisition_capability_sets }}</span>
-        </li>
-        <li class="list-group-item">
-            <a href="{% url 'resource_management:acquisitions' %}">Acquisitions</a>
-            <span class="text-body-secondary">{{ num_current_acquisitions }}</span>
-        </li>
-        <li class="list-group-item">
-            <a href="{% url 'resource_management:computation_capability_sets' %}">Computation Capabilities</a>
-            <span class="text-body-secondary">{{ num_current_computation_capability_sets }}</span>
-        </li>
-        <li class="list-group-item">
-            <a href="{% url 'resource_management:computations' %}">Computations</a>
-            <span class="text-body-secondary">{{ num_current_computations }}</span>
-        </li>
-        <li class="list-group-item">
-            <a href="{% url 'resource_management:processes' %}">Processes</a>
-            <span class="text-body-secondary">{{ num_current_processes }}</span>
-        </li>
-        <li class="list-group-item">
-            <a href="{% url 'resource_management:data_collections' %}">Data Collections</a>
-            <span class="text-body-secondary">{{ num_current_data_collections }}</span>
-        </li>
-    </ol>
+<div class="row align-items-start gx-lg-5 gy-4">
+    <div class="col-lg-9">
+        <hgroup class="d-flex flex-column-reverse row-gap-1 mb-3">
+            <h1>{{ title }}</h1>
+            <p class="fs-base-2 line-clamp line-clamp-2 text-body-secondary mb-0">
+                {% if request.session.institution_for_login_session %}
+                {{ request.session.institution_for_login_session }}
+                {% else %}
+                Unknown Institution
+                {% endif %}
+            </p>
+        </hgroup>
+        <ol class="list-group list-group-numbered">
+            <li class="list-group-item">
+                <a href="{% url 'resource_management:organisations' %}">Organisations</a>
+                <span class="text-body-secondary">{{ num_current_organisations }}</span>
+            </li>
+            <li class="list-group-item">
+                <a href="{% url 'resource_management:individuals' %}">Individuals</a>
+                <span class="text-body-secondary">{{ num_current_individuals }}</span>
+            </li>
+            <li class="list-group-item">
+                <a href="{% url 'resource_management:projects' %}">Projects</a>
+                <span class="text-body-secondary">{{ num_current_projects }}</span>
+            </li>
+            <li class="list-group-item">
+                <a href="{% url 'resource_management:platforms' %}">Platforms</a>
+                <span class="text-body-secondary">{{ num_current_platforms }}</span>
+            </li>
+            <li class="list-group-item">
+                <a href="{% url 'resource_management:operations' %}">Operations</a>
+                <span class="text-body-secondary">{{ num_current_operations }}</span>
+            </li>
+            <li class="list-group-item">
+                <a href="{% url 'resource_management:instruments' %}">Instruments</a>
+                <span class="text-body-secondary">{{ num_current_instruments }}</span>
+            </li>
+            <li class="list-group-item">
+                <a href="{% url 'resource_management:acquisition_capability_sets' %}">Acquisition Capabilities</a>
+                <span class="text-body-secondary">{{ num_current_acquisition_capability_sets }}</span>
+            </li>
+            <li class="list-group-item">
+                <a href="{% url 'resource_management:acquisitions' %}">Acquisitions</a>
+                <span class="text-body-secondary">{{ num_current_acquisitions }}</span>
+            </li>
+            <li class="list-group-item">
+                <a href="{% url 'resource_management:computation_capability_sets' %}">Computation Capabilities</a>
+                <span class="text-body-secondary">{{ num_current_computation_capability_sets }}</span>
+            </li>
+            <li class="list-group-item">
+                <a href="{% url 'resource_management:computations' %}">Computations</a>
+                <span class="text-body-secondary">{{ num_current_computations }}</span>
+            </li>
+            <li class="list-group-item">
+                <a href="{% url 'resource_management:processes' %}">Processes</a>
+                <span class="text-body-secondary">{{ num_current_processes }}</span>
+            </li>
+            <li class="list-group-item">
+                <a href="{% url 'resource_management:data_collections' %}">Data Collections</a>
+                <span class="text-body-secondary">{{ num_current_data_collections }}</span>
+            </li>
+        </ol>
+    </div>
+    <div class="registration-process-info col-lg-3">
+        <div class="bg-body-tertiary rounded p-3">
+            <h2 class="fs-sm-1 text-secondary-emphasis">
+                Data Collection-related Metadata
+            </h2>
+            <p class="fs-sm-1 text-body-secondary mb-0">
+                Registering a data collection involves registering
+                <strong>up to</strong> 12 types of metadata, registered
+                in the order presented. Further information on the data
+                collection registration process can be found in the
+                <a
+                    href="{% url 'resource_registration_user_guide' %}#page=8"
+                    target="_blank"
+                    class="link-underline-by-default">
+                    data resource registration guide</a>.
+            </p>
+        </div>
+    </div>
 </div>
 {% endblock content %}
