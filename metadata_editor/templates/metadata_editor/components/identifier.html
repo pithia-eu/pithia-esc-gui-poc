@@ -4,33 +4,6 @@
             <h2 class="mb-0">Identifier</h2>
         </div>
     </div>
-    {% if editor_registration_setup_script_path %}
-    <div class="row flex-column gy-2">
-        <div class="col-lg-4">
-            {{ form.localid.label_tag }}
-        </div>
-        <div class="col-xl-9 col-lg-12">
-            <small class="d-block text-body-secondary mb-2">{{ form.localid.help_text }}</small>
-        </div>
-        <div class="col-xl-9 col-lg-12">
-            {% include 'metadata_editor/components/localid_input_group.html' %}
-        </div>
-    </div>
-    <div class="row flex-column gy-2">
-        <div class="col-lg-5">
-            {{ form.namespace.label_tag }}
-        </div>
-        <div class="col-xl-9 col-lg-12">
-            <small class="d-block text-body-secondary mb-2">{{ form.namespace.help_text }}</small>
-        </div>
-        <div class="col-xl-3 col-lg-5">
-            {{ form.namespace }}
-        </div>
-        {% for error in form.namespace.errors %}
-        <div class="form-text text-danger">{{ error }}</div>
-        {% endfor %}
-    </div>
-    {% endif %}
     <div class="row flex-column gy-2">
         <div class="col-lg-5">
             {{ form.identifier_version.label_tag }}
@@ -45,4 +18,38 @@
         <div class="form-text text-danger">{{ error }}</div>
         {% endfor %}
     </div>
+    <details>
+        <summary class="summary-marker-custom summary-marker-custom-sm summary-marker-custom-baseline text-body-secondary">
+            Local ID and Namespace
+        </summary>
+        <div class="d-flex flex-column row-gap-4">
+            {% if editor_registration_setup_script_path %}
+            <div class="row flex-column gy-2">
+                <div class="col-lg-4">
+                    {{ form.localid.label_tag }}
+                </div>
+                <div class="col-xl-9 col-lg-12">
+                    <small class="d-block text-body-secondary mb-2">{{ form.localid.help_text }}</small>
+                </div>
+                <div class="col-xl-9 col-lg-12">
+                    {% include 'metadata_editor/components/localid_input_group.html' %}
+                </div>
+            </div>
+            <div class="row flex-column gy-2">
+                <div class="col-lg-5">
+                    {{ form.namespace.label_tag }}
+                </div>
+                <div class="col-xl-9 col-lg-12">
+                    <small class="d-block text-body-secondary mb-2">{{ form.namespace.help_text }}</small>
+                </div>
+                <div class="col-xl-3 col-lg-5">
+                    {{ form.namespace }}
+                </div>
+                {% for error in form.namespace.errors %}
+                <div class="form-text text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </details>
 </section>

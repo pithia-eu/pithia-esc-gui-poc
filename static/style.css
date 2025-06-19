@@ -1531,6 +1531,16 @@ section .keyword-list li:last-child:after {
 
 
 /* Metadata editor */
+#wizard-toc a {
+    font-size: var(--fs-sm-2);
+    color: var(--bs-body-color);
+    text-decoration-color: var(--bs-body-color);
+}
+
+#wizard-toc li {
+    padding-inline: 0;
+}
+
 legend.required::after,
 legend h2.required::after,
 label.required::after {

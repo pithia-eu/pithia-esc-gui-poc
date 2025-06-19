@@ -24,26 +24,24 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<div class="row gx-xl-5 gx-lg-5 gx-sm-0">
-    <div class="col-xl-3 col-lg-4 d-lg-block d-none">
-        <div class="row gy-4 sticky-top">
-            <div class="col-lg-12">
-                <section class="sticky-top">
-                    <h2 class="fw-normal fs-4">Metadata Sections</h2>
-                    <ul class="list-group toc-container">
-                        {% block table_of_contents %}{% endblock table_of_contents %}
-                    </ul>
-                </section>
-            </div>
+<div class="row align-items-baseline gx-md-5 gx-sm-0">
+    <div class="d-lg-block d-none col-lg-2 border-end sticky-top">
+        <div class="pe-2">
+            <section class="sticky-top">
+                <h2 class="fs-base-2 text-body-secondary mb-3">Metadata Sections</h2>
+                <ul id="wizard-toc" class="list-group list-group-flush">
+                    {% block table_of_contents %}{% endblock table_of_contents %}
+                </ul>
+            </section>
         </div>
     </div>
-    <div class="col-xl-7 col-lg-6">
-        <section>
+    <div class="col-lg-8 col-md-9">
+        <section class="px-2">
             <div class="d-flex justify-content-between column-gap-3">
                 <div>
                     <hgroup class="d-flex flex-column-reverse row-gap-1 mb-0">
                         <h1>{{ title }}</h1>
-                        <p class="fs-base-2 line-clamp line-clamp-2 text-body-secondary mb-0">
+                        <p class="fs-6 line-clamp line-clamp-2 text-body-secondary mb-0">
                             {% if request.session.institution_for_login_session %}
                             {{ request.session.institution_for_login_session }}
                             {% else %}
@@ -69,9 +67,10 @@
                             </a>
                         </li>
                         <li>
-                            <a class="btn-reset-wizard dropdown-item text-danger" href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg me-3" viewBox="0 0 16 16">
-                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                            <a class="btn-reset-wizard dropdown-item text-body" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise me-3" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+                                    <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
                                 </svg>Reset
                             </a>
                         </li>
@@ -95,7 +94,7 @@
                 {% csrf_token %}
                 {% block form_content %}{% endblock form_content %}
                 <div class="d-flex flex-column row-gap-3 border-top pt-5 mt-4">
-                    <div class="col-lg-12 d-flex flex-column row-gap-2">
+                    <div class="d-flex flex-column row-gap-2 col-lg-12">
                         <button type="submit" class="btn btn-outline-primary flex-grow-1 py-3 px-4">
                             {{ submit_button_text }}
                         </button>
@@ -115,31 +114,30 @@
             </form>
         </section>
     </div>
-    <div class="col-xl-2 col-lg-2 d-lg-block d-none">
-        <div class="row gy-3 sticky-top">
-            <div class="col-lg-12">
-                <section>
-                    <h2 class="fw-normal fs-5 text-body-secondary mb-0">Wizard Actions</h2>
-                    <small class="d-inline-block last-saved-at text-body-secondary my-3">Changes are automatically saved in your browser (except for files).</small>
-                    <ul class="list-unstyled">
-                        <li class="mb-3">
-                            <button class="btn btn-light btn-light-togglable btn-save-data w-100">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy2-fill me-3" viewBox="0 0 16 16">
-                                    <path d="M12 2h-2v3h2z"/>
-                                    <path d="M1.5 0A1.5 1.5 0 0 0 0 1.5v13A1.5 1.5 0 0 0 1.5 16h13a1.5 1.5 0 0 0 1.5-1.5V2.914a1.5 1.5 0 0 0-.44-1.06L14.147.439A1.5 1.5 0 0 0 13.086 0zM4 6a1 1 0 0 1-1-1V1h10v4a1 1 0 0 1-1 1zM3 9h10a1 1 0 0 1 1 1v5H2v-5a1 1 0 0 1 1-1"/>
-                                </svg>Save
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-outline-danger btn-reset-wizard w-100">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg me-3" viewBox="0 0 16 16">
-                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-                                </svg>Reset
-                            </button>
-                        </li>
-                    </ul>
-                </section>
-            </div>
+    <div class="d-lg-block d-none col-lg-2 border-start sticky-top">
+        <div class="ps-2">
+            <section>
+                <h2 class="fs-6 fw-semibold text-body-secondary mb-0">Wizard Menu</h2>
+                <small class="d-inline-block last-saved-at text-body-secondary my-3">Changes are automatically saved in your browser (except for files).</small>
+                <ul class="d-flex flex-column align-items-stretch row-gap-3 list-unstyled">
+                    <li>
+                        <button class="d-inline-flex align-items-center justify-content-center column-gap-2 btn btn-light btn-light-togglable w-100 btn-save-data">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy2-fill flex-shrink-0" viewBox="0 0 16 16">
+                                <path d="M12 2h-2v3h2z"/>
+                                <path d="M1.5 0A1.5 1.5 0 0 0 0 1.5v13A1.5 1.5 0 0 0 1.5 16h13a1.5 1.5 0 0 0 1.5-1.5V2.914a1.5 1.5 0 0 0-.44-1.06L14.147.439A1.5 1.5 0 0 0 13.086 0zM4 6a1 1 0 0 1-1-1V1h10v4a1 1 0 0 1-1 1zM3 9h10a1 1 0 0 1 1 1v5H2v-5a1 1 0 0 1 1-1"/>
+                            </svg>Save
+                        </button>
+                    </li>
+                    <li>
+                        <button class="d-inline-flex align-items-center justify-content-center column-gap-2 btn btn-outline-dark btn-outline-dark-togglable w-100 btn-reset-wizard">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise flex-shrink-0" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+                                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+                            </svg>Reset
+                        </button>
+                    </li>
+                </ul>
+            </section>
         </div>
     </div>
 </div>
