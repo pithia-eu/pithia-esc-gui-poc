@@ -101,4 +101,4 @@ class DataSubsetXmlDownloadFromManagementView(
 class WorkflowXmlDownloadFromManagementView(
         view_mixins.WorkflowXmlDownloadViewMixin,
         ResourceXmlDownloadFromManagementView):
-    template_name = 'utils/from_management/resource_as_xml_from_management_2.html'
+    template_name = 'utils/from_management/resource_as_xml_from_management_no_second_level.html'

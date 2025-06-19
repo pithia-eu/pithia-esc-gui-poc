@@ -134,21 +134,21 @@ class StaticDatasetEntryXmlDownloadFromBrowsingView(
         view_mixins.StaticDatasetEntryXmlDownloadViewMixin,
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
-    template_name = 'utils/from_browsing/resource_as_xml_from_browsing_2.html'
+    template_name = 'utils/from_browsing/resource_as_xml_from_browsing_no_second_level.html'
 
 
 class DataSubsetXmlDownloadFromBrowsingView(
         view_mixins.DataSubsetXmlDownloadViewMixin,
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
-    template_name = 'utils/from_browsing/resource_as_xml_from_browsing_2.html'
+    template_name = 'utils/from_browsing/resource_as_xml_from_browsing_no_second_level.html'
 
 
 class WorkflowXmlDownloadFromBrowsingView(
         view_mixins.WorkflowXmlDownloadViewMixin,
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
-    template_name = 'utils/from_browsing/resource_as_xml_from_browsing_2.html'
+    template_name = 'utils/from_browsing/resource_as_xml_from_browsing_no_second_level.html'
 
 
 def metadata_xml_file_direct_download(request, resource_type, resource_namespace, resource_id):
