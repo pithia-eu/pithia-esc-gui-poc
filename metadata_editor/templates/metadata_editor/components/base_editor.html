@@ -41,7 +41,16 @@
         <section>
             <div class="d-flex justify-content-between column-gap-3">
                 <div>
-                    <h1 class="mb-0">{{ title }}</h1>
+                    <hgroup class="d-flex flex-column-reverse row-gap-1 mb-0">
+                        <h1>{{ title }}</h1>
+                        <p class="fs-base-2 line-clamp line-clamp-2 text-body-secondary mb-0">
+                            {% if request.session.institution_for_login_session %}
+                            {{ request.session.institution_for_login_session }}
+                            {% else %}
+                            Unknown Institution
+                            {% endif %}
+                        </p>
+                    </hgroup>
                     <small class="d-lg-none d-inline-block last-saved-at text-body-secondary my-3">Changes are automatically saved in your browser (except for files).</small>
                 </div>
                 <div class="dropdown d-lg-none d-block">

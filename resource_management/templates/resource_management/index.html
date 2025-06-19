@@ -4,7 +4,16 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1>{{ title }}</h1>
+<hgroup class="d-flex flex-column-reverse row-gap-1 mb-4">
+    <h1>{{ title }}</h1>
+    <p class="fs-base-2 line-clamp line-clamp-2 text-body-secondary mb-0">
+        {% if request.session.institution_for_login_session %}
+        {{ request.session.institution_for_login_session }}
+        {% else %}
+        Unknown Institution
+        {% endif %}
+    </p>
+</hgroup>
 <ul class="card-menu list-unstyled">
     <li>
         <a href="{% url 'resource_management:data_collection_related_metadata_index' %}" class="card">

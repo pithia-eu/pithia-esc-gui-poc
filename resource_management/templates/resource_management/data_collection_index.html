@@ -7,7 +7,16 @@
 {% endblock breadcrumbs %}
 {% block content %}
 <div class="col-xl-7 col-lg-9">
-    <h1 class="mb-4">{{ title }}</h1>
+    <hgroup class="d-flex flex-column-reverse row-gap-1 mb-4">
+        <h1>{{ title }}</h1>
+        <p class="fs-base-2 line-clamp line-clamp-2 text-body-secondary mb-0">
+            {% if request.session.institution_for_login_session %}
+            {{ request.session.institution_for_login_session }}
+            {% else %}
+            Unknown Institution
+            {% endif %}
+        </p>
+    </hgroup>
     <p class="d-block page-info page-info-emphasised my-4">
         Registering a data collection involves registering <strong>
         up to 12 types of metadata</strong>, registered in the order
