@@ -2,7 +2,7 @@
 <section class="resource-detail-section">
     {# Determine if top-level disclosure widget needed or not #}
     {% if resource.properties.capability_links|length == 1 %}
-    <h2 class="mb-2">
+    <h2 id="capability-links" class="mb-2">
         Capability Links
         <span class="text-body-secondary">({{ resource.properties.capability_links|length }})</span>
     </h2>
@@ -33,7 +33,7 @@
     <details class="details-capability-links-top" open>
         <summary class="summary-marker-custom summary-marker-custom-baseline">
             <div class="d-inline-block">
-                <h2>
+                <h2 id="capability-links">
                     Capability Links
                     <span class="text-body-secondary">({{ resource.properties.capability_links|length }})</span>
                 </h2>

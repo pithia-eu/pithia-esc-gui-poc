@@ -1,6 +1,6 @@
 {% if resource.properties.data_quality_flags or resource.properties.metadata_quality_flags or resource.properties.science_relevance_indicators %}
 <section class="resource-detail-section">
-    <h3>Quality Assessment</h3>
+    <h3 id="quality-assessment" class="include-in-toc">Quality Assessment</h3>
     {% if resource.properties.data_quality_flags %}
     <dl class="resource-detail-subsection">
         <dt class="fw-medium fs-6">Data Quality Flags</dt>

@@ -54,7 +54,7 @@
 {% block further_information_extra_sections %}
 {% if resource.properties.procedure %}
 <section class="resource-detail-section">
-    <h3>Procedure</h3>
+    <h3 id="procedure" class="include-in-toc">Procedure</h3>
     {% with value=resource.properties.procedure %}
     {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
     {% endwith %}
@@ -62,7 +62,7 @@
 {% endif %}
 {% if resource.properties.projects %}
 <section class="resource-detail-section">
-    <h3>Projects</h3>
+    <h3 id="projects" class="include-in-toc">Projects</h3>
     <ul>
         {% for project in resource.properties.projects %}
         <li>
@@ -76,7 +76,7 @@
 {% endif %}
 {% if resource.properties.sub_collections %}
 <section class="resource-detail-section">
-    <h3>Sub-collections</h3>
+    <h3 id="sub-collections" class="include-in-toc">Sub-collections</h3>
     <ul>
         {% for sub_collection in resource.properties.sub_collections %}
         <li>
@@ -90,7 +90,7 @@
 {% endif %}
 {% if resource.properties.features_of_interest %}
 <section class="resource-detail-section">
-    <h3>Features of Interest</h3>
+    <h3 id="features-of-interest" class="include-in-toc">Features of Interest</h3>
     <ul>
         {% for foi in resource.properties.features_of_interest %}
         <li>

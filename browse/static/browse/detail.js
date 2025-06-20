@@ -1,6 +1,9 @@
 import {
     loadRelatedMetadata,
 } from "/static/browse/related_metadata.js";
+import {
+    loadTableOfContentsElements,
+} from "/static/browse/table_of_contents.js";
 
 
 function enablePopovers() {
@@ -9,6 +12,7 @@ function enablePopovers() {
 }
 
 window.addEventListener("load", async () => {
+    loadTableOfContentsElements();
     enablePopovers();
     await loadRelatedMetadata();
 });

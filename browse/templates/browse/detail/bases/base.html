@@ -33,6 +33,21 @@
             </p>
             {% block post_last_modified_date_content %}{% endblock post_last_modified_date_content %}
         </div>
+        <section class="d-lg-none d-block resource-detail-section">
+            <details>
+                <summary class="summary-marker-custom summary-marker-custom-baseline">
+                    <h2 class="exclude-from-toc">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-ul me-2" style="transform: translateY(0.125rem);" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+                        </svg>
+                        In This Page
+                    </h2>
+                </summary>
+                <ul id="toc-md" class="toc list-group list-group-flush">
+                    {% include 'browse/detail/components/toc/toc_placeholder.html' %}
+                </ul>
+            </details>
+        </section>
         {% block pre_responsible_parties_content %}{% endblock pre_responsible_parties_content %}
         {# Responsible parties section #}
         {% include 'browse/detail/sections/top/responsible_parties_top_section.html' %}
@@ -44,15 +59,20 @@
         <section id="further-information-section" class="resource-detail-section">
             <details>
                 <summary class="summary-marker-custom">
-                    <h2 id="resources-and-further-information">Resources and Further Information</h2>
+                    <h2 id="resources-and-further-information" class="exclude-from-toc">Further Resources and Information</h2>
                 </summary>
                 <div class="d-flex flex-column">
                     <section class="resource-detail-section">
                         <h3>Resources</h3>
-                        <a href="{% url resource_download_url_name resource.id %}" id="metadata-file-link" class="icon-link icon-link-hover link-underline-by-default" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text-fill" viewBox="0 0 16 16">
-                                <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M4.5 9a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM4 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 1 0-1h4a.5.5 0 0 1 0 1z"/>
-                            </svg>Metadata File (XML)
+                        <a
+                            href="{% url resource_download_url_name resource.id %}"
+                            id="metadata-file-link"
+                            class="btn btn-outline-dark btn-outline-dark-togglable icon-link icon-link-hover"
+                            style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text" viewBox="0 0 16 16">
+                                <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5"/>
+                                <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
+                            </svg>Go to Metadata File
                         </a>
                     </section>
                     {% block further_information_extra_sections %}{% endblock further_information_extra_sections %}
@@ -154,22 +174,10 @@
         {% endif %}
     </div>
     <aside class="col-xl-3 col-lg-4 resource-detail-aside border-start">
-        {% block aside_extra_content_before_default %}{% endblock aside_extra_content_before_default %}
-        {% block aside_extra_content_after_default %}{% endblock aside_extra_content_after_default %}
-        <section class="resource-detail-aside-section">
-            <h2 class="fs-6 text-body-secondary">
-                Page Suggestions & Support
-            </h2>
-            <ul class="list-unstyled">
-                <li>
-                    <a href="{% url 'support' %}#support-heading" class="icon-link icon-link-hover link-underline-by-default column-gap-2" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0);">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-dots fs-6" viewBox="0 0 16 16">
-                            <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
-                            <path d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9 9 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.4 10.4 0 0 1-.524 2.318l-.003.011a11 11 0 0 1-.244.637c-.079.186.074.394.273.362a22 22 0 0 0 .693-.125m.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6-3.004 6-7 6a8 8 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a11 11 0 0 0 .398-2"/>
-                        </svg>
-                        Provide feedback
-                    </a>
-                </li>
+        <section class="d-lg-block d-none resource-detail-aside-section">
+            <h2 class="px-3">In This Page</h2>
+            <ul id="toc-lg" class="toc list-group list-group-flush">
+                {% include 'browse/detail/components/toc/toc_placeholder.html' %}
             </ul>
         </section>
     </aside>

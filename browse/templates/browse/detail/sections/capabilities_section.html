@@ -1,7 +1,7 @@
 {% if resource.properties.capabilities %}
 <section class="resource-detail-section">
     {% if resource.properties.capabilities|length == 1 %}
-    <h2>
+    <h2 id="capabilities">
         Capabilities
         <span class="text-body-secondary">({{ resource.properties.capabilities|length }})</span>
     </h2>
@@ -11,7 +11,7 @@
     {% else %}
     <details class="details-capabilities-top" open>
         <summary class="summary-marker-custom">
-            <h2>
+            <h2 id="capabilities">
                 Capabilities
                 <span class="text-body-secondary">({{ resource.properties.capabilities|length }})</span>
             </h2>

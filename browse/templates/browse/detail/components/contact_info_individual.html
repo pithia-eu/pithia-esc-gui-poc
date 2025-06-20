@@ -3,7 +3,7 @@
 {# organisation and position_name are set in the template being extended. #}
 {% if organisation %}
 <section class="d-flex flex-column align-items-start row-gap-1 py-0">
-    <h2 class="fw-semibold {{ heading_font_size_class }} mb-0">
+    <h2 id="position" class="fw-semibold {{ heading_font_size_class }} mb-0">
         Organisation {% if position_name %}and Position{% endif %}
     </h2>
     {# Organisation #}

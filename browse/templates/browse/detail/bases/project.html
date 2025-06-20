@@ -79,7 +79,7 @@
 {% block further_information_extra_sections %}
 {% if resource.properties.keywords %}
 <section class="resource-detail-section">
-    <h3>Keywords</h3>
+    <h3 id="keywords" class="include-in-toc">Keywords</h3>
     {% include 'browse/detail/components/project/keyword_inline_list.html' %}
 </section>
 {% endif %}

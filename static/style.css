@@ -2186,7 +2186,7 @@ ul.tree ul {
         display: inline-block;
     }
 
-    .breadcrumb-item {
+    .breadcrumb {
         font-size: var(--fs-sm-2);
     }
 
@@ -2208,7 +2208,7 @@ ul.tree ul {
     }
 
     #further-information-section h3 {
-        font-size: 1.25rem;
+        font-size: var(--fs-base-2);
     }
 
     #related-metadata-section h3 {

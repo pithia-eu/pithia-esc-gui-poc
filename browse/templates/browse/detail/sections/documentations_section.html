@@ -1,6 +1,6 @@
 {% if resource.properties.documentations %}
 <section class="resource-detail-section">
-    <h2>Documentation</h2>
+    <h2 id="documentation">Documentation</h2>
     <ul class="d-flex flex-column list-group list-group-flush">
         {% for documentation in resource.properties.documentations %}
         <li class="list-group-item px-0 {% if forloop.first %}pb-3{% elif forloop.last %}pt-3{% else %}py-3{% endif %}">

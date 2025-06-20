@@ -1,7 +1,7 @@
 {% load project_tags %}
 {% if 'dataLevel' in resource.json %}
 <section class="resource-detail-section">
-    <h3>Data Levels</h3>
+    <h3 id="data-levels" class="include-in-toc">Data Levels</h3>
     <ul>
         {% for data_level in resource.json.dataLevel|wrap_in_list_if_dict %}
         <li>
