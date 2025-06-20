@@ -5,7 +5,7 @@
     <li class="my-2">
         <div class="d-inline-flex justify-content-between column-gap-4 w-100">
             {% with section_name=key.split|join:'-'|lower %}
-            <a href="#{{ section_name }}-heading" class="link-plain-by-default">
+            <a href="#{{ section_name }}-heading" class="text-body link-plain-by-default">
                 {{ key }}</a>
             {% endwith %}
             <span class="text-body-secondary ms-auto">{{ value|length }}</span>

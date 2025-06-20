@@ -6,7 +6,7 @@
     <li class="my-2">
         <div class="d-inline-flex justify-content-between column-gap-4 w-100">
             {% with section_name=static_dataset_category.name.split|join:'-'|lower %}
-            <a href="#{{ section_name }}-section" class="link-plain-by-default">
+            <a href="#{{ section_name }}-section" class="text-body link-plain-by-default">
                 {{ static_dataset_category.name }}
             </a>
             {% endwith %}
