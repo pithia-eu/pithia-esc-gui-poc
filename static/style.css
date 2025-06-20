@@ -1027,9 +1027,30 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
     padding-bottom: 0;
 }
 
-.resource-detail-section details.details-capabilities-top[open] > summary,
-.resource-detail-section details.details-capability-links-top[open] > summary {
-    border-bottom: 2px var(--bs-border-color) dotted;
+.resource-detail-section details.details-capabilities-top > summary .link-underline-by-default,
+.resource-detail-section details.details-capability-links-top > summary .link-underline-by-default {
+    text-decoration: underline;
+}
+
+.resource-detail-section details.details-capabilities-top > summary:hover .link-underline-by-default,
+.resource-detail-section details.details-capabilities-top > summary:focus-visible .link-underline-by-default,
+.resource-detail-section details.details-capability-links-top > summary:hover .link-underline-by-default,
+.resource-detail-section details.details-capability-links-top > summary:focus-visible .link-underline-by-default {
+    text-decoration: none;
+}
+
+.resource-detail-section details.details-capabilities-top[open] > summary .open,
+.resource-detail-section details.details-capability-links-top[open] > summary .open,
+.resource-detail-section details.details-capabilities-top:not([open]) > summary .collapsed,
+.resource-detail-section details.details-capability-links-top:not([open]) > summary .collapsed {
+    display: inline;
+}
+
+.resource-detail-section details.details-capabilities-top:not([open]) .open,
+.resource-detail-section details.details-capability-links-top:not([open]) .open,
+.resource-detail-section details.details-capabilities-top[open] .collapsed,
+.resource-detail-section details.details-capability-links-top[open] .collapsed {
+    display: none;
 }
 
 .resource-detail-section details.details-capabilities-top li > details[name="details-capabilities"] > summary > div::after,
@@ -1054,6 +1075,18 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
 .resource-detail-section > details[name="details-capability-links"][open] > summary.summary-marker-custom {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+}
+
+.resource-detail-section details.details-capabilities-top li:first-child > details[name="details-capabilities"] > summary,
+.resource-detail-section details.details-capability-links-top li:first-child > details[name="details-capability-links"] summary {
+    border-top-left-radius: var(--bs-border-radius);
+    border-top-right-radius: var(--bs-border-radius);
+}
+
+.resource-detail-section details.details-capabilities-top li:last-child > details[name="details-capabilities"]:not([open]) > summary,
+.resource-detail-section details.details-capability-links-top li:last-child > details[name="details-capability-links"]:not([open]) summary {
+    border-bottom-left-radius: var(--bs-border-radius);
+    border-bottom-right-radius: var(--bs-border-radius);
 }
 
 .capability-details-pane,
