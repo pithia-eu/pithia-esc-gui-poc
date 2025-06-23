@@ -1,33 +1,48 @@
 <div id="{{ node.id }}"
-    class="d-inline-flex flex-column align-items-start row-gap-1 {% if parent_node_in_ontology %}ontology-term-with-parent{% endif %} ontology-term my-3"
+    class="d-inline-flex flex-column align-items-start row-gap-2 {% if parent_node_in_ontology %}ontology-term-with-parent{% endif %} ontology-term my-3"
     data-is-parent-node="{{ is_parent_node|default_if_none:"false" }}"
     data-parent-node-in-ontology="{{ parent_node_in_ontology|default_if_none:"" }}">
     <div class="d-flex flex-wrap align-items-baseline column-gap-2 row-gap-1">
-        <!-- Link to term detail page -->
         {% if node.prefLabel %}
+        <!-- Link to term detail page -->
         <a
             href="{% url 'ontology:ontology_term_detail' category node.value %}"
             class="d-flex align-items-center fw-semibold keyword-searchable">
             {{ node.prefLabel|default:node.value }} {% if node.altLabel %}({{ node.altLabel }}){% endif %}
         </a>
-        {% elif node.value %}
+        {% else %}
+        <!-- If no prefLabel, use value or "Unknown" -->
+        {% if node.value %}
         <span class="fw-semibold keyword-searchable">
             {{ node.value }} {% if node.altLabel %}({{ node.altLabel }}){% endif %}
         </span>
+        {% else %}
+        <span class="fw-semibold text-body-secondary keyword-searchable">
+            Unknown
+        </span>
         {% endif %}
-
-        <!-- "Registered" indicator -->
-        {% if node.value in registered_ontology_terms and node.value in parents_of_registered_ontology_terms %}
-        <small class="border rounded-3 bg-body-secondary px-1 me-1">
-            registered
-        </small>
-        {% endif %}
-
         <!-- "Invalid" indicator -->
-        {% if not node.prefLabel %}
         <small class="text-body-secondary fst-italic">— A page for this term could not be found</small>
         {% endif %}
+        <!-- Tags -->
+        {% if node.value in parents_of_registered_ontology_terms or node.value in registered_ontology_terms %}
+        <div class="d-flex flex-wrap align-items-start row-gap-1">
+            <!-- "Parent of registered" indicator -->
+            {% if node.value in parents_of_registered_ontology_terms %}
+            <small class="bg-body-tertiary border rounded px-1 me-1">
+                parent of registered term
+            </small>
+            {% endif %}
+            <!-- "Registered" indicator -->
+            {% if node.value in registered_ontology_terms %}
+            <small class="bg-body-secondary border rounded px-1 me-1">
+                registered
+            </small>
+            {% endif %}
+        </div>
+        {% endif %}
     </div>
+    <!-- Definition -->
     {% if node.definition %}
     <div class="fs-sm-2 text-body-secondary line-clamp line-clamp-5 ontology-term-description">
         {% autoescape off %}
@@ -35,8 +50,9 @@
         {% endautoescape %}
     </div>
     {% endif %}
+    <!-- Copy IRI button -->
     {% if node.prefLabel %}
-    <small class="d-inline-block pt-2">
+    <small class="d-inline-block">
         {% with ontology_iri=node.iri btn_extra_classes='btn-sm' %}
         {% include 'ontology/ontology_iri.html' %}
         {% endwith %}
