@@ -936,17 +936,33 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
     margin-block-end: 0;
 }
 
-#responsible-parties-top-section dd {
-    display: inline;
+#responsible-parties-top-section dl > div {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.1rem;
 }
 
-#responsible-parties-top-section dd > span::after {
+#responsible-parties-top-section dd {
+    display: flex;
+    align-items: baseline;
+    column-gap: 0.5em;
+    margin-bottom: 0;
+}
+
+#responsible-parties-top-section dd svg {
+    font-size: var(--fs-sm-2);
+    color: var(--bs-secondary-text-emphasis);
+    transform: translateY(0.15em);
+    flex-shrink: 0;
+}
+
+/* #responsible-parties-top-section dd > span::after {
     content: ', ';
 }
 
 #responsible-parties-top-section dd:last-child > span::after {
     content: '';
-}
+} */
 
 .standard-identifier-list,
 .standard-identifier-list li {
