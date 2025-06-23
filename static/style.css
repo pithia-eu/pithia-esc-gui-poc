@@ -569,6 +569,13 @@ header .login-link {
     padding-block: 0.25rem;
 }
 
+.user-dropdown > a:first-of-type > .user-menu-dropdown-text {
+    max-width: 30ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
+}
+
 .user-dropdown .dropdown-menu.show {
     width: max-content;
 }
