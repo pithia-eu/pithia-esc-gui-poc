@@ -60,5 +60,7 @@
         <div class="tree-search-box-filter-results">0 found, 0 hidden</div>
         <div class="tree-checkbox-filter-results">0 found, 0 hidden</div>
     </div>
-    <div class="tree-search-terms px-md-3 px-0" id="{{ ontology_component }}-tree-search-terms"></div>
+    <div class="tree-search-terms" id="{{ ontology_component }}-tree-search-terms">
+        {% include placeholder_template_path|default:'search/placeholders/default_placeholder.html' %}
+    </div>
 </div>

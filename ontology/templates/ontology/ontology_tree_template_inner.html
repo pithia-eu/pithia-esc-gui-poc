@@ -1,4 +1,7 @@
-<li>
+<li
+{% if not parent_node_in_ontology %}
+class="border-bottom pb-3 mb-3"
+{% endif %}>
     {% if node.narrowers|length > 0 %}
     <details>
         <summary class="summary-marker-custom summary-marker-custom-baseline summary-marker-custom-sm mb-0">
@@ -18,8 +21,5 @@
     {% with category=category registered_ontology_terms=registered_ontology_terms parents_of_registered_ontology_terms=parents_of_registered_ontology_terms %}
     {% include "ontology/ontology_tree_node_template.html" %}
     {% endwith %}
-    {% endif %}
-    {% if not parent_node_in_ontology %}
-    <hr>
     {% endif %}
 </li>

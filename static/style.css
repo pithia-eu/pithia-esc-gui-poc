@@ -1889,7 +1889,7 @@ ul.tree ul {
 }
 
 .ontology-browser-terms ul.tree ul li {
-    border-left : 1px solid var(--bs-gray-400);
+    border-left : var(--bs-border-style) var(--bs-border-width) var(--bs-border-color);
     padding-left: var(--list-item-left-padding);
 }
 

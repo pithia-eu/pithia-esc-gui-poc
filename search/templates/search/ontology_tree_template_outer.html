@@ -1,4 +1,4 @@
-<ul class="tree">
+<ul class="tree px-md-3 px-0">
     {% for key, value in ontology_component.items|dictsort:0 %}
     {% with node=value registered_ontology_terms=registered_ontology_terms parents_of_registered_ontology_terms=parents_of_registered_ontology_terms %}
     {% include "search/ontology_tree_template_inner.html" %}

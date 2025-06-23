@@ -29,7 +29,7 @@
         {% endif %}
     </div>
     {% if node.definition %}
-    <div class="ontology-term-description text-body-secondary">
+    <div class="fs-sm-2 text-body-secondary line-clamp line-clamp-5 ontology-term-description">
         {% autoescape off %}
         {{ node.definition|default:'' }}
         {% endautoescape %}
