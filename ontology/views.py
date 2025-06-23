@@ -8,13 +8,9 @@ from django.http import (
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import TemplateView
-from rdflib import URIRef
-from rdflib.resource import Resource
-from rdflib.namespace._SKOS import SKOS
 
 from .services import (
     create_dictionary_from_pithia_ontology_component,
-    get_graph_of_pithia_ontology_component,
     get_ontology_category_terms_in_xml_format,
 )
 from .utils import (
@@ -24,20 +20,11 @@ from .utils import (
     OntologyTermMetadata,
 )
 
+from common.models import ScientificMetadata
 from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
 from pithiaesc.settings import BASE_DIR
-from data_collection_search.services import (
-    get_registered_computation_types,
-    get_registered_features_of_interest,
-    get_registered_instrument_types,
-    get_registered_measurands,
-    get_registered_observed_properties,
-    get_registered_phenomenons
-)
 from search.services import get_parents_of_registered_ontology_terms
 from utils.string_helpers import split_camel_case
-from utils.url_helpers import create_ontology_term_detail_url_from_ontology_term_server_url
-from utils.html_helpers import create_anchor_tag_html_from_ontology_term_details
 
 
 _ONTOLOGY_INDEX_PAGE_TITLE = 'Space Physics Ontology Browser'
@@ -82,26 +69,13 @@ def ontology_category_terms_list_only(request, category):
         return HttpResponseServerError('Could not load terms due to a server error.')
     registered_ontology_terms = []
     parents_of_registered_ontology_terms = []
-    if category.lower() == 'observedproperty':
-        registered_ontology_terms = get_registered_observed_properties()
-        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, [])
-    elif category.lower() == 'featureofinterest':
-        registered_ontology_terms = get_registered_features_of_interest()
-        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, [])
-    elif category.lower() == 'instrumenttype':
-        registered_ontology_terms = get_registered_instrument_types()
-        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, [])
-    elif category.lower() == 'computationtype':
-        registered_ontology_terms = get_registered_computation_types()
-        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, [])
-    elif category.lower() == 'phenomenon':
-        registered_observed_property_ids = get_registered_observed_properties()
-        registered_ontology_terms = get_registered_phenomenons(registered_observed_property_ids)
-        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, [])
-    elif category.lower() == 'measurand':
-        registered_observed_property_ids = get_registered_observed_properties()
-        registered_ontology_terms = get_registered_measurands(registered_observed_property_ids)
-        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, [])
+    registered_ontology_server_urls = list()
+    registrations = ScientificMetadata.objects.all()
+    for r in registrations:
+        registered_ontology_server_urls += r.properties.ontology_urls
+    registered_ontology_server_urls = list(set(registered_ontology_server_urls))
+    registered_ontology_terms = [url.split('/')[-1] for url in registered_ontology_server_urls]
+    parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, [])
     return render(request, 'ontology/ontology_tree_template_outer.html', {
         'dictionary': dictionary,
         'category': category,
