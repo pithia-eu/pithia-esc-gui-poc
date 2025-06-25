@@ -17,6 +17,7 @@ from .services import (
     MetadataFileXSDValidator,
 )
 from .url_validation_services import (
+    AcquisitionCapabilitiesMetadataFileMetadataURLReferencesValidator,
     MetadataFileOntologyURLReferencesValidator,
     MetadataFileMetadataURLReferencesValidator,
 )
@@ -504,10 +505,10 @@ class XMLMetadataFileIntegrationTestCase(TestCase):
         xml_file_string = xml_file.read()
         self.xml_metadata_file_with_invalid_urls = AcquisitionCapabilitiesXMLMetadataFile(xml_file_string, xml_file.name)
         
-        invalid_resource_urls_with_op_mode_ids = MetadataFileMetadataURLReferencesValidator.is_each_operational_mode_url_valid(self.xml_metadata_file_with_invalid_urls)
+        invalid_resource_urls_with_op_mode_ids = AcquisitionCapabilitiesMetadataFileMetadataURLReferencesValidator.is_each_potential_operational_mode_url_valid(self.xml_metadata_file_with_invalid_urls)
         self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_with_incorrect_structure']), 1)
-        self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_pointing_to_unregistered_resources']), 1)
-        self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_pointing_to_registered_resources_with_missing_op_modes']), 2)
+        self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_pointing_to_unregistered_resources']), 3)
+        self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_pointing_to_registered_resources_with_missing_op_modes']), 0)
 
 
 class XMLMetadataFileTestCase(TestCase):
@@ -561,7 +562,7 @@ class XMLMetadataFileTestCase(TestCase):
         xml_file_string = xml_file.read()
         self.test_xml_file = AcquisitionCapabilitiesXMLMetadataFile(xml_file_string, xml_file.name)
 
-        validation_results = MetadataFileMetadataURLReferencesValidator.is_each_potential_operational_mode_url_valid(self.test_xml_file)
+        validation_results = AcquisitionCapabilitiesMetadataFileMetadataURLReferencesValidator.is_each_potential_operational_mode_url_valid(self.test_xml_file)
         self.assertEqual(len(validation_results['urls_with_incorrect_structure']), 1)
 
 class InlineValidationTestCase(TestCase):
