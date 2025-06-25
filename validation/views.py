@@ -173,20 +173,34 @@ class QuickInlineInstrumentUpdateValidationFormView(QuickInlineValidationFormVie
         if len(op_mode_validation_results.get('acquisition_capabilities_to_update')) == 0:
             return super().validate(request, xml_metadata_file)
 
+        institution_id = get_institution_id_for_login_session(self.request.session)
+        acquisition_capabilities_update_url_and_url_texts = [
+            (
+                reverse_lazy(f'update:acquisition_capability_set', kwargs={
+                    'resource_id': ac.pk,
+                }),
+                f'Update {ac.name}'
+            )
+            for ac in op_mode_validation_results.get('acquisition_capabilities_to_update')
+            if ac.institution_id == institution_id
+        ]
+        acquisition_capabilities_detail_url_and_url_texts = [
+            (
+                reverse_lazy(f'browse:acquisition_capability_set_detail', kwargs={
+                    'acquisition_capability_set_id': ac.pk,
+                }),
+                ac.name
+            )
+            for ac in op_mode_validation_results.get('acquisition_capabilities_to_update')
+            if ac.institution_id != institution_id
+        ]
         self.error_dict['op_mode_warnings'].append(
             render_to_string(
                 'validation/warning_missing_instrument_operational_modes.html',
                 context={
                     'missing_operational_mode_urls': op_mode_validation_results.get('missing_operational_mode_urls'),
-                    'acquisition_capabilities_update_url_and_url_texts': [
-                        (
-                            reverse_lazy(f'update:acquisition_capability_set', kwargs={
-                                'resource_id': ac.pk,
-                            }),
-                            f'Update {ac.name}'
-                        )
-                        for ac in op_mode_validation_results.get('acquisition_capabilities_to_update')
-                    ],
+                    'acquisition_capabilities_update_url_and_url_texts': acquisition_capabilities_update_url_and_url_texts,
+                    'acquisition_capabilities_detail_url_and_url_texts': acquisition_capabilities_detail_url_and_url_texts,
                 }
             )
         )
