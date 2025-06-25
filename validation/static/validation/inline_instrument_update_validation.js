@@ -97,9 +97,7 @@ class InstrumentMetadataFileUpdateValidator extends MetadataFileUpdateValidator 
 
     serverValidationResultsObject(results) {
         return {
-            metadataReferenceErrors: results.incorrectly_structured_url_errors
-                                        .concat(results.unregistered_resource_url_errors)
-                                        .concat(results.unregistered_operational_mode_url_errors),
+            metadataReferenceErrors: results.metadata_url_reference_errors,
             ontologyReferenceErrors: results.invalid_ontology_url_errors,
             updateErrors: results.update_conflicts,
             operationalModeUpdateErrors: results.op_mode_conflicts,

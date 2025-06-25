@@ -17,14 +17,17 @@
     {% endfor %}
 </ul>
 <div class="pt-2">
-    <b>Note:</b>
-    If your URLs start with "<i>http://</i>" please
-    change this to "<i>https://</i>".
+    <strong>Note:</strong>
+    If your URLs start with <b>http://</b> please
+    change this to <b>https://</b>.
 </div>
+{% if file_upload_registration_url_and_url_texts %}
 <div class="pt-2">
+    {% block post_note_text %}
     Please use the following links to register
     the resources referenced in the submitted
     metadata file:
+    {% endblock post_note_text %}
 </div>
 <ul class="pt-1">
     {% for url, url_text in file_upload_registration_url_and_url_texts %}
@@ -33,3 +36,5 @@
     </li>
     {% endfor %}
 </ul>
+{% endif %}
+{% block extra_content %}{% endblock extra_content %}

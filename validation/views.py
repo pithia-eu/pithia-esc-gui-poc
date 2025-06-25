@@ -31,12 +31,14 @@ from .services import (
     MetadataFileXSDValidator,
 )
 from .url_validation_services import (
+    AcquisitionCapabilitiesMetadataFileMetadataURLReferencesValidator,
     MetadataFileMetadataURLReferencesValidator,
 )
 
 from common import models
 from common.decorators import login_session_institution_required
 from common.helpers import clean_localid_or_namespace
+from user_management.services import get_institution_id_for_login_session
 
 
 logger = logging.getLogger(__name__)
@@ -50,17 +52,13 @@ class QuickInlineValidationFormView(FormView):
     error_dict = {}
     file_wrapper_class = XMLMetadataFile
 
-    def validate(self, request, xml_metadata_file: XMLMetadataFile):
+    def validate_url_references(self, xml_metadata_file: XMLMetadataFile):
         url_references_validation_results = MetadataFileMetadataURLReferencesValidator.validate_and_return_results(xml_metadata_file)
-        self.error_dict.update({
-            'incorrectly_structured_url_errors': list(),
-            'unregistered_resource_url_errors': list(),
-            'unregistered_operational_mode_url_errors': list(),
-            'invalid_ontology_url_errors': list(),
-        })
+        metadata_url_reference_errors = list()
+        invalid_ontology_url_errors = list()
 
         if url_references_validation_results.get('incorrectly_structured_urls'):
-            self.error_dict['incorrectly_structured_url_errors'].append(
+            metadata_url_reference_errors.append(
                 render_to_string(
                     'validation/error_incorrectly_structured_urls.html',
                     context={
@@ -68,8 +66,9 @@ class QuickInlineValidationFormView(FormView):
                     }
                 )
             )
+
         if url_references_validation_results.get('unregistered_resource_urls'):
-            self.error_dict['unregistered_resource_url_errors'].append(
+            metadata_url_reference_errors.append(
                 render_to_string(
                     'validation/error_unregistered_resource_urls.html',
                     context={
@@ -81,21 +80,9 @@ class QuickInlineValidationFormView(FormView):
                     }
                 )
             )
-        if url_references_validation_results.get('unregistered_operational_mode_urls'):
-            self.error_dict['unregistered_operational_mode_url_errors'].append(
-                render_to_string(
-                    'validation/error_unregistered_operational_mode_urls.html',
-                    context={
-                        'unregistered_resource_urls': url_references_validation_results.get('unregistered_operational_mode_urls'),
-                        'file_upload_registration_url_and_url_texts': list(map(
-                            create_register_url_from_resource_type_from_resource_url,
-                            url_references_validation_results.get('types_in_unregistered_operational_mode_urls'),
-                        )),
-                    }
-                )
-            )
+
         if url_references_validation_results.get('invalid_ontology_urls'):
-            self.error_dict['invalid_ontology_url_errors'].append(
+            invalid_ontology_url_errors.append(
                 render_to_string(
                     'validation/error_invalid_ontology_urls.html',
                     context={
@@ -103,6 +90,14 @@ class QuickInlineValidationFormView(FormView):
                     }
                 )
             )
+        return {
+            'metadata_url_reference_errors': metadata_url_reference_errors,
+            'invalid_ontology_url_errors': invalid_ontology_url_errors,
+        }
+
+    def validate(self, request, xml_metadata_file: XMLMetadataFile):
+        url_reference_errors = self.validate_url_references(xml_metadata_file)
+        self.error_dict.update(url_reference_errors)
 
     def post(self, request, *args, **kwargs):
         self.error_dict = {}
@@ -199,13 +194,46 @@ class QuickInlineInstrumentUpdateValidationFormView(QuickInlineValidationFormVie
         return super().validate(request, xml_metadata_file)
 
 
+class QuickInlineAcquisitionCapabilitiesValidationFormViewMixin:
+    def validate_url_references(self, xml_metadata_file: AcquisitionCapabilitiesXMLMetadataFile):
+        url_reference_errors = super().validate_url_references(xml_metadata_file)
+        operational_mode_urls_validation_results = AcquisitionCapabilitiesMetadataFileMetadataURLReferencesValidator.validate_and_return_results(xml_metadata_file)
+        if operational_mode_urls_validation_results.get('unregistered_operational_mode_urls'):
+            institution_id = get_institution_id_for_login_session(self.request.session)
+            instrument_update_url_and_url_texts = [
+                (reverse_lazy('update:instrument', kwargs={'resource_id': instrument.pk}), f'Update {instrument.name}')
+                for instrument in operational_mode_urls_validation_results.get('instruments_to_update')
+                if instrument.institution_id == institution_id
+            ]
+            instrument_detail_url_and_url_texts = [
+                (reverse_lazy('browse:instrument_detail', kwargs={'instrument_id': instrument.pk}), instrument.name)
+                for instrument in operational_mode_urls_validation_results.get('instruments_to_update')
+                if instrument.institution_id != institution_id
+            ]
+            url_reference_errors['metadata_url_reference_errors'].append(
+                render_to_string(
+                    'validation/error_unregistered_operational_mode_urls.html',
+                    context={
+                        'unregistered_resource_urls': operational_mode_urls_validation_results.get('unregistered_operational_mode_urls'),
+                        'file_upload_registration_url_and_url_texts': instrument_update_url_and_url_texts,
+                        'instrument_detail_url_and_url_texts': instrument_detail_url_and_url_texts,
+                    }
+                )
+            )
+        return url_reference_errors
+
+
 @method_decorator(login_session_institution_required, name='dispatch')
-class QuickInlineAcquisitionCapabilitiesRegistrationValidationFormView(QuickInlineRegistrationValidationFormView):
+class QuickInlineAcquisitionCapabilitiesRegistrationValidationFormView(
+        QuickInlineAcquisitionCapabilitiesValidationFormViewMixin,
+        QuickInlineRegistrationValidationFormView):
     file_wrapper_class = AcquisitionCapabilitiesXMLMetadataFile
 
 
 @method_decorator(login_session_institution_required, name='dispatch')
-class QuickInlineAcquisitionCapabilitiesUpdateValidationFormView(QuickInlineUpdateValidationFormView):
+class QuickInlineAcquisitionCapabilitiesUpdateValidationFormView(
+        QuickInlineAcquisitionCapabilitiesValidationFormViewMixin,
+        QuickInlineUpdateValidationFormView):
     file_wrapper_class = AcquisitionCapabilitiesXMLMetadataFile
 
 
@@ -219,10 +247,13 @@ class InlineXSDValidationFormView(FormView):
         if not form.is_valid():
             return HttpResponseBadRequest('The form submitted was not valid.')
         xml_metadata_file = XMLMetadataFile(request.POST.get('xml_file_string'), '')
+        # If XSD errors list stays empty, validation has succeeded.
         self.error_dict.update({
             'xsd_errors': list(),
         })
-        xsd_error_unescaped = next(iter(MetadataFileXSDValidator.validate_and_return_errors(xml_metadata_file)), None)
+        xsd_error_unescaped = next(iter(
+            MetadataFileXSDValidator.validate_and_return_errors(xml_metadata_file)
+        ), None)
         if not xsd_error_unescaped:
             return JsonResponse(self.error_dict, status=HTTPStatus.OK)
 
@@ -234,7 +265,6 @@ class InlineXSDValidationFormView(FormView):
                 }
             )],
         })
-        
         return JsonResponse(self.error_dict, status=HTTPStatus.BAD_REQUEST)
 
 

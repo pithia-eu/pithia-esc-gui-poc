@@ -1,7 +1,30 @@
 {% extends 'validation/error_unregistered_resource_urls.html' %}
 {% block main_error_text %}
-One or multiple referenced operational modes are invalid.
+One or multiple referenced operational modes are unregistered.
 {% endblock main_error_text %}
 {% block pre_list_text %}
-Invalid operational mode references:
+Unregistered operational modes:
 {% endblock pre_list_text %}
+{% block post_note_text %}
+Please use the following links to update
+or to help find the institution responsible
+for the relevant instruments:
+{% endblock post_note_text %}
+{% block extra_content %}
+{% if instrument_detail_url_and_url_texts %}
+<div class="pt-2">
+    You may be able to request an update from
+    the institutions responsible for the relevant
+    instruments. Contact details for these
+    institutions may be available from the instruments'
+    detail pages, which can be accessed below:
+</div>
+<ul class="pt-1">
+    {% for url, url_text in instrument_detail_url_and_url_texts %}
+    <li>
+        <a href="{{ url }}" target="_blank" class="alert-link">{{ url_text }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock extra_content %}
