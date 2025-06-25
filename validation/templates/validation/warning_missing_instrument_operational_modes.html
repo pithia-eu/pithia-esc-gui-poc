@@ -1,0 +1,21 @@
+<div class="mt-2">
+    Any references to the following operational modes will be invalidated after this update:
+<div>
+<ul class="mt-3">
+    {% for url in missing_operational_mode_urls %}
+    <li>
+        {{ url }}
+    </li>
+    {% endfor %}
+</ul>
+<div class="mt-3">
+    To fix this, please also update any references to this instrument's operational mode
+    IDs in the acquisition capabilities listed below, after updating this instrument:
+</div>
+<ul class="mt-3">
+    {% for url, url_text in acquisition_capabilities_update_url_and_url_texts %}
+    <li>
+        <a href="{{ url }}" target="_blank" class="alert-link">{{ url_text }}</a>
+    </li>
+    {% endfor %}
+</ul>

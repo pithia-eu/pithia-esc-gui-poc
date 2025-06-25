@@ -5,6 +5,8 @@ from django.http import (
     HttpResponseBadRequest,
     JsonResponse,
 )
+from django.template.loader import render_to_string
+from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import (
     require_GET,
@@ -21,6 +23,7 @@ from .file_wrappers import (
     XMLMetadataFile,
 )
 from .forms import *
+from .helpers import create_register_url_from_resource_type_from_resource_url
 from .services import (
     InstrumentMetadataFileValidator,
     MetadataFileRegistrationValidator,
@@ -48,9 +51,58 @@ class QuickInlineValidationFormView(FormView):
     file_wrapper_class = XMLMetadataFile
 
     def validate(self, request, xml_metadata_file: XMLMetadataFile):
-        self.error_dict.update(
-            MetadataFileMetadataURLReferencesValidator.validate_and_return_errors(xml_metadata_file)
-        )
+        url_references_validation_results = MetadataFileMetadataURLReferencesValidator.validate_and_return_results(xml_metadata_file)
+        self.error_dict.update({
+            'incorrectly_structured_url_errors': list(),
+            'unregistered_resource_url_errors': list(),
+            'unregistered_operational_mode_url_errors': list(),
+            'invalid_ontology_url_errors': list(),
+        })
+
+        if url_references_validation_results.get('incorrectly_structured_urls'):
+            self.error_dict['incorrectly_structured_url_errors'].append(
+                render_to_string(
+                    'validation/error_incorrectly_structured_urls.html',
+                    context={
+                        'incorrectly_structured_urls': url_references_validation_results.get('incorrectly_structured_urls'),
+                    }
+                )
+            )
+        if url_references_validation_results.get('unregistered_resource_urls'):
+            self.error_dict['unregistered_resource_url_errors'].append(
+                render_to_string(
+                    'validation/error_unregistered_resource_urls.html',
+                    context={
+                        'unregistered_resource_urls': url_references_validation_results.get('unregistered_resource_urls'),
+                        'file_upload_registration_url_and_url_texts': list(map(
+                            create_register_url_from_resource_type_from_resource_url,
+                            url_references_validation_results.get('types_in_unregistered_resource_urls'),
+                        )),
+                    }
+                )
+            )
+        if url_references_validation_results.get('unregistered_operational_mode_urls'):
+            self.error_dict['unregistered_operational_mode_url_errors'].append(
+                render_to_string(
+                    'validation/error_unregistered_operational_mode_urls.html',
+                    context={
+                        'unregistered_resource_urls': url_references_validation_results.get('unregistered_operational_mode_urls'),
+                        'file_upload_registration_url_and_url_texts': list(map(
+                            create_register_url_from_resource_type_from_resource_url,
+                            url_references_validation_results.get('types_in_unregistered_operational_mode_urls'),
+                        )),
+                    }
+                )
+            )
+        if url_references_validation_results.get('invalid_ontology_urls'):
+            self.error_dict['invalid_ontology_url_errors'].append(
+                render_to_string(
+                    'validation/error_invalid_ontology_urls.html',
+                    context={
+                        'invalid_ontology_urls': url_references_validation_results.get('invalid_ontology_urls'),
+                    }
+                )
+            )
 
     def post(self, request, *args, **kwargs):
         self.error_dict = {}
@@ -117,11 +169,32 @@ class QuickInlineInstrumentUpdateValidationFormView(QuickInlineValidationFormVie
         
         self.error_dict.update({
             'op_mode_conflicts': [],
-            'op_mode_warnings': InstrumentMetadataFileValidator.validate_and_return_errors(
-                xml_metadata_file,
-                request.POST.get('existing_metadata_id')
-            ),
+            'op_mode_warnings': [],
         })
+        op_mode_validation_results = InstrumentMetadataFileValidator.validate_and_return_results(
+            xml_metadata_file,
+            request.POST.get('existing_metadata_id')
+        )
+        if len(op_mode_validation_results.get('acquisition_capabilities_to_update')) == 0:
+            return super().validate(request, xml_metadata_file)
+
+        self.error_dict['op_mode_warnings'].append(
+            render_to_string(
+                'validation/warning_missing_instrument_operational_modes.html',
+                context={
+                    'missing_operational_mode_urls': op_mode_validation_results.get('missing_operational_mode_urls'),
+                    'acquisition_capabilities_update_url_and_url_texts': [
+                        (
+                            reverse_lazy(f'update:acquisition_capability_set', kwargs={
+                                'resource_id': ac.pk,
+                            }),
+                            f'Update {ac.name}'
+                        )
+                        for ac in op_mode_validation_results.get('acquisition_capabilities_to_update')
+                    ],
+                }
+            )
+        )
 
         return super().validate(request, xml_metadata_file)
 
@@ -147,11 +220,20 @@ class InlineXSDValidationFormView(FormView):
             return HttpResponseBadRequest('The form submitted was not valid.')
         xml_metadata_file = XMLMetadataFile(request.POST.get('xml_file_string'), '')
         self.error_dict.update({
-            'xsd_errors': MetadataFileXSDValidator.validate_and_return_errors(xml_metadata_file),
+            'xsd_errors': list(),
         })
-
-        if not any(self.error_dict.values()):
+        xsd_error_unescaped = next(iter(MetadataFileXSDValidator.validate_and_return_errors(xml_metadata_file)), None)
+        if not xsd_error_unescaped:
             return JsonResponse(self.error_dict, status=HTTPStatus.OK)
+
+        self.error_dict.update({
+            'xsd_errors': [render_to_string(
+                'validation/error_xsd_validation_failed.html',
+                context={
+                    'error': xsd_error_unescaped,
+                }
+            )],
+        })
         
         return JsonResponse(self.error_dict, status=HTTPStatus.BAD_REQUEST)
 

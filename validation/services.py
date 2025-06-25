@@ -6,7 +6,6 @@ from datetime import (
     timezone,
 )
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.html import escape
 from typing import Union
 from xmlschema.exceptions import XMLSchemaException
 
@@ -17,10 +16,6 @@ from .errors import (
 from .file_wrappers import (
     InstrumentXMLMetadataFile,
     XMLMetadataFile,
-)
-from .helpers import (
-    map_acquisition_capability_to_update_link,
-    map_string_to_li_element,
 )
 
 from common.models import (
@@ -69,7 +64,7 @@ class MetadataFileXSDValidator:
             cls.validate(xml_metadata_file)
         except XMLSchemaException as err:
             logger.exception('Error occurred during metadata validation.')
-            error_msg = f'<span style="white-space: pre-wrap;">{escape(str(err).strip())}</span>'
+            error_msg = str(err).strip()
             errors.append(error_msg)
         return errors
 
@@ -172,8 +167,11 @@ class InstrumentMetadataFileValidator:
         return result, missing_operational_mode_urls
 
     @classmethod
-    def validate_and_return_errors(cls, xml_metadata_file: InstrumentXMLMetadataFile, existing_metadata_id: str):
-        errors = []
+    def validate_and_return_results(cls, xml_metadata_file: InstrumentXMLMetadataFile, existing_metadata_id: str):
+        results = {
+            'acquisition_capabilities_to_update': list(),
+            'missing_operational_mode_urls': list(),
+        }
         try:
             # Operational mode IDs are changed and pre-existing IDs are referenced by any Acquisition Capabilities validation
             is_each_op_mode_in_update_valid, missing_operational_mode_urls = cls.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(
@@ -184,11 +182,11 @@ class InstrumentMetadataFileValidator:
             if not is_each_op_mode_in_update_valid:
                 acquisition_capability_sets = AcquisitionCapabilities.objects.referencing_operational_mode_urls(missing_operational_mode_urls)
                 if len(acquisition_capability_sets) == 0:
-                    return errors
-                error_msg = '<div class="mt-2">Any references to the following operational modes will be invalidated after this update:<div>'
-                error_msg = error_msg + '<ul class="mt-3">%s</ul>' % ''.join(list(map(map_string_to_li_element, missing_operational_mode_urls)))
-                error_msg = error_msg + '<div class="mt-3">To fix this, please also update any references to this instrument\'s operational mode IDs in the acquisition capabilities listed below, after updating this instrument:</div><ul class="mt-3">%s</ul>' % ''.join(list(map(map_acquisition_capability_to_update_link, acquisition_capability_sets)))
-                errors.append(error_msg)
+                    return results
+                results.update({
+                    'acquisition_capabilities_to_update': acquisition_capability_sets,
+                    'missing_operational_mode_urls': missing_operational_mode_urls,
+                })
         except AttributeError:
             logger.exception('This metadata file doesn\'t have operational modes')
-        return errors
+        return results

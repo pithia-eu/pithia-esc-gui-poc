@@ -574,7 +574,7 @@ class InlineValidationTestCase(TestCase):
         xml_file_string = xml_file.read()
         test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
 
-        results = MetadataFileMetadataURLReferencesValidator.validate_and_return_errors(test_xml_file)
+        results = MetadataFileMetadataURLReferencesValidator.validate_and_return_results(test_xml_file)
         print('results', results)
         self.assertIs(type(results), dict)
         self.assertFalse(any(results.values()))
@@ -654,9 +654,9 @@ class InlineValidationTestCase(TestCase):
         xml_file_string = xml_file.read()
         test_xml_file = InstrumentXMLMetadataFile(xml_file_string, xml_file.name)
 
-        results = InstrumentMetadataFileValidator.validate_and_return_errors(test_xml_file, test_xml_file.localid)
+        results = InstrumentMetadataFileValidator.validate_and_return_results(test_xml_file, test_xml_file.localid)
         print('results', results)
-        self.assertIs(type(results), list)
+        self.assertIs(type(results), dict)
 
     def test_inline_instrument_validation_does_not_return_errors(self):
         """Returns an empty list of errors found whilst validating an instrument XML
@@ -668,9 +668,9 @@ class InlineValidationTestCase(TestCase):
         xml_file_string = xml_file.read()
         test_xml_file = InstrumentXMLMetadataFile(xml_file_string, xml_file.name)
 
-        results = InstrumentMetadataFileValidator.validate_and_return_errors(test_xml_file, test_xml_file.localid)
+        results = InstrumentMetadataFileValidator.validate_and_return_results(test_xml_file, test_xml_file.localid)
         print('results', results)
-        self.assertIs(type(results), list)
+        self.assertIs(type(results), dict)
 
 class LocalIDServiceTestCase(TestCase):
     def setUp(self) -> None:

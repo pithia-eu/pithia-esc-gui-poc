@@ -1,7 +1,6 @@
 import re
 import validators
 from django.core.exceptions import ObjectDoesNotExist
-from django.template.loader import render_to_string
 from operator import itemgetter
 from rdflib import (
     Graph,
@@ -15,9 +14,6 @@ from typing import List
 from .file_wrappers import (
     AcquisitionCapabilitiesXMLMetadataFile,
     XMLMetadataFile,
-)
-from .helpers import (
-    create_register_url_from_resource_type_from_resource_url,
 )
 
 from common.constants import PITHIA_METADATA_SERVER_HTTPS_URL_BASE
@@ -44,7 +40,7 @@ class MetadataFileOntologyURLReferencesValidator:
         Any other HTTP response error code is treated
         as unexpected.
         """
-        # e.g. http://ontology.espas-fp7.eu/relatedPartyRole/Operator
+        # e.g. https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/Operator/
         response = get(ontology_term_url)
         if response.status_code == 404:
             return False
@@ -281,11 +277,7 @@ class MetadataFileMetadataURLReferencesValidator:
         return invalid_urls_dict
 
     @classmethod
-    def validate_and_return_errors(cls, xml_metadata_file: XMLMetadataFile):
-        incorrectly_structured_url_errors = []
-        unregistered_resource_url_errors = []
-        unregistered_operational_mode_url_errors = []
-
+    def validate_and_return_results(cls, xml_metadata_file: XMLMetadataFile):
         # Resource URL validation
         # Check which resource URLs are valid and return
         # the invalid ones.
@@ -302,68 +294,36 @@ class MetadataFileMetadataURLReferencesValidator:
             invalid_resource_urls.get(cls.UNREGISTERED_RESOURCE_URLS_KEY, [])
             + invalid_operational_mode_urls.get(cls.UNREGISTERED_RESOURCE_URLS_KEY, [])
         ))
-        unregistered_resource_url_types = list(set(
-            invalid_resource_urls.get(cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY, []) +
-            invalid_operational_mode_urls.get(cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY, [])
-        ))
         unregistered_operational_mode_urls = list(set(
             invalid_operational_mode_urls.get(cls.UNREGISTERED_OPERATIONAL_MODE_URLS_KEY, [])
         ))
         
-        # Return error messages depending on the what problem
-        # occurred.
+        # Return results depending on the what problem occurred.
+        results = dict()
+        # Incorrectly structured URLs
         if len(incorrectly_structured_urls) > 0:
-            error_msg = render_to_string(
-                'validation/error_incorrectly_structured_urls.html',
-                context={
-                    'incorrectly_structured_urls': incorrectly_structured_urls,
-                }
-            )
-            incorrectly_structured_url_errors.append(error_msg)
+            results.update({
+                'incorrectly_structured_urls': incorrectly_structured_urls,
+            })
 
+        # Unregistered resource URLs
         if len(unregistered_resource_urls) > 0:
-            file_upload_registration_url_and_url_texts = list(map(
-                create_register_url_from_resource_type_from_resource_url,
-                unregistered_resource_url_types
-            ))
-            error_msg = render_to_string(
-                'validation/error_unregistered_resource_urls.html',
-                context={
-                    'unregistered_resource_urls': unregistered_resource_urls,
-                    'file_upload_registration_url_and_url_texts': file_upload_registration_url_and_url_texts,
-                }
-            )
-            unregistered_resource_url_errors.append(error_msg)
+            results.update({
+                'unregistered_resource_urls': unregistered_resource_urls,
+                'types_in_unregistered_resource_urls': invalid_resource_urls.get(cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY, []),
+            })
 
+        # Unregistered operational mode URLs
         if len(unregistered_operational_mode_urls) > 0:
-            file_upload_registration_url_and_url_texts = list(map(
-                create_register_url_from_resource_type_from_resource_url,
-                unregistered_resource_url_types
-            ))
-            error_msg = render_to_string(
-                'validation/error_unregistered_operational_mode_urls.html',
-                context={
-                    'unregistered_resource_urls': unregistered_operational_mode_urls,
-                    'file_upload_registration_url_and_url_texts': file_upload_registration_url_and_url_texts,
-                }
-            )
-            unregistered_operational_mode_url_errors.append(error_msg)
+            results.update({
+                'unregistered_operational_mode_urls': unregistered_operational_mode_urls,
+                'types_in_unregistered_operational_mode_urls': invalid_operational_mode_urls.get(cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY, []),
+            })
 
-        # Ontology URL validation
+        # Invalid ontology URLs
         invalid_ontology_urls = MetadataFileOntologyURLReferencesValidator.is_each_potential_ontology_url_in_xml_file_valid(xml_metadata_file)
-        invalid_ontology_url_errors = []
         if len(invalid_ontology_urls) > 0:
-            error_msg = render_to_string(
-                'validation/error_invalid_ontology_urls.html',
-                context={
-                    'invalid_ontology_urls': invalid_ontology_urls,
-                }
-            )
-            invalid_ontology_url_errors.append(error_msg)
-
-        return {
-            'incorrectly_structured_url_errors': incorrectly_structured_url_errors,
-            'unregistered_resource_url_errors': unregistered_resource_url_errors,
-            'unregistered_operational_mode_url_errors': unregistered_operational_mode_url_errors,
-            'invalid_ontology_url_errors': invalid_ontology_url_errors,
-        }
+            results.update({
+                'invalid_ontology_urls': invalid_ontology_urls,
+            })
+        return results
