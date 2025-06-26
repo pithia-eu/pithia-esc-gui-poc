@@ -464,12 +464,6 @@ class PithiaDocumentationMetadataPropertiesMixin(BaseMetadataPropertiesShortcutM
                 self.PITHIA_NSPREFIX_XPATH
             )
         )
-        print('documentation_elements', documentation_elements)
-        print('documentations', [
-            self._get_citation_from_documentation_element(documentation_element)
-            for documentation_element in documentation_elements
-            if documentation_element is not None
-        ])
         return [
             self._get_citation_from_documentation_element(documentation_element)
             for documentation_element in documentation_elements
