@@ -1,5 +1,6 @@
 import os
 import shutil
+import urllib.parse
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.urls import reverse_lazy
 from django.utils.text import slugify
@@ -69,7 +70,7 @@ class DataSubsetDataHubViewMixin:
                 'browse:data_subset_online_resource_file',
                 kwargs={
                     'data_subset_id': self.resource_id,
-                    'online_resource_name': online_resource_name
+                    'online_resource_name': urllib.parse.quote_plus(online_resource_name)
                 }
             )
         )

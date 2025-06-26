@@ -1,3 +1,4 @@
+import urllib.parse
 from django.http import FileResponse
 from django.http import Http404
 from django.shortcuts import render
@@ -20,7 +21,7 @@ def get_workflow_details_file(request, workflow_id):
 def get_data_subset_online_resource_file(request, data_subset_id, online_resource_name):
     online_resource_file = DataSubsetDataHubService.get_data_subset_file(
         data_subset_id,
-        online_resource_name
+        urllib.parse.unquote_plus(online_resource_name)
     )
     if not online_resource_file:
         raise Http404(f'A file for <i>{online_resource_name}</i> (<i>data subset {data_subset_id}</i>) was not found in the e-Science Centre.')
