@@ -14,11 +14,12 @@
     <div class="border-top pt-3 mt-3">
         <p class="fw-semibold mb-0">
             <button
-                class="fs-sm-1 btn btn-link btn-show-outdated-regs-dialog icon-link link-underline-by-default text-body p-0"
+                class="fs-sm-1 align-items-start btn btn-link btn-show-outdated-regs-dialog icon-link text-body text-start p-0"
                 type="button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill" viewBox="0 0 16 16">
-                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
-                </svg>{{ outdated_registrations.keys|length }} outdated registrations
+                <span class="spinner-grow spinner-grow-sm text-body-tertiary mt-1" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </span>
+                Checking for outdated registrations
             </button>
         </p>
     </div>

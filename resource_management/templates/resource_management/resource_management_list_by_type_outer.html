@@ -7,6 +7,7 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block scripts %}
+{{ outdated_resource_check_url_name|json_script:'outdated-resource-check-url-name' }}
 <script src="{% static 'resource_management/resource_management.js' %}" type="module"></script>
 <script src="{% static 'utils/expandable_text_block.js' %}" type="module"></script>
 {% endblock scripts %}
