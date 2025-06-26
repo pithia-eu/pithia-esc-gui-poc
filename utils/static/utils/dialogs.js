@@ -1,4 +1,4 @@
-export function setupDialog(dialog, showButton, closeButton) {
+export function setupDialog(dialog, showButtons, closeButton) {
     // Light dismiss - allows dialog to be closed
     // by clicking on the backdrop.
     dialog.addEventListener("click", () => {
@@ -22,12 +22,14 @@ export function setupDialog(dialog, showButton, closeButton) {
         dialog.setAttribute("inert", "");
     });
 
-    showButton.addEventListener("click", () => {
-        dialog.removeAttribute("inert");
-        dialog.showModal();
-        // Close button should autofocus with
-        // dialog, but doesn't in Safari for
-        // some reason.
-        closeButton.focus();
+    showButtons.forEach(showButton => {
+        showButton.addEventListener("click", () => {
+            dialog.removeAttribute("inert");
+            dialog.showModal();
+            // Close button should autofocus with
+            // dialog, but doesn't in Safari for
+            // some reason.
+            closeButton.focus();
+        });
     });
 }

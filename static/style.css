@@ -11,7 +11,6 @@ section {
 /* Credit: Used this article as reference for dialog implementation:
 https://web.dev/articles/building/a-dialog-component */
 dialog {
-    width: 30rem;
     border: 1px var(--bs-gray-300) solid;
     border-radius: 12.5px;
     pointer-events: none;
@@ -49,7 +48,7 @@ dialog .dialog-header {
 }
 
 dialog .btn-close {
-    transform: translateY(0.25rem);
+    transform: translateY(-0.5rem);
     flex-shrink: 0;
 }
 
@@ -505,6 +504,10 @@ h3.opblock-tag p {
     text-overflow: ellipsis;
 }
 
+.line-clamp-1 {
+    -webkit-line-clamp: 1;
+}
+
 .line-clamp-2 {
     -webkit-line-clamp: 2;
 }
@@ -867,6 +870,10 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
 .btn-card-help-dialog:hover svg:nth-child(2),
 .btn-card-help-dialog:focus-visible svg:nth-child(2) {
     display: inline;
+}
+
+.help-dialog {
+    width: 30rem;
 }
 
 /* Home page, login alert - institution selection */

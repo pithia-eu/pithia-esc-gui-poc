@@ -1,0 +1,53 @@
+{% extends 'utils/dialog_template.html' %}
+{% block dialog_header_content %}
+<h2 class="fs-base-2 mb-0">
+    Outdated Registrations
+    <span class="text-secondary">({{ outdated_registrations.keys|length }})</span>
+</h2>
+{% endblock dialog_header_content %}
+{% block dialog_body_content %}
+<ul class="list-group list-group-flush">
+    {% for outdated_registration_id, outdated_registration_data in outdated_registrations.items %}
+    <li class="list-group-item p-0">
+        <details>
+            <summary class="summary-marker-custom summary-marker-custom-sm summary-marker-custom-baseline py-2 {% if forloop.first %}pt-2{% endif %} mb-0">
+                <div class="d-inline-flex flex-column row-gap-1">
+                    {{ outdated_registration_data.registration.name }}
+                    <span class="fs-sm-1 text-body-secondary line-clamp line-clamp-2 text-break w-100">{{ outdated_registration_id }}</span>
+                </div>
+            </summary>
+            <div class="d-flex flex-column align-items-start row-gap-3 pb-3">
+                {% if outdated_registration_data.deprecated_ontology_urls %}
+                <ul class="px-3" style="list-style-type: disc;">
+                    {% for url in outdated_registration_data.deprecated_ontology_urls %}
+                    <li {% if not forloop.first %}class="pt-2"{% endif %}>
+                        References deprecated ontology term: <code class="text-break">{{ url }}</code>.
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% if outdated_registration_data.not_found_ontology_urls %}
+                <ul class="px-3" style="list-style-type: disc;">
+                    {% for url in outdated_registration_data.not_found_ontology_urls %}
+                    <li {% if not forloop.first %}class="pt-2"{% endif %}>
+                        References term not present in ontology: <code class="text-break">{{ url }}</code>.
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <div class="d-flex flex-wrap justify-content-between column-gap-4">
+                    <a
+                        href="{% url resource_update_page_url_name outdated_registration_id %}"
+                        class="link-underline-by-default text-body">Update</a>
+                    {% if resource_update_with_wizard_page_url_name %}
+                    <a
+                        href="{% url resource_update_with_wizard_page_url_name outdated_registration_id %}"
+                        class="link-underline-by-default text-body ms-auto">Update with Wizard</a>
+                    {% endif %}
+                </div>
+            </div>
+        </details>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock dialog_body_content %}

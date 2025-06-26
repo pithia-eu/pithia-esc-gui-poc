@@ -271,8 +271,8 @@
         {% csrf_token %}
     </form>
 </div>
-{% for dict in help_content_dicts %}
-{% with help_content=dict %}
+{% for help_content_dict in help_content_dicts %}
+{% with help_content=help_content_dict dialog_id=help_content_dict.dialog_id dialog_extra_classes='help-dialog' %}
 {% include 'help/help_dialogs/dialog_template.html' %}
 {% endwith %}
 {% endfor %}

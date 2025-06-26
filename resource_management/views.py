@@ -4,6 +4,12 @@ from django.views.generic import ListView
 
 from common import models
 from common.decorators import login_session_institution_required
+from ontology.services import get_ontology_category_terms_in_xml_format
+from ontology.utils import (
+    OntologyCategoryMetadata,
+    OntologyTermMetadata,
+    get_ontology_term_category_from_url
+)
 from user_management.services import (
     get_institution_id_for_login_session,
     get_members_by_institution_id,
@@ -92,6 +98,97 @@ class ResourceManagementListView(ListView):
     resource_management_category_list_page_breadcrumb_text = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:data_collection_related_metadata_index'
 
+    def _add_registration_to_registrations_by_ontology_url(self, registration, registrations_by_ontology_url: dict):
+        for ontology_url in registration.properties.ontology_urls:
+            if ontology_url not in registrations_by_ontology_url:
+                registrations_by_ontology_url.update({
+                    ontology_url: {
+                        'category': '',
+                        'registrations': [],
+                    },
+                })
+            registrations_by_ontology_url[ontology_url]['registrations'].append(registration)
+        return registrations_by_ontology_url
+
+    def _add_registrations_referencing_not_found_ontology_url(
+            self,
+            registrations,
+            not_found_ontology_url: str,
+            outdated_registrations: dict):
+        for r in registrations:
+            if r.pk not in outdated_registrations:
+                outdated_registrations[r.pk] = {
+                    'registration': r,
+                    'not_found_ontology_urls': [],
+                }
+            outdated_registrations[r.pk]['not_found_ontology_urls'].append(
+                not_found_ontology_url
+            )
+        return outdated_registrations
+
+    def _add_registrations_referencing_deprecated_ontology_url(
+            self,
+            registrations,
+            deprecated_ontology_url: str,
+            outdated_registrations: dict):
+        for r in registrations:
+            if r.pk not in outdated_registrations:
+                outdated_registrations[r.pk] = {
+                    'registration': r,
+                    'deprecated_ontology_urls': [],
+                }
+            outdated_registrations[r.pk]['deprecated_ontology_urls'].append(
+                deprecated_ontology_url
+            )
+        return outdated_registrations
+
+    def get_outdated_registrations(self):
+        registrations = self.model.objects.owned_by_institution(
+            get_institution_id_for_login_session(self.request.session)
+        )
+        registrations_by_ontology_url = {}
+        for r in registrations:
+            registrations_by_ontology_url = self._add_registration_to_registrations_by_ontology_url(
+                r,
+                registrations_by_ontology_url
+            )
+
+        ontology_category_names = set()
+        for ontology_url, ontology_url_data in registrations_by_ontology_url.items():
+            category = get_ontology_term_category_from_url(ontology_url)
+            ontology_url_data.update({
+                'category': category
+            })
+            ontology_category_names.add(category)
+        ontology_categories = {
+            category: OntologyCategoryMetadata(get_ontology_category_terms_in_xml_format(category))
+            for category in ontology_category_names
+        }
+        outdated_registrations = dict()
+        for ontology_url, ontology_url_data in registrations_by_ontology_url.items():
+            category_name = ontology_url_data.get('category', '')
+            category_metadata = ontology_categories.get(category_name)
+            if not category_metadata:
+                continue
+            xml_of_ontology_term = category_metadata.get_term_with_iri(ontology_url)
+            if not xml_of_ontology_term:
+                self._add_registrations_referencing_not_found_ontology_url(
+                    registrations_by_ontology_url.get(ontology_url).get('registrations', []),
+                    ontology_url,
+                    outdated_registrations
+                )
+                continue
+            ontology_term_metadata = OntologyTermMetadata(xml_of_ontology_term)
+            if 'deprecate' not in ontology_term_metadata.pref_label.lower():
+                continue
+            self._add_registrations_referencing_deprecated_ontology_url(
+                registrations_by_ontology_url.get(ontology_url).get('registrations', []),
+                ontology_url,
+                outdated_registrations
+            )
+        return outdated_registrations
+
+
     def get(self, request, *args, **kwargs):
         self.institution_id = get_institution_id_for_login_session(request.session)
 
@@ -117,6 +214,8 @@ class ResourceManagementListView(ListView):
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_text'] = self.resource_management_category_list_page_breadcrumb_text
         context['resource_management_category_list_page_breadcrumb_url_name'] = self.resource_management_category_list_page_breadcrumb_url_name
+        context['outdated_registrations'] = self.get_outdated_registrations()
+
         return context
 
 

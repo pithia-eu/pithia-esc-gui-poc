@@ -7,7 +7,7 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block scripts %}
-<script src="{% static 'resource_management/resource_management.js' %}" defer></script>
+<script src="{% static 'resource_management/resource_management.js' %}" type="module"></script>
 <script src="{% static 'utils/expandable_text_block.js' %}" type="module"></script>
 {% endblock scripts %}
 {% block content %}
@@ -69,4 +69,7 @@
         {% endwith %}
     </div>
 </div>
+{% with dialog_id='outdated-registrations-dialog' dialog_extra_classes='col-lg-8' %}
+{% include 'resource_management/outdated_registrations_dialog.html' %}
+{% endwith %}
 {% endblock content %}

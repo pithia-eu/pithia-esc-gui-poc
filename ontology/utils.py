@@ -199,3 +199,13 @@ class ObservedPropertyOntologyTermMetadata(OntologyTermMetadata):
     @property
     def qualifiers(self):
         return self._get_elements_with_xpath_query('.//%s:qualifier/@%s:resource' % (NamespacePrefix.PITHIA, NamespacePrefix.RDF))
+
+
+# Ontology URL helpers
+def get_ontology_term_category_from_url(ontology_url: str):
+    ontology_url_with_shortened_path = ontology_url.replace(SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE, '')
+    return next(iter([
+        s
+        for s in ontology_url_with_shortened_path.split('/')
+        if s.strip()
+    ]), '')
