@@ -13,7 +13,9 @@
         </button>
         <div id="navbarNav" class="collapse navbar-collapse px-xl-0 px-2">
             <div class="d-md-none d-block border-bottom pt-4 pb-3">
+                {% with user_menu_location='navbar' %}
                 {% include 'header/user_menu.html' %}
+                {% endwith %}
             </div>
             <ul class="navbar-nav align-items-xl-center align-items-start column-gap-4 fs-sm-2 fw-medium text-secondary-emphasis w-100 py-xl-0 pt-md-2 pt-3 pb-3 mb-0">
                 <li class="nav-item">

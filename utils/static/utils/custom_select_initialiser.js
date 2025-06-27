@@ -1,12 +1,42 @@
 const customSelects = {};
 const selectControlWithNoSearchSelector = "select.no-search";
 const keywordsInputSelector = "select[name='keyword']";
+const userMenuInstitutionSelectControlSelector = ".user-dropdown select[name='institutions']";
+
 
 function addEventListenersToCustomSelect(customSelect) {
     customSelect.control.addEventListener("mousedown", e => {
         if (document.activeElement.tagName !== "BODY") {
             document.activeElement.blur();
         }
+    });
+}
+
+function addVisuallyHiddenClassToTomSelectControlInput(tomSelectInstance) {
+    tomSelectInstance.control_input.classList.add("visually-hidden");
+}
+
+function removeVisuallyHiddenClassFromTomSelectControlInput(tomSelectInstance) {
+    tomSelectInstance.control_input.classList.remove("visually-hidden");
+}
+
+function initialiseInstitutionSelectControlsInUserMenus(selectControls) {
+    selectControls.forEach(sc => {
+        const cs = new TomSelect(sc, {
+            closeAfterSelect: true,
+            maxOptions: null,
+            onBlur: () => {
+                removeVisuallyHiddenClassFromTomSelectControlInput(cs);
+            },
+            onDropdownClose: () => {
+                addVisuallyHiddenClassToTomSelectControlInput(cs);
+            },
+            onType: () => {
+                removeVisuallyHiddenClassFromTomSelectControlInput(cs);
+            },
+        });
+        addEventListenersToCustomSelect(cs);
+        customSelects[sc.id] = cs;
     });
 }
 
@@ -46,8 +76,9 @@ function initialiseKeywordMultipleChoiceSelectControls(selectControls) {
 
 // Initialise all selects on window load
 window.addEventListener("load", () => {
-    initialiseSelectControls(document.querySelectorAll(`select:not(${keywordsInputSelector}, ${selectControlWithNoSearchSelector})`));
-    initialiseSelectControlsWithNoSearch(document.querySelectorAll(`${selectControlWithNoSearchSelector}:not(${keywordsInputSelector})`));
+    initialiseSelectControls(document.querySelectorAll(`select:not(${keywordsInputSelector}, ${selectControlWithNoSearchSelector}, ${userMenuInstitutionSelectControlSelector})`));
+    initialiseSelectControlsWithNoSearch(document.querySelectorAll(`${selectControlWithNoSearchSelector}:not(${keywordsInputSelector}, ${userMenuInstitutionSelectControlSelector})`));
+    initialiseInstitutionSelectControlsInUserMenus(document.querySelectorAll(userMenuInstitutionSelectControlSelector));
     initialiseKeywordMultipleChoiceSelectControls(document.querySelectorAll(`${keywordsInputSelector}`));
 });
 
