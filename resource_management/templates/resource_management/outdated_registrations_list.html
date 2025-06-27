@@ -1,3 +1,6 @@
+{% if outdated_registrations.keys|length == 0 %}
+<span class="text-body-secondary">No outdated registrations found.</span>
+{% else %}
 <ul class="list-group list-group-flush">
     {% for outdated_registration_id, outdated_registration_data in outdated_registrations.items %}
     <li class="list-group-item bg-transparent p-0">
@@ -42,3 +45,4 @@
     </li>
     {% endfor %}
 </ul>
+{% endif %}
