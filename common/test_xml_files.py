@@ -3204,15 +3204,15 @@ METADATA_AND_ONTOLOGY_URLS_XML = SimpleUploadedFile(
         <url xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/test"/>
 
         <!-- Valid resource URLs -->
-        <url xlink:hreef="https://metadata.pithia.eu/resources/2.2/process/eiscat/CompositeProcess_EISCAT_Vector_VHF"/>
-
-        <!-- Invalid resource URLs -->
+        <url xlink:href="https://metadata.pithia.eu/resources/2.2/process/eiscat/CompositeProcess_EISCAT_Vector_VHF"/>
         <url xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_Test"/>
         <url xlink:href="https://metadata.pithia.eu/resources/2.2/individual/pithia/Individual_TEST_Test"/>
+
+        <!-- Invalid resource URLs -->
         <url xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/pithia/Individual_TEST_Test"/>
+        <url xlink:href="https://metadata.pithia.eu/resources/2.2/collection/pithia/Organisation_Test#Test"/>
 
         <!-- Invalid resource URLs with operational mode IDs -->
-        <url xlink:href="https://metadata.pithia.eu/resources/2.2/collection/pithia/Organisation_Test#Test"/>
         <url xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_Test#Test"/>
     </urltest>
     '''

@@ -494,7 +494,7 @@ class XMLMetadataFileIntegrationTestCase(TestCase):
         invalid_resource_urls = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(
             self.xml_metadata_file_with_invalid_urls
         )
-        self.assertEquals(len(invalid_resource_urls['urls_pointing_to_unregistered_resources']), 2)
+        self.assertEquals(len(invalid_resource_urls['urls_pointing_to_unregistered_resources']), 3)
 
     def test_invalid_op_mode_urls_in_file_are_found(self):
         """The validator returns lists of invalid operational
@@ -507,7 +507,7 @@ class XMLMetadataFileIntegrationTestCase(TestCase):
         
         invalid_resource_urls_with_op_mode_ids = AcquisitionCapabilitiesMetadataFileMetadataURLReferencesValidator.is_each_potential_operational_mode_url_valid(self.xml_metadata_file_with_invalid_urls)
         self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_with_incorrect_structure']), 1)
-        self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_pointing_to_unregistered_resources']), 3)
+        self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_pointing_to_unregistered_resources']), 1)
         self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_pointing_to_registered_resources_with_missing_op_modes']), 0)
 
 
@@ -563,7 +563,7 @@ class XMLMetadataFileTestCase(TestCase):
         self.test_xml_file = AcquisitionCapabilitiesXMLMetadataFile(xml_file_string, xml_file.name)
 
         validation_results = AcquisitionCapabilitiesMetadataFileMetadataURLReferencesValidator.is_each_potential_operational_mode_url_valid(self.test_xml_file)
-        self.assertEqual(len(validation_results['urls_with_incorrect_structure']), 1)
+        self.assertEqual(len(validation_results['urls_with_incorrect_structure']), 2)
 
 class InlineValidationTestCase(TestCase):
     def test_inline_reference_validation_returns_no_errors(self):
