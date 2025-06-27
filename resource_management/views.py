@@ -415,11 +415,16 @@ class OutdatedRegistrationsCheckViewMixin:
             if r.pk not in outdated_registrations:
                 outdated_registrations[r.pk] = {
                     'registration': r,
-                    'not_found_ontology_urls': [],
+                    'not_found_ontology_urls': dict(),
                 }
-            outdated_registrations[r.pk]['not_found_ontology_urls'].append(
-                not_found_ontology_url
-            )
+            if not_found_ontology_url not in outdated_registrations[r.pk]['not_found_ontology_urls']:
+                outdated_registrations[r.pk]['not_found_ontology_urls'].update({
+                    not_found_ontology_url: {
+                        'number_of_occurrences': 1,
+                    }
+                })
+                continue
+            outdated_registrations[r.pk]['not_found_ontology_urls'][not_found_ontology_url]['number_of_occurrences'] += 1
         return outdated_registrations
 
     def _add_registrations_referencing_deprecated_ontology_url(
@@ -431,11 +436,16 @@ class OutdatedRegistrationsCheckViewMixin:
             if r.pk not in outdated_registrations:
                 outdated_registrations[r.pk] = {
                     'registration': r,
-                    'deprecated_ontology_urls': [],
+                    'deprecated_ontology_urls': dict(),
                 }
-            outdated_registrations[r.pk]['deprecated_ontology_urls'].append(
-                deprecated_ontology_url
-            )
+            if deprecated_ontology_url not in outdated_registrations[r.pk]['deprecated_ontology_urls']:
+                outdated_registrations[r.pk]['deprecated_ontology_urls'].update({
+                    deprecated_ontology_url: {
+                        'number_of_occurrences': 1,
+                    }
+                })
+                continue
+            outdated_registrations[r.pk]['deprecated_ontology_urls'][deprecated_ontology_url]['number_of_occurrences'] += 1
         return outdated_registrations
 
     def get_outdated_registrations(self):

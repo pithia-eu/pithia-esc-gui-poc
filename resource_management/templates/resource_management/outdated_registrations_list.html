@@ -12,20 +12,32 @@
                 </div>
             </summary>
             <div class="d-flex flex-column align-items-start row-gap-3 pb-3">
-                {% if outdated_registration_data.deprecated_ontology_urls %}
+                {% if outdated_registration_data.deprecated_ontology_urls.items %}
                 <ul class="px-3" style="list-style-type: disc;">
-                    {% for url in outdated_registration_data.deprecated_ontology_urls %}
+                    {% for url, url_data in outdated_registration_data.deprecated_ontology_urls.items %}
                     <li {% if not forloop.first %}class="pt-2"{% endif %}>
-                        References deprecated ontology term: <code class="text-break">{{ url }}</code>.
+                        {% with number_of_occurrences=url_data.number_of_occurrences %}
+                        {% if number_of_occurrences == 1 %}
+                        A reference is made to a deprecated ontology term: <code class="text-break">{{ url }}</code>.
+                        {% else %}
+                        {{ number_of_occurrences }} references are made to a deprecated ontology term: <code class="text-break">{{ url }}</code>.
+                        {% endif %}
+                        {% endwith %}
                     </li>
                     {% endfor %}
                 </ul>
                 {% endif %}
                 {% if outdated_registration_data.not_found_ontology_urls %}
                 <ul class="px-3" style="list-style-type: disc;">
-                    {% for url in outdated_registration_data.not_found_ontology_urls %}
+                    {% for url, url_data in outdated_registration_data.not_found_ontology_urls.items %}
                     <li {% if not forloop.first %}class="pt-2"{% endif %}>
-                        References term not present in ontology: <code class="text-break">{{ url }}</code>.
+                        {% with number_of_occurrences=url_data.number_of_occurrences %}
+                        {% if number_of_occurrences == 1 %}
+                        A reference is made to a term not present in ontology: <code class="text-break">{{ url }}</code>.
+                        {% else %}
+                        {{ number_of_occurrences }} references are made to a term not present in ontology: <code class="text-break">{{ url }}</code>.
+                        {% endif %}
+                        {% endwith %}
                     </li>
                     {% endfor %}
                 </ul>
