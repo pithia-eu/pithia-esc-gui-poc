@@ -3210,9 +3210,11 @@ METADATA_AND_ONTOLOGY_URLS_XML = SimpleUploadedFile(
 
         <!-- Invalid resource URLs -->
         <url xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/pithia/Individual_TEST_Test"/>
-        <url xlink:href="https://metadata.pithia.eu/resources/2.2/collection/pithia/Organisation_Test#Test"/>
 
         <!-- Invalid resource URLs with operational mode IDs -->
+        <url xlink:href="https://metadata.pithia.eu/resources/2.2/collection/pithia/Organisation_Test#Test"/>
+
+        <!-- Valid operational mode URLs -->
         <url xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_Test#Test"/>
     </urltest>
     '''

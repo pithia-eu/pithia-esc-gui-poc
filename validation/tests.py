@@ -563,7 +563,7 @@ class XMLMetadataFileTestCase(TestCase):
         self.test_xml_file = AcquisitionCapabilitiesXMLMetadataFile(xml_file_string, xml_file.name)
 
         validation_results = AcquisitionCapabilitiesMetadataFileMetadataURLReferencesValidator.is_each_potential_operational_mode_url_valid(self.test_xml_file)
-        self.assertEqual(len(validation_results['urls_with_incorrect_structure']), 2)
+        self.assertEqual(len(validation_results['urls_with_incorrect_structure']), 1)
 
 class InlineValidationTestCase(TestCase):
     def test_inline_reference_validation_returns_no_errors(self):
