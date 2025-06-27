@@ -39,6 +39,7 @@
             </div>
             {{ request.institution_selection_form.institutions.label_tag }}
             <select
+                id="{{ request.institution_selection_form.institutions.auto_id }}-{{ user_menu_location|default:'header' }}"
                 name="{{ request.institution_selection_form.institutions.name }}"
                 {% comment %} id="{{ request.institution_selection_form.institutions.auto_id }}" {% endcomment %}
                 class="form-select mb-3"
