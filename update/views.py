@@ -45,13 +45,13 @@ from resource_management.forms import (
     UploadUpdatedFileForm,
     UploadUpdatedWorkflowFileForm,
 )
-from resource_management.view_mixins import DataSubsetResourceManagementViewMixin
-from resource_management.views import (
-    _create_manage_resource_page_title,
+from resource_management.constants import (
     _INDEX_PAGE_TITLE,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
     _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE,
 )
+from resource_management.utils import _create_manage_resource_page_title
+from resource_management.view_mixins import DataSubsetResourceManagementViewMixin
 from user_management.services import get_user_id_for_login_session
 from validation.view_mixins import WorkflowDetailsUrlValidationViewMixin
 

@@ -3,12 +3,12 @@ from browse.views import (
 )
 from common import models
 from common.constants import STATIC_DATASET_TYPE_PLURAL_READABLE
-from resource_management.views import _INDEX_PAGE_TITLE as _RESOURCE_MANAGEMENT_INDEX_PAGE_TITLE
-from resource_management.views import (
+from resource_management.constants import _INDEX_PAGE_TITLE as _RESOURCE_MANAGEMENT_INDEX_PAGE_TITLE
+from resource_management.constants import (
     _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE,
-    _create_manage_resource_page_title,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
 )
+from resource_management.utils import _create_manage_resource_page_title
 
 
 class ResourceXmlDownloadFromBrowsingViewMixin:

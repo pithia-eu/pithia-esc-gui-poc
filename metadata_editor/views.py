@@ -53,12 +53,12 @@ from ontology.services import (
     get_ontology_category_terms_in_xml_format,
     OntologyCategoryMetadataService,
 )
-from resource_management.views import (
+from resource_management.constants import (
     _INDEX_PAGE_TITLE,
     _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
-    _create_manage_resource_page_title
 )
+from resource_management.utils import _create_manage_resource_page_title
 from user_management.services import (
     get_user_id_for_login_session,
     get_institution_id_for_login_session,

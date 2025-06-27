@@ -22,12 +22,12 @@ from datahub_management.view_mixins import (
     DataSubsetDataHubViewMixin,
     WorkflowDataHubViewMixin,
 )
-from resource_management.views import (
+from resource_management.constants import (
     _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE,
-    _create_manage_resource_page_title,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
     _INDEX_PAGE_TITLE,
 )
+from resource_management.utils import _create_manage_resource_page_title
 
 
 logger = logging.getLogger(__name__)
