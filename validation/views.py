@@ -51,9 +51,9 @@ class QuickInlineValidationFormView(FormView):
     form_class = QuickInlineMetadataValidationForm
     error_dict = {}
     file_wrapper_class = XMLMetadataFile
+    url_references_validator_class = MetadataFileMetadataURLReferencesValidator
 
-    def validate_url_references(self, xml_metadata_file: XMLMetadataFile):
-        url_references_validation_results = MetadataFileMetadataURLReferencesValidator.validate_and_return_results(xml_metadata_file)
+    def generate_url_reference_errors_from_validation_results(self, url_references_validation_results: dict) -> dict:
         metadata_url_reference_errors = list()
         invalid_ontology_url_errors = list()
 
@@ -95,8 +95,13 @@ class QuickInlineValidationFormView(FormView):
             'invalid_ontology_url_errors': invalid_ontology_url_errors,
         }
 
+    def validate_url_references_and_get_errors(self, xml_metadata_file: XMLMetadataFile):
+        url_references_validation_results = self.url_references_validator_class.validate_and_return_results(xml_metadata_file)
+        return self.generate_url_reference_errors_from_validation_results(url_references_validation_results)
+
+
     def validate(self, request, xml_metadata_file: XMLMetadataFile):
-        url_reference_errors = self.validate_url_references(xml_metadata_file)
+        url_reference_errors = self.validate_url_references_and_get_errors(xml_metadata_file)
         self.error_dict.update(url_reference_errors)
 
     def post(self, request, *args, **kwargs):
@@ -209,31 +214,33 @@ class QuickInlineInstrumentUpdateValidationFormView(QuickInlineValidationFormVie
 
 
 class QuickInlineAcquisitionCapabilitiesValidationFormViewMixin:
-    def validate_url_references(self, xml_metadata_file: AcquisitionCapabilitiesXMLMetadataFile):
-        url_reference_errors = super().validate_url_references(xml_metadata_file)
-        operational_mode_urls_validation_results = AcquisitionCapabilitiesMetadataFileMetadataURLReferencesValidator.validate_and_return_results(xml_metadata_file)
-        if operational_mode_urls_validation_results.get('unregistered_operational_mode_urls'):
-            institution_id = get_institution_id_for_login_session(self.request.session)
-            instrument_update_url_and_url_texts = [
-                (reverse_lazy('update:instrument', kwargs={'resource_id': instrument.pk}), f'Update {instrument.name}')
-                for instrument in operational_mode_urls_validation_results.get('instruments_to_update')
-                if instrument.institution_id == institution_id
-            ]
-            instrument_detail_url_and_url_texts = [
-                (reverse_lazy('browse:instrument_detail', kwargs={'instrument_id': instrument.pk}), instrument.name)
-                for instrument in operational_mode_urls_validation_results.get('instruments_to_update')
-                if instrument.institution_id != institution_id
-            ]
-            url_reference_errors['metadata_url_reference_errors'].append(
-                render_to_string(
-                    'validation/error_unregistered_operational_mode_urls.html',
-                    context={
-                        'unregistered_resource_urls': operational_mode_urls_validation_results.get('unregistered_operational_mode_urls'),
-                        'file_upload_registration_url_and_url_texts': instrument_update_url_and_url_texts,
-                        'instrument_detail_url_and_url_texts': instrument_detail_url_and_url_texts,
-                    }
-                )
+    url_references_validator_class = AcquisitionCapabilitiesMetadataFileMetadataURLReferencesValidator
+
+    def generate_url_reference_errors_from_validation_results(self, url_references_validation_results: dict) -> dict:
+        url_reference_errors = super().generate_url_reference_errors_from_validation_results(url_references_validation_results)
+        if not url_references_validation_results.get('unregistered_operational_mode_urls'):
+            return url_reference_errors
+        institution_id = get_institution_id_for_login_session(self.request.session)
+        instrument_update_url_and_url_texts = [
+            (reverse_lazy('update:instrument', kwargs={'resource_id': instrument.pk}), f'Update {instrument.name}')
+            for instrument in url_references_validation_results.get('instruments_to_update')
+            if instrument.institution_id == institution_id
+        ]
+        instrument_detail_url_and_url_texts = [
+            (reverse_lazy('browse:instrument_detail', kwargs={'instrument_id': instrument.pk}), instrument.name)
+            for instrument in url_references_validation_results.get('instruments_to_update')
+            if instrument.institution_id != institution_id
+        ]
+        url_reference_errors['metadata_url_reference_errors'].append(
+            render_to_string(
+                'validation/error_unregistered_operational_mode_urls.html',
+                context={
+                    'unregistered_resource_urls': url_references_validation_results.get('unregistered_operational_mode_urls'),
+                    'file_upload_registration_url_and_url_texts': instrument_update_url_and_url_texts,
+                    'instrument_detail_url_and_url_texts': instrument_detail_url_and_url_texts,
+                }
             )
+        )
         return url_reference_errors
 
 

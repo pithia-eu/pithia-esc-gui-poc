@@ -1,23 +1,22 @@
 {% extends 'validation/error_unregistered_resource_urls.html' %}
 {% block main_error_text %}
-One or multiple referenced operational modes are unregistered.
+A referenced operational mode has not yet been unregistered.
 {% endblock main_error_text %}
 {% block pre_list_text %}
-Unregistered operational modes:
+Unregistered operational mode:
 {% endblock pre_list_text %}
 {% block post_note_text %}
-Please use the following links to update
-or to help find the institution responsible
-for the relevant instruments:
+Please use the following links to update the relevant
+instruments:
 {% endblock post_note_text %}
 {% block extra_content %}
 {% if instrument_detail_url_and_url_texts %}
 <div class="pt-2">
     You may be able to request an update from
-    the institutions responsible for the relevant
-    instruments. Contact details for these
-    institutions may be available from the instruments'
-    detail pages, which can be accessed below:
+    the institution responsible for the relevant
+    instrument. Contact details for this institution
+    may be available from the instrument's
+    detail page, which can be accessed below:
 </div>
 <ul class="pt-1">
     {% for url, url_text in instrument_detail_url_and_url_texts %}

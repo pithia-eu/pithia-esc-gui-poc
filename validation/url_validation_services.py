@@ -192,9 +192,9 @@ class MetadataFileMetadataURLReferencesValidator:
 
         # Remove duplicate URLs/URL types and return results
         return {
-            cls.INCORRECTLY_STRUCTURED_URLS_KEY: list(set(incorrectly_structured_urls)),
-            cls.UNREGISTERED_RESOURCE_URLS_KEY: list(set(unregistered_resource_urls)),
-            cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY: list(set(unregistered_resource_url_types)),
+            cls.INCORRECTLY_STRUCTURED_URLS_KEY: incorrectly_structured_urls,
+            cls.UNREGISTERED_RESOURCE_URLS_KEY: unregistered_resource_urls,
+            cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY: unregistered_resource_url_types,
         }
 
     @classmethod
@@ -214,31 +214,31 @@ class MetadataFileMetadataURLReferencesValidator:
         return cls._is_each_resource_url_valid(resource_urls)
 
     @classmethod
-    def _process_validation_results(cls, unprocessed_validation_results):
+    def _process_validation_results(cls, unprocessed_validation_results) -> dict:
         # Remove duplicates and combine invalid URLs with
         # invalid URLs derived from operational mode URLs.
         incorrectly_structured_urls = unprocessed_validation_results.get(cls.INCORRECTLY_STRUCTURED_URLS_KEY, [])
         unregistered_resource_urls = unprocessed_validation_results.get(cls.UNREGISTERED_RESOURCE_URLS_KEY, [])
         
-        # Return results depending on the what problem occurred.
+        # Return results depending on what problem occurred.
         results = dict()
         # Incorrectly structured URLs
         if len(incorrectly_structured_urls) > 0:
             results.update({
-                'incorrectly_structured_urls': incorrectly_structured_urls,
+                'incorrectly_structured_urls': list(set(incorrectly_structured_urls)),
             })
 
         # Unregistered resource URLs
         if len(unregistered_resource_urls) > 0:
             results.update({
-                'unregistered_resource_urls': unregistered_resource_urls,
-                'types_in_unregistered_resource_urls': unprocessed_validation_results.get(cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY, []),
+                'unregistered_resource_urls': list(set(unregistered_resource_urls)),
+                'types_in_unregistered_resource_urls': list(set(unprocessed_validation_results.get(cls.UNREGISTERED_RESOURCE_URL_TYPES_KEY, []))),
             })
 
         return results
 
     @classmethod
-    def validate_and_return_results(cls, xml_metadata_file: XMLMetadataFile):
+    def validate_and_return_results(cls, xml_metadata_file: XMLMetadataFile) -> dict:
         # Check which resource URLs are valid and return
         # the invalid ones.
         unprocessed_validation_results = cls.is_each_potential_resource_url_valid(xml_metadata_file)
@@ -280,31 +280,21 @@ class AcquisitionCapabilitiesMetadataFileMetadataURLReferencesValidator(Metadata
         ]
         unprocessed_validation_results = cls._is_each_resource_url_valid(resource_urls)
 
-        # Add operational mode URLs to results and narrow
-        # down operational mode URLs to still check.
-        operational_mode_urls_to_check = resource_urls_with_op_mode_ids
-        incorrectly_structured_op_mode_urls = unprocessed_validation_results.get(
-            cls.INCORRECTLY_STRUCTURED_URLS_KEY, []
-        )
-        for url in resource_urls_with_op_mode_ids:
-            if not url in unprocessed_validation_results.get(cls.INCORRECTLY_STRUCTURED_URLS_KEY, []):
-                continue
-            incorrectly_structured_op_mode_urls.append(url)
-            # If operational mode URL is not structured
-            # correctly, cannot verify that only operational
-            # mode is unregistered.
-            operational_mode_urls_to_check.remove(url)
-        unprocessed_validation_results.update({
-            cls.INCORRECTLY_STRUCTURED_URLS_KEY: incorrectly_structured_op_mode_urls,
-        })
-
         # Find unregistered operational modes of registered
-        # instruments, and add an unregistered operational
-        # mode URLs category.
+        # instruments, and add any operational mode URLs failing
+        # other checks.
         unregistered_operational_mode_urls = list()
         instruments_with_unregistered_operational_modes = list()
-        for url in operational_mode_urls_to_check:
+        for url in resource_urls_with_op_mode_ids:
             instrument_url = itemgetter('resource_url')(divide_resource_url_from_op_mode_id(url))
+
+            if instrument_url in unprocessed_validation_results.get(
+                cls.INCORRECTLY_STRUCTURED_URLS_KEY, []):
+                unprocessed_validation_results[cls.INCORRECTLY_STRUCTURED_URLS_KEY].append(
+                    url
+                )
+                continue
+
             try:
                 instrument = Instrument.objects.get_by_metadata_server_url(instrument_url)
             except Exception:
@@ -328,24 +318,25 @@ class AcquisitionCapabilitiesMetadataFileMetadataURLReferencesValidator(Metadata
         return unprocessed_validation_results
 
     @classmethod
-    def validate_and_return_results(cls, xml_metadata_file: XMLMetadataFile):
+    def _process_validation_results(cls, unprocessed_validation_results) -> dict:
+        results = super()._process_validation_results(unprocessed_validation_results)
+
+        # Unregistered operational mode URLs
+        unregistered_operational_mode_urls = unprocessed_validation_results.get(cls.UNREGISTERED_OPERATIONAL_MODE_URLS_KEY, [])
+        if len(unregistered_operational_mode_urls) > 0:
+            results.update({
+                'unregistered_operational_mode_urls': list(set(unregistered_operational_mode_urls)),
+                'instruments_to_update': unprocessed_validation_results.get(cls.INSTRUMENTS_TO_UPDATE_KEY, []),
+            })
+
+        return results
+
+    @classmethod
+    def validate_and_return_results(cls, xml_metadata_file: AcquisitionCapabilitiesXMLMetadataFile) -> dict:
+        results = super().validate_and_return_results(xml_metadata_file)
         # Check which operational mode URLs are valid and return
         # the invalid ones.
         unprocessed_validation_results = cls.is_each_potential_operational_mode_url_valid(xml_metadata_file)
         results = cls._process_validation_results(unprocessed_validation_results)
-
-        # Remove duplicates
-        unregistered_operational_mode_urls = list(set(
-            unprocessed_validation_results.get(cls.UNREGISTERED_OPERATIONAL_MODE_URLS_KEY, [])
-        ))
-        
-        # Return results depending on the what problem occurred.
-        results = cls._process_validation_results(unprocessed_validation_results)
-        # Unregistered operational mode URLs
-        if len(unregistered_operational_mode_urls) > 0:
-            results.update({
-                'unregistered_operational_mode_urls': unregistered_operational_mode_urls,
-                'instruments_to_update': unprocessed_validation_results.get(cls.INSTRUMENTS_TO_UPDATE_KEY, []),
-            })
 
         return results
