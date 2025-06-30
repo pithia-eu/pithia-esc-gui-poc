@@ -233,12 +233,14 @@ class OutdatedMetadataReferencesCheckViewMixin(BaseOutdatedRegistrationsCheckVie
         super().__init__()
         self.deprecated_metadata_urls = set()
         self.not_found_metadata_urls = set()
+        self.not_found_operational_mode_urls = set()
 
     def _get_template_for_outdated_registration_entry(self, registration):
         template = super()._get_template_for_outdated_registration_entry(registration)
         template.update({
             'deprecated_metadata_urls': dict(),
             'not_found_metadata_urls': dict(),
+            'not_found_operational_mode_urls': dict(),
         })
         return template
 
@@ -273,8 +275,28 @@ class OutdatedMetadataReferencesCheckViewMixin(BaseOutdatedRegistrationsCheckVie
             })
         not_found_metadata_urls_for_entry[not_found_metadata_url]['number_of_occurrences'] += 1
 
+    def _update_not_found_operational_mode_urls_for_outdated_registration(
+            self,
+            registration,
+            not_found_operational_mode_url: str):
+        entry = self._get_entry_for_outdated_registration(registration)
+        not_found_operational_mode_urls_for_entry = entry.get('not_found_operational_mode_urls')
+        if not_found_operational_mode_url not in not_found_operational_mode_urls_for_entry:
+            not_found_operational_mode_urls_for_entry.update({
+                not_found_operational_mode_url: {
+                    'number_of_occurrences': 0,
+                }
+            })
+        not_found_operational_mode_urls_for_entry[not_found_operational_mode_url]['number_of_occurrences'] += 1
+
     def _check_for_outdated_metadata_urls_in_registration(self, registration: models.ScientificMetadata):
         for metadata_url in registration.properties.resource_urls:
+            if metadata_url in self.not_found_operational_mode_urls:
+                self._update_not_found_operational_mode_urls_for_outdated_registration(
+                    registration,
+                    metadata_url
+                )
+                continue
             if metadata_url in self.not_found_metadata_urls:
                 self._update_not_found_metadata_urls_for_outdated_registration(
                     registration,
@@ -287,6 +309,18 @@ class OutdatedMetadataReferencesCheckViewMixin(BaseOutdatedRegistrationsCheckVie
                     metadata_url
                 )
                 continue
+            # Check for unregistered operational modes
+            if '#' in metadata_url:
+                try:
+                    referenced_registration = models.Instrument.objects.get_by_operational_mode_url(metadata_url)
+                except models.Instrument.DoesNotExist:
+                    self._update_not_found_operational_mode_urls_for_outdated_registration(
+                        registration,
+                        metadata_url
+                    )
+                    self.not_found_operational_mode_urls.add(metadata_url)
+                    continue
+            # Check for unregistered metadata
             try:
                 referenced_registration = models.ScientificMetadata.objects.get_by_metadata_server_url(metadata_url)
             except models.ScientificMetadata.DoesNotExist:
@@ -296,6 +330,7 @@ class OutdatedMetadataReferencesCheckViewMixin(BaseOutdatedRegistrationsCheckVie
                 )
                 self.not_found_metadata_urls.add(metadata_url)
                 continue
+
             if not self._is_metadata_registration_deprecated(referenced_registration):
                 continue
             self._update_deprecated_metadata_urls_for_outdated_registration(

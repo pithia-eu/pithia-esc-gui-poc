@@ -69,6 +69,20 @@
                     </li>
                     {% endfor %}
                     {% endif %}
+                    {# References to unregistered operational modes #}
+                    {% if outdated_registration_data.not_found_operational_mode_urls %}
+                    {% for url, url_data in outdated_registration_data.not_found_operational_mode_urls.items %}
+                    <li>
+                        {% with number_of_occurrences=url_data.number_of_occurrences %}
+                        {% if number_of_occurrences == 1 %}
+                        A reference is made to an unregistered operational mode: <code class="text-break">{{ url }}</code>.
+                        {% else %}
+                        {{ number_of_occurrences }} references are made to an unregistered operational mode: <code class="text-break">{{ url }}</code>.
+                        {% endif %}
+                        {% endwith %}
+                    </li>
+                    {% endfor %}
+                    {% endif %}
                 </ul>
                 <div class="d-flex flex-wrap justify-content-between column-gap-4">
                     <a
