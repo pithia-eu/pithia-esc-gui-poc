@@ -113,10 +113,6 @@ class InstrumentQuerySet(ScientificMetadataQuerySet, AbstractInstrumentDatabaseQ
             json__identifier__PITHIA_Identifier__namespace=namespace,
             json__identifier__PITHIA_Identifier__localID=localid,
             json__operationalMode__contains=[{'InstrumentOperationalMode': {'id': op_mode_id}}]
-        ) | self.get(
-            json__identifier__PITHIA_Identifier__namespace=namespace,
-            json__identifier__PITHIA_Identifier__localID=localid,
-            json__operationalMode__contains={'InstrumentOperationalMode': {'id': op_mode_id}}
         )
     
     def referencing_instrument_type_urls(self, instrument_type_urls: list):
