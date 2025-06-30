@@ -19,6 +19,7 @@ from .view_mixins import (
     InstrumentManagementListViewMixin,
     OperationManagementListViewMixin,
     OrganisationManagementListViewMixin,
+    OutdatedMetadataReferencesCheckViewMixin,
     OutdatedOntologyTermReferencesCheckViewMixin,
     PlatformManagementListViewMixin,
     ProcessManagementListViewMixin,
@@ -217,12 +218,14 @@ class WorkflowManagementListView(WorkflowManagementListViewMixin, ResourceManage
     template_name = 'resource_management/workflow_management_list_outer.html'
 
 
-class OutdatedResourcesCheckTemplateView(OutdatedOntologyTermReferencesCheckViewMixin, TemplateView):
+class OutdatedResourcesCheckTemplateView(
+        OutdatedMetadataReferencesCheckViewMixin,
+        OutdatedOntologyTermReferencesCheckViewMixin,
+        TemplateView):
     template_name = 'resource_management/outdated_registrations_list.html'
 
     def get_outdated_registrations(self):
-        self._check_for_registrations_using_outdated_ontology_terms()
-        return self.outdated_registrations
+        return super()._get_outdated_registrations()
 
     def dispatch(self, request, *args, **kwargs):
         self.registrations_owned_by_logged_in_institution = self.model.objects.owned_by_institution(

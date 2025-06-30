@@ -218,6 +218,96 @@ class BaseOutdatedRegistrationsCheckViewMixin:
             })
         return self.outdated_registrations[registration.pk]
 
+    def validate_registration(self, registration: models.ScientificMetadata):
+        # Implemented in subclasses
+        pass
+
+    def _get_outdated_registrations(self):
+        for registration in self.registrations_owned_by_logged_in_institution:
+            self.validate_registration(registration)
+        return self.outdated_registrations
+
+
+class OutdatedMetadataReferencesCheckViewMixin(BaseOutdatedRegistrationsCheckViewMixin):
+    def __init__(self) -> None:
+        super().__init__()
+        self.deprecated_metadata_urls = set()
+        self.not_found_metadata_urls = set()
+
+    def _get_template_for_outdated_registration_entry(self, registration):
+        template = super()._get_template_for_outdated_registration_entry(registration)
+        template.update({
+            'deprecated_metadata_urls': dict(),
+            'not_found_metadata_urls': dict(),
+        })
+        return template
+
+    def _is_metadata_registration_deprecated(self, registration: models.ScientificMetadata):
+        return 'deprecate' in registration.name.lower()
+
+    def _update_deprecated_metadata_urls_for_outdated_registration(
+            self,
+            registration,
+            deprecated_metadata_url: str):
+        entry = self._get_entry_for_outdated_registration(registration)
+        deprecated_metadata_urls_for_entry = entry.get('deprecated_metadata_urls')
+        if deprecated_metadata_url not in deprecated_metadata_urls_for_entry:
+            deprecated_metadata_urls_for_entry.update({
+                deprecated_metadata_url: {
+                    'number_of_occurrences': 0,
+                }
+            })
+        deprecated_metadata_urls_for_entry[deprecated_metadata_url]['number_of_occurrences'] += 1
+
+    def _update_not_found_metadata_urls_for_outdated_registration(
+            self,
+            registration,
+            not_found_metadata_url: str):
+        entry = self._get_entry_for_outdated_registration(registration)
+        not_found_metadata_urls_for_entry = entry.get('not_found_metadata_urls')
+        if not_found_metadata_url not in not_found_metadata_urls_for_entry:
+            not_found_metadata_urls_for_entry.update({
+                not_found_metadata_url: {
+                    'number_of_occurrences': 0,
+                }
+            })
+        not_found_metadata_urls_for_entry[not_found_metadata_url]['number_of_occurrences'] += 1
+
+    def _check_for_outdated_metadata_urls_in_registration(self, registration: models.ScientificMetadata):
+        for metadata_url in registration.properties.resource_urls:
+            if metadata_url in self.not_found_metadata_urls:
+                self._update_not_found_metadata_urls_for_outdated_registration(
+                    registration,
+                    metadata_url
+                )
+                continue
+            if metadata_url in self.deprecated_metadata_urls:
+                self._update_deprecated_metadata_urls_for_outdated_registration(
+                    registration,
+                    metadata_url
+                )
+                continue
+            try:
+                referenced_registration = models.ScientificMetadata.objects.get_by_metadata_server_url(metadata_url)
+            except models.ScientificMetadata.DoesNotExist:
+                self._update_not_found_metadata_urls_for_outdated_registration(
+                    registration,
+                    metadata_url
+                )
+                self.not_found_metadata_urls.add(metadata_url)
+                continue
+            if not self._is_metadata_registration_deprecated(referenced_registration):
+                continue
+            self._update_deprecated_metadata_urls_for_outdated_registration(
+                registration,
+                metadata_url
+            )
+            self.deprecated_metadata_urls.add(metadata_url)
+
+    def validate_registration(self, registration: models.ScientificMetadata):
+        super().validate_registration(registration)
+        self._check_for_outdated_metadata_urls_in_registration(registration)
+
 
 class OutdatedOntologyTermReferencesCheckViewMixin(BaseOutdatedRegistrationsCheckViewMixin):
     def __init__(self) -> None:
@@ -229,7 +319,6 @@ class OutdatedOntologyTermReferencesCheckViewMixin(BaseOutdatedRegistrationsChec
     def _get_template_for_outdated_registration_entry(self, registration):
         template = super()._get_template_for_outdated_registration_entry(registration)
         template.update({
-            'registration': registration,
             'deprecated_ontology_urls': dict(),
             'not_found_ontology_urls': dict(),
         })
@@ -325,9 +414,9 @@ class OutdatedOntologyTermReferencesCheckViewMixin(BaseOutdatedRegistrationsChec
             )
             self.deprecated_ontology_term_urls.add(ontology_term_url)
 
-    def _check_for_registrations_using_outdated_ontology_terms(self):
-        for r in self.registrations_owned_by_logged_in_institution:
-            self._check_for_outdated_ontology_terms_in_registration(r)
+    def validate_registration(self, registration: models.ScientificMetadata):
+        super().validate_registration(registration)
+        self._check_for_outdated_ontology_terms_in_registration(registration)
 
 
 # Data subset validation view mixin

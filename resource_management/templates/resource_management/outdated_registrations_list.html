@@ -12,10 +12,11 @@
                 </div>
             </summary>
             <div class="d-flex flex-column align-items-start row-gap-3 pb-3">
-                {% if outdated_registration_data.deprecated_ontology_urls.items %}
-                <ul class="px-3" style="list-style-type: disc;">
+                <ul class="d-flex flex-column row-gap-3 pt-2 ps-3" style="list-style-type: disc;">
+                    {# References to deprecated ontology terms #}
+                    {% if outdated_registration_data.deprecated_ontology_urls %}
                     {% for url, url_data in outdated_registration_data.deprecated_ontology_urls.items %}
-                    <li {% if not forloop.first %}class="pt-2"{% endif %}>
+                    <li>
                         {% with number_of_occurrences=url_data.number_of_occurrences %}
                         {% if number_of_occurrences == 1 %}
                         A reference is made to a deprecated ontology term: <code class="text-break">{{ url }}</code>.
@@ -25,12 +26,11 @@
                         {% endwith %}
                     </li>
                     {% endfor %}
-                </ul>
-                {% endif %}
-                {% if outdated_registration_data.not_found_ontology_urls %}
-                <ul class="px-3" style="list-style-type: disc;">
+                    {% endif %}
+                    {# References to unregistered ontology terms #}
+                    {% if outdated_registration_data.not_found_ontology_urls %}
                     {% for url, url_data in outdated_registration_data.not_found_ontology_urls.items %}
-                    <li {% if not forloop.first %}class="pt-2"{% endif %}>
+                    <li>
                         {% with number_of_occurrences=url_data.number_of_occurrences %}
                         {% if number_of_occurrences == 1 %}
                         A reference is made to a term not present in ontology: <code class="text-break">{{ url }}</code>.
@@ -40,8 +40,36 @@
                         {% endwith %}
                     </li>
                     {% endfor %}
+                    {% endif %}
+                    {# References to deprecated registrations #}
+                    {% if outdated_registration_data.deprecated_metadata_urls %}
+                    {% for url, url_data in outdated_registration_data.deprecated_metadata_urls.items %}
+                    <li>
+                        {% with number_of_occurrences=url_data.number_of_occurrences %}
+                        {% if number_of_occurrences == 1 %}
+                        A reference is made to a deprecated metadata registration: <code class="text-break">{{ url }}</code>.
+                        {% else %}
+                        {{ number_of_occurrences }} references are made to a deprecated metadata registration: <code class="text-break">{{ url }}</code>.
+                        {% endif %}
+                        {% endwith %}
+                    </li>
+                    {% endfor %}
+                    {% endif %}
+                    {# References to unregistered metadata #}
+                    {% if outdated_registration_data.not_found_metadata_urls %}
+                    {% for url, url_data in outdated_registration_data.not_found_metadata_urls.items %}
+                    <li>
+                        {% with number_of_occurrences=url_data.number_of_occurrences %}
+                        {% if number_of_occurrences == 1 %}
+                        A reference is made to an unregistered metadata document: <code class="text-break">{{ url }}</code>.
+                        {% else %}
+                        {{ number_of_occurrences }} references are made to an unregistered metadata document: <code class="text-break">{{ url }}</code>.
+                        {% endif %}
+                        {% endwith %}
+                    </li>
+                    {% endfor %}
+                    {% endif %}
                 </ul>
-                {% endif %}
                 <div class="d-flex flex-wrap justify-content-between column-gap-4">
                     <a
                         href="{% url resource_update_page_url_name outdated_registration_id %}"
