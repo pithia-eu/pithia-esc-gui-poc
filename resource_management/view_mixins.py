@@ -313,6 +313,7 @@ class OutdatedMetadataReferencesCheckViewMixin(BaseOutdatedRegistrationsCheckVie
             if '#' in metadata_url:
                 try:
                     referenced_registration = models.Instrument.objects.get_by_operational_mode_url(metadata_url)
+                    continue
                 except models.Instrument.DoesNotExist:
                     self._update_not_found_operational_mode_urls_for_outdated_registration(
                         registration,
