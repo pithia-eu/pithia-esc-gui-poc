@@ -14,7 +14,6 @@ class CapabilitiesTab extends DynamicEditorTab {
             "#capabilities-tab-content-template",
             ".remove-capability-button",
             "input[name='capabilities_json']",
-            "input[name='capabilities_extra_json']",
             "Capability"
         );
     }

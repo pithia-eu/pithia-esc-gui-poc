@@ -32,5 +32,7 @@
         </div>
     </div>
     {{ form.keywords_json }}
-    {{ form.keywords_extra_json }}
+    {% with field=form.keywords_json %}
+    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+    {% endwith %}
 </section>

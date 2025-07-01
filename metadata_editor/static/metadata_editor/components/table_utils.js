@@ -4,14 +4,13 @@ import {
 
 
 export class DynamicEditorTable {
-    constructor(tableSelector, tableBodySelector, addRowButtonSelector, removeRowButtonSelector, rowContentTemplateSelector, jsonOutputSelector, jsonExtraOutputSelector) {
+    constructor(tableSelector, tableBodySelector, addRowButtonSelector, removeRowButtonSelector, rowContentTemplateSelector, jsonOutputSelector) {
         this.table = document.querySelector(tableSelector);
         this.tableBody = document.querySelector(tableBodySelector);
         this.rowContentTemplate = JSON.parse(document.querySelector(rowContentTemplateSelector).textContent);
         this.addRowButton = document.querySelector(addRowButtonSelector);
         this.removeRowButtonSelector = removeRowButtonSelector;
         this.jsonOutputElement = document.querySelector(jsonOutputSelector);
-        this.jsonExtraOutputElement = document.querySelector(jsonExtraOutputSelector);
         this.numNewRows = 0;
         this.deletedRowIndexSequence = [];
     }
@@ -57,15 +56,6 @@ export class DynamicEditorTable {
         this.deletedRowIndexSequence.push(rowIndex);
     }
 
-    exportExtraTableDataToJsonAndStoreInOutputElement() {
-        const extraTableData = {
-            numAdditions: this.numNewRows,
-            deletedIndexSequence: this.deletedRowIndexSequence,
-        };
-        this.jsonExtraOutputElement.value = JSON.stringify(extraTableData);
-        window.dispatchEvent(new CustomEvent("dynamicTableDataExported"));
-    }
-
     exportTableData() {
         // Implemented in child class
     }
@@ -109,7 +99,6 @@ export class DynamicEditorTable {
         this.addRow();
         this.incrementNumberOfNewRows();
         this.exportTableDataToJsonAndStoreInOutputElement();
-        this.exportExtraTableDataToJsonAndStoreInOutputElement();
     }
 
     setupAddRowButton() {
@@ -129,7 +118,6 @@ export class DynamicEditorTable {
         const deletedRowIndex = this.removeRow(e.currentTarget);
         this.addRowToDeletedRowSequence(deletedRowIndex);
         this.exportTableDataToJsonAndStoreInOutputElement();
-        this.exportExtraTableDataToJsonAndStoreInOutputElement();
     }
 
     setupNewRemoveRowButton(removeRowButton) {
@@ -138,12 +126,5 @@ export class DynamicEditorTable {
 
     // Load input data before page refresh/after failed form submission
     loadPreviousData() {
-        const extraTableData = JSON.parse(this.jsonExtraOutputElement.value);
-        if ("numAdditions" in extraTableData) {
-            this.numNewRows = parseInt(extraTableData.numAdditions);
-        }
-        if ("deletedIndexSequence" in extraTableData) {
-            this.deletedRowIndexSequence = extraTableData.deletedIndexSequence;
-        }
     }
 }

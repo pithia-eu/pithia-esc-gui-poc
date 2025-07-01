@@ -27,5 +27,7 @@
         </div>
     </div>
     {{ form.citations_json }}
-    {{ form.citations_extra_json }}
+    {% with field=form.citations_json %}
+    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+    {% endwith %}
 </section>

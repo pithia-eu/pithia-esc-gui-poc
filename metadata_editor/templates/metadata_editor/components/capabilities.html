@@ -29,5 +29,7 @@
         </div>
     </div>
     {{ form.capabilities_json }}
-    {{ form.capabilities_extra_json }}
+    {% with field=form.capabilities_json %}
+    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+    {% endwith %}
 </section>

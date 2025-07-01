@@ -10,5 +10,7 @@
 
 {% block si_json_field %}
 {{ form.standard_identifiers_json }}
-{{ form.standard_identifiers_extra_json }}
+{% with field=form.standard_identifiers_json %}
+{% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+{% endwith %}
 {% endblock si_json_field %}

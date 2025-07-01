@@ -27,5 +27,7 @@
         </div>
     </div>
     {{ form.time_periods_json }}
-    {{ form.time_periods_extra_json }}
+    {% with field=form.time_periods_json %}
+    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+    {% endwith %}
 </section>

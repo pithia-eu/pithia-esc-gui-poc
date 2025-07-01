@@ -15,7 +15,6 @@ export class TimePeriodsTab extends DynamicEditorTab {
             "#time-periods-tab-pane-content-template",
             ".remove-time-period-button",
             "input[name='time_periods_json']",
-            "input[name='time_periods_extra_json']",
             "Time Period"
         );
         // Beginning of time period

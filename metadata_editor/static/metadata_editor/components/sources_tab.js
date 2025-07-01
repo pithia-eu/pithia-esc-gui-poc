@@ -11,7 +11,6 @@ export class SourcesTab extends DynamicEditorTab {
             "#sources-tab-pane-content-template",
             ".remove-source-button",
             "input[name='sources_json']",
-            "input[name='sources_extra_json']",
             "Online Resource"
         );
         this.sourceServiceFunctionSelectSelector = "select[name='source_service_functions']";

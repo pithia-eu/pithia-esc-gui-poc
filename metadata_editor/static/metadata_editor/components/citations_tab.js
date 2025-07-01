@@ -14,7 +14,6 @@ class CitationsTab extends DynamicEditorTab {
             "#citations-tab-content-template",
             ".remove-citation-button",
             "input[name='citations_json']",
-            "input[name='citations_extra_json']",
             "Documentation"
         );
         this.requiredFieldsSelector = "input[name='citation_title'], input[name='citation_publication_date']";

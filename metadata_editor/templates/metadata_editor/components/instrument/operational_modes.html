@@ -31,5 +31,7 @@
         </div>
     </div>
     {{ form.operational_modes_json }}
-    {{ form.operational_modes_extra_json }}
+    {% with field=form.operational_modes_json %}
+    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+    {% endwith %}
 </section>
