@@ -38,6 +38,9 @@
         </div>
         <div class="col-xl-9 col-lg-12">
             {{ form.description }}
+            {% with field=form.description %}
+            {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+            {% endwith %}
         </div>
     </div>
 </section>
@@ -124,6 +127,9 @@
                                 {% if form.workflow_details_file.help_text %}
                                 <div class="form-text">{{ form.workflow_details_file.help_text }}</div>
                                 {% endif %}
+                                {% with field=form.workflow_details_file %}
+                                {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+                                {% endwith %}
                             </div>
                             {% elif forloop.counter0 == workflow_details_file_source_external_choice_index %}
                             <!-- External -->
@@ -150,11 +156,9 @@
                                         {{ form.workflow_details.label_tag }}
                                     </div>
                                     {{ form.workflow_details }}
-                                    <ul id="workflow-details-url-error-list" class="list-unstyled mb-0">
-                                        {% for error in form.workflow_details.errors %}
-                                        <li class="form-text text-danger">{{ error }}</li>
-                                        {% endfor %}
-                                    </ul>
+                                    {% with field=form.workflow_details_file %}
+                                    {% include 'metadata_editor/components/workflow/workflow_details_invalid_feedback.html' %}
+                                    {% endwith %}
                                 </div>
                             </div>
                             {% endif %}

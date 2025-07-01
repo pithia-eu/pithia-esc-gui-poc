@@ -44,10 +44,10 @@
                 </div>
                 <div class="col-xl-3 col-lg-5">
                     {{ form.namespace }}
+                    {% with field=form.namespace %}
+                    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+                    {% endwith %}
                 </div>
-                {% for error in form.namespace.errors %}
-                <div class="form-text text-danger">{{ error }}</div>
-                {% endfor %}
             </div>
             {% endif %}
         </div>

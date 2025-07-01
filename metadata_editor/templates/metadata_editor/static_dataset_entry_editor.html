@@ -13,14 +13,15 @@
         </div>
         <div class="col-xl-9 col-lg-12">
             {{ form.static_dataset_category }}
-        </div>
-        {% if form.static_dataset_category.help_text %}
-        <div class="col-xl-9 col-lg-12">
-            <p class="text-body-secondary">
+            {% if form.static_dataset_category.help_text %}
+            <div class="form-text">
                 {{ form.static_dataset_category.help_text }}
-            </p>
+            </div>
+            {% endif %}
+            {% with field=form.static_dataset_category %}
+            {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+            {% endwith %}
         </div>
-        {% endif %}
     </div>
 </section>
 {% include 'metadata_editor/components/name_and_organisation_section.html' %}
@@ -39,13 +40,7 @@
         {% if field.help_text %}
         <div class="form-text">{{ field.help_text }}</div>
         {% endif %}
-        <div id="invalid-feedback-{{ field.auto_id }}" class="invalid-feedback">
-            <ul class="d-flex-inline row-gap-1 list-unstyled field-error-list mb-0">
-                {% for error in field.errors %}
-                <li class="form-text text-danger">{{ error }}</li>
-                {% endfor %}
-            </ul>
-        </div>
+        {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
         {% endwith %}
     </div>
 </section>

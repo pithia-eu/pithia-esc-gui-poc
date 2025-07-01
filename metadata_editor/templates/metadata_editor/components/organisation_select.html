@@ -5,6 +5,9 @@
         </div>
         <div class="col-xl-9 col-lg-12">
             {{ form.organisation }}
+            {% with field=form.organisation %}
+            {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+            {% endwith %}
         </div>
     </div>
 </section>
