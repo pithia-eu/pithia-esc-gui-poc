@@ -7,6 +7,9 @@
         </div>
         <div class="col-xl-9 col-lg-12">
             {{ form.child_platforms }}
+            {% with field=form.child_platforms %}
+            {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+            {% endwith %}
         </div>
     </div>
 </section>

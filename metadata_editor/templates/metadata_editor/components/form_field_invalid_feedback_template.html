@@ -1,1 +1,3 @@
-<div id="invalid-feedback-{{ field.auto_id }}" class="invalid-feedback"></div>
+<div id="invalid-feedback-{{ field.auto_id }}" class="invalid-feedback">
+    {% block invalid_feedback_content %}{% endblock invalid_feedback_content %}
+</div>

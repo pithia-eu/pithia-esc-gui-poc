@@ -8,11 +8,7 @@
             </label>
         </div>
     </div>
-    {% if form.register_doi.errors %}
-    <ul class="list-unstyled form-text text-danger mb-0">
-        {% for error in form.register_doi.errors %}
-        <li>{{ error|escape }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
+    {% with field=form.register_doi %}
+    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+    {% endwith %}
 </section>

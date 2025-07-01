@@ -11,10 +11,9 @@
     <div class="d-xl-none d-block">
         {{ form.processing_input_description.label_tag }}
     </div>
-    <div class="position-relative">
-        {{ form.processing_input_description }}
-        <div class="textarea-facade" aria-hidden="true"></div>
-    </div>
+    {% with field=form.processing_input_description %}
+    {% include 'metadata_editor/components/computation_capabilities/field_wrappers/processing_input_description_field_wrapper.html' %}
+    {% endwith %}
     {% with field=form.processing_input_description %}
     {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
     {% endwith %}
