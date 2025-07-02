@@ -78,6 +78,7 @@
                     <h2>Registrations Using this Term ({{ number_of_registrations_referencing_ontology_term }})</h2>
                 </summary>
                 {% for category, registrations in registrations_referencing_ontology_term.items %}
+                {% if registrations %}
                 <section>
                     <h3 class="fs-base-2 fw-semibold">{{ category|title }}</h3>
                     <ul class="list-group list-group-flush">
@@ -92,6 +93,7 @@
                         {% endfor %}
                     </ul>
                 </section>
+                {% endif %}
                 {% endfor %}
             </details>
         </section>

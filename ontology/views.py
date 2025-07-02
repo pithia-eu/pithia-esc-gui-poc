@@ -20,7 +20,24 @@ from .utils import (
     OntologyTermMetadata,
 )
 
-from common.models import ScientificMetadata
+from common.models import (
+    Organisation,
+    Individual,
+    Project,
+    Platform,
+    Operation,
+    Instrument,
+    AcquisitionCapabilities,
+    Acquisition,
+    ComputationCapabilities,
+    Computation,
+    Process,
+    DataCollection,
+    StaticDatasetEntry,
+    DataSubset,
+    Workflow,
+    ScientificMetadata,
+)
 from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
 from pithiaesc.settings import BASE_DIR
 from search.services import get_parents_of_registered_ontology_terms
@@ -96,25 +113,35 @@ class OntologyTermDetailView(TemplateView):
     def get_registrations_referencing_ontology_term(self):
         ontology_iri = self.ontology_term_metadata.iri
         all_registrations_unsubclassed = ScientificMetadata.objects.all()
-        registrations_referencing_ontology_term = dict()
         unknown_key = 'Unknown'
+        registrations_referencing_ontology_term = {
+            Organisation.type_plural_readable: list(),
+            Individual.type_plural_readable: list(),
+            Project.type_plural_readable: list(),
+            Platform.type_plural_readable: list(),
+            Operation.type_plural_readable: list(),
+            Instrument.type_plural_readable: list(),
+            AcquisitionCapabilities.type_plural_readable: list(),
+            Acquisition.type_plural_readable: list(),
+            ComputationCapabilities.type_plural_readable: list(),
+            Computation.type_plural_readable: list(),
+            Process.type_plural_readable: list(),
+            DataCollection.type_plural_readable: list(),
+            StaticDatasetEntry.type_plural_readable: list(),
+            DataSubset.type_plural_readable: list(),
+            Workflow.type_plural_readable: list(),
+            unknown_key: list(),
+        }
+
         self.number_of_registrations_referencing_ontology_term = 0
         for r in all_registrations_unsubclassed:
             if not ontology_iri in r.properties.ontology_urls:
                 continue
             r_subclassed = r.get_subclass_instance()
             if not r_subclassed:
-                if unknown_key not in registrations_referencing_ontology_term:
-                    registrations_referencing_ontology_term.update({
-                        unknown_key: list()
-                    })
                 registrations_referencing_ontology_term[unknown_key].append(r)
                 self.number_of_registrations_referencing_ontology_term += 1
                 continue
-            if r_subclassed.type_plural_readable not in registrations_referencing_ontology_term:
-                registrations_referencing_ontology_term.update({
-                    r_subclassed.type_plural_readable: list()
-                })
             registrations_referencing_ontology_term[r_subclassed.type_plural_readable].append(r_subclassed)
             self.number_of_registrations_referencing_ontology_term += 1
         return registrations_referencing_ontology_term
