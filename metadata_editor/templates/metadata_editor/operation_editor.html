@@ -1,15 +1,11 @@
 {% extends 'metadata_editor/components/base_editor.html' %}
 {% load static %}
-{% block extra_scripts %}
+{% block editor_scripts %}
 <script src="{% static 'metadata_editor/operation_editor.js' %}" type="module" defer></script>
 {{ related_parties_row_content_template|json_script:'related-parties-row-content-template' }}
 {{ citations_tab_content_template|json_script:'citations-tab-content-template' }}
-{% endblock extra_scripts %}
+{% endblock editor_scripts %}
 {% block form_content %}
-{% include 'metadata_editor/components/name_section.html' %}
-<hr class="my-5">
-{% include 'metadata_editor/components/identifier.html' %}
-<hr class="my-5">
 <section id="description-section">
     <div class="row flex-column gy-4">
         <div class="col-lg-12">

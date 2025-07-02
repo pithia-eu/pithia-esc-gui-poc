@@ -1,0 +1,18 @@
+{% extends 'metadata_editor/static_dataset_entry_editor.html' %}
+{% load static %}
+
+{# Registration-specific editor scripts #}
+{% block registration_scripts %}
+{% include 'register_with_support/registration_scripts.html' %}
+<script src="{% static 'register_with_support/editor_registration_setup.js' %}" type="module"></script>
+{% endblock registration_scripts %}
+
+{# Add organisation field #}
+{% block name_section %}
+{% include 'register_with_support/new_name_and_organisation_section.html' %}
+{% endblock name_section %}
+
+{# Add localID and namespace fields #}
+{% block identifier_section %}
+{% include 'register_with_support/new_identifier.html' %}
+{% endblock identifier_section %}

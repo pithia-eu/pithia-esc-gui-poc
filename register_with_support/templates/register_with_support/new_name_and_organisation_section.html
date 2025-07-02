@@ -1,0 +1,8 @@
+{% extends 'metadata_editor/components/name_section.html' %}
+{% block organisation_field %}
+<div class="col-xl-9 col-lg-12">
+    {% with field=form.organisation %}
+    {% include 'metadata_editor/components/form_field_template.html' %}
+    {% endwith %}
+</div>
+{% endblock organisation_field %}
