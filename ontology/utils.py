@@ -101,6 +101,10 @@ class OntologyTermMetadata(OntologyXmlMixin):
         self.xml_parsed = etree.fromstring(xml_string_for_ontology_term.encode('utf-8'))
 
     @property
+    def iri(self):
+        return self._get_first_element_value_or_blank_string_with_xpath_query('.//@%s:about' % NamespacePrefix.RDF)
+
+    @property
     def last_modified_date(self):
         value_of_last_modified_date = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:date' % NamespacePrefix.DC)
         try:
