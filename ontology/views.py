@@ -67,14 +67,18 @@ def ontology_category_terms_list_only(request, category):
         dictionary = create_dictionary_from_pithia_ontology_component(category)
     except FileNotFoundError:
         return HttpResponseServerError('Could not load terms due to a server error.')
-    registered_ontology_terms = []
-    parents_of_registered_ontology_terms = []
-    registered_ontology_server_urls = list()
+    registered_ontology_terms = list()
+    parents_of_registered_ontology_terms = list()
+    registered_ontology_server_urls = set()
     registrations = ScientificMetadata.objects.all()
     for r in registrations:
-        registered_ontology_server_urls += r.properties.ontology_urls
-    registered_ontology_server_urls = list(set(registered_ontology_server_urls))
-    registered_ontology_terms = [url.split('/')[-1] for url in registered_ontology_server_urls]
+        for ontology_url in r.properties.ontology_urls:
+            if ontology_url in registered_ontology_server_urls:
+                continue
+            if f'/{category}/'.lower() not in ontology_url.lower():
+                continue
+            registered_ontology_server_urls.add(ontology_url)
+    registered_ontology_terms = [url.split('/')[-1] for url in list(registered_ontology_server_urls)]
     parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, [])
     return render(request, 'ontology/ontology_tree_template_outer.html', {
         'dictionary': dictionary,
@@ -89,6 +93,32 @@ class OntologyTermDetailView(TemplateView):
     def apply_wrapper_to_ontology_term_metadata(self, xml_string_for_ontology_term: str):
         return OntologyTermMetadata(xml_string_for_ontology_term)
 
+    def get_registrations_referencing_ontology_term(self):
+        ontology_iri = self.ontology_term_metadata.iri
+        all_registrations_unsubclassed = ScientificMetadata.objects.all()
+        registrations_referencing_ontology_term = dict()
+        unknown_key = 'Unknown'
+        self.number_of_registrations_referencing_ontology_term = 0
+        for r in all_registrations_unsubclassed:
+            if not ontology_iri in r.properties.ontology_urls:
+                continue
+            r_subclassed = r.get_subclass_instance()
+            if not r_subclassed:
+                if unknown_key not in registrations_referencing_ontology_term:
+                    registrations_referencing_ontology_term.update({
+                        unknown_key: list()
+                    })
+                registrations_referencing_ontology_term[unknown_key].append(r)
+                self.number_of_registrations_referencing_ontology_term += 1
+                continue
+            if r_subclassed.type_plural_readable not in registrations_referencing_ontology_term:
+                registrations_referencing_ontology_term.update({
+                    r_subclassed.type_plural_readable: list()
+                })
+            registrations_referencing_ontology_term[r_subclassed.type_plural_readable].append(r_subclassed)
+            self.number_of_registrations_referencing_ontology_term += 1
+        return registrations_referencing_ontology_term
+
     def get(self, request, *args, **kwargs):
         if not hasattr(self, 'category'):
             self.category = self.kwargs['category']
@@ -99,6 +129,7 @@ class OntologyTermDetailView(TemplateView):
         if not xml_string_for_ontology_term:
             raise Http404(f'An ontology term with ID, <b>"{self.term_id}"</b>, was not found.')
         self.ontology_term_metadata = self.apply_wrapper_to_ontology_term_metadata(xml_string_for_ontology_term)
+        
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -115,8 +146,10 @@ class OntologyTermDetailView(TemplateView):
                 }
             ),
             'category': self.category,
+            'registrations_referencing_ontology_term': self.get_registrations_referencing_ontology_term(),
             'ontology_index_page_breadcrumb_text': _ONTOLOGY_INDEX_PAGE_TITLE,
             'ontology_category_term_list_page_breadcrumb_text': _get_ontology_category_term_list_page_title_from_category(self.category),
+            'number_of_registrations_referencing_ontology_term': self.number_of_registrations_referencing_ontology_term,
         })
         return context
 

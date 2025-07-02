@@ -117,7 +117,11 @@ class ScientificMetadata(models.Model):
     
     @property
     def name(self):
-        return self.json['name']
+        try:
+            return self.json['name']
+        except Exception:
+            pass
+        return ''
     
     @property
     def description(self):
@@ -296,7 +300,11 @@ class ScientificMetadata(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse(f'{self._browse_detail_page_url_name}', args=[str(self.pk)])
+        try:
+            return reverse(f'{self._browse_detail_page_url_name}', args=[str(self.pk)])
+        except Exception:
+            pass
+        return None
     
     class Meta:
         db_table = 'scien_metadata'

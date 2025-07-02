@@ -71,6 +71,31 @@
         {% endif %}
         {% endif %}
         {% endblock post_definition_content %}
+        {% if registrations_referencing_ontology_term %}
+        <section class="resource-detail-section">
+            <details>
+                <summary class="summary-marker-custom summary-marker-custom-baseline">
+                    <h2>Registrations Using this Term ({{ number_of_registrations_referencing_ontology_term }})</h2>
+                </summary>
+                {% for category, registrations in registrations_referencing_ontology_term.items %}
+                <section>
+                    <h3 class="fs-base-2 fw-semibold">{{ category|title }}</h3>
+                    <ul class="list-group list-group-flush">
+                        {% for registration in registrations %}
+                        <li class="list-group-item px-0">
+                            {% if registration.get_absolute_url %}
+                            <a href="{{ registration.get_absolute_url }}">{{ registration.name|default:registration.pk }}</a>
+                            {% else %}
+                            {{ registration.name|default:registration.pk }}
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+                {% endfor %}
+            </details>
+        </section>
+        {% endif %}
     </div>
     <aside class="col-xl-3 col-lg-4 resource-detail-aside border-start">
         {% block aside_extra_content_start %}
