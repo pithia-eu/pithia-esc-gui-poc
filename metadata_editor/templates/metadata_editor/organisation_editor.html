@@ -37,25 +37,7 @@
             <h2 class="mb-0">Identifier</h2>
         </div>
     </div>
-    {% if editor_registration_setup_script_path %}
-    <div class="row flex-column gy-3">
-        <div class="col-lg-4">
-            {{ form.localid.label_tag }}
-        </div>
-        <div class="col-xl-9 col-lg-12">
-            <small class="d-block text-body-secondary mb-2">{{ form.localid.help_text }}</small>
-        </div>
-        <div class="col-xl-9 col-lg-12">
-            {% include 'metadata_editor/components/localid_input_group.html' %}
-        </div>
-    </div>
-    <div class="row flex-column gy-3">
-        {{ form.namespace }}
-        {% with field=form.namespace %}
-        {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
-        {% endwith %}
-    </div>
-    {% endif %}
+    {% block localid_and_namespace_fields %}{% endblock localid_and_namespace_fields %}
     <div class="row flex-column gy-3">
         <div class="col-lg-5">
             {{ form.identifier_version.label_tag }}
