@@ -8,6 +8,16 @@
 <script src="{% static 'register_with_support/workflow_editor_registration_setup.js' %}" type="module"></script>
 {% endblock registration_scripts %}
 
+{# Add organisation field #}
+{% block name_section %}
+{% include 'register_with_support/new_name_and_organisation_section.html' %}
+{% endblock name_section %}
+
+{# Add localID and namespace fields #}
+{% block identifier_section %}
+{% include 'register_with_support/sections/new_identifier_section.html' %}
+{% endblock identifier_section %}
+
 {# OpenAPI editor section #}
 {% block open_api_section %}
 <hr class="my-5">
