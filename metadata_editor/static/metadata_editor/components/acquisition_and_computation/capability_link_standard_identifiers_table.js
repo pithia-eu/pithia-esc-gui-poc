@@ -34,12 +34,4 @@ export class CapabilityLinkStandardIdentifiersTable extends StandardIdentifiersT
         });
         this.jsonOutputElement.dispatchEvent(inputEvent);
     }
-
-    exportExtraTableDataToJsonAndStoreInOutputElement() {
-        super.exportExtraTableDataToJsonAndStoreInOutputElement();
-        const inputEvent = new Event("input", {
-            bubbles: true,
-        });
-        this.jsonExtraOutputElement.dispatchEvent(inputEvent);
-    }
 }
