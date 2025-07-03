@@ -14,8 +14,7 @@ class InputDescriptionsTable extends DynamicEditorTableWithTextArea {
             "#add-idrow-button",
             ".remove-idrow-button",
             "#input-description-row-content-template",
-            "input[name='input_descriptions_json']",
-            "input[name='input_descriptions_extra_json']"
+            "input[name='input_descriptions_json']"
         );
     }
 

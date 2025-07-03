@@ -17,7 +17,6 @@ export class StandardIdentifiersTable extends DynamicEditorTable {
         removeRowButtonSelector,
         rowContentTemplateSelector,
         jsonOutputSelector,
-        jsonExtraOutputSelector,
         standardIdentifierAuthorityInputSelector,
         standardIdentifierInputSelector
     ) {
@@ -27,8 +26,7 @@ export class StandardIdentifiersTable extends DynamicEditorTable {
             addRowButtonSelector,
             removeRowButtonSelector,
             rowContentTemplateSelector,
-            jsonOutputSelector,
-            jsonExtraOutputSelector
+            jsonOutputSelector
         );
         this.standardIdentifierAuthorityInputSelector = standardIdentifierAuthorityInputSelector;
         this.standardIdentifierInputSelector = standardIdentifierInputSelector;

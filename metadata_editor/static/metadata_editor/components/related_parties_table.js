@@ -17,8 +17,7 @@ class RelatedPartiesTable extends DynamicEditorTable {
             "#add-rprrow-button",
             ".remove-rprrow-button",
             "#related-parties-row-content-template",
-            "input[name='related_parties_json']",
-            "input[name='related_parties_extra_json']"
+            "input[name='related_parties_json']"
         );
     }
 

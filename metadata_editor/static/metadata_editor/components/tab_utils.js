@@ -5,13 +5,12 @@ import {
 
 
 export class DynamicEditorTab {
-    constructor(tabListSelector, tabContentSelector, tabPaneContentTemplateSelector, removeTabAndTabPaneButtonSelector, jsonExportElementSelector, jsonExtraExportElementSelector, tabButtonPrefixText = "Tab") {
+    constructor(tabListSelector, tabContentSelector, tabPaneContentTemplateSelector, removeTabAndTabPaneButtonSelector, jsonExportElementSelector, tabButtonPrefixText = "Tab") {
         this.tabList = document.querySelector(tabListSelector);
         this.tabContent = document.querySelector(tabContentSelector);
         this.tabPaneContentTemplate = JSON.parse(document.querySelector(tabPaneContentTemplateSelector).textContent);
         this.removeTabAndTabPaneButtonSelector = removeTabAndTabPaneButtonSelector;
         this.jsonExportElement = document.querySelector(jsonExportElementSelector);
-        this.jsonExtraExportElement = document.querySelector(jsonExtraExportElementSelector);
         this.tabButtonPrefixText = tabButtonPrefixText;
         this.createTabElement = this.tabList.querySelector(".create-tab");
         this.createTabButton = this.tabList.querySelector(".create-tab button");
@@ -88,7 +87,6 @@ export class DynamicEditorTab {
             const deletedTabPaneIndex = this.removeTabAndTabPane(e.currentTarget);
             this.addTabToDeletedTabSequence(deletedTabPaneIndex);
             this.exportTabData();
-            this.exportExtraTabData();
             this.focusLastTabPane();
         });
     }
@@ -214,7 +212,6 @@ export class DynamicEditorTab {
 
     createTabOnClickActions(newTabPane) {
         this.incrementNumberOfNewTabs();
-        this.exportExtraTabData();
     }
 
     // Tab data saving/loading
@@ -230,27 +227,11 @@ export class DynamicEditorTab {
         this.deletedTabIndexSequence.push(tabIndex);
     }
 
-    exportExtraTabData() {
-        const extraTabData = {
-            numAdditions: this.numNewTabs,
-            deletedIndexSequence: this.deletedTabIndexSequence,
-        };
-        this.jsonExtraExportElement.value = JSON.stringify(extraTabData);
-        window.dispatchEvent(new CustomEvent("dynamicTabDataExported"));
-    }
-
     exportTabData() {
         this.jsonExportElement.value = JSON.stringify(this.getTabDataAsJson());
         window.dispatchEvent(new CustomEvent("dynamicTabDataExported"));
     }
 
     loadPreviousTabData() {
-        const extraTabData = JSON.parse(this.jsonExtraExportElement.value);
-        if ("numAdditions" in extraTabData) {
-            this.numNewTabs = parseInt(extraTabData.numAdditions);
-        }
-        if ("deletedIndexSequence" in extraTabData) {
-            this.deletedTabIndexSequence = extraTabData.deletedIndexSequence;
-        }
     }
 }

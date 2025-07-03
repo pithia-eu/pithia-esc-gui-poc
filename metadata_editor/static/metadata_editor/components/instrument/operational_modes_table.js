@@ -14,8 +14,7 @@ class OperationalModesTable extends DynamicEditorTableWithTextArea {
             "#add-omrow-button",
             ".remove-omrow-button",
             "#operational-mode-row-content-template",
-            "input[name='operational_modes_json']",
-            "input[name='operational_modes_extra_json']"
+            "input[name='operational_modes_json']"
         );
     }
 
