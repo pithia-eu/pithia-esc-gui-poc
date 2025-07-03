@@ -128,8 +128,13 @@
                                         {{ form.workflow_details.label_tag }}
                                     </div>
                                     {{ form.workflow_details }}
+                                    <ul id="workflow-details-url-error-list" class="list-unstyled mb-0">
+                                        {% for error in form.workflow_details.errors %}
+                                        <li class="form-text text-danger">{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
                                     {% with field=form.workflow_details_file %}
-                                    {% include 'metadata_editor/components/workflow/workflow_details_invalid_feedback.html' %}
+                                    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
                                     {% endwith %}
                                 </div>
                             </div>
