@@ -1,6 +1,5 @@
 import {
-    editorForm,
-    validateAndRegister,
+    BaseEditor,
 } from "/static/metadata_editor/components/base_editor.js";
 import {
     setupCapabilitiesTab,
@@ -18,23 +17,23 @@ import {
     setupRelatedPartiesTable,
 } from "/static/metadata_editor/components/related_parties_table.js";
 
-let relatedPartiesTable;
 
+class ProcessEditor extends BaseEditor {
+    setup() {
+        super.setup();
+        setupWizardManualAndAutoSave();
+        setupCitationsTab();
+        setupCapabilitiesTab();
+        setupQualityAssessmentSection();
+        this.relatedPartiesTable = setupRelatedPartiesTable();
+    }
 
-function prepareFormForSubmission() {
-    relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
+    async submitAndGenerateXml() {
+        this.relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
+        return super.submitAndGenerateXml();
+    }
 }
 
-editorForm.addEventListener("submit", async e => {
-    e.preventDefault();
-    prepareFormForSubmission();
-    await validateAndRegister();
-});
-
 window.addEventListener("load", () => {
-    setupWizardManualAndAutoSave();
-    setupCitationsTab();
-    relatedPartiesTable = setupRelatedPartiesTable();
-    setupCapabilitiesTab();
-    setupQualityAssessmentSection();
+    const editor = new ProcessEditor();
 });

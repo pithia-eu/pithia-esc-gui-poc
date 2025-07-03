@@ -1,17 +1,18 @@
 import {
-    editorForm,
-    validateAndRegister,
+    BaseEditor,
 } from "/static/metadata_editor/components/base_editor.js";
 import {
     setupWizardManualAndAutoSave,
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
 
 
-window.addEventListener("load", () => {
-    setupWizardManualAndAutoSave();
-});
+class OrganisationEditor extends BaseEditor {
+    setup() {
+        super.setup();
+        setupWizardManualAndAutoSave();
+    }
+}
 
-editorForm.addEventListener("submit", async e => {
-    e.preventDefault();
-    await validateAndRegister();
+window.addEventListener("load", () => {
+    const editor = new OrganisationEditor();
 });

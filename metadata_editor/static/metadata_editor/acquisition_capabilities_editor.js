@@ -1,6 +1,5 @@
 import {
-    editorForm,
-    validateAndRegister,
+    BaseEditor,
 } from "/static/metadata_editor/components/base_editor.js";
 import {
     setupCapabilitiesTab,
@@ -24,25 +23,25 @@ import {
     setupInputDescriptionsTable,
 } from "/static/metadata_editor/components/acquisition_capabilities/input_descriptions_table.js";
 
-let relatedPartiesTable;
 
+class AcquisitionCapabilitiesEditor extends BaseEditor {
+    setup() {
+        super.setup();
+        setupWizardManualAndAutoSave();
+        setupCitationsTab();
+        setupInputDescriptionsTable();
+        setupCapabilitiesTab();
+        setupInstrumentModePairSection();
+        setupQualityAssessmentSection();
+        this.relatedPartiesTable = setupRelatedPartiesTable();
+    }
 
-function prepareFormForSubmission() {
-    relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
+    async submitAndGenerateXml() {
+        this.relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
+        return super.submitAndGenerateXml();
+    }
 }
 
-editorForm.addEventListener("submit", async e => {
-    e.preventDefault();
-    prepareFormForSubmission();
-    await validateAndRegister();
-});
-
 window.addEventListener("load", async () => {
-    setupWizardManualAndAutoSave();
-    setupCitationsTab();
-    relatedPartiesTable = setupRelatedPartiesTable();
-    setupInputDescriptionsTable();
-    setupCapabilitiesTab();
-    setupInstrumentModePairSection();
-    setupQualityAssessmentSection();
+    const editor = new AcquisitionCapabilitiesEditor();
 });

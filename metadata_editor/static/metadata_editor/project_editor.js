@@ -1,6 +1,5 @@
 import {
-    editorForm,
-    validateAndRegister,
+    BaseEditor,
 } from "/static/metadata_editor/components/base_editor.js";
 import {
     setupCitationsTab,
@@ -15,24 +14,23 @@ import {
     setupKeywordsTable,
 } from "/static/metadata_editor/components/project/keywords_table.js";
 
-// let keywordsTable;
-let relatedPartiesTable;
 
+class ProjectEditor extends BaseEditor {
+    setup() {
+        super.setup();
+        setupWizardManualAndAutoSave();
+        setupCitationsTab();
+        // this.keywordsTable = setupKeywordsTable();
+        this.relatedPartiesTable = setupRelatedPartiesTable();
+    }
 
-function prepareFormForSubmission() {
-    // keywordsTable.exportTableDataToJsonAndStoreInOutputElement();
-    relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
+    async submitAndGenerateXml() {
+        // this.keywordsTable.exportTableDataToJsonAndStoreInOutputElement();
+        this.relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
+        return super.submitAndGenerateXml();
+    }
 }
 
-editorForm.addEventListener("submit", async e => {
-    e.preventDefault();
-    prepareFormForSubmission();
-    await validateAndRegister();
-});
-
 window.addEventListener("load", () => {
-    setupWizardManualAndAutoSave();
-    setupCitationsTab();
-    // keywordsTable = setupKeywordsTable();
-    relatedPartiesTable = setupRelatedPartiesTable();
+    const editor = new ProjectEditor();
 });

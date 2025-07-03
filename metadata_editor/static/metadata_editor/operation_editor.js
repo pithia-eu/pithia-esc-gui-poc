@@ -1,6 +1,5 @@
 import {
-    editorForm,
-    validateAndRegister,
+    BaseEditor,
 } from "/static/metadata_editor/components/base_editor.js";
 import {
     setupCitationsTab,
@@ -21,26 +20,27 @@ import {
     setupTimePeriodElements,
 } from "/static/metadata_editor/components/time_period.js";
 
-let relatedPartiesTable;
 
+class OperationEditor extends BaseEditor {
+    setup() {
+        super.setup();
+        setupWizardManualAndAutoSave();
+        setupCitationsTab();
+        setupGeometryLocationSection();
+        setupOperationTimeSection();
+        setupTimePeriodElements(
+            "input[name='time_instant_begin_position']",
+            "input[name='time_instant_end_position']"
+        );
+        this.relatedPartiesTable = setupRelatedPartiesTable();
+    }
 
-function prepareFormForSubmission() {
-    relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
+    async submitAndGenerateXml() {
+        this.relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
+        return super.submitAndGenerateXml();
+    }
 }
 
-editorForm.addEventListener("submit", async e => {
-    e.preventDefault();
-
-    prepareFormForSubmission();
-
-    validateAndRegister();
-});
-
 window.addEventListener("load", () => {
-    setupWizardManualAndAutoSave();
-    setupCitationsTab();
-    setupGeometryLocationSection();
-    setupOperationTimeSection();
-    setupTimePeriodElements("input[name='time_instant_begin_position']", "input[name='time_instant_end_position']");
-    relatedPartiesTable = setupRelatedPartiesTable();
+    const editor = new OperationEditor();
 });

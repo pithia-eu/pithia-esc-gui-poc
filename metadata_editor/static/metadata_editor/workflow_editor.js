@@ -1,6 +1,5 @@
 import {
-    editorForm,
-    validateAndRegister,
+    BaseEditor,
 } from "/static/metadata_editor/components/base_editor.js";
 import {
     setupWizardManualAndAutoSave,
@@ -9,130 +8,132 @@ import {
     checkIfEscUrl,
 } from "/static/metadata_editor/components/url_format_checker.js";
 
-const workflowDetailsFileExistingRadioButton = document.querySelector("input[name='workflow_details_file_source'][value='existing']");
 
-const workflowDetailsFileUploadRadioButton = document.querySelector("input[name='workflow_details_file_source'][value='file_upload']");
-const workflowDetailsFileInput = document.querySelector("input[name='workflow_details_file']");
+class WorkflowEditor extends BaseEditor {
+    setup() {
+        super.setup();
+        this.workflowDetailsFileExistingRadioButton = document.querySelector("input[name='workflow_details_file_source'][value='existing']");
 
-const workflowDetailsFileExternalRadioButton = document.querySelector("input[name='workflow_details_file_source'][value='external']");
-const workflowDetailsFileExternalTextInput = document.querySelector("input[name='workflow_details']");
-const workflowDetailsUrlErrorList = document.querySelector("#workflow-details-url-error-list");
+        this.workflowDetailsFileUploadRadioButton = document.querySelector("input[name='workflow_details_file_source'][value='file_upload']");
+        this.workflowDetailsFileInput = document.querySelector("input[name='workflow_details_file']");
+        
+        this.workflowDetailsFileExternalRadioButton = document.querySelector("input[name='workflow_details_file_source'][value='external']");
+        this.workflowDetailsFileExternalTextInput = document.querySelector("input[name='workflow_details']");
+        this.workflowDetailsUrlErrorList = document.querySelector("#workflow-details-url-error-list");
+        
+        this.workflowDetailsFileSourceChoices = {}
+        this.workflowDetailsUrlValidationTimeout;
 
-const workflowDetailsFileSourceChoices = {}
-let workflowDetailsUrlValidationTimeout;
-
-
-function setWorkflowDetailsFileSourceChoiceState(radioButtonValue, isEnabled) {
-    if ('relatedInput' in workflowDetailsFileSourceChoices[radioButtonValue]) {
-        workflowDetailsFileSourceChoices[radioButtonValue].relatedInput.disabled = !isEnabled;
-        workflowDetailsFileSourceChoices[radioButtonValue].relatedInput.required = isEnabled;
+        setupWizardManualAndAutoSave();
+        this.setupWorkflowDetailsSection();
     }
-}
 
-function updateWorkflowDetailsRelatedInputStates(radioButtonValue) {
-    for (const key in workflowDetailsFileSourceChoices) {
-        if (key != radioButtonValue) {
-            setWorkflowDetailsFileSourceChoiceState(key, false);
-            continue;
+    setWorkflowDetailsFileSourceChoiceState(radioButtonValue, isEnabled) {
+        if ('relatedInput' in this.workflowDetailsFileSourceChoices[radioButtonValue]) {
+            this.workflowDetailsFileSourceChoices[radioButtonValue].relatedInput.disabled = !isEnabled;
+            this.workflowDetailsFileSourceChoices[radioButtonValue].relatedInput.required = isEnabled;
         }
-        setWorkflowDetailsFileSourceChoiceState(key, true);
     }
-}
-
-function validateWorkflowDetailsUrl() {
-    try {
-        const isWorkflowDetailsUrlInternal = checkIfEscUrl(workflowDetailsFileExternalTextInput.value);
-        if (isWorkflowDetailsUrlInternal) {
+    
+    updateWorkflowDetailsRelatedInputStates(radioButtonValue) {
+        for (const key in this.workflowDetailsFileSourceChoices) {
+            if (key != radioButtonValue) {
+                this.setWorkflowDetailsFileSourceChoiceState(key, false);
+                continue;
+            }
+            this.setWorkflowDetailsFileSourceChoiceState(key, true);
+        }
+    }
+    
+    validateWorkflowDetailsUrl() {
+        try {
+            const isWorkflowDetailsUrlInternal = checkIfEscUrl(this.workflowDetailsFileExternalTextInput.value);
+            if (isWorkflowDetailsUrlInternal) {
+                return {
+                    valid: false,
+                    error: "Please use the provided workflow details file input to register the details file with this workflow.",
+                }
+            }
+        } catch (error) {
+            console.error(error);
             return {
                 valid: false,
-                error: "Please use the provided workflow details file input to register the details file with this workflow.",
-            }
+                error: "Please enter a URL",
+            };
         }
-    } catch (error) {
-        console.error(error);
         return {
-            valid: false,
-            error: "Please enter a URL",
+            valid: true,
         };
     }
-    return {
-        valid: true,
-    };
-}
-
-function resetWorkflowDetailsUrlValidationErrors() {
-    workflowDetailsUrlErrorList.textContent = "";
-}
-
-function displayWorkflowDetailsValidatingProgressText() {
-    workflowDetailsUrlErrorList.innerHTML = '<li class="form-text">Checking link...</li>';
-}
-
-function validateWorkflowDetailsUrlAndDisplayErrors() {
-    if (!workflowDetailsFileExternalTextInput.value) {
-        return;
+    
+    resetWorkflowDetailsUrlValidationErrors() {
+        this.workflowDetailsUrlErrorList.textContent = "";
     }
-    const workflowDetailsUrlValidationResults = validateWorkflowDetailsUrl();
-    if (!workflowDetailsUrlValidationResults.valid) {
-        const errorListItem = document.createElement("LI");
-        errorListItem.className = "form-text text-danger";
-        errorListItem.textContent = workflowDetailsUrlValidationResults.error;
-        workflowDetailsUrlErrorList.appendChild(errorListItem);
+    
+    displayWorkflowDetailsValidatingProgressText() {
+        this.workflowDetailsUrlErrorList.innerHTML = '<li class="form-text">Checking link...</li>';
     }
-}
-
-function setupWorkflowDetailsSection() {
-    // Group controls for each workflow details source choice
-    if (workflowDetailsFileExistingRadioButton) {
-        workflowDetailsFileSourceChoices[workflowDetailsFileExistingRadioButton.value] = {
-            radioButton: workflowDetailsFileExistingRadioButton,
-        }
-    }
-    workflowDetailsFileSourceChoices[workflowDetailsFileUploadRadioButton.value] = {
-        radioButton: workflowDetailsFileUploadRadioButton,
-        relatedInput: workflowDetailsFileInput,
-    }
-    workflowDetailsFileSourceChoices[workflowDetailsFileExternalRadioButton.value] = {
-        radioButton: workflowDetailsFileExternalRadioButton,
-        relatedInput: workflowDetailsFileExternalTextInput,
-    }
-
-    const currentWorkflowDetailsSourceChoice = document.querySelector("input[name='workflow_details_file_source']:checked").value;
-    updateWorkflowDetailsRelatedInputStates(currentWorkflowDetailsSourceChoice);
-    if (currentWorkflowDetailsSourceChoice === workflowDetailsFileExternalRadioButton.value) {
-        validateWorkflowDetailsUrlAndDisplayErrors();
-    }
-
-    for (const choice in workflowDetailsFileSourceChoices) {
-        workflowDetailsFileSourceChoices[choice].radioButton.addEventListener("change", e => {
-            const radioButton = workflowDetailsFileSourceChoices[choice].radioButton;
-            updateWorkflowDetailsRelatedInputStates(e.target.value);
-            if (radioButton === workflowDetailsFileExternalRadioButton) {
-                return validateWorkflowDetailsUrlAndDisplayErrors();
-            }
-            return resetWorkflowDetailsUrlValidationErrors();
-        });
-    }
-    workflowDetailsFileExternalTextInput.addEventListener("input", () => {
-        resetWorkflowDetailsUrlValidationErrors();
-        if (!workflowDetailsFileExternalTextInput.value) {
+    
+    validateWorkflowDetailsUrlAndDisplayErrors() {
+        if (!this.workflowDetailsFileExternalTextInput.value) {
             return;
         }
-        displayWorkflowDetailsValidatingProgressText();
-        window.clearTimeout(workflowDetailsUrlValidationTimeout);
-        workflowDetailsUrlValidationTimeout = window.setTimeout(() => {
-            resetWorkflowDetailsUrlValidationErrors();
-            validateWorkflowDetailsUrlAndDisplayErrors();
-        }, 500);
-    });
+        const workflowDetailsUrlValidationResults = this.validateWorkflowDetailsUrl();
+        if (!workflowDetailsUrlValidationResults.valid) {
+            const errorListItem = document.createElement("LI");
+            errorListItem.className = "form-text text-danger";
+            errorListItem.textContent = workflowDetailsUrlValidationResults.error;
+            this.workflowDetailsUrlErrorList.appendChild(errorListItem);
+        }
+    }
+    
+    setupWorkflowDetailsSection() {
+        // Group controls for each workflow details source choice
+        if (this.workflowDetailsFileExistingRadioButton) {
+            this.workflowDetailsFileSourceChoices[this.workflowDetailsFileExistingRadioButton.value] = {
+                radioButton: this.workflowDetailsFileExistingRadioButton,
+            }
+        }
+        this.workflowDetailsFileSourceChoices[this.workflowDetailsFileUploadRadioButton.value] = {
+            radioButton: this.workflowDetailsFileUploadRadioButton,
+            relatedInput: this.workflowDetailsFileInput,
+        }
+        this.workflowDetailsFileSourceChoices[this.workflowDetailsFileExternalRadioButton.value] = {
+            radioButton: this.workflowDetailsFileExternalRadioButton,
+            relatedInput: this.workflowDetailsFileExternalTextInput,
+        }
+    
+        const currentWorkflowDetailsSourceChoice = document.querySelector("input[name='workflow_details_file_source']:checked").value;
+        this.updateWorkflowDetailsRelatedInputStates(currentWorkflowDetailsSourceChoice);
+        if (currentWorkflowDetailsSourceChoice === this.workflowDetailsFileExternalRadioButton.value) {
+            this.validateWorkflowDetailsUrlAndDisplayErrors();
+        }
+    
+        for (const choice in this.workflowDetailsFileSourceChoices) {
+            this.workflowDetailsFileSourceChoices[choice].radioButton.addEventListener("change", e => {
+                const radioButton = this.workflowDetailsFileSourceChoices[choice].radioButton;
+                this.updateWorkflowDetailsRelatedInputStates(e.target.value);
+                if (radioButton === this.workflowDetailsFileExternalRadioButton) {
+                    return this.validateWorkflowDetailsUrlAndDisplayErrors();
+                }
+                return this.resetWorkflowDetailsUrlValidationErrors();
+            });
+        }
+        this.workflowDetailsFileExternalTextInput.addEventListener("input", () => {
+            this.resetWorkflowDetailsUrlValidationErrors();
+            if (!this.workflowDetailsFileExternalTextInput.value) {
+                return;
+            }
+            this.displayWorkflowDetailsValidatingProgressText();
+            window.clearTimeout(this.workflowDetailsUrlValidationTimeout);
+            this.workflowDetailsUrlValidationTimeout = window.setTimeout(() => {
+                this.resetWorkflowDetailsUrlValidationErrors();
+                this.validateWorkflowDetailsUrlAndDisplayErrors();
+            }, 500);
+        });
+    }
 }
 
-editorForm.addEventListener("submit", async e => {
-    e.preventDefault();
-    await validateAndRegister();
-});
-
 window.addEventListener("load", () => {
-    setupWizardManualAndAutoSave();
-    setupWorkflowDetailsSection();
+    const editor = new WorkflowEditor();
 });

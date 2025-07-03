@@ -1,6 +1,5 @@
 import {
-    editorForm,
-    validateAndRegister,
+    BaseEditor,
 } from "/static/metadata_editor/components/base_editor.js";
 import {
     setupCapabilitiesTab,
@@ -24,59 +23,58 @@ import {
     setupProcessingInputsTable,
 } from "/static/metadata_editor/components/computation_capabilities/processing_inputs_table.js";
 
-let relatedPartiesTable;
 
-const softwareReferenceSection = document.querySelector("#software-reference-section");
-const softwareReferenceSectionRequiredFields = [
-    softwareReferenceSection.querySelector("input[name='software_reference_citation_title']"),
-    softwareReferenceSection.querySelector("input[name='software_reference_citation_publication_date']"),
-];
-const softwareReferenceSectionOptionalFields = [
-    softwareReferenceSection.querySelector("input[name='software_reference_citation_doi']"),
-    softwareReferenceSection.querySelector("textarea[name='software_reference_other_citation_details']"),
-    softwareReferenceSection.querySelector("input[name='software_reference_citation_linkage_url']"),
-];
+class ComputationCapabilitiesEditor extends BaseEditor {
+    setup() {
+        super.setup();
+        setupWizardManualAndAutoSave();
+        setupCitationsTab();
+        setupCapabilitiesTab();
+        setupQualityAssessmentSection();
+        this.setupSoftwareReferenceSection();
+        this.relatedPartiesTable = setupRelatedPartiesTable();
+        this.processingInputsTable = setupProcessingInputsTable();
+    }
 
+    checkAndSetSoftwareReferenceConditionalRequiredFields() {
+        checkAndSetRequiredAttributesForFields(
+            this.softwareReferenceSectionRequiredFields,
+            this.softwareReferenceSectionOptionalFields,
+        );
+    }
+    
+    setupSoftwareReferenceSection() {
+        // Instantiate variables for section first
+        this.softwareReferenceSection = document.querySelector("#software-reference-section");
+        this.softwareReferenceSectionRequiredFields = [
+            this.softwareReferenceSection.querySelector("input[name='software_reference_citation_title']"),
+            this.softwareReferenceSection.querySelector("input[name='software_reference_citation_publication_date']"),
+        ];
+        this.softwareReferenceSectionOptionalFields = [
+            this.softwareReferenceSection.querySelector("input[name='software_reference_citation_doi']"),
+            this.softwareReferenceSection.querySelector("textarea[name='software_reference_other_citation_details']"),
+            this.softwareReferenceSection.querySelector("input[name='software_reference_citation_linkage_url']"),
+        ];
 
-function prepareFormForSubmission() {
-    relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
+        this.checkAndSetSoftwareReferenceConditionalRequiredFields();
+    
+        let allSoftwareReferenceFields = [
+            ...this.softwareReferenceSectionRequiredFields,
+            ...this.softwareReferenceSectionOptionalFields,
+        ];
+        for (const field of allSoftwareReferenceFields) {
+            field.addEventListener("input", () => {
+                this.checkAndSetSoftwareReferenceConditionalRequiredFields();
+            });
+        }
+    }
+
+    async submitAndGenerateXml() {
+        this.relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
+        return super.submitAndGenerateXml();
+    }
 }
-
-function checkAndSetSoftwareReferenceConditionalRequiredFields() {
-    checkAndSetRequiredAttributesForFields(
-        softwareReferenceSectionRequiredFields,
-        softwareReferenceSectionOptionalFields,
-    );
-}
-
-function setupSoftwareReferenceSection() {
-    checkAndSetSoftwareReferenceConditionalRequiredFields();
-
-    const allSoftwareReferenceFields = [
-        ...softwareReferenceSectionRequiredFields,
-        ...softwareReferenceSectionOptionalFields,
-    ];
-    allSoftwareReferenceFields.forEach(field => {
-        field.addEventListener("input", () => {
-            checkAndSetSoftwareReferenceConditionalRequiredFields();
-        });
-    });
-}
-
-editorForm.addEventListener("submit", async e => {
-    e.preventDefault();
-
-    prepareFormForSubmission();
-
-    validateAndRegister();
-});
 
 window.addEventListener("load", async () => {
-    setupWizardManualAndAutoSave();
-    setupSoftwareReferenceSection();
-    setupCitationsTab();
-    relatedPartiesTable = setupRelatedPartiesTable();
-    processingInputsTable = setupProcessingInputsTable();
-    setupCapabilitiesTab();
-    setupQualityAssessmentSection();
+    const editor = new ComputationCapabilitiesEditor();
 });
