@@ -91,11 +91,11 @@
                 {% csrf_token %}
                 {% block pre_name_section %}{% endblock pre_name_section %}
                 {% block name_section %}
-                {% include 'metadata_editor/components/name_section.html' %}
+                {% include 'metadata_editor/sections/name_section.html' %}
                 {% endblock name_section %}
                 <hr class="my-5">
                 {% block identifier_section %}
-                {% include 'metadata_editor/components/identifier_section.html' %}
+                {% include 'metadata_editor/sections/identifier_section.html' %}
                 {% endblock identifier_section %}
                 <hr class="my-5">
                 {% block form_content %}{% endblock form_content %}
