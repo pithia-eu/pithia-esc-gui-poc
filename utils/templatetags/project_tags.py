@@ -1,4 +1,6 @@
 import random
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.urls import reverse
 from django import template
 from typing import Union
@@ -69,3 +71,13 @@ def url_target_blank(a_tag_text):
 def choice_values(choices):
     """Returns the values of a ChoiceField's choices"""
     return [c[1] for c in choices]
+
+@register.filter
+def is_email(value):
+    """Returns True if the value is an email, False if not."""
+    try:
+        validate_email(value)
+        return True
+    except ValidationError:
+        pass
+    return False

@@ -577,6 +577,30 @@ class SourceMetadataFormComponent(forms.Form):
         self.fields['source_data_formats'].choices = data_format_choices
         self.fields['source_service_functions'].choices = service_function_choices
 
+    def clean(self):
+        cleaned_data = super().clean()
+        sources = cleaned_data.get('sources_json')
+        for source in sources:
+            linkage = source.get('linkage')
+            is_linkage_a_url = True
+            is_linkage_an_email = True
+            # Test if URL
+            try:
+                forms.URLField().clean(linkage)
+            except ValidationError:
+                is_linkage_a_url = False
+
+            # Test if email
+            try:
+                forms.EmailField().clean(linkage)
+            except ValidationError:
+                is_linkage_an_email = False
+
+            if is_linkage_a_url or is_linkage_an_email:
+                continue
+            self.add_error('sources_json', ValidationError('One or multiple online resource links are invalid.'))
+        return cleaned_data
+
     source_service_functions = forms.MultipleChoiceField(
         required=False,
         label='Service Function',
@@ -586,10 +610,10 @@ class SourceMetadataFormComponent(forms.Form):
         help_text='The function performed by the online resource. E.g. Direct data download. Obtained from a controlled vocabulary.'
     )
 
-    source_linkage = forms.URLField(
+    source_linkage = forms.CharField(
         required=False,
         label='Link to Online Resource',
-        widget=forms.URLInput(attrs={
+        widget=forms.TextInput(attrs={
             'placeholder': 'https://',
         }),
         help_text='A location (address) for online access using a Uniform Resource Locator/Uniform Resource Identifier address.'
