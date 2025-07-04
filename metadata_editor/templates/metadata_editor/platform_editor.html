@@ -64,7 +64,9 @@
 {% endblock form_content %}
 {% block table_of_contents %}
 <li class="list-group-item">
-    <a href="#name-and-organisation-section">Full Name, Short Name and Organisation</a>
+    {% block name_toc_list_item_link %}
+    <a href="#name-and-organisation-section">Full Name and Short Name</a>
+    {% endblock name_toc_list_item_link %}
 </li>
 <li class="list-group-item">
     <a href="#identifier-section">Identifier</a>
