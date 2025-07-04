@@ -71,6 +71,25 @@ export class BaseEditor {
         `;
         this.formCancelButton.disabled = true;
     }
+    displayFormErrors(formErrors) {
+        for (const fieldName in formErrors) {
+            console.log(fieldName, formErrors[fieldName]);
+        }
+    }
+
+    processResponseTextIfJson(responseText) {
+        try {
+            const data = JSON.parse(responseText);
+            this.displayFormErrors(data.errors);
+            this.updateFormStatusAlert(data.message);
+            return {success: true};
+        } catch (error) {
+            // Response was not a JSON object, continue
+            // with default response handling.
+            console.error("Could not display form validation errors.", error);
+        }
+        return {success: false};
+    }
     
     async submitAndGenerateXml() {
         this.controller = new AbortController();
@@ -107,6 +126,10 @@ export class BaseEditor {
     
             if (!response.ok) {
                 const responseText = await response.text();
+                const processingResults = this.processResponseTextIfJson(responseText);
+                if (processingResults.success) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
                 if (responseText.toLowerCase().startsWith("<!doctype html>")) {
                     this.updateFormStatusAlert("An unexpected response was received. Please try submitting the form again. If the problem persists, please let our support team know.");
                     throw new Error(`Response status: ${response.status}`);
