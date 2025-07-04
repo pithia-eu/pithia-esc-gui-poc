@@ -1,7 +1,11 @@
 {% extends 'metadata_editor/components/base_editor.html' %}
 {% load static %}
+{% block styles %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.4/build/css/intlTelInput.css">
+{% endblock styles %}
 {% block editor_scripts %}
 {{ email_address_field_content_template|json_script:'email-address-field-template' }}
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.4/build/js/intlTelInput.min.js"></script>
 <script src="{% static 'metadata_editor/organisation_editor.js' %}" type="module" defer></script>
 <script src="{% static 'metadata_editor/components/contact_info.js' %}" type="module" defer></script>
 {% endblock editor_scripts %}

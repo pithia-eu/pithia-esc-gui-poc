@@ -1,6 +1,5 @@
 {% extends 'metadata_editor/data_subset_editor.html' %}
 {% load static %}
-{% block update_scripts %}
-{{ form.sources_json.value|json_script:'sources-default' }}
+{% block editor_setup_scripts %}
 <script src="{% static 'update_with_support/data_subset_update_editor.js' %}" type="module"></script>
-{% endblock update_scripts %}
+{% endblock editor_setup_scripts %}
