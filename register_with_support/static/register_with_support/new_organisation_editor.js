@@ -7,6 +7,9 @@ import {
 import {
     OrganisationEditor,
 } from "/static/metadata_editor/organisation_editor.js";
+import {
+    setupEditor,
+} from "/static/metadata_editor/components/editor_setup.js";
 
 
 class NewOrganisationEditor extends OrganisationEditor {
@@ -28,6 +31,13 @@ class NewOrganisationEditor extends OrganisationEditor {
         });
     }
 
+    async runPostSetupActions() {
+        if (this.shortNameInput.value !== "") {
+            this.generateLocalIdAndUpdateLocalIdSuffixInputValue();
+            await this.validateOrganisationLocalIdAndProcessResults();
+        }
+    }
+
     generateLocalId(shortName) {
         // Organisation local ID is generated using a different method
         // to all other metadata types.
@@ -46,9 +56,5 @@ class NewOrganisationEditor extends OrganisationEditor {
 
 
 window.addEventListener("load", async () => {
-    const editor = new NewOrganisationEditor();
-    if (editor.shortNameInput.value !== "") {
-        editor.generateLocalIdAndUpdateLocalIdSuffixInputValue();
-        await editor.validateOrganisationLocalIdAndProcessResults();
-    }
+    const editor = await setupEditor(NewOrganisationEditor);
 });

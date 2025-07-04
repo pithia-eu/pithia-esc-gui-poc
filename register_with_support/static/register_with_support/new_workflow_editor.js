@@ -2,6 +2,9 @@ import {
     WorkflowEditor,
 } from "/static/metadata_editor/workflow_editor.js";
 import {
+    setupEditor,
+} from "/static/metadata_editor/components/editor_setup.js";
+import {
     apiSpecificationUrlInput,
     badApiInteractionMethodModifiedEvent,
     validateOpenApiSpecificationUrl,
@@ -20,10 +23,14 @@ class NewWorkflowEditor extends WorkflowEditor {
             await validateOpenApiSpecificationUrl();
         });
     }
+
+    async runPostSetupActions() {
+        await super.runPostSetupActions();
+        await validateOpenApiSpecificationUrl();
+    }
 }
 
 
 window.addEventListener("load", async () => {
-    const editor = new NewWorkflowEditor();
-    await validateOpenApiSpecificationUrl();
+    const editor = await setupEditor(NewWorkflowEditor);
 });
