@@ -6,14 +6,10 @@ import {
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
 
 
-class IndividualEditor extends BaseEditor {
+export class IndividualEditor extends BaseEditor {
     setup() {
         super.setup();
         setupWizardManualAndAutoSave();
     }
     
 }
-
-window.addEventListener("load", () => {
-    const editor = new IndividualEditor();
-});

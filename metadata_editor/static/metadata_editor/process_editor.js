@@ -18,7 +18,7 @@ import {
 } from "/static/metadata_editor/components/related_parties_table.js";
 
 
-class ProcessEditor extends BaseEditor {
+export class ProcessEditor extends BaseEditor {
     setup() {
         super.setup();
         setupWizardManualAndAutoSave();
@@ -33,7 +33,3 @@ class ProcessEditor extends BaseEditor {
         return super.submitAndGenerateXml();
     }
 }
-
-window.addEventListener("load", () => {
-    const editor = new ProcessEditor();
-});

@@ -12,7 +12,7 @@ import {
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
 
 
-class StaticDatasetEntryEditor extends BaseEditor {
+export class StaticDatasetEntryEditor extends BaseEditor {
     setup() {
         super.setup();
         setupWizardManualAndAutoSave();
@@ -51,7 +51,3 @@ class StaticDatasetEntryEditor extends BaseEditor {
         return super.submitAndGenerateXml();
     }
 }
-
-window.addEventListener("load", () => {
-    const editor = new StaticDatasetEntryEditor();
-});

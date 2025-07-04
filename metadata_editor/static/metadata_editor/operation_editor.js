@@ -21,7 +21,7 @@ import {
 } from "/static/metadata_editor/components/time_period.js";
 
 
-class OperationEditor extends BaseEditor {
+export class OperationEditor extends BaseEditor {
     setup() {
         super.setup();
         setupWizardManualAndAutoSave();
@@ -40,7 +40,3 @@ class OperationEditor extends BaseEditor {
         return super.submitAndGenerateXml();
     }
 }
-
-window.addEventListener("load", () => {
-    const editor = new OperationEditor();
-});

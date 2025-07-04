@@ -15,7 +15,7 @@ import {
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
 
 
-class DataCollectionEditor extends BaseEditor {
+export class DataCollectionEditor extends BaseEditor {
     setup() {
         super.setup();
         setupWizardManualAndAutoSave();
@@ -29,7 +29,3 @@ class DataCollectionEditor extends BaseEditor {
         return super.submitAndGenerateXml();
     }
 }
-
-window.addEventListener("load", () => {
-    const editor = new DataCollectionEditor();
-});

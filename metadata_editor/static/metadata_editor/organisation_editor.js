@@ -6,13 +6,9 @@ import {
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
 
 
-class OrganisationEditor extends BaseEditor {
+export class OrganisationEditor extends BaseEditor {
     setup() {
         super.setup();
         setupWizardManualAndAutoSave();
     }
 }
-
-window.addEventListener("load", () => {
-    const editor = new OrganisationEditor();
-});

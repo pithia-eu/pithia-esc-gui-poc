@@ -9,14 +9,10 @@ import {
 } from "/static/metadata_editor/components/acquisition_and_computation/capability_links_tab.js";
 
 
-class AcquisitionOrComputationEditor extends BaseEditor {
+export class AcquisitionOrComputationEditor extends BaseEditor {
     setup() {
         super.setup();
         setupWizardManualAndAutoSave();
         setupCapabilityLinksTab();
     }
 }
-
-window.addEventListener("load", () => {
-    const editor = new AcquisitionOrComputationEditor();
-});

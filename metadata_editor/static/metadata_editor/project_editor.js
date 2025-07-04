@@ -15,7 +15,7 @@ import {
 } from "/static/metadata_editor/components/project/keywords_table.js";
 
 
-class ProjectEditor extends BaseEditor {
+export class ProjectEditor extends BaseEditor {
     setup() {
         super.setup();
         setupWizardManualAndAutoSave();
@@ -30,7 +30,3 @@ class ProjectEditor extends BaseEditor {
         return super.submitAndGenerateXml();
     }
 }
-
-window.addEventListener("load", () => {
-    const editor = new ProjectEditor();
-});

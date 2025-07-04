@@ -15,7 +15,7 @@ import {
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
 
 
-class DataSubsetEditor extends BaseEditor {
+export class DataSubsetEditor extends BaseEditor {
     setup() {
         super.setup();
         setupWizardManualAndAutoSave();
@@ -29,7 +29,3 @@ class DataSubsetEditor extends BaseEditor {
         return super.submitAndGenerateXml();
     }
 }
-
-window.addEventListener("load", () => {
-    const editor = new DataSubsetEditor();
-});

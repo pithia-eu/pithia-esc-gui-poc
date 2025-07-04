@@ -18,7 +18,7 @@ import {
 } from "/static/metadata_editor/components/platform/platform_standard_identifiers_table.js";
 
 
-class PlatformEditor extends BaseEditor {
+export class PlatformEditor extends BaseEditor {
     setup() {
         super.setup();
         setupWizardManualAndAutoSave();
@@ -34,7 +34,3 @@ class PlatformEditor extends BaseEditor {
         return super.submitAndGenerateXml();
     }
 }
-
-window.addEventListener("load", () => {
-    const editor = new PlatformEditor();
-});

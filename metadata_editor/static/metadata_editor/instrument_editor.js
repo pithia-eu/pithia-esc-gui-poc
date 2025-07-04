@@ -15,7 +15,7 @@ import {
 } from "/static/metadata_editor/components/instrument/operational_modes_table.js";
 
 
-class InstrumentEditor extends BaseEditor {
+export class InstrumentEditor extends BaseEditor {
     setup() {
         super.setup();
         setupWizardManualAndAutoSave();
@@ -30,7 +30,3 @@ class InstrumentEditor extends BaseEditor {
         return super.submitAndGenerateXml();
     }
 }
-
-window.addEventListener("load", () => {
-    const editor = new InstrumentEditor();
-});

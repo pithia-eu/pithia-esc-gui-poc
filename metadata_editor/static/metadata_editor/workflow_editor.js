@@ -9,7 +9,7 @@ import {
 } from "/static/metadata_editor/components/url_format_checker.js";
 
 
-class WorkflowEditor extends BaseEditor {
+export class WorkflowEditor extends BaseEditor {
     setup() {
         super.setup();
         this.workflowDetailsFileExistingRadioButton = document.querySelector("input[name='workflow_details_file_source'][value='existing']");
@@ -133,7 +133,3 @@ class WorkflowEditor extends BaseEditor {
         });
     }
 }
-
-window.addEventListener("load", () => {
-    const editor = new WorkflowEditor();
-});

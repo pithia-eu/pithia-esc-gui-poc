@@ -24,7 +24,7 @@ import {
 } from "/static/metadata_editor/components/acquisition_capabilities/input_descriptions_table.js";
 
 
-class AcquisitionCapabilitiesEditor extends BaseEditor {
+export class AcquisitionCapabilitiesEditor extends BaseEditor {
     setup() {
         super.setup();
         setupWizardManualAndAutoSave();
@@ -41,7 +41,3 @@ class AcquisitionCapabilitiesEditor extends BaseEditor {
         return super.submitAndGenerateXml();
     }
 }
-
-window.addEventListener("load", async () => {
-    const editor = new AcquisitionCapabilitiesEditor();
-});

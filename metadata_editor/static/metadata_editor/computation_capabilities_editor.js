@@ -24,7 +24,7 @@ import {
 } from "/static/metadata_editor/components/computation_capabilities/processing_inputs_table.js";
 
 
-class ComputationCapabilitiesEditor extends BaseEditor {
+export class ComputationCapabilitiesEditor extends BaseEditor {
     setup() {
         super.setup();
         setupWizardManualAndAutoSave();
@@ -74,7 +74,3 @@ class ComputationCapabilitiesEditor extends BaseEditor {
         return super.submitAndGenerateXml();
     }
 }
-
-window.addEventListener("load", async () => {
-    const editor = new ComputationCapabilitiesEditor();
-});
