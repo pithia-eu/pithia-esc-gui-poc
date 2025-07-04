@@ -1,8 +1,3 @@
-import {
-    setupLocalIdAndNamespaceRelatedEventListeners,
-} from "/static/metadata_editor/components/localid_validation.js";
-
-
 export const editorForm = document.getElementById("metadata-editor-form");
 
 
@@ -46,8 +41,7 @@ export class BaseEditor {
         });
     }
 
-    async runPostSetupActions() {
-        await setupLocalIdAndNamespaceRelatedEventListeners();
+    async runAfterInitialEditorSetup() {
     }
 
     updateFormStatusAlert(content) {

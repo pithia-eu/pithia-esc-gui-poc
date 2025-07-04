@@ -31,7 +31,7 @@ class NewOrganisationEditor extends OrganisationEditor {
         });
     }
 
-    async runPostSetupActions() {
+    async runAfterInitialEditorSetup() {
         if (this.shortNameInput.value !== "") {
             this.generateLocalIdAndUpdateLocalIdSuffixInputValue();
             await this.validateOrganisationLocalIdAndProcessResults();

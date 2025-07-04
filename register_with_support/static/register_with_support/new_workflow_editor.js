@@ -5,13 +5,16 @@ import {
     setupEditor,
 } from "/static/metadata_editor/components/editor_setup.js";
 import {
+    NewRegistrationEditorMixin,
+} from "/static/register_with_support/components/mixins.js";
+import {
     apiSpecificationUrlInput,
     badApiInteractionMethodModifiedEvent,
     validateOpenApiSpecificationUrl,
 } from "/static/validation/api_specification_validation.js";
 
 
-class NewWorkflowEditor extends WorkflowEditor {
+class NewWorkflowEditor extends NewRegistrationEditorMixin(WorkflowEditor) {
     setupEventListeners() {
         super.setupEventListeners();
 
@@ -24,9 +27,12 @@ class NewWorkflowEditor extends WorkflowEditor {
         });
     }
 
-    async runPostSetupActions() {
-        await super.runPostSetupActions();
-        await validateOpenApiSpecificationUrl();
+    async runAfterInitialEditorSetup() {
+        await Promise.all([
+            super.runAfterInitialEditorSetup(),
+            this.setupNewRegistrationEditingFunctionalities(),
+            validateOpenApiSpecificationUrl(),
+        ]);
     }
 }
 
