@@ -2,11 +2,11 @@
 {% load static %}
 
 {# Registration-specific editor scripts #}
-{% block registration_scripts %}
+{% block editor_setup_scripts %}
 {% include 'register_with_support/components/registration_scripts.html' %}
 {{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
-<script src="{% static 'register_with_support/workflow_new_registration_editor_setup.js' %}" type="module"></script>
-{% endblock registration_scripts %}
+<script src="{% static 'register_with_support/new_workflow_editor.js' %}" type="module"></script>
+{% endblock editor_setup_scripts %}
 
 {# Add organisation field #}
 {% block name_section %}
