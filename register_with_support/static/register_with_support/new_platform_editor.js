@@ -4,6 +4,9 @@ import {
 import {
     NewRegistrationEditorMixin,
 } from "/static/register_with_support/components/mixins.js";
+import {
+    setupEditor,
+} from "/static/metadata_editor/components/editor_setup.js";
 
 
 class NewPlatformEditor extends NewRegistrationEditorMixin(PlatformEditor) {
