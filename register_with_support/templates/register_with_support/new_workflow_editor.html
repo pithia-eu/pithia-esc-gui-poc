@@ -5,7 +5,7 @@
 {% block registration_scripts %}
 {% include 'register_with_support/components/registration_scripts.html' %}
 {{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
-<script src="{% static 'register_with_support/workflow_editor_registration_setup.js' %}" type="module"></script>
+<script src="{% static 'register_with_support/workflow_new_registration_editor_setup.js' %}" type="module"></script>
 {% endblock registration_scripts %}
 
 {# Add organisation field #}
