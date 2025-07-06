@@ -2,12 +2,12 @@ export const editorForm = document.getElementById("metadata-editor-form");
 
 
 export class BaseEditor {
-    constructor() {
-        this.setup();
+    setup() {
+        this.setupClassVariables();
         this.setupEventListeners();
     }
 
-    setup() {
+    setupClassVariables() {
         this.editorForm = editorForm;
         this.xmlGenerationUrl = JSON.parse(document.getElementById("xml-generation-url").textContent);
         // Form submit button animation
@@ -21,7 +21,7 @@ export class BaseEditor {
         this.controller = null;
         this.isRequestAborted = false;
         // Error messages
-        this.NETWORK_ERROR_MSG = "The connection to the server timed out. Please try submitting the form again, and if the problem persists please let our support team know."
+        this.NETWORK_ERROR_MSG = "The connection to the server timed out. Please try submitting the form again, and if the problem persists please let our support team know.";
     }
 
     setupEventListeners() {
