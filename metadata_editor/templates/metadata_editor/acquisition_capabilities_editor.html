@@ -5,7 +5,6 @@
 {{ capabilities_tab_content_template|json_script:'capabilities-tab-content-template' }}
 {{ input_description_row_content_template|json_script:'input-description-row-content-template' }}
 {{ citations_tab_content_template|json_script:'citations-tab-content-template' }}
-<script src="{% static 'metadata_editor/acquisition_capabilities_editor.js' %}" type="module" defer></script>
 {% endblock editor_scripts %}
 {% block form_content %}
 {% include 'metadata_editor/sections/description_section.html' %}

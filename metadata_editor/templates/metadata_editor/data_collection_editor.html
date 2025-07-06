@@ -3,7 +3,6 @@
 {% block editor_scripts %}
 {{ related_parties_row_content_template|json_script:'related-parties-row-content-template' }}
 {{ sources_tab_pane_content_template|json_script:'sources-tab-pane-content-template' }}
-<script src="{% static 'metadata_editor/data_collection_editor.js' %}" type="module"></script>
 {% endblock editor_scripts %}
 {% block form_content %}
 <section id="description-section">
