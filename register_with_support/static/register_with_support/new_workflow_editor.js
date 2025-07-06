@@ -18,6 +18,8 @@ class NewWorkflowEditor extends NewRegistrationEditorMixin(WorkflowEditor) {
     setupEventListeners() {
         super.setupEventListeners();
 
+        this.setupLocalIdAndNamespaceRelatedEventListeners();
+
         apiSpecificationUrlInput.addEventListener("input", async () => {
             const url = apiSpecificationUrlInput.value;
             if (url.trim().length === 0) {
@@ -30,7 +32,7 @@ class NewWorkflowEditor extends NewRegistrationEditorMixin(WorkflowEditor) {
     async runAfterInitialEditorSetup() {
         await Promise.all([
             super.runAfterInitialEditorSetup(),
-            this.setupNewRegistrationEditingFunctionalities(),
+            this.validateLocalIdAfterInitialEditorSetupIfNeeded(),
             validateOpenApiSpecificationUrl(),
         ]);
     }

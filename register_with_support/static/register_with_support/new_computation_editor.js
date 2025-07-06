@@ -1,6 +1,6 @@
 import {
-    ComputationEditor,
-} from "/static/metadata_editor/computation_editor.js";
+    AcquisitionAndComputationEditor,
+} from "/static/metadata_editor/acquisition_and_computation_editor.js";
 import {
     NewRegistrationEditorMixin,
 } from "/static/register_with_support/components/mixins.js";
@@ -9,11 +9,16 @@ import {
 } from "/static/metadata_editor/components/editor_setup.js";
 
 
-class NewComputationEditor extends NewRegistrationEditorMixin(ComputationEditor) {
+class NewComputationEditor extends NewRegistrationEditorMixin(AcquisitionAndComputationEditor) {
+    setupEventListeners() {
+        super.setupEventListeners();
+        this.setupLocalIdAndNamespaceRelatedEventListeners();
+    }
+
     async runAfterInitialEditorSetup() {
         await Promise.all([
             super.runAfterInitialEditorSetup(),
-            this.setupNewRegistrationEditingFunctionalities(),
+            this.validateLocalIdAfterInitialEditorSetupIfNeeded(),
         ]);
     }
 }

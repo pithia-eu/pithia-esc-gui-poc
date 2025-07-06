@@ -10,10 +10,15 @@ import {
 
 
 class NewPlatformEditor extends NewRegistrationEditorMixin(PlatformEditor) {
+    setupEventListeners() {
+        super.setupEventListeners();
+        this.setupLocalIdAndNamespaceRelatedEventListeners();
+    }
+
     async runAfterInitialEditorSetup() {
         await Promise.all([
             super.runAfterInitialEditorSetup(),
-            this.setupNewRegistrationEditingFunctionalities(),
+            this.validateLocalIdAfterInitialEditorSetupIfNeeded(),
         ]);
     }
 }

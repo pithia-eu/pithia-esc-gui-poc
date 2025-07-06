@@ -10,10 +10,15 @@ import {
 
 
 class NewComputationCapabilitiesEditor extends NewRegistrationEditorMixin(ComputationCapabilitiesEditor) {
+    setupEventListeners() {
+        super.setupEventListeners();
+        this.setupLocalIdAndNamespaceRelatedEventListeners();
+    }
+
     async runAfterInitialEditorSetup() {
         await Promise.all([
             super.runAfterInitialEditorSetup(),
-            this.setupNewRegistrationEditingFunctionalities(),
+            this.validateLocalIdAfterInitialEditorSetupIfNeeded(),
         ]);
     }
 }

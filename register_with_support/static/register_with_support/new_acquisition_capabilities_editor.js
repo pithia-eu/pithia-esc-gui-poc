@@ -10,10 +10,15 @@ import {
 
 
 class NewAcquisitionCapabilitiesEditor extends NewRegistrationEditorMixin(AcquisitionCapabilitiesEditor) {
+    setupEventListeners() {
+        super.setupEventListeners();
+        this.setupLocalIdAndNamespaceRelatedEventListeners();
+    }
+
     async runAfterInitialEditorSetup() {
         await Promise.all([
             super.runAfterInitialEditorSetup(),
-            this.setupNewRegistrationEditingFunctionalities(),
+            this.validateLocalIdAfterInitialEditorSetupIfNeeded(),
         ]);
     }
 }

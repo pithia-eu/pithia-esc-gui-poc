@@ -10,10 +10,15 @@ import {
 
 
 class NewInstrumentEditor extends NewRegistrationEditorMixin(InstrumentEditor) {
+    setupEventListeners() {
+        super.setupEventListeners();
+        this.setupLocalIdAndNamespaceRelatedEventListeners();
+    }
+
     async runAfterInitialEditorSetup() {
         await Promise.all([
             super.runAfterInitialEditorSetup(),
-            this.setupNewRegistrationEditingFunctionalities(),
+            this.validateLocalIdAfterInitialEditorSetupIfNeeded(),
         ]);
     }
 }
