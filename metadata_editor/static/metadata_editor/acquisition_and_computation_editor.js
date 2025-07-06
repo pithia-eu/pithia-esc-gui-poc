@@ -9,7 +9,7 @@ import {
 } from "/static/metadata_editor/components/acquisition_and_computation/capability_links_tab.js";
 
 
-export class AcquisitionOrComputationEditor extends BaseEditor {
+export class AcquisitionAndComputationEditor extends BaseEditor {
     setup() {
         super.setup();
         setupWizardManualAndAutoSave();
