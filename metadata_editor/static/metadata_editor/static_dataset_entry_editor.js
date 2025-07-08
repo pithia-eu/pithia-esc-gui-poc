@@ -21,9 +21,13 @@ export class StaticDatasetEntryEditor extends BaseEditor {
             "input[name='time_instant_begin_position']",
             "input[name='time_instant_end_position']"
         );
+        this.updateNameInputHelpText();
+    }
+
+    setupClassVariables() {
+        super.setupClassVariables();
         this.nameInputHelpText = document.querySelector("input[name='name'] + .form-text");
         this.staticDatasetCategorySelect = document.querySelector("select[name='static_dataset_category']");
-        this.updateNameInputHelpText();
     }
 
     setupEventListeners() {

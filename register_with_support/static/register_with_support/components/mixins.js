@@ -44,11 +44,27 @@ export const NewRegistrationEditorMixin = (Base) => class extends Base {
         }
     }
 
+    async validateLocalIdAndProcessResults(localIdSuffix) {
+        const localIdCheck = await checkLocalIdIsUnique(this.localIdBase + "_" + localIdSuffix);
+        if ("error" in localIdCheck) {
+            if ("displayError" in localIdCheck) this.#displayLocalIdError(localIdCheck.error);
+            return;
+        }
+        const isLocalIdInUse = localIdCheck.result;
+
+        if (isLocalIdInUse) {
+            this.#displayLocalIdSuggestion(localIdCheck, localIdSuffix);
+        } else {
+            this.localIdSuffixInput.classList.remove("is-invalid");
+        }
+        window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallySet"));
+    }
+
     async #generateValidLocalIdSuffixAndDisplayResults() {
         const localIdSuffix = generateLocalId(this.nameInput.value);
         this.localIdSuffixInput.value = localIdSuffix;
 
-        await this.#validateLocalIdAndProcessResults(localIdSuffix);
+        await this.validateLocalIdAndProcessResults(localIdSuffix);
     }
 
     #displayLocalIdError(error) {
@@ -64,21 +80,5 @@ export const NewRegistrationEditorMixin = (Base) => class extends Base {
         const suggestionSuffix = localIdCheck.suggestion.split("_").slice(1).join("_");
         this.localIdSuffixInput.value = suggestionSuffix;
         return this.#displayLocalIdError(`Local ID with suffix "${localIdSuffix}" is already in use so "${suggestionSuffix}" will be used instead.`);
-    }
-
-    async #validateLocalIdAndProcessResults(localIdSuffix) {
-        const localIdCheck = await checkLocalIdIsUnique(this.localIdBase + "_" + localIdSuffix);
-        if ("error" in localIdCheck) {
-            if ("displayError" in localIdCheck) this.#displayLocalIdError(localIdCheck.error);
-            return;
-        }
-        const isLocalIdInUse = localIdCheck.result;
-
-        if (isLocalIdInUse) {
-            this.#displayLocalIdSuggestion(localIdCheck, localIdSuffix);
-        } else {
-            this.localIdSuffixInput.classList.remove("is-invalid");
-        }
-        window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallySet"));
     }
 }
