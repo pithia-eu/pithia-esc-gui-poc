@@ -20,8 +20,12 @@ export class DataSubsetEditor extends BaseEditor {
         super.setup();
         setupWizardManualAndAutoSave();
         this.timePeriodsTab = setupTimePeriodsTab();
-        this.sourcesTab = setupDataSubsetSourcesTab();
+        this.sourcesTab = this.setupSourcesTab();
         setupSourceFileSharingMethodSwitching(this.sourcesTab);
+    }
+
+    setupSourcesTab() {
+        return setupDataSubsetSourcesTab();
     }
 
     async submitAndGenerateXml() {
