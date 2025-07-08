@@ -628,6 +628,11 @@ class DataSubsetForm(
         initial=True
     )
 
+    def clean_source_linkages(self, cleaned_data):
+        if cleaned_data.get('is_file_uploaded_for_each_online_resource'):
+            return
+        return super().clean_source_linkages(cleaned_data)
+
     def clean(self):
         cleaned_data = super().clean()
         time_periods = cleaned_data.get('time_periods_json')
