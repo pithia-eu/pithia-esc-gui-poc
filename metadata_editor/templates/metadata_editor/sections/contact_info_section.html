@@ -11,7 +11,7 @@
             {% endwith %}
             <ul id="email-address-input-list" class="d-flex flex-column row-gap-3 list-unstyled mb-3">
                 <li>
-                    {% with disabled=True %}
+                    {% with field=form.email_address disabled=True %}
                     {% include 'metadata_editor/components/ci_email_address_field_content_template.html' %}
                     {% endwith %}
                 </li>

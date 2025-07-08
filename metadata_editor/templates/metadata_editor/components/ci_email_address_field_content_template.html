@@ -1,14 +1,5 @@
-
 {{ form.email_address.label_tag }}
-<div class="d-flex column-gap-3">
-    {{ form.email_address }}
-    <button
-        class="btn btn-outline-danger btn-remove-email"
-        type="button"
-        {% if disabled %}
-        disabled
-        {% endif %}>Remove</button>
-</div>
+{% include 'metadata_editor/components/ci_email_address_field_wrapper.html' %}
 {% if form.email_address.help_text %}
 <div class="form-text">{{ form.email_address.help_text }}</div>
 {% endif %}
