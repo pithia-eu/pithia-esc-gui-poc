@@ -5,6 +5,9 @@
 {{ capability_link_standard_identifier_row_content_template|json_script:'capability-link-standard-identifier-row-content-template' }}
 {{ capability_link_time_span_row_content_template|json_script:'capability-link-time-span-row-content-template' }}
 {% endblock editor_scripts %}
+{% block editor_setup_scripts %}
+<script src="{% static 'update_with_support/computation_update_editor.js' %}" type="module"></script>
+{% endblock editor_setup_scripts %}
 {% block form_content %}
 <section id="description-section">
     <div class="row gy-3">

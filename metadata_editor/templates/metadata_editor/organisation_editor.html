@@ -8,6 +8,9 @@
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.4/build/js/intlTelInput.min.js"></script>
 <script src="{% static 'metadata_editor/components/contact_info.js' %}" type="module"></script>
 {% endblock editor_scripts %}
+{% block editor_setup_scripts %}
+<script src="{% static 'update_with_support/organisation_update_editor.js' %}" type="module"></script>
+{% endblock editor_setup_scripts %}
 {% block name_section %}
 <section id="name-section" class="d-flex flex-column row-gap-4">
     <h2 class="visually-hidden">Full Name and Short Name</h2>

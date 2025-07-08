@@ -5,6 +5,9 @@
 {{ sources_tab_pane_content_template|json_script:'sources-tab-pane-content-template' }}
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 {% endblock editor_scripts %}
+{% block editor_setup_scripts %}
+<script src="{% static 'update_with_support/data_subset_update_editor.js' %}" type="module"></script>
+{% endblock editor_setup_scripts %}
 {% block extra_form_attrs %}enctype="multipart/form-data"{% endblock extra_form_attrs %}
 {% block form_content %}
 {% include 'metadata_editor/sections/description_section.html' %}

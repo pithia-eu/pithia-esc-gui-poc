@@ -1,7 +1,8 @@
 {% extends 'metadata_editor/components/base_editor.html' %}
 {% load static %}
-{% block editor_scripts %}
-{% endblock editor_scripts %}
+{% block editor_setup_scripts %}
+<script src="{% static 'update_with_support/static_dataset_entry_update_editor.js' %}" type="module"></script>
+{% endblock editor_setup_scripts %}
 {% block pre_name_section %}
 <section id="static-dataset-category-section" class="pb-2">
     <div class="row gy-1">

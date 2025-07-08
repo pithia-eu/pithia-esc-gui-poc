@@ -322,7 +322,6 @@ class DataSubsetUpdateWithEditorFormView(
         HandleRegistrationViewMixin,
         ResourceUpdateWithEditorFormView,
         DataSubsetEditorFormView):
-    template_name = 'update_with_support/data_subset_update_editor.html'
     model = models.DataSubset
     success_url_name = 'update:data_subset_with_editor'
     
