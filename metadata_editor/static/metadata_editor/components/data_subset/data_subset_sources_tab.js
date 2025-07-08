@@ -107,30 +107,32 @@ export class DataSubsetSourcesTab extends SourcesTab {
         });
     }
 
-    resetFieldErrorList(errorListElement) {
-        errorListElement.replaceChildren();
+    getInvalidFeedbackElementForInput(input) {
+        return document.querySelector(`#invalid-feedback-${input.id}`);
     }
 
-    addErrorToFieldErrorList(errorText, errorList) {
-        const liElement = document.createElement("LI");
-        liElement.className = "form-text text-danger";
-        liElement.textContent = errorText;
-        errorList.append(liElement);
+    resetFieldInvalidFeedback(invalidFeedbackElement) {
+        invalidFeedbackElement.replaceChildren();
     }
 
-    addLoadingTextToFieldErrorList(loadingText, errorList) {
-        const liElement = document.createElement("LI");
-        liElement.className = "form-text";
-        liElement.textContent = loadingText;
-        errorList.append(liElement);
+    updateInvalidFeedbackForField(errorText, invalidFeedbackElement) {
+        invalidFeedbackElement.textContent = errorText;
+    }
+
+    showLoadingTextForLinkageField(sourceLinkageInputWrapper) {
+        return sourceLinkageInputWrapper.querySelector(".loading-text").classList.remove("d-none");
+    }
+
+    hideLoadingTextForLinkageField(sourceLinkageInputWrapper) {
+        return sourceLinkageInputWrapper.querySelector(".loading-text").classList.add("d-none");
     }
 
     resetSourceNameErrors() {
         const sourceNameInputs = this.tabContent.querySelectorAll("input[name='source_name']");
         sourceNameInputs.forEach(input => input.classList.remove("is-invalid"));
-        const errorLists = this.tabContent.querySelectorAll(".source-name-wrapper .field-error-list");
-        for (const errorList of errorLists) {
-            this.resetFieldErrorList(errorList);
+        const invalidFeedbackElementsForInputs = Array.from(sourceNameInputs).map(input => this.getInvalidFeedbackElementForInput(input));
+        for (const invalidFeedbackElement of invalidFeedbackElementsForInputs) {
+            this.resetFieldInvalidFeedback(invalidFeedbackElement);
         }
     }
 
@@ -154,10 +156,10 @@ export class DataSubsetSourcesTab extends SourcesTab {
                 const inputsWithSimilarNames = inputs.filter(inputWithSimilarName => input.id !== inputWithSimilarName.id);
                 input.classList.add("is-invalid");
                 const errorText = `"${input.value.trim()}" is too similar to the names of ${inputsWithSimilarNames.length} other online resource${inputsWithSimilarNames.length === 1 ? '' : 's'}. Please enter a different name.`;
-                const closestErrorList = input.closest("div").querySelector("ul.field-error-list");
-                this.addErrorToFieldErrorList(
+                const inputInvalidFeedbackElement = this.getInvalidFeedbackElementForInput(input);
+                this.updateInvalidFeedbackForField(
                     errorText,
-                    closestErrorList
+                    inputInvalidFeedbackElement
                 );
             });
         }
@@ -188,9 +190,9 @@ export class DataSubsetSourcesTab extends SourcesTab {
 
     checkLinkageUrlIsValidAndDisplayErrors(linkageInput) {
         const linkageUrl = linkageInput.value;
-        const closestErrorList = linkageInput.closest("div").querySelector("ul.field-error-list");
+        const linkageInputInvalidFeedbackElement = this.getInvalidFeedbackElementForInput(linkageInput);
+        this.resetFieldInvalidFeedback(linkageInputInvalidFeedbackElement);
         linkageInput.classList.remove("is-invalid");
-        this.resetFieldErrorList(closestErrorList);
         if (!linkageUrl.trim()) {
             return;
         }
@@ -202,10 +204,10 @@ export class DataSubsetSourcesTab extends SourcesTab {
             return;
         }
         linkageInput.classList.add("is-invalid");
-        this.resetFieldErrorList(closestErrorList);
-        this.addErrorToFieldErrorList(
+        this.resetFieldInvalidFeedback(linkageInputInvalidFeedbackElement);
+        this.updateInvalidFeedbackForField(
             error,
-            closestErrorList
+            linkageInputInvalidFeedbackElement
         );
     }
 
@@ -218,19 +220,20 @@ export class DataSubsetSourcesTab extends SourcesTab {
     }
 
     setupLinkageCheckForTabPane(newTabPane) {
+        const sourceLinkageInputWrapper = newTabPane.querySelector(this.sourceLinkageInputWrapperSelector);
         const linkageInput = newTabPane.querySelector("input[name='source_linkage']");
-        const closestErrorList = linkageInput.closest("div").querySelector("ul.field-error-list");
-        let linkageInputTimeout;
         this.checkLinkageUrlIsValidAndDisplayErrors(linkageInput);
+        
+        let linkageInputTimeout;
         linkageInput.addEventListener("input", () => {
             if (linkageInputTimeout) {
                 window.clearTimeout(linkageInputTimeout);
             }
             linkageInputTimeout = window.setTimeout(() => {
+                this.hideLoadingTextForLinkageField(sourceLinkageInputWrapper);
                 this.checkLinkageUrlIsValidAndDisplayErrors(linkageInput);
             }, 500);
-            this.resetFieldErrorList(closestErrorList);
-            this.addLoadingTextToFieldErrorList("Checking link...", closestErrorList);
+            this.showLoadingTextForLinkageField(sourceLinkageInputWrapper);
         });
     }
 
