@@ -142,7 +142,7 @@ class ContactInfoEditorFormComponent(forms.Form):
 
     email_addresses_json = forms.JSONField(
         required=False,
-        initial=list,
+        initial=list(),
         widget=forms.HiddenInput()
     )
 
@@ -187,7 +187,7 @@ class CitationDocumentationEditorFormComponent(forms.Form):
 
     citations_json = forms.JSONField(
         required=False,
-        initial=list,
+        initial=list(),
         widget=forms.HiddenInput()
     )
 
@@ -216,7 +216,7 @@ class RelatedPartiesEditorFormComponent(forms.Form):
 
     related_parties_json = forms.JSONField(
         required=False,
-        initial=list,
+        initial=list(),
         widget=forms.HiddenInput()
     )
 
@@ -442,7 +442,7 @@ class CapabilitiesFormComponent(forms.Form):
 
     capabilities_json = forms.JSONField(
         required=False,
-        initial=list,
+        initial=list(),
         widget=forms.HiddenInput()
     )
 
@@ -462,7 +462,7 @@ class StandardIdentifierEditorFormComponent(forms.Form):
 
     standard_identifiers_json = forms.JSONField(
         required=False,
-        initial=list,
+        initial=list(),
         widget=forms.HiddenInput()
     )
 
@@ -532,7 +532,7 @@ class CapabilityLinkEditorFormComponent(StandardIdentifierEditorFormComponent):
 
     capability_link_standard_identifiers_json = forms.JSONField(
         required=False,
-        initial=list,
+        initial=list(),
         widget=forms.HiddenInput()
     )
 
@@ -559,13 +559,13 @@ class CapabilityLinkEditorFormComponent(StandardIdentifierEditorFormComponent):
 
     capability_link_time_spans_json = forms.JSONField(
         required=False,
-        initial=list,
+        initial=list(),
         widget=forms.HiddenInput()
     )
 
     capability_links_json = forms.JSONField(
         required=False,
-        initial=list,
+        initial=list(),
         widget=forms.HiddenInput()
     )
 
@@ -659,7 +659,7 @@ class SourceMetadataFormComponent(forms.Form):
 
     sources_json = forms.JSONField(
         required=False,
-        initial=list,
+        initial=list(),
         widget=forms.HiddenInput()
     )
 

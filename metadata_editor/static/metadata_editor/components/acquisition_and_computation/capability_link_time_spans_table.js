@@ -84,7 +84,17 @@ export class CapabilityLinkTimeSpansTable extends DynamicEditorTable {
 
     loadPreviousData() {
         super.loadPreviousData();
-        const previousData = JSON.parse(this.jsonOutputElement.value);
+        const previousDataJsonString = this.jsonOutputElement.value;
+        if (!previousDataJsonString.trim()) {
+            return;
+        }
+        let previousData;
+        try {
+            previousData = JSON.parse(previousDataJsonString);
+        } catch (error) {
+            console.error('Could not load previous time span data.');
+            return;
+        }
         if (!previousData) {
             return;
         }

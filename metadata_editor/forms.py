@@ -83,7 +83,7 @@ class ProjectEditorForm(
     # Only keyword-related field that gets processed
     keywords_json = forms.JSONField(
         required=False,
-        initial=list,
+        initial=list(),
         widget=forms.HiddenInput()
     )
 
@@ -143,7 +143,7 @@ class PlatformEditorForm(
 
     standard_identifiers_json = forms.JSONField(
         required=False,
-        initial=list,
+        initial=list(),
         widget=forms.HiddenInput()
     )
 
@@ -251,7 +251,7 @@ class InstrumentEditorForm(
 
     operational_modes_json = forms.JSONField(
         required=False,
-        initial=list,
+        initial=list(),
         widget=forms.HiddenInput()
     )
 
@@ -302,7 +302,7 @@ class AcquisitionCapabilitiesEditorForm(
 
     input_descriptions_json = forms.JSONField(
         required=False,
-        initial=list,
+        initial=list(),
         widget=forms.HiddenInput()
     )
 
@@ -359,7 +359,7 @@ class ComputationCapabilitiesEditorForm(
 
     processing_inputs_json = forms.JSONField(
         required=False,
-        initial=list,
+        initial=list(),
         widget=forms.HiddenInput()
     )
 
@@ -597,7 +597,7 @@ class DataSubsetForm(
     # Result time
     time_periods_json = forms.JSONField(
         required=False,
-        initial=list,
+        initial=list(),
         widget=forms.HiddenInput()
     )
 
