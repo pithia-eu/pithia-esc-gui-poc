@@ -62,7 +62,17 @@ export class StandardIdentifiersTable extends DynamicEditorTable {
 
     loadPreviousData() {
         super.loadPreviousData();
-        const previousData = JSON.parse(editorForm.querySelector(this.standardIdentifiersJsonInputSelector).value);
+        const previousDataJsonString = editorForm.querySelector(this.standardIdentifiersJsonInputSelector).value;
+        if (!previousDataJsonString.trim()) {
+            return;
+        }
+        let previousData;
+        try {
+            previousData = JSON.parse(previousDataJsonString);
+        } catch (error) {
+            console.error('Could not load previous standard identifiers data.');
+            return;
+        }
         if (!previousData) {
             return;
         }
