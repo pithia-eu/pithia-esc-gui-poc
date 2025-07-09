@@ -38,9 +38,9 @@
         <div class="col-xl-9 col-lg-12">
             <small class="d-block text-body-secondary mb-2">{{ form.identifier_version.help_text }}</small>
         </div>
-        <div id="field-wrapper-{{ form.identifier_version.auto_id }}" class="col-xl-3 col-lg-4">
-            {{ form.identifier_version }}
-        </div>
+        {% with field=form.identifier_version field_wrapper_classes='col-xl-3 col-lg-4' %}
+        {% include 'register_with_support/components/organisation/organisation_identifier_version_field_wrapper.html' %}
+        {% endwith %}
         {% with field=form.identifier_version extra_classes='col-lg-7' %}
         {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
         {% endwith %}
