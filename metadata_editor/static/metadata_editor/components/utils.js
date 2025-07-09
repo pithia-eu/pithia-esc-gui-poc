@@ -1,11 +1,27 @@
-const UNIX_TIMESTAMP_LENGTH = Date.now().toString().length;
+const RANDOM_STRING_PREFIX = "rs-";
+
+
+// Credit: https://stackoverflow.com/a/1349426/10640126
+function generateRandomString(length) {
+    // Generates a random 5-character string.
+    let result = "";
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
 
 export function generateUniqueElemIdFromCurrentElemId(currentElemId) {
-    const isTimestampAddedAlready = Number.isInteger(Number.parseInt(currentElemId.slice(-UNIX_TIMESTAMP_LENGTH)));
-    if (isTimestampAddedAlready) {
-        return `${currentElemId.slice(0, -UNIX_TIMESTAMP_LENGTH)}${Date.now()}`
+    const randomStringLength = 5;
+    const randomString = generateRandomString(randomStringLength);
+    const randomStringWithPrefix = `${RANDOM_STRING_PREFIX}${randomString}`;
+    const isRandomStringAlreadyAdded = currentElemId.slice(-randomStringWithPrefix).startsWith(RANDOM_STRING_PREFIX);
+    if (isRandomStringAlreadyAdded) {
+        return `${currentElemId.slice(0, -randomStringWithPrefix.length)}${randomStringWithPrefix}`
     }
-    return `${currentElemId}${Date.now()}`;
+    return `${currentElemId}${randomStringWithPrefix}`;
 }
 
 export function updateDuplicatedElemsWithIdsInContainer(elems, containerElement) {
