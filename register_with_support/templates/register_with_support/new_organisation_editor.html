@@ -38,7 +38,7 @@
         <div class="col-xl-9 col-lg-12">
             <small class="d-block text-body-secondary mb-2">{{ form.identifier_version.help_text }}</small>
         </div>
-        {% with field=form.identifier_version field_wrapper_classes='col-xl-3 col-lg-4' %}
+        {% with field=form.identifier_version field_wrapper_extra_classes='col-xl-3 col-lg-4' %}
         {% include 'register_with_support/components/organisation/organisation_identifier_version_field_wrapper.html' %}
         {% endwith %}
         {% with field=form.identifier_version extra_classes='col-lg-7' %}

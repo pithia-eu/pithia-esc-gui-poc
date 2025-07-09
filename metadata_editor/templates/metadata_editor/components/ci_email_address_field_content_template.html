@@ -1,5 +1,7 @@
 {{ form.email_address.label_tag }}
+{% with field=form.email_address %}
 {% include 'metadata_editor/components/ci_email_address_field_wrapper.html' %}
+{% endwith %}
 {% if form.email_address.help_text %}
 <div class="form-text">{{ form.email_address.help_text }}</div>
 {% endif %}
