@@ -87,7 +87,8 @@ def ontology_category_terms_list_only(request, category):
     registered_ontology_terms = list()
     parents_of_registered_ontology_terms = list()
     registered_ontology_server_urls = set()
-    registrations = ScientificMetadata.objects.all()
+    type_choice_values = [type_choice[0] for type_choice in ScientificMetadata.TYPE_CHOICES]
+    registrations = ScientificMetadata.objects.filter(type__in=type_choice_values)
     for r in registrations:
         for ontology_url in r.properties.ontology_urls:
             if ontology_url in registered_ontology_server_urls:
