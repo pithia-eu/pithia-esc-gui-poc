@@ -113,7 +113,6 @@ class OntologyTermDetailView(TemplateView):
     def get_registrations_referencing_ontology_term(self):
         ontology_iri = self.ontology_term_metadata.iri
         all_registrations_unsubclassed = ScientificMetadata.objects.all()
-        unknown_key = 'Unknown'
         registrations_referencing_ontology_term = {
             Organisation.type_plural_readable: list(),
             Individual.type_plural_readable: list(),
@@ -130,7 +129,6 @@ class OntologyTermDetailView(TemplateView):
             StaticDatasetEntry.type_plural_readable: list(),
             DataSubset.type_plural_readable: list(),
             Workflow.type_plural_readable: list(),
-            unknown_key: list(),
         }
 
         self.number_of_registrations_referencing_ontology_term = 0
@@ -139,8 +137,6 @@ class OntologyTermDetailView(TemplateView):
                 continue
             r_subclassed = r.get_subclass_instance()
             if not r_subclassed:
-                registrations_referencing_ontology_term[unknown_key].append(r)
-                self.number_of_registrations_referencing_ontology_term += 1
                 continue
             registrations_referencing_ontology_term[r_subclassed.type_plural_readable].append(r_subclassed)
             self.number_of_registrations_referencing_ontology_term += 1
