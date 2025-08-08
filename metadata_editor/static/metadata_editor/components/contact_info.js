@@ -1,7 +1,19 @@
 import {
     updateDuplicatedElemsWithIdsInContainer,
 } from "/static/metadata_editor/components/utils.js";
-const phoneInput = document.querySelector("#id_phone");
+
+
+export const phoneInput = document.querySelector("#id_phone");
+// Initialise phone number input auto-formatting
+export const iti = window.intlTelInput(phoneInput, {
+    allowDropdown: false,
+    autoPlaceholder: false,
+    defaultToFirstCountry: false,
+    nationalMode: false,
+    placeholderNumberType: "FIXED_LINE",
+    showFlags: false,
+    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.4/build/js/utils.js",
+});
 
 
 class EmailAddressContactInfoSection {
@@ -54,7 +66,7 @@ class EmailAddressContactInfoSection {
     removeEmailAddressInput(containingLiElement) {
         containingLiElement.remove();
         this.disableFirstRemoveEmailInputButtonIfOnlyOne();
-        window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallyAdded"));
+        window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallyRemoved"));
     }
 
     addEmailAddressInput() {
@@ -64,7 +76,10 @@ class EmailAddressContactInfoSection {
         this.updateDuplicatedContentInNewLiElement(newLiElement);
         this.emailAddressInputList.appendChild(newLiElement);
         this.disableFirstRemoveEmailInputButtonIfOnlyOne();
-        window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallyRemoved"));
+        window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallyAdded"));
+        window.dispatchEvent(new CustomEvent("newOnBlurValidationFieldsAdded", {
+            detail: Array.from(newLiElement.querySelectorAll("input")).map(input => input.id),
+        }));
     }
 
     exportEmailAddressesToJsonOutputElement() {
@@ -96,16 +111,6 @@ class EmailAddressContactInfoSection {
 
 // Event listeners
 window.addEventListener("load", () => {
-    // Initialise phone number input auto-formatting
-    window.intlTelInput(phoneInput, {
-        allowDropdown: false,
-        autoPlaceholder: false,
-        defaultToFirstCountry: false,
-        nationalMode: false,
-        placeholderNumberType: "FIXED_LINE",
-        showFlags: false,
-        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.4/build/js/utils.js",
-    });
 
     // Initialise multiple email address inputs
     const emailAddressSection = new EmailAddressContactInfoSection();

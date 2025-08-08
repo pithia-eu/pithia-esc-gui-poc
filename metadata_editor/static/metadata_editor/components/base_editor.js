@@ -5,6 +5,7 @@ export class BaseEditor {
     setup() {
         this.setupClassVariables();
         this.setupEventListeners();
+        this.setupValidator();
     }
 
     setupClassVariables() {
@@ -41,7 +42,30 @@ export class BaseEditor {
         });
     }
 
+    getValidator() {
+    }
+
+    setupValidator() {
+        this.validator = this.getValidator();
+        if (!this.validator) {
+            return;
+        }
+        this.validator.setup();
+    }
+
     async runAfterInitialEditorSetup() {
+    }
+
+    getFieldsToValidateOnInput() {
+        return this.editorForm.querySelectorAll("input:not(input[type='email']), textarea");
+    }
+
+    getFieldsToValidateOnBlur() {
+        return this.editorForm.querySelectorAll("input[type='email']");
+    }
+
+    getSelectsToValidateOnInput() {
+        return this.editorForm.querySelectorAll("select");
     }
 
     updateFormStatusAlert(content) {
