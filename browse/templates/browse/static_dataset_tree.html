@@ -25,11 +25,7 @@
 </div>
 {% endblock aside_responsive %}
 {% block resource_count %}
-{% if resources|length == 1 %}
-{{ resources|length }} {{ type_readable }}
-{% else %}
-{{ resources|length }} {{ type_plural_readable }}
-{% endif %},
+{% if resources|length == 1 %}{{ resources|length }} {{ type_readable }}{% else %}{{ resources|length }} {{ type_plural_readable }}{% endif %},
 {% if data_subset_count == 1 %}
 {{ data_subset_count }} {{ data_subset_type_readable }}
 {% else %}
