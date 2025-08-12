@@ -47,7 +47,7 @@ class CapabilitiesTab extends DynamicEditorTab {
         super.setup();
         const firstTabPane = this.tabContent.querySelector(".tab-pane");
         this.updateTabPaneConditionalRequiredFieldStates(firstTabPane);
-        this.updateTabPaneConditionalRequiredCadenceRelatedFieldStates(firstTabPane);        
+        this.updateTabPaneConditionalRequiredCadenceRelatedFieldStates(firstTabPane);
     }
 
     setupTabPaneEventListeners(tabPane) {

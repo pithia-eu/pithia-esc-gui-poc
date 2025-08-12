@@ -98,6 +98,7 @@ export class BaseEditor {
         `;
         this.formCancelButton.disabled = true;
     }
+
     displayFormErrors(formErrors) {
         for (const fieldName in formErrors) {
             console.log(fieldName, formErrors[fieldName]);
