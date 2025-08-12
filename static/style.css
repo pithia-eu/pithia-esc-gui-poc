@@ -2107,6 +2107,13 @@ ul.tree ul {
     display: none;
 }
 
+.form-select.is-invalid:not([multiple]):not([size]), .form-select.is-invalid:not([multiple])[size="1"], .was-validated .form-select:invalid:not([multiple]):not([size]), .was-validated .form-select:invalid:not([multiple])[size="1"] {
+    background-image: var(--bs-form-select-bg-img),var(--bs-form-select-bg-icon,none);
+    padding-right: 4.125rem;
+    background-position: right .75rem center,center right 2.25rem;
+    background-size: 16px 12px,calc(.75em + .375rem) calc(.75em + .375rem);
+}
+
 
 /* || Bootstrap tooltips */
 .custom-tooltip {

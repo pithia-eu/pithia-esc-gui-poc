@@ -68,6 +68,11 @@ class RelatedPartiesTable extends DynamicEditorTable {
             s.addEventListener("change", e => {
                 checkAndSetRequiredAttributesForFields(selects);
                 this.exportTableDataToJsonAndStoreInOutputElement();
+                window.dispatchEvent(new CustomEvent("validateFields", {
+                    detail: {
+                        fieldIds: selects.map(select => select.id),
+                    }
+                }));
             });
         });
     }

@@ -19,6 +19,9 @@ import {
 import {
     setupTimePeriodElements,
 } from "/static/metadata_editor/components/time_period.js";
+import {
+    OperationEditorValidator,
+} from "/static/metadata_editor/components/validation/operation_editor_validator.js";
 
 
 export class OperationEditor extends BaseEditor {
@@ -27,12 +30,16 @@ export class OperationEditor extends BaseEditor {
         setupWizardManualAndAutoSave();
         setupCitationsTab();
         setupGeometryLocationSection();
-        setupOperationTimeSection();
         setupTimePeriodElements(
             "input[name='time_instant_begin_position']",
             "input[name='time_instant_end_position']"
         );
+        setupOperationTimeSection();
         this.relatedPartiesTable = setupRelatedPartiesTable();
+    }
+
+    getValidator() {
+        return new OperationEditorValidator();
     }
 
     async submitAndGenerateXml() {

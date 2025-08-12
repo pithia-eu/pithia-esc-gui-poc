@@ -3,6 +3,19 @@ import {
 } from "/static/metadata_editor/components/conditional_required_fields.js";
 const operationTimeSection = document.getElementById("operation-time-section");
 
+
+function checkAndUpdateFieldStates(operationTimeSectionInputs) {
+    checkAndSetRequiredAttributesForFields(
+        operationTimeSectionInputs
+    );
+    window.dispatchEvent(new CustomEvent("validateFields", {
+        detail: {
+            fieldIds: Array.from(operationTimeSectionInputs).map(input => input.id),
+        },
+    }));
+}
+
+
 export function setupOperationTimeSection() {
     const operationTimeSectionInputs = operationTimeSection.querySelectorAll("input");
 
@@ -15,10 +28,11 @@ export function setupOperationTimeSection() {
     // Set event listeners for each field in the
     // operation time section
     operationTimeSectionInputs.forEach(input => {
+        input.addEventListener("keyup", () => {
+            checkAndUpdateFieldStates(operationTimeSectionInputs);
+        });
         input.addEventListener("input", () => {
-            checkAndSetRequiredAttributesForFields(
-                operationTimeSectionInputs
-            );
+            checkAndUpdateFieldStates(operationTimeSectionInputs);
         });
     });
 }

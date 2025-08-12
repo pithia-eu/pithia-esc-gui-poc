@@ -47,6 +47,11 @@ class CitationsTab extends DynamicEditorTab {
             inputOrTextarea.addEventListener("input", () => {
                 this.exportTabData();
                 this.updateTabPaneConditionalRequiredFieldStates(tabPane);
+                window.dispatchEvent(new CustomEvent("validateFields", {
+                    detail: {
+                        fieldIds: Array.from(inputsAndTextareas).map(inputOrTextarea => inputOrTextarea.id),
+                    },
+                }));
             });
         });
     }

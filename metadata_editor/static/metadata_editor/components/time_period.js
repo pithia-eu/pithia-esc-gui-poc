@@ -6,19 +6,21 @@ function isTimePeriodBeginBeforeOrEqualToTimePeriodEnd(timePeriodBeginValue, tim
 }
 
 export function alertIfTimePeriodIsInvalid(timePeriodBeginInput, timePeriodEndInput) {
-    if (!timePeriodBeginInput.value) {
-        timePeriodBeginInput.classList.remove("is-invalid");
-        return;
+    if ((!timePeriodBeginInput.value && !timePeriodBeginInput.required)
+        && (!timePeriodEndInput.value && !timePeriodEndInput.required)) {
+            timePeriodBeginInput.classList.remove("is-invalid");
+            return timePeriodEndInput.classList.remove("is-invalid");
     }
-    if (!timePeriodEndInput.value) {
-        timePeriodBeginInput.classList.remove("is-invalid");
-        return;
+    if (!timePeriodBeginInput.value && !timePeriodBeginInput.required) {
+        return timePeriodBeginInput.classList.remove("is-invalid");
+    }
+    if (!timePeriodEndInput.value && !timePeriodEndInput.required) {
+        return timePeriodEndInput.classList.remove("is-invalid");
     }
     if (isTimePeriodBeginBeforeOrEqualToTimePeriodEnd(timePeriodBeginInput.value, timePeriodEndInput.value)) {
         timePeriodBeginInput.classList.remove("is-invalid");
-        return;
+        return timePeriodEndInput.classList.remove("is-invalid");
     }
-    document.querySelector(`#invalid-feedback-${timePeriodBeginInput.id}`).textContent = "The begin time cannot be later than the end time.";
     timePeriodBeginInput.classList.add("is-invalid");
 }
 
@@ -36,21 +38,17 @@ export function setupTimePeriodElements(timePeriodBeginInputSelector, timePeriod
 
     if (timePeriodBeginInput.value) {
         updateTimePeriodEndMinValue(timePeriodBeginInput.value, timePeriodEndInput);
-        alertIfTimePeriodIsInvalid(timePeriodBeginInput, timePeriodEndInput);
     }
 
     if (timePeriodEndInput.value) {
         updateTimePeriodBeginMaxValue(timePeriodEndInput.value, timePeriodBeginInput);
-        alertIfTimePeriodIsInvalid(timePeriodBeginInput, timePeriodEndInput);
     }
 
     timePeriodBeginInput.addEventListener("input", () => {
         updateTimePeriodEndMinValue(timePeriodBeginInput.value, timePeriodEndInput);
-        alertIfTimePeriodIsInvalid(timePeriodBeginInput, timePeriodEndInput);
     });
 
     timePeriodEndInput.addEventListener("input", () => {
         updateTimePeriodBeginMaxValue(timePeriodEndInput.value, timePeriodBeginInput);
-        alertIfTimePeriodIsInvalid(timePeriodBeginInput, timePeriodEndInput);
     });
 }

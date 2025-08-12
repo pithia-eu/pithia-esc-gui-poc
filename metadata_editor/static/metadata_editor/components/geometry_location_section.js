@@ -30,6 +30,11 @@ export function setupGeometryLocationSection() {
                 allGeometryLocationFields,
                 allGeometryLocationFields,
             );
+            window.dispatchEvent(new CustomEvent("validateFields", {
+                detail: {
+                    fieldIds: allGeometryLocationFields.map(field => field.id),
+                }
+            }));
         });
     });
     geometryLocationSelects.forEach(select => {
@@ -38,6 +43,11 @@ export function setupGeometryLocationSection() {
                 allGeometryLocationFields,
                 allGeometryLocationFields,
             );
+            window.dispatchEvent(new CustomEvent("validateFields", {
+                detail: {
+                    fieldIds: allGeometryLocationFields.map(field => field.id),
+                }
+            }));
         });
     });
 }

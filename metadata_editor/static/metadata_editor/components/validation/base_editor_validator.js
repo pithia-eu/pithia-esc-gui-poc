@@ -9,6 +9,7 @@ export  class BaseEditorValidator {
         this.setupLiveValidationForFields(this.getOnInputValidationFields());
         this.setupOnBlurValidationForFields(this.getOnBlurValidationFields());
         this.setupLiveValidationForSelects(this.getOnInputValidationSelects());
+        this.setupOnCallValidationForFields();
     }
 
     getCustomValidationFieldNames() {
@@ -88,6 +89,15 @@ export  class BaseEditorValidator {
         }
     }
 
+    setupOnCallValidationForFields() {
+        window.addEventListener("validateFields", e => {
+            const fieldIds = e.detail.fieldIds;
+            const fieldsSelector = fieldIds.map(fieldId => `#${fieldId}`).join(", ");
+            const fields = document.querySelectorAll(fieldsSelector);
+            this.validateFields(fields);
+        });
+    }
+
     setupOnNewFieldsAddedEventListener() {
         window.addEventListener("newOnInputValidationFieldsAdded", e => {
             const newFieldIds = e.detail;
@@ -115,6 +125,10 @@ export  class BaseEditorValidator {
         if (fieldWrapper) {
             fieldWrapper.classList.remove("is-invalid")
         }
+        const tsControl = document.querySelector(`#${field.id} + .ts-wrapper`);
+        if (tsControl) {
+            tsControl.classList.remove("is-invalid");
+        }
         return field.classList.remove("is-invalid");
     }
     
@@ -122,6 +136,10 @@ export  class BaseEditorValidator {
         const fieldWrapper = this.#getWrapperForField(field);
         if (fieldWrapper) {
             fieldWrapper.classList.add("is-invalid")
+        }
+        const tsControl = document.querySelector(`#${field.id} + .ts-wrapper`);
+        if (tsControl) {
+            tsControl.classList.add("is-invalid");
         }
         field.classList.add("is-invalid");
         const fieldFeedbackElement = document.querySelector(`#invalid-feedback-${field.id}`);
