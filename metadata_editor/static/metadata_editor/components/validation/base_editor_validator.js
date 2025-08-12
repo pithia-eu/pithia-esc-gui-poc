@@ -49,7 +49,8 @@ export  class BaseEditorValidator {
         const notOnBlurValidationFieldsSelectorOrBlankString = this.#getNotOnBlurValidationFieldsSelectorOrBlankStringIfEmpty();
         return Array.from(editorForm.querySelectorAll(
             `input${notOnBlurValidationFieldsSelectorOrBlankString}${notCustomValidationFieldsSelectorOrBlankString},
-            textarea${notOnBlurValidationFieldsSelectorOrBlankString}${notCustomValidationFieldsSelectorOrBlankString}`
+            textarea${notOnBlurValidationFieldsSelectorOrBlankString}${notCustomValidationFieldsSelectorOrBlankString},
+            select${notOnBlurValidationFieldsSelectorOrBlankString}${notCustomValidationFieldsSelectorOrBlankString}`
         ));
     }
 

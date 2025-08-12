@@ -27,6 +27,15 @@ export class TimePeriodsTab extends DynamicEditorTab {
         this.exportTabData();
     }
 
+    #checkAndUpdateFieldStates(tabPane, inputs) {
+        this.tabPaneControlEventHandlerActions(tabPane);
+        window.dispatchEvent(new CustomEvent("validateFields", {
+            detail: {
+                fieldIds: inputs.map(input => input.id),
+            }
+        }));
+    }
+
     setupTabPaneEventListeners(tabPane) {
         super.setupTabPaneEventListeners(tabPane);
         setupTimePeriodElements(
@@ -37,7 +46,13 @@ export class TimePeriodsTab extends DynamicEditorTab {
         const inputs = Array.from(tabPane.querySelectorAll("input"));
         inputs.forEach(input => {
             input.addEventListener("input", () => {
-                this.tabPaneControlEventHandlerActions(tabPane);
+                this.#checkAndUpdateFieldStates();
+            });
+        });
+        
+        inputs.forEach(input => {
+            input.addEventListener("keyup", () => {
+                this.#checkAndUpdateFieldStates();
             });
         });
     }

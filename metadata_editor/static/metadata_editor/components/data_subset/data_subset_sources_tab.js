@@ -89,7 +89,6 @@ export class DataSubsetSourcesTab extends SourcesTab {
         // for conditional required fields are
         // set.
         const optionalFieldSelectorsUnformatted = [
-            this.disabledSourceFileSharingMethodInputSelector,
             this.sourceServiceFunctionSelectSelector,
             this.sourceDescriptionTextareaSelector,
             this.sourceDataFormatSelectSelector,
@@ -111,6 +110,10 @@ export class DataSubsetSourcesTab extends SourcesTab {
         return document.querySelector(`#invalid-feedback-${input.id}`);
     }
 
+    getFeedbackElementForSourceNameInput(input) {
+        return document.querySelector(`#${input.id} ~ .source-name-feedback`);
+    }
+
     resetFieldInvalidFeedback(invalidFeedbackElement) {
         invalidFeedbackElement.replaceChildren();
     }
@@ -129,8 +132,7 @@ export class DataSubsetSourcesTab extends SourcesTab {
 
     resetSourceNameErrors() {
         const sourceNameInputs = this.tabContent.querySelectorAll("input[name='source_name']");
-        sourceNameInputs.forEach(input => input.classList.remove("is-invalid"));
-        const invalidFeedbackElementsForInputs = Array.from(sourceNameInputs).map(input => this.getInvalidFeedbackElementForInput(input));
+        const invalidFeedbackElementsForInputs = Array.from(sourceNameInputs).map(input => this.getFeedbackElementForSourceNameInput(input));
         for (const invalidFeedbackElement of invalidFeedbackElementsForInputs) {
             this.resetFieldInvalidFeedback(invalidFeedbackElement);
         }
@@ -154,9 +156,8 @@ export class DataSubsetSourcesTab extends SourcesTab {
             });
             inputs.forEach(input => {
                 const inputsWithSimilarNames = inputs.filter(inputWithSimilarName => input.id !== inputWithSimilarName.id);
-                input.classList.add("is-invalid");
                 const errorText = `"${input.value.trim()}" is too similar to the names of ${inputsWithSimilarNames.length} other online resource${inputsWithSimilarNames.length === 1 ? '' : 's'}. Please enter a different name.`;
-                const inputInvalidFeedbackElement = this.getInvalidFeedbackElementForInput(input);
+                const inputInvalidFeedbackElement = this.getFeedbackElementForSourceNameInput(input);
                 this.updateInvalidFeedbackForField(
                     errorText,
                     inputInvalidFeedbackElement
@@ -254,6 +255,11 @@ export class DataSubsetSourcesTab extends SourcesTab {
     tabPaneControlEventHandlerActions(tabPane) {
         super.tabPaneControlEventHandlerActions(tabPane);
         this.updateTabPaneConditionalRequiredFieldStates(tabPane);
+        window.dispatchEvent(new CustomEvent("validateFields", {
+            detail: {
+                fieldIds: Array.from(tabPane.querySelectorAll("input, textarea, select")).map(field => field.id),
+            }
+        }));
     }
 
     getTabPaneData(tabPane) {

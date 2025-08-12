@@ -13,6 +13,9 @@ import {
 import {
     setupWizardManualAndAutoSave,
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
+import {
+    DataSubsetEditorValidator,
+} from "/static/metadata_editor/components/validation/data_subset_editor_validator.js";
 
 
 export class DataSubsetEditor extends BaseEditor {
@@ -22,6 +25,10 @@ export class DataSubsetEditor extends BaseEditor {
         this.timePeriodsTab = setupTimePeriodsTab();
         this.sourcesTab = this.setupSourcesTab();
         setupSourceFileSharingMethodSwitching(this.sourcesTab);
+    }
+
+    getValidator() {
+        return new DataSubsetEditorValidator();
     }
 
     setupSourcesTab() {
