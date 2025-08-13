@@ -34,6 +34,11 @@ class ProcessingInputsTable extends DynamicEditorTableWithTextArea {
                     [processingInputDescriptionTextarea],
                     [processingInputNameInput]
                 );
+                window.dispatchEvent(new CustomEvent("validateFields", {
+                    detail: {
+                        fieldIds: fields.map(field => field.id),
+                    }
+                }));
                 this.exportTableDataToJsonAndStoreInOutputElement();
             });
         });

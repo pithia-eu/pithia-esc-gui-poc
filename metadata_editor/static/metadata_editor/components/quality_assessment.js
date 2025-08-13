@@ -11,6 +11,13 @@ function updateQualityAssessmentConditionalRequiredFieldStates() {
         [dataQualityFlagsSelect],
         [metadataQualityFlagsSelect]
     );
+    window.dispatchEvent(new CustomEvent("validateFields", {
+        detail: {
+            fieldIds: [
+                dataQualityFlagsSelect, metadataQualityFlagsSelect
+            ].map(select => select.id),
+        }
+    }));
 }
 
 export function setupQualityAssessmentSection() {

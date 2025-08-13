@@ -22,6 +22,9 @@ import {
 import {
     setupProcessingInputsTable,
 } from "/static/metadata_editor/components/computation_capabilities/processing_inputs_table.js";
+import {
+    ComputationCapabilitiesEditorValidator
+} from "/static/metadata_editor/components/validation/computation_capabilities_editor_validator.js";
 
 
 export class ComputationCapabilitiesEditor extends BaseEditor {
@@ -34,6 +37,10 @@ export class ComputationCapabilitiesEditor extends BaseEditor {
         this.setupSoftwareReferenceSection();
         this.relatedPartiesTable = setupRelatedPartiesTable();
         this.processingInputsTable = setupProcessingInputsTable();
+    }
+
+    getValidator() {
+        return new ComputationCapabilitiesEditorValidator();
     }
 
     checkAndSetSoftwareReferenceConditionalRequiredFields() {
@@ -65,6 +72,11 @@ export class ComputationCapabilitiesEditor extends BaseEditor {
         for (const field of allSoftwareReferenceFields) {
             field.addEventListener("input", () => {
                 this.checkAndSetSoftwareReferenceConditionalRequiredFields();
+                window.dispatchEvent(new CustomEvent("validateFields", {
+                    detail: {
+                        fieldIds: allSoftwareReferenceFields.map(field => field.id),
+                    }
+                }));
             });
         }
     }

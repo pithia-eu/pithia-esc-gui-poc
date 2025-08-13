@@ -54,6 +54,10 @@ class CapabilitiesTab extends DynamicEditorTab {
         super.setupTabPaneEventListeners(tabPane);
         const inputs = tabPane.querySelectorAll("input");
         const selects = tabPane.querySelectorAll("select");
+        const allFieldsInTabPane = [
+            ...inputs,
+            ...selects
+        ];
     
         inputs.forEach(input => {
             input.addEventListener("input", () => {
@@ -62,6 +66,11 @@ class CapabilitiesTab extends DynamicEditorTab {
                 if (input.name === 'capability_cadence') {
                     this.updateTabPaneConditionalRequiredCadenceRelatedFieldStates(tabPane);
                 }
+                window.dispatchEvent(new CustomEvent("validateFields", {
+                    detail: {
+                        fieldIds: allFieldsInTabPane.map(field => field.id),
+                    }
+                }));
             });
         });
     
@@ -72,6 +81,11 @@ class CapabilitiesTab extends DynamicEditorTab {
                 if (select.name === 'capability_cadence_units') {
                     this.updateTabPaneConditionalRequiredCadenceRelatedFieldStates(tabPane);
                 }
+                window.dispatchEvent(new CustomEvent("validateFields", {
+                    detail: {
+                        fieldIds: allFieldsInTabPane.map(field => field.id),
+                    }
+                }));
             });
         });
     }
