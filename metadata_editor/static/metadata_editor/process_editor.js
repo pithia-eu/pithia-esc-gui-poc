@@ -16,6 +16,9 @@ import {
 import {
     setupRelatedPartiesTable,
 } from "/static/metadata_editor/components/related_parties_table.js";
+import {
+    ProcessEditorValidator,
+} from "/static/metadata_editor/components/validation/process_editor_validator.js";
 
 
 export class ProcessEditor extends BaseEditor {
@@ -26,6 +29,10 @@ export class ProcessEditor extends BaseEditor {
         setupCapabilitiesTab();
         setupQualityAssessmentSection();
         this.relatedPartiesTable = setupRelatedPartiesTable();
+    }
+
+    getValidator() {
+        return new ProcessEditorValidator();
     }
 
     async submitAndGenerateXml() {
