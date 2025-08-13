@@ -22,6 +22,13 @@ export class SourcesTab extends DynamicEditorTab {
     }
 
     tabPaneControlEventHandlerActions(tabPane) {
+        window.dispatchEvent(new CustomEvent("validateFields", {
+            detail: {
+                fieldIds: Array.from(
+                    tabPane.querySelectorAll("input, select, textarea")
+                ).map(field => field.id),
+            }
+        }));
         this.exportTabData();
     }
 

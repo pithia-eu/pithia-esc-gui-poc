@@ -13,6 +13,9 @@ import {
 import {
     setupWizardManualAndAutoSave,
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
+import {
+    DataCollectionEditorValidator,
+} from "/static/metadata_editor/components/validation/data_collection_editor_validator.js";
 
 
 export class DataCollectionEditor extends BaseEditor {
@@ -22,6 +25,10 @@ export class DataCollectionEditor extends BaseEditor {
         setupRelatedPartiesTable();
         setupQualityAssessmentSection();
         this.sourcesTab = setupSourcesTab();
+    }
+
+    getValidator() {
+        return new DataCollectionEditorValidator();
     }
 
     async submitAndGenerateXml() {
