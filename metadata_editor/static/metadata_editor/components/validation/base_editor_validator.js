@@ -130,6 +130,10 @@ export  class BaseEditorValidator {
         if (tsControl) {
             tsControl.classList.remove("is-invalid");
         }
+        const fieldFeedbackElement = document.querySelector(`#invalid-feedback-${field.id}`);
+        if (fieldFeedbackElement) {
+            fieldFeedbackElement.textContent = "";
+        }
         return field.classList.remove("is-invalid");
     }
     
@@ -144,6 +148,9 @@ export  class BaseEditorValidator {
         }
         field.classList.add("is-invalid");
         const fieldFeedbackElement = document.querySelector(`#invalid-feedback-${field.id}`);
+        if (!fieldFeedbackElement) {
+            return;
+        }
         return fieldFeedbackElement.textContent = field.validationMessage;
     }
 

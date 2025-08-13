@@ -7,6 +7,9 @@ import {
 import {
     checkIfEscUrl,
 } from "/static/metadata_editor/components/url_format_checker.js";
+import {
+    WorkflowEditorValidator,
+} from "/static/metadata_editor/components/validation/workflow_editor_validator.js";
 
 
 export class WorkflowEditor extends BaseEditor {
@@ -26,6 +29,11 @@ export class WorkflowEditor extends BaseEditor {
 
         setupWizardManualAndAutoSave();
         this.setupWorkflowDetailsSection();
+        this.setupUrlInputValidation();
+    }
+
+    getValidator() {
+        return new WorkflowEditorValidator();
     }
 
     setWorkflowDetailsFileSourceChoiceState(radioButtonValue, isEnabled) {
@@ -80,6 +88,7 @@ export class WorkflowEditor extends BaseEditor {
         }
         const workflowDetailsUrlValidationResults = this.validateWorkflowDetailsUrl();
         if (!workflowDetailsUrlValidationResults.valid) {
+            this.workflowDetailsFileExternalTextInput.classList.add("is-invalid");
             const errorListItem = document.createElement("LI");
             errorListItem.className = "form-text text-danger";
             errorListItem.textContent = workflowDetailsUrlValidationResults.error;
@@ -114,9 +123,25 @@ export class WorkflowEditor extends BaseEditor {
                 const radioButton = this.workflowDetailsFileSourceChoices[choice].radioButton;
                 this.updateWorkflowDetailsRelatedInputStates(e.target.value);
                 if (radioButton === this.workflowDetailsFileExternalRadioButton) {
-                    return this.validateWorkflowDetailsUrlAndDisplayErrors();
+                    this.validateWorkflowDetailsUrlAndDisplayErrors();
+                    return window.dispatchEvent(new CustomEvent("validateFields", {
+                        detail: {
+                            fieldIds: [
+                                this.workflowDetailsFileInput,
+                                this.workflowDetailsFileExternalTextInput,
+                            ].map(field => field.id),
+                        }
+                    }));
                 }
-                return this.resetWorkflowDetailsUrlValidationErrors();
+                this.resetWorkflowDetailsUrlValidationErrors();
+                return window.dispatchEvent(new CustomEvent("validateFields", {
+                    detail: {
+                        fieldIds: [
+                            this.workflowDetailsFileInput,
+                            this.workflowDetailsFileExternalTextInput,
+                        ].map(field => field.id),
+                    }
+                }));
             });
         }
         this.workflowDetailsFileExternalTextInput.addEventListener("input", () => {
@@ -130,6 +155,34 @@ export class WorkflowEditor extends BaseEditor {
                 this.resetWorkflowDetailsUrlValidationErrors();
                 this.validateWorkflowDetailsUrlAndDisplayErrors();
             }, 500);
+        });
+    }
+
+    setupUrlInputValidation() {
+        const workflowOpenApiSpecificationUrlInput = document.querySelector("input[name='api_specification_url']");
+        workflowOpenApiSpecificationUrlInput.addEventListener("input", () => {
+            const openApiSpecificationUrlFeedbackElement = document.querySelector(".api-specification-url-status-validation");
+            const validator = this.getValidator();
+            const value = workflowOpenApiSpecificationUrlInput.value;
+            if (value.length > 0) {
+                openApiSpecificationUrlFeedbackElement.classList.remove("d-none");
+                return validator.highlightFieldAsValid(workflowOpenApiSpecificationUrlInput);
+            }
+            openApiSpecificationUrlFeedbackElement.classList.add("d-none");
+            return validator.validateField(workflowOpenApiSpecificationUrlInput);
+        });
+
+        const workflowDetailsUrlInput = document.querySelector("input[name='workflow_details']");
+        workflowDetailsUrlInput.addEventListener("input", () => {
+            const feedbackElement = document.querySelector("#workflow-details-url-error-list");
+            const validator = this.getValidator();
+            const value = workflowDetailsUrlInput.value;
+            if (value.length > 0) {
+                feedbackElement.classList.remove("d-none");
+                return validator.highlightFieldAsValid(workflowDetailsUrlInput);
+            }
+            feedbackElement.classList.add("d-none");
+            return validator.validateField(workflowDetailsUrlInput);
         });
     }
 }
