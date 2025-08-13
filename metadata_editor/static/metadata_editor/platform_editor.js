@@ -16,6 +16,9 @@ import {
 import {
     setupPlatformStandardIdentifiersTable,
 } from "/static/metadata_editor/components/platform/platform_standard_identifiers_table.js";
+import {
+    PlatformEditorValidator,
+} from "/static/metadata_editor/components/validation/platform_editor_validator.js";
 
 
 export class PlatformEditor extends BaseEditor {
@@ -26,6 +29,10 @@ export class PlatformEditor extends BaseEditor {
         setupGeometryLocationSection();
         this.relatedPartiesTable = setupRelatedPartiesTable();
         this.platformStandardIdentifiersTable = setupPlatformStandardIdentifiersTable();
+    }
+
+    getValidator() {
+        return new PlatformEditorValidator();
     }
 
     async submitAndGenerateXml() {

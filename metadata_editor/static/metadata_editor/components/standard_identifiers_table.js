@@ -55,6 +55,11 @@ export class StandardIdentifiersTable extends DynamicEditorTable {
         inputs.forEach(input => {
             input.addEventListener("input", () => {
                 checkAndSetRequiredAttributesForFields(inputs, inputs);
+                window.dispatchEvent(new CustomEvent("validateFields", {
+                    detail: {
+                        fieldIds: inputs.map(input => input.id),
+                    }
+                }));
                 this.exportTableDataToJsonAndStoreInOutputElement();
             });
         });
