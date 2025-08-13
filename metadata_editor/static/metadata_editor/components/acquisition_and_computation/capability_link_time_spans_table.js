@@ -29,12 +29,22 @@ export class CapabilityLinkTimeSpansTable extends DynamicEditorTable {
         const timeSpanBeginPositionInput = newRow.querySelector(this.timeSpanBeginPositionInputSelector);
         timeSpanBeginPositionInput.addEventListener("input", () => {
             checkAndSetRequiredAttributesForFields(fields, fields);
+            window.dispatchEvent(new CustomEvent("validateFields", {
+                detail: {
+                    fieldIds: fields.map(field => field.id),
+                }
+            }));
             this.exportTableDataToJsonAndStoreInOutputElement();
         });
 
         const timeSpanEndPositionSelect = newRow.querySelector(this.timeSpanEndPositionSelectSelector);
         timeSpanEndPositionSelect.addEventListener("change", () => {
             checkAndSetRequiredAttributesForFields(fields, fields);
+            window.dispatchEvent(new CustomEvent("validateFields", {
+                detail: {
+                    fieldIds: fields.map(field => field.id),
+                }
+            }));
             this.exportTableDataToJsonAndStoreInOutputElement();
         });
     }

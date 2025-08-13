@@ -55,10 +55,19 @@ class CapabilityLinksTab extends DynamicEditorTab {
         super.setupTabPaneEventListeners(tabPane);
         const inputs = Array.from(tabPane.querySelectorAll("input"));
         const selects = Array.from(tabPane.querySelectorAll("select"));
+        const allTabPaneFields = [
+            ...inputs,
+            ...selects,
+        ];
     
         inputs.forEach(input => {
             input.addEventListener("input", () => {
                 updateTabPaneConditionalRequiredFieldStates(tabPane);
+                window.dispatchEvent(new CustomEvent("validateFields", {
+                    detail: {
+                        fieldIds: allTabPaneFields.map(field => field.id),
+                    }
+                }));
                 this.exportTabData();
             });
         });
@@ -66,6 +75,11 @@ class CapabilityLinksTab extends DynamicEditorTab {
         selects.forEach(select => {
             select.addEventListener("change", () => {
                 updateTabPaneConditionalRequiredFieldStates(tabPane);
+                window.dispatchEvent(new CustomEvent("validateFields", {
+                    detail: {
+                        fieldIds: allTabPaneFields.map(field => field.id),
+                    }
+                }));
                 this.exportTabData();
             });
         });
