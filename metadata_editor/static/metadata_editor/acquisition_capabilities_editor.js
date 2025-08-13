@@ -22,6 +22,9 @@ import {
 import {
     setupInputDescriptionsTable,
 } from "/static/metadata_editor/components/acquisition_capabilities/input_descriptions_table.js";
+import {
+    AcquisitionCapabilitiesEditorValidator,
+} from "/static/metadata_editor/components/validation/acquisition_capabilities_editor_validator.js";
 
 
 export class AcquisitionCapabilitiesEditor extends BaseEditor {
@@ -34,6 +37,10 @@ export class AcquisitionCapabilitiesEditor extends BaseEditor {
         setupInstrumentModePairSection();
         setupQualityAssessmentSection();
         this.relatedPartiesTable = setupRelatedPartiesTable();
+    }
+
+    getValidator() {
+        return new AcquisitionCapabilitiesEditorValidator();
     }
 
     async submitAndGenerateXml() {

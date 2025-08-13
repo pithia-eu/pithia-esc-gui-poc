@@ -34,6 +34,11 @@ class InputDescriptionsTable extends DynamicEditorTableWithTextArea {
                     [inputParameterDescriptionTextarea],
                     [inputParameterNameInput]
                 );
+                window.dispatchEvent(new CustomEvent("validateFields", {
+                    detail: {
+                        fieldIds: fields.map(field => field.id),
+                    }
+                }));
                 this.exportTableDataToJsonAndStoreInOutputElement();
             });
         });

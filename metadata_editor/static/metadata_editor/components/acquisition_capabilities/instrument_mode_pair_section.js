@@ -50,5 +50,13 @@ export function setupInstrumentModePairSection() {
         instrumentModeSelect.value = "";
         filterInstrumentModeOptions(instrumentSelect.options[instrumentSelect.selectedIndex].text);
         checkAndSetRequiredAttributesForFields(conditionalRequiredFields, optionalFields);
+        window.dispatchEvent(new CustomEvent("validateFields", {
+            detail: {
+                fieldIds: [
+                    ...conditionalRequiredFields,
+                    ...optionalFields,
+                ].map(field => field.id),
+            }
+        }));
     });
 }
