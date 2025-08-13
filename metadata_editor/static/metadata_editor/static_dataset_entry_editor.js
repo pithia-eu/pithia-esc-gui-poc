@@ -10,18 +10,25 @@ import {
 import {
     setupWizardManualAndAutoSave,
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
+import {
+    StaticDatasetEntryEditorValidator,
+} from "/static/metadata_editor/components/validation/static_dataset_entry_editor_validator.js";
 
 
 export class StaticDatasetEntryEditor extends BaseEditor {
     setup() {
         super.setup();
         setupWizardManualAndAutoSave();
-        setupPhenomenonTimeSection();
         setupTimePeriodElements(
             "input[name='time_instant_begin_position']",
             "input[name='time_instant_end_position']"
         );
+        setupPhenomenonTimeSection();
         this.updateNameInputHelpText();
+    }
+
+    getValidator() {
+        return new StaticDatasetEntryEditorValidator();
     }
 
     setupClassVariables() {
