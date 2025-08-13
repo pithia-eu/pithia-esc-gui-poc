@@ -13,6 +13,9 @@ import {
 import {
     setupKeywordsTable,
 } from "/static/metadata_editor/components/project/keywords_table.js";
+import {
+    ProjectEditorValidator,
+} from "/static/metadata_editor/components/validation/project_editor_validator.js";
 
 
 export class ProjectEditor extends BaseEditor {
@@ -22,6 +25,10 @@ export class ProjectEditor extends BaseEditor {
         setupCitationsTab();
         // this.keywordsTable = setupKeywordsTable();
         this.relatedPartiesTable = setupRelatedPartiesTable();
+    }
+
+    getValidator() {
+        return new ProjectEditorValidator();
     }
 
     async submitAndGenerateXml() {
