@@ -26,6 +26,11 @@ class OperationalModesTable extends DynamicEditorTableWithTextArea {
         fields.forEach(field => {
             field.addEventListener("input", () => {
                 checkAndSetRequiredAttributesForFields(fields);
+                window.dispatchEvent(new CustomEvent("validateFields", {
+                    detail: {
+                        fieldIds: fields.map(field => field.id),
+                    }
+                }));
                 this.exportTableDataToJsonAndStoreInOutputElement();
             });
         });

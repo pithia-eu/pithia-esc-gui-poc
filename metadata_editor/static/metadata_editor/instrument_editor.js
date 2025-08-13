@@ -13,6 +13,9 @@ import {
 import {
     setupOperationalModesTable,
 } from "/static/metadata_editor/components/instrument/operational_modes_table.js";
+import {
+    InstrumentEditorValidator,
+} from "/static/metadata_editor/components/validation/instrument_editor_validator.js";
 
 
 export class InstrumentEditor extends BaseEditor {
@@ -22,6 +25,10 @@ export class InstrumentEditor extends BaseEditor {
         setupCitationsTab();
         this.relatedPartiesTable = setupRelatedPartiesTable();
         this.operationalModesTable = setupOperationalModesTable();
+    }
+
+    getValidator() {
+        return new InstrumentEditorValidator();
     }
 
     async submitAndGenerateXml() {
