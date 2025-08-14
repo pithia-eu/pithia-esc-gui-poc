@@ -39,6 +39,13 @@ class EmailAddressContactInfoSection {
         emailAddressInput.addEventListener("input", () => {
             this.exportEmailAddressesToJsonOutputElement();
         });
+        emailAddressInput.addEventListener("blur", () => {
+            window.dispatchEvent(new CustomEvent("validateFields", {
+                detail: {
+                    fieldIds: [emailAddressInput.id],
+                }
+            }));
+        });
         const removeEmailAddressInputButton = containingLiElement.querySelector(this.removeEmailAddressInputButtonSelector);
         removeEmailAddressInputButton.addEventListener("click", () => {
             this.removeEmailAddressInput(containingLiElement);

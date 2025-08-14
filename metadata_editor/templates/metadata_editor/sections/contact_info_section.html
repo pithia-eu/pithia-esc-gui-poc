@@ -23,8 +23,9 @@
         <div class="col-xl-5 col-lg-8">
             <div class="d-flex flex-column">
                 {{ form.phone.label_tag }}
-                <input type="tel" name="{{ form.phone.name }}" id="{{ form.phone.auto_id }}" class="form-control pe-2" value="{{ form.phone.value|default:'' }}">
-                <div class="form-text">{{ form.phone.help_text }}</div>
+                {% with field=form.phone %}
+                {% include 'metadata_editor/components/ci_phone_field_wrapper.html' %}
+                {% endwith %}
                 {% with field=form.phone %}
                 {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
                 {% endwith %}
