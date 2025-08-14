@@ -4,6 +4,9 @@ import {
 import {
     setupWizardManualAndAutoSave,
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
+import {
+    IndividualEditorValidator,
+} from "/static/metadata_editor/components/validation/individual_editor_validator.js";
 
 
 export class IndividualEditor extends BaseEditor {
@@ -12,4 +15,7 @@ export class IndividualEditor extends BaseEditor {
         setupWizardManualAndAutoSave();
     }
     
+    getValidator() {
+        return new IndividualEditorValidator();
+    }
 }
