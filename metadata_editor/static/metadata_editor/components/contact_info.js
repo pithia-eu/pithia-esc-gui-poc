@@ -1,6 +1,9 @@
 import {
     updateDuplicatedElemsWithIdsInContainer,
 } from "/static/metadata_editor/components/utils.js";
+import {
+    dispatchValidateFieldsEvent,
+} from "/static/metadata_editor/components/validation/utils/events.js";
 
 
 export const phoneInput = document.querySelector("#id_phone");
@@ -40,11 +43,7 @@ class EmailAddressContactInfoSection {
             this.exportEmailAddressesToJsonOutputElement();
         });
         emailAddressInput.addEventListener("blur", () => {
-            window.dispatchEvent(new CustomEvent("validateFields", {
-                detail: {
-                    fieldIds: [emailAddressInput.id],
-                }
-            }));
+            dispatchValidateFieldsEvent([emailAddressInput]);
         });
         const removeEmailAddressInputButton = containingLiElement.querySelector(this.removeEmailAddressInputButtonSelector);
         removeEmailAddressInputButton.addEventListener("click", () => {

@@ -25,6 +25,9 @@ import {
 import {
     ComputationCapabilitiesEditorValidator
 } from "/static/metadata_editor/components/validation/computation_capabilities_editor_validator.js";
+import {
+    dispatchValidateFieldsEvent,
+} from "/static/metadata_editor/components/validation/utils/events.js";
 
 
 export class ComputationCapabilitiesEditor extends BaseEditor {
@@ -72,11 +75,10 @@ export class ComputationCapabilitiesEditor extends BaseEditor {
         for (const field of allSoftwareReferenceFields) {
             field.addEventListener("input", () => {
                 this.checkAndSetSoftwareReferenceConditionalRequiredFields();
-                window.dispatchEvent(new CustomEvent("validateFields", {
-                    detail: {
-                        fieldIds: allSoftwareReferenceFields.map(field => field.id),
-                    }
-                }));
+                if (allSoftwareReferenceFields.some(field => field.required)) {
+                    return dispatchValidateFieldsEvent([field]);
+                }
+                return dispatchValidateFieldsEvent(allSoftwareReferenceFields);
             });
         }
     }

@@ -10,6 +10,9 @@ import {
 import {
     WorkflowEditorValidator,
 } from "/static/metadata_editor/components/validation/workflow_editor_validator.js";
+import {
+    dispatchValidateFieldsEvent,
+} from "/static/metadata_editor/components/validation/utils/events.js";
 
 
 export class WorkflowEditor extends BaseEditor {
@@ -118,30 +121,20 @@ export class WorkflowEditor extends BaseEditor {
             this.validateWorkflowDetailsUrlAndDisplayErrors();
         }
     
+        const workflowDetailsInputs = [
+            this.workflowDetailsFileInput,
+            this.workflowDetailsFileExternalTextInput,
+        ];
         for (const choice in this.workflowDetailsFileSourceChoices) {
             this.workflowDetailsFileSourceChoices[choice].radioButton.addEventListener("change", e => {
                 const radioButton = this.workflowDetailsFileSourceChoices[choice].radioButton;
                 this.updateWorkflowDetailsRelatedInputStates(e.target.value);
                 if (radioButton === this.workflowDetailsFileExternalRadioButton) {
                     this.validateWorkflowDetailsUrlAndDisplayErrors();
-                    return window.dispatchEvent(new CustomEvent("validateFields", {
-                        detail: {
-                            fieldIds: [
-                                this.workflowDetailsFileInput,
-                                this.workflowDetailsFileExternalTextInput,
-                            ].map(field => field.id),
-                        }
-                    }));
+                    return dispatchValidateFieldsEvent(workflowDetailsInputs);
                 }
                 this.resetWorkflowDetailsUrlValidationErrors();
-                return window.dispatchEvent(new CustomEvent("validateFields", {
-                    detail: {
-                        fieldIds: [
-                            this.workflowDetailsFileInput,
-                            this.workflowDetailsFileExternalTextInput,
-                        ].map(field => field.id),
-                    }
-                }));
+                return dispatchValidateFieldsEvent(workflowDetailsInputs);
             });
         }
         this.workflowDetailsFileExternalTextInput.addEventListener("input", () => {

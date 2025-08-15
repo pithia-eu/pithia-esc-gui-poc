@@ -1,6 +1,10 @@
 import {
     checkAndSetRequiredAttributesForFields,
 } from "/static/metadata_editor/components/conditional_required_fields.js";
+import {
+    dispatchValidateFieldsEvent,
+} from "/static/metadata_editor/components/validation/utils/events.js";
+
 const phenomenonTimeSection = document.getElementById("phenomenon-time-section");
 const phenomenonTimeSectionInputs = Array.from(phenomenonTimeSection.querySelectorAll("input"));
 
@@ -9,11 +13,7 @@ function checkAndUpdateFieldStates() {
     checkAndSetRequiredAttributesForFields(
         phenomenonTimeSectionInputs
     );
-    window.dispatchEvent(new CustomEvent("validateFields", {
-        detail: {
-            fieldIds: phenomenonTimeSectionInputs.map(input => input.id),
-        }
-    }));
+    dispatchValidateFieldsEvent(phenomenonTimeSectionInputs);
 }
 
 export function setupPhenomenonTimeSection() {

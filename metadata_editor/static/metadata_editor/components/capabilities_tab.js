@@ -4,6 +4,9 @@ import {
 import {
     checkAndSetRequiredAttributesForFields,
 } from "/static/metadata_editor/components/conditional_required_fields.js";
+import {
+    dispatchValidateFieldsEvent,
+} from "/static/metadata_editor/components/validation/utils/events.js";
 
 
 class CapabilitiesTab extends DynamicEditorTab {
@@ -66,11 +69,10 @@ class CapabilitiesTab extends DynamicEditorTab {
                 if (input.name === 'capability_cadence') {
                     this.updateTabPaneConditionalRequiredCadenceRelatedFieldStates(tabPane);
                 }
-                window.dispatchEvent(new CustomEvent("validateFields", {
-                    detail: {
-                        fieldIds: allFieldsInTabPane.map(field => field.id),
-                    }
-                }));
+                if (allFieldsInTabPane.some(field => field.required)) {
+                    return dispatchValidateFieldsEvent([input]);
+                }
+                return dispatchValidateFieldsEvent(allFieldsInTabPane);
             });
         });
     
@@ -81,11 +83,10 @@ class CapabilitiesTab extends DynamicEditorTab {
                 if (select.name === 'capability_cadence_units') {
                     this.updateTabPaneConditionalRequiredCadenceRelatedFieldStates(tabPane);
                 }
-                window.dispatchEvent(new CustomEvent("validateFields", {
-                    detail: {
-                        fieldIds: allFieldsInTabPane.map(field => field.id),
-                    }
-                }));
+                if (allFieldsInTabPane.some(field => field.required)) {
+                    return dispatchValidateFieldsEvent([select]);
+                }
+                return dispatchValidateFieldsEvent(allFieldsInTabPane);
             });
         });
     }
