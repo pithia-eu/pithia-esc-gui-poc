@@ -126,6 +126,9 @@ export  class BaseEditorValidator {
         if (fieldWrapper) {
             fieldWrapper.classList.remove("is-invalid")
         }
+        if (!field.id) {
+            return field.classList.remove("is-invalid");
+        }
         const tsControl = document.querySelector(`#${field.id} + .ts-wrapper`);
         if (tsControl) {
             tsControl.classList.remove("is-invalid");
