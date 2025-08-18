@@ -8,6 +8,9 @@ import {
     checkIfEscUrl,
 } from "/static/metadata_editor/components/url_format_checker.js";
 import {
+    dispatchValidateFieldsEvent,
+} from "/static/metadata_editor/components/validation/utils/events.js";
+import {
     checkForSimilarSourceNames,
 } from "/static/validation/data_subset_validation.js";
 
@@ -103,6 +106,8 @@ export class DataSubsetSourcesTab extends SourcesTab {
         const tabPanes = this.tabContent.querySelectorAll(".tab-pane");
         tabPanes.forEach(tabPane => {
             this.updateTabPaneConditionalRequiredFieldStates(tabPane);
+            const allFieldsInTabPane = Array.from(tabPane.querySelectorAll("input, select, textarea"));
+            return dispatchValidateFieldsEvent(allFieldsInTabPane);
         });
     }
 
@@ -252,14 +257,9 @@ export class DataSubsetSourcesTab extends SourcesTab {
         return newTabPane;
     }
 
-    tabPaneControlEventHandlerActions(tabPane) {
-        super.tabPaneControlEventHandlerActions(tabPane);
+    tabPaneControlEventHandlerActions(tabPaneControl, tabPane) {
+        super.tabPaneControlEventHandlerActions(tabPaneControl, tabPane);
         this.updateTabPaneConditionalRequiredFieldStates(tabPane);
-        window.dispatchEvent(new CustomEvent("validateFields", {
-            detail: {
-                fieldIds: Array.from(tabPane.querySelectorAll("input, textarea, select")).map(field => field.id),
-            }
-        }));
     }
 
     getTabPaneData(tabPane) {

@@ -4,6 +4,9 @@ import {
 import {
     checkAndSetRequiredAttributesForFields,
 } from "/static/metadata_editor/components/conditional_required_fields.js";
+import {
+    dispatchValidateFieldsEvent,
+} from "/static/metadata_editor/components/validation/utils/events.js";
 
 
 class OperationalModesTable extends DynamicEditorTableWithTextArea {
@@ -22,16 +25,17 @@ class OperationalModesTable extends DynamicEditorTableWithTextArea {
         super.setupNewRowEventListeners(newRow);
  
         this.setupDynamicTextAreaForNewRow(newRow, "textarea[name='operational_mode_description']");
-        const fields = Array.from(newRow.querySelectorAll("input[name='operational_mode_id'], input[name='operational_mode_name'], textarea[name='operational_mode_description']"));
+        const fields = Array.from(
+            newRow.querySelectorAll("input[name='operational_mode_id'], input[name='operational_mode_name'], textarea[name='operational_mode_description']")
+        );
         fields.forEach(field => {
             field.addEventListener("input", () => {
                 checkAndSetRequiredAttributesForFields(fields);
-                window.dispatchEvent(new CustomEvent("validateFields", {
-                    detail: {
-                        fieldIds: fields.map(field => field.id),
-                    }
-                }));
                 this.exportTableDataToJsonAndStoreInOutputElement();
+                if (fields.some(field => field.required)) {
+                    return dispatchValidateFieldsEvent([field]);
+                }
+                return dispatchValidateFieldsEvent(fields);
             });
         });
     }

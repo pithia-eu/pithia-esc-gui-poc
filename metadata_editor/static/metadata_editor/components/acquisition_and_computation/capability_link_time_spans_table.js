@@ -4,6 +4,9 @@ import {
 import {
     checkAndSetRequiredAttributesForFields,
 } from "/static/metadata_editor/components/conditional_required_fields.js";
+import {
+    dispatchValidateFieldsEvent,
+} from "/static/metadata_editor/components/validation/utils/events.js";
 
 export class CapabilityLinkTimeSpansTable extends DynamicEditorTable {
     constructor(tabId) {
@@ -23,29 +26,32 @@ export class CapabilityLinkTimeSpansTable extends DynamicEditorTable {
         super.setupNewRowEventListeners(newRow);
 
         const fields = Array.from(
-            newRow.querySelectorAll(`${this.timeSpanBeginPositionInputSelector}, ${this.timeSpanEndPositionSelectSelector}`)
+            newRow.querySelectorAll(
+                `${this.timeSpanBeginPositionInputSelector},${this.timeSpanEndPositionSelectSelector}`
+            )
         );
 
         const timeSpanBeginPositionInput = newRow.querySelector(this.timeSpanBeginPositionInputSelector);
         timeSpanBeginPositionInput.addEventListener("input", () => {
             checkAndSetRequiredAttributesForFields(fields, fields);
-            window.dispatchEvent(new CustomEvent("validateFields", {
-                detail: {
-                    fieldIds: fields.map(field => field.id),
-                }
-            }));
             this.exportTableDataToJsonAndStoreInOutputElement();
+            if (fields.some(field => field.required)) {
+                return dispatchValidateFieldsEvent([timeSpanBeginPositionInput]);
+            }
+            dispatchValidateFieldsEvent(fields);
+            if (!timeSpanBeginPositionInput.value && !timeSpanBeginPositionInput.required) {
+                return timeSpanBeginPositionInput.classList.remove("is-invalid");
+            }
         });
 
         const timeSpanEndPositionSelect = newRow.querySelector(this.timeSpanEndPositionSelectSelector);
         timeSpanEndPositionSelect.addEventListener("change", () => {
             checkAndSetRequiredAttributesForFields(fields, fields);
-            window.dispatchEvent(new CustomEvent("validateFields", {
-                detail: {
-                    fieldIds: fields.map(field => field.id),
-                }
-            }));
             this.exportTableDataToJsonAndStoreInOutputElement();
+            if (fields.some(field => field.required)) {
+                return dispatchValidateFieldsEvent([timeSpanEndPositionSelect]);
+            }
+            return dispatchValidateFieldsEvent(fields);
         });
     }
 

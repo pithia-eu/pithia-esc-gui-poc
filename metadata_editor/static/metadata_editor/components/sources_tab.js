@@ -1,6 +1,9 @@
 import {
     DynamicEditorTab,
 } from "/static/metadata_editor/components/tab_utils.js";
+import {
+    dispatchValidateFieldsEvent,
+} from "/static/metadata_editor/components/validation/utils/events.js";
 
 
 export class SourcesTab extends DynamicEditorTab {
@@ -21,14 +24,7 @@ export class SourcesTab extends DynamicEditorTab {
         this.sourceDataFormatSelectSelector = "select[name='source_data_formats']";
     }
 
-    tabPaneControlEventHandlerActions(tabPane) {
-        window.dispatchEvent(new CustomEvent("validateFields", {
-            detail: {
-                fieldIds: Array.from(
-                    tabPane.querySelectorAll("input, select, textarea")
-                ).map(field => field.id),
-            }
-        }));
+    tabPaneControlEventHandlerActions(tabPaneControl, tabPane) {
         this.exportTabData();
     }
 
@@ -37,22 +33,39 @@ export class SourcesTab extends DynamicEditorTab {
         const inputs = Array.from(tabPane.querySelectorAll("input"));
         const selects = Array.from(tabPane.querySelectorAll("select"));
         const textareas = Array.from(tabPane.querySelectorAll("textarea"));
+        const allFieldsInTabPane = [
+            ...inputs,
+            ...selects,
+            ...textareas,
+        ];
     
         inputs.forEach(input => {
             input.addEventListener("input", () => {
-                this.tabPaneControlEventHandlerActions(tabPane);
+                this.tabPaneControlEventHandlerActions(input, tabPane);
+                if (allFieldsInTabPane.some(field => field.required)) {
+                    return dispatchValidateFieldsEvent([input]);
+                }
+                return dispatchValidateFieldsEvent(allFieldsInTabPane);
             });
         });
     
         selects.forEach(select => {
             select.addEventListener("change", () => {
-                this.tabPaneControlEventHandlerActions(tabPane);
+                this.tabPaneControlEventHandlerActions(select, tabPane);
+                if (allFieldsInTabPane.some(field => field.required)) {
+                    return dispatchValidateFieldsEvent([select]);
+                }
+                return dispatchValidateFieldsEvent(allFieldsInTabPane);
             });
         });
 
         textareas.forEach(textarea => {
             textarea.addEventListener("input", () => {
-                this.tabPaneControlEventHandlerActions(tabPane);
+                this.tabPaneControlEventHandlerActions(textarea, tabPane);
+                if (allFieldsInTabPane.some(field => field.required)) {
+                    return dispatchValidateFieldsEvent([textarea]);
+                }
+                return dispatchValidateFieldsEvent(allFieldsInTabPane);
             });
         });
     }

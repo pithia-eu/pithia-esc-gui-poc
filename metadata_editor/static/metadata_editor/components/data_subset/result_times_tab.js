@@ -5,6 +5,9 @@ import {
     alertIfTimePeriodIsInvalid,
     setupTimePeriodElements,
 } from "/static/metadata_editor/components/time_period.js";
+import {
+    dispatchValidateFieldsEvent,
+} from "/static/metadata_editor/components/validation/utils/events.js";
 
 
 export class TimePeriodsTab extends DynamicEditorTab {
@@ -23,17 +26,10 @@ export class TimePeriodsTab extends DynamicEditorTab {
         this.timeInstantEndPositionInputSelector = "input[name='time_instant_end_position']";
     }
 
-    tabPaneControlEventHandlerActions(tabPane) {
+    tabPaneControlEventHandlerActions(tabPaneControl, tabPane) {
         this.exportTabData();
-    }
-
-    #checkAndUpdateFieldStates(tabPane, inputs) {
-        this.tabPaneControlEventHandlerActions(tabPane);
-        window.dispatchEvent(new CustomEvent("validateFields", {
-            detail: {
-                fieldIds: inputs.map(input => input.id),
-            }
-        }));
+        const inputs = Array.from(tabPane.querySelectorAll("input"));
+        return dispatchValidateFieldsEvent(inputs);
     }
 
     setupTabPaneEventListeners(tabPane) {
@@ -46,13 +42,13 @@ export class TimePeriodsTab extends DynamicEditorTab {
         const inputs = Array.from(tabPane.querySelectorAll("input"));
         inputs.forEach(input => {
             input.addEventListener("input", () => {
-                this.#checkAndUpdateFieldStates();
+                this.tabPaneControlEventHandlerActions(input, tabPane);
             });
         });
         
         inputs.forEach(input => {
             input.addEventListener("keyup", () => {
-                this.#checkAndUpdateFieldStates();
+                this.tabPaneControlEventHandlerActions(input, tabPane);
             });
         });
     }

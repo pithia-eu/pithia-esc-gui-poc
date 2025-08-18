@@ -10,6 +10,9 @@ import {
 import {
     checkAndSetRequiredAttributesForFieldsBySelectors,
 } from "/static/metadata_editor/components/conditional_required_fields.js";
+import {
+    dispatchValidateFieldsEvent,
+} from "/static/metadata_editor/components/validation/utils/events.js";
 
 
 function updateTabPaneConditionalRequiredFieldStates(tabPane) {
@@ -63,24 +66,22 @@ class CapabilityLinksTab extends DynamicEditorTab {
         inputs.forEach(input => {
             input.addEventListener("input", () => {
                 updateTabPaneConditionalRequiredFieldStates(tabPane);
-                window.dispatchEvent(new CustomEvent("validateFields", {
-                    detail: {
-                        fieldIds: allTabPaneFields.map(field => field.id),
-                    }
-                }));
                 this.exportTabData();
+                if (allTabPaneFields.some(field => field.required)) {
+                    return dispatchValidateFieldsEvent([input]);
+                }
+                return dispatchValidateFieldsEvent(allTabPaneFields);
             });
         });
     
         selects.forEach(select => {
             select.addEventListener("change", () => {
                 updateTabPaneConditionalRequiredFieldStates(tabPane);
-                window.dispatchEvent(new CustomEvent("validateFields", {
-                    detail: {
-                        fieldIds: allTabPaneFields.map(field => field.id),
-                    }
-                }));
                 this.exportTabData();
+                if (allTabPaneFields.some(field => field.required)) {
+                    return dispatchValidateFieldsEvent([select]);
+                }
+                return dispatchValidateFieldsEvent(allTabPaneFields);
             });
         });
     }

@@ -1,6 +1,9 @@
 import {
     checkAndSetRequiredAttributesForFields,
 } from "/static/metadata_editor/components/conditional_required_fields.js";
+import {
+    dispatchValidateFieldsEvent,
+} from "/static/metadata_editor/components/validation/utils/events.js";
 
 const instrumentSelect = document.querySelector("select[name='instrument_mode_pair_instrument']");
 const instrumentModeSelect = document.querySelector("select[name='instrument_mode_pair_mode']");
@@ -10,7 +13,11 @@ const conditionalRequiredFields = [
 ];
 const optionalFields = [
     instrumentSelect,
-]
+];
+const allFields = [
+    ...conditionalRequiredFields,
+    ...optionalFields,
+];
 
 
 function filterInstrumentModeOptions(optGroupFilter) {
@@ -50,13 +57,9 @@ export function setupInstrumentModePairSection() {
         instrumentModeSelect.value = "";
         filterInstrumentModeOptions(instrumentSelect.options[instrumentSelect.selectedIndex].text);
         checkAndSetRequiredAttributesForFields(conditionalRequiredFields, optionalFields);
-        window.dispatchEvent(new CustomEvent("validateFields", {
-            detail: {
-                fieldIds: [
-                    ...conditionalRequiredFields,
-                    ...optionalFields,
-                ].map(field => field.id),
-            }
-        }));
+        if (allFields.some(field => field.required)) {
+            return dispatchValidateFieldsEvent([instrumentSelect]);
+        }
+        return dispatchValidateFieldsEvent(allFields);
     });
 }

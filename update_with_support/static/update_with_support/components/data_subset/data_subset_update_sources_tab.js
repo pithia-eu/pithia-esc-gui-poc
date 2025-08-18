@@ -53,8 +53,8 @@ class DataSubsetUpdateSourcesTab extends DataSubsetSourcesTab {
         this.configureFileInputsIfExistingDataHubFileForTabPane(tabPane);
     }
 
-    tabPaneControlEventHandlerActions(tabPane) {
-        super.tabPaneControlEventHandlerActions(tabPane);
+    tabPaneControlEventHandlerActions(tabPaneControl, tabPane) {
+        super.tabPaneControlEventHandlerActions(tabPaneControl, tabPane);
         this.updateTabPaneConditionalRequiredFieldStates(tabPane);
     }
 

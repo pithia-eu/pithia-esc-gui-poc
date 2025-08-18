@@ -4,6 +4,9 @@ import {
 import {
     checkAndSetRequiredAttributesForFields,
 } from "/static/metadata_editor/components/conditional_required_fields.js";
+import {
+    dispatchValidateFieldsEvent,
+} from "/static/metadata_editor/components/validation/utils/events.js";
 
 
 class ProcessingInputsTable extends DynamicEditorTableWithTextArea {
@@ -34,12 +37,11 @@ class ProcessingInputsTable extends DynamicEditorTableWithTextArea {
                     [processingInputDescriptionTextarea],
                     [processingInputNameInput]
                 );
-                window.dispatchEvent(new CustomEvent("validateFields", {
-                    detail: {
-                        fieldIds: fields.map(field => field.id),
-                    }
-                }));
                 this.exportTableDataToJsonAndStoreInOutputElement();
+                if (fields.some(field => field.required)) {
+                    return dispatchValidateFieldsEvent([field]);
+                }
+                return dispatchValidateFieldsEvent(fields);
             });
         });
     }
