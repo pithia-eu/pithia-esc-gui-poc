@@ -66,21 +66,22 @@ function displayValidLinkResult(validationResult) {
     const { valid, error, details } = validationResult;
     isValidationStatusListVisibile(true);
     document.querySelector(".status-validating-link").classList.add("d-none");
-    if (valid === true) {
+    if (valid) {
         isValidationStatusListVisibile(false);
-        document.querySelector(".status-invalid-link").classList.add("d-none");
-    } else {
-        document.querySelector(".status-invalid-link .status-details").classList.add("d-none");
-        document.querySelector(".status-invalid-link").classList.remove("d-none");
-        document.querySelector(".status-invalid-link .status-text").innerHTML = "An unexpected error occurred.";
-        if (error) {
-            document.querySelector(".status-invalid-link .status-text").innerHTML = error;
-        }
-        if (details) {
-            document.querySelector(".status-invalid-link .status-details span").innerHTML = '';
-            document.querySelector(".status-invalid-link .status-details span").appendChild(document.createTextNode(details));
-            document.querySelector(".status-invalid-link .status-details").classList.remove("d-none");
-        }
+        apiSpecificationUrlInput.classList.remove("is-invalid");
+        return document.querySelector(".status-invalid-link").classList.add("d-none");
+    }
+    apiSpecificationUrlInput.classList.add("is-invalid");
+    document.querySelector(".status-invalid-link .status-details").classList.add("d-none");
+    document.querySelector(".status-invalid-link").classList.remove("d-none");
+    document.querySelector(".status-invalid-link .status-text").innerHTML = "An unexpected error occurred.";
+    if (error) {
+        document.querySelector(".status-invalid-link .status-text").innerHTML = error;
+    }
+    if (details) {
+        document.querySelector(".status-invalid-link .status-details span").innerHTML = '';
+        document.querySelector(".status-invalid-link .status-details span").appendChild(document.createTextNode(details));
+        document.querySelector(".status-invalid-link .status-details").classList.remove("d-none");
     }
 }
 

@@ -3,15 +3,20 @@
         {{ form.input_name.label_tag }}
     </div>
     {{ form.input_name }}
+    {% with field=form.input_name %}
+    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+    {% endwith %}
 </td>
 <td class="col-xl-7 col-lg-12">
     <div class="d-xl-none d-block">
         {{ form.input_description.label_tag }}
     </div>
-    <div class="position-relative">
-        {{ form.input_description }}
-        <div class="textarea-facade" aria-hidden="true"></div>
-    </div>
+    {% with field=form.input_description %}
+    {% include 'metadata_editor/components/acquisition_capabilities/field_wrappers/input_description_field_wrapper.html' %}
+    {% endwith %}
+    {% with field=form.input_description %}
+    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+    {% endwith %}
 </td>
 <td>
     <button class="btn btn-outline-danger remove-dtrow-button remove-idrow-button" type="button" disabled>

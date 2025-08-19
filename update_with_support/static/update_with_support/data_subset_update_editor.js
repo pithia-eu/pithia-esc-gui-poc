@@ -1,38 +1,21 @@
 import {
-    editorForm,
-    validateAndRegister,
-} from "/static/metadata_editor/components/base_editor.js";
-import {
     setupDataSubsetUpdateSourcesTab,
 } from "/static/update_with_support/components/data_subset/data_subset_update_sources_tab.js";
 import {
-    setupSourceFileSharingMethodSwitching,
-} from "/static/metadata_editor/components/data_subset/source_file_sharing_method_switching.js";
+    DataSubsetEditor,
+} from "/static/metadata_editor/data_subset_editor.js";
 import {
-    setupTimePeriodsTab,
-} from "/static/metadata_editor/components/data_subset/result_times_tab.js";
-import {
-    setupWizardManualAndAutoSave,
-} from "/static/metadata_editor/components/editor_manual_and_autosave.js";
-
-let sourcesTab;
-let timePeriodsTab;
+    setupEditor,
+} from "/static/metadata_editor/components/editor_setup.js";
 
 
-function prepareFormForSubmission() {
-    sourcesTab.exportTabData();
+class DataSubsetUpdateEditor extends DataSubsetEditor {
+    setupSourcesTab() {
+        return setupDataSubsetUpdateSourcesTab();
+    }
 }
 
-editorForm.addEventListener("submit", async e => {
-    e.preventDefault();
-    prepareFormForSubmission();
-    await validateAndRegister();
-});
 
-window.addEventListener("load", () => {
-    setupWizardManualAndAutoSave();
-
-    timePeriodsTab = setupTimePeriodsTab();
-    sourcesTab = setupDataSubsetUpdateSourcesTab();
-    setupSourceFileSharingMethodSwitching(sourcesTab);
+window.addEventListener("load", async () => {
+    const editor = await setupEditor(DataSubsetUpdateEditor);
 });

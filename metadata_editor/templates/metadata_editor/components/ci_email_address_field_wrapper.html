@@ -1,0 +1,12 @@
+{% extends 'metadata_editor/components/form_field_wrapper_template.html' %}
+{% block field_wrapper_content %}
+<div class="d-flex column-gap-3">
+    {{ form.email_address }}
+    <button
+        class="btn btn-outline-danger btn-remove-email"
+        type="button"
+        {% if disabled %}
+        disabled
+        {% endif %}>Remove</button>
+</div>
+{% endblock field_wrapper_content %}

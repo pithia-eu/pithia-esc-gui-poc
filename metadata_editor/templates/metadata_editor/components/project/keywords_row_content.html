@@ -1,26 +1,32 @@
 <td class="col-xl-5">
     <div class="d-xl-none d-block">{{ form.keyword_type.label_tag }}</div>
     {{ form.keyword_type }}
-    <div class="invalid-feedback">
-        Enter a keyword type
-    </div>
+    {% with field=form.keyword_type %}
+    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+    {% endwith %}
 </td>
 <td class="col-xl-2">
     <div class="d-xl-none d-block">{{ form.keyword_type_code.label_tag }}</div>
     <div class="input-group">
         <span class="input-group-text" id="input-group-prepend">#</span>
-        <input type="text" class="{{ form.keyword_type_code.field.widget.attrs.class }}" name="{{ form.keyword_type_code.name }}" id="{{ form.keyword_type_code.auto_id }}" aria-describedby="input-group-prepend" value="{{ form.keyword_type_code.value|default:'' }}">
-        <div class="invalid-feedback">
-            Enter a keyword type code
-        </div>
+        <input
+            type="text"
+            class="{{ form.keyword_type_code.field.widget.attrs.class }}"
+            name="{{ form.keyword_type_code.name }}"
+            id="{{ form.keyword_type_code.auto_id }}"
+            aria-describedby="input-group-prepend"
+            value="{{ form.keyword_type_code.value|default:'' }}">
+        {% with field=form.keyword_type_code %}
+        {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+        {% endwith %}
     </div>
 </td>
 <td class="td-keywords col-xl-5">
     <div class="d-xl-none d-block">{{ form.keyword.label_tag }}</div>
     {{ form.keyword }}
-    <div class="invalid-feedback">
-        Enter a keyword
-    </div>
+    {% with field=form.keyword %}
+    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+    {% endwith %}
 </td>
 <td>
     <button class="btn btn-outline-danger remove-dtrow-button remove-kwrow-button" type="button" disabled>

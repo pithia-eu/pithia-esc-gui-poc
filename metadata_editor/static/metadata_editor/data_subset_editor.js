@@ -1,6 +1,5 @@
 import {
-    editorForm,
-    validateAndRegister,
+    BaseEditor,
 } from "/static/metadata_editor/components/base_editor.js";
 import {
     setupDataSubsetSourcesTab,
@@ -14,25 +13,30 @@ import {
 import {
     setupWizardManualAndAutoSave,
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
+import {
+    DataSubsetEditorValidator,
+} from "/static/metadata_editor/components/validation/data_subset_editor_validator.js";
 
-let sourcesTab;
-let timePeriodsTab;
 
+export class DataSubsetEditor extends BaseEditor {
+    setup() {
+        super.setup();
+        setupWizardManualAndAutoSave();
+        this.timePeriodsTab = setupTimePeriodsTab();
+        this.sourcesTab = this.setupSourcesTab();
+        setupSourceFileSharingMethodSwitching(this.sourcesTab);
+    }
 
-function prepareFormForSubmission() {
-    sourcesTab.exportTabData();
+    getValidator() {
+        return new DataSubsetEditorValidator();
+    }
+
+    setupSourcesTab() {
+        return setupDataSubsetSourcesTab();
+    }
+
+    async submitAndGenerateXml() {
+        this.sourcesTab.exportTabData();
+        return super.submitAndGenerateXml();
+    }
 }
-
-editorForm.addEventListener("submit", async e => {
-    e.preventDefault();
-    prepareFormForSubmission();
-    await validateAndRegister();
-});
-
-window.addEventListener("load", () => {
-    setupWizardManualAndAutoSave();
-
-    timePeriodsTab = setupTimePeriodsTab();
-    sourcesTab = setupDataSubsetSourcesTab();
-    setupSourceFileSharingMethodSwitching(sourcesTab);
-});

@@ -13,12 +13,20 @@
     <fieldset class="source-file-options-fieldset">
         <legend class="fs-6 fw-semibold required">File for Online Resource</legend>
         <div class="d-flex flex-column row-gap-2">
-            <div class="form-check existing-datahub-file-checkbox-wrapper">
-                {{ form.is_existing_datahub_file_used }}
-                <label for="{{ form.is_existing_datahub_file_used.id_for_label }}" class="form-check-label mb-0">
-                    {{ form.is_existing_datahub_file_used.label }}
-                </label>
+            <div class="existing-datahub-file-checkbox-wrapper">
+                <div class="form-check">
+                    {{ form.is_existing_datahub_file_used }}
+                    <label for="{{ form.is_existing_datahub_file_used.id_for_label }}" class="form-check-label mb-0">
+                        {{ form.is_existing_datahub_file_used.label }}
+                    </label>
+                    {% with field=form.is_existing_datahub_file_used %}
+                    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+                    {% endwith %}
+                </div>
                 {{ form.source_datahub_file_name }}
+                {% with field=form.source_datahub_file_name %}
+                {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+                {% endwith %}
             </div>
             <div class="source-file-option">
                 {% with field=form.source_file %}

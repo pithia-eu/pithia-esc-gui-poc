@@ -1,6 +1,5 @@
 import {
-    editorForm,
-    validateAndRegister,
+    BaseEditor,
 } from "/static/metadata_editor/components/base_editor.js";
 import {
     setupQualityAssessmentSection,
@@ -14,23 +13,26 @@ import {
 import {
     setupWizardManualAndAutoSave,
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
+import {
+    DataCollectionEditorValidator,
+} from "/static/metadata_editor/components/validation/data_collection_editor_validator.js";
 
-let sourcesTab;
 
+export class DataCollectionEditor extends BaseEditor {
+    setup() {
+        super.setup();
+        setupWizardManualAndAutoSave();
+        setupRelatedPartiesTable();
+        setupQualityAssessmentSection();
+        this.sourcesTab = setupSourcesTab();
+    }
 
-function prepareFormForSubmission() {
-    sourcesTab.exportTabData();
+    getValidator() {
+        return new DataCollectionEditorValidator();
+    }
+
+    async submitAndGenerateXml() {
+        this.sourcesTab.exportTabData();
+        return super.submitAndGenerateXml();
+    }
 }
-
-editorForm.addEventListener("submit", async e => {
-    e.preventDefault();
-    prepareFormForSubmission();
-    await validateAndRegister();
-});
-
-window.addEventListener("load", () => {
-    setupWizardManualAndAutoSave();
-    sourcesTab = setupSourcesTab();
-    setupRelatedPartiesTable();
-    setupQualityAssessmentSection();
-});

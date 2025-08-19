@@ -1,15 +1,13 @@
 {% extends 'metadata_editor/components/base_editor.html' %}
 {% load static %}
-{% block extra_scripts %}
+{% block editor_scripts %}
 {{ related_parties_row_content_template|json_script:'related-parties-row-content-template' }}
 {{ sources_tab_pane_content_template|json_script:'sources-tab-pane-content-template' }}
-<script src="{% static 'metadata_editor/data_collection_editor.js' %}" type="module"></script>
-{% endblock extra_scripts %}
+{% endblock editor_scripts %}
+{% block editor_setup_scripts %}
+<script src="{% static 'update_with_support/data_collection_update_editor.js' %}" type="module"></script>
+{% endblock editor_setup_scripts %}
 {% block form_content %}
-{% include 'metadata_editor/components/name_and_organisation_section.html' %}
-<hr class="my-5">
-{% include 'metadata_editor/components/identifier.html' %}
-<hr class="my-5">
 <section id="description-section">
     <div class="row gy-4">
         <div class="col-lg-12">
@@ -65,19 +63,19 @@
     </div>
 </section>
 <hr class="my-5">
-{% include 'metadata_editor/components/data_collection/collection_results_section.html' %}
+{% include 'metadata_editor/sections/data_collection/collection_results_section.html' %}
 <hr class="my-5">
-{% include 'metadata_editor/components/data_levels.html' %}
+{% include 'metadata_editor/sections/data_levels_section.html' %}
 <hr class="my-5">
-{% include 'metadata_editor/components/quality_assessment.html' %}
+{% include 'metadata_editor/sections/quality_assessment_section.html' %}
 <hr class="my-5">
-{% include 'metadata_editor/components/related_parties.html' %}
+{% include 'metadata_editor/sections/related_parties_section.html' %}
 {% endblock form_content %}
 {% block table_of_contents %}
 <li class="list-group-item">
-    <a href="#name-and-organisation-section">
-        Full Name and Organisation
-    </a>
+    {% block name_toc_list_item_link %}
+    <a href="#name-and-organisation-section">Full Name</a>
+    {% endblock name_toc_list_item_link %}
 </li>
 <li class="list-group-item">
     <a href="#identifier-section">

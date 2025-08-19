@@ -3,18 +3,18 @@
         {{ form.related_party_role.label_tag }}
     </div>
     {{ form.related_party_role }}
-    <div class="invalid-feedback">
-        Select a role
-    </div>
+    {% with field=form.related_party_role %}
+    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+    {% endwith %}
 </td>
 <td class="col-xl-6 col-lg-12 td-related-parties">
     <div class="d-xl-none d-block">
         {{ form.related_party.label_tag }}
     </div>
     {{ form.related_party }}
-    <div class="invalid-feedback">
-        Select a related party
-    </div>
+    {% with field=form.related_party %}
+    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+    {% endwith %}
 </td>
 <td>
     <button class="btn btn-outline-danger remove-dtrow-button remove-rprrow-button" type="button" disabled>

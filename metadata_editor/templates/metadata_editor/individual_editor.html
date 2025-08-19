@@ -1,15 +1,17 @@
 {% extends 'metadata_editor/components/base_editor.html' %}
 {% load static %}
-{% block extra_scripts %}
+{% block styles %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.4/build/css/intlTelInput.css">
+{% endblock styles %}
+{% block editor_scripts %}
 {{ email_address_field_content_template|json_script:'email-address-field-template' }}
-<script src="{% static 'metadata_editor/individual_editor.js' %}" type="module" defer></script>
-<script src="{% static 'metadata_editor/components/contact_info.js' %}" type="module" defer></script>
-{% endblock extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.4/build/js/intlTelInput.min.js"></script>
+<script src="{% static 'metadata_editor/components/contact_info.js' %}" type="module"></script>
+{% endblock editor_scripts %}
+{% block editor_setup_scripts %}
+<script src="{% static 'update_with_support/individual_update_editor.js' %}" type="module"></script>
+{% endblock editor_setup_scripts %}
 {% block form_content %}
-{% include 'metadata_editor/components/name_and_organisation_section.html' %}
-<hr class="my-5">
-{% include 'metadata_editor/components/identifier.html' %}
-<hr class="my-5">
 <section id="position-name-section">
     <div class="row gy-3">
         <div class="col-lg-12">
@@ -18,14 +20,14 @@
         <div class="col-xl-9 col-lg-12">
             {{ form.position_name }}
             <div class="form-text">{{ form.position_name.help_text }}</div>
-            {% for error in form.position_name.errors  %}
-            <div class="form-text text-danger">{{ error }}</div>
-            {% endfor %}
+            {% with field=form.position_name %}
+            {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+            {% endwith %}
         </div>
     </div>
 </section>
 <hr class="my-5">
-{% include 'metadata_editor/components/contact_info.html' %}
+{% include 'metadata_editor/sections/contact_info_section.html' %}
 {% endblock form_content %}
 {% block table_of_contents %}
 <li class="list-group-item">

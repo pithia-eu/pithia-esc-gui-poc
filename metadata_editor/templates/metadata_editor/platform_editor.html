@@ -1,16 +1,14 @@
 {% extends 'metadata_editor/components/base_editor.html' %}
 {% load static %}
-{% block extra_scripts %}
-<script src="{% static 'metadata_editor/platform_editor.js' %}" type="module" defer></script>
+{% block editor_scripts %}
 {{ related_parties_row_content_template|json_script:'related-parties-row-content-template' }}
 {{ standard_identifier_row_content_template|json_script:'standard-identifier-row-content-template' }}
 {{ citations_tab_content_template|json_script:'citations-tab-content-template' }}
-{% endblock extra_scripts %}
+{% endblock editor_scripts %}
+{% block editor_setup_scripts %}
+<script src="{% static 'update_with_support/platform_update_editor.js' %}" type="module"></script>
+{% endblock editor_setup_scripts %}
 {% block form_content %}
-{% include 'metadata_editor/components/name_and_organisation_section.html' %}
-<hr class="my-5">
-{% include 'metadata_editor/components/identifier.html' %}
-<hr class="my-5">
 <section id="description-and-type-section">
     <div class="row flex-column gy-3">
         <div class="col-lg-12">
@@ -60,15 +58,17 @@
     </div>
 </section>
 <hr class="my-5">
-{% include 'metadata_editor/components/location.html' %}
+{% include 'metadata_editor/sections/location_section.html' %}
 <hr class="my-5">
-{% include 'metadata_editor/components/related_parties.html' %}
+{% include 'metadata_editor/sections/related_parties_section.html' %}
 <hr class="my-5">
-{% include 'metadata_editor/components/citations_section.html' %}
+{% include 'metadata_editor/sections/citations_section.html' %}
 {% endblock form_content %}
 {% block table_of_contents %}
 <li class="list-group-item">
-    <a href="#name-and-organisation-section">Full Name, Short Name and Organisation</a>
+    {% block name_toc_list_item_link %}
+    <a href="#name-and-organisation-section">Full Name and Short Name</a>
+    {% endblock name_toc_list_item_link %}
 </li>
 <li class="list-group-item">
     <a href="#identifier-section">Identifier</a>

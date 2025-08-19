@@ -6,7 +6,10 @@ import {
 } from "/static/metadata_editor/components/conditional_required_fields.js";
 import {
     DynamicEditorTable,
-} from "/static/metadata_editor/components/table_utils.js"
+} from "/static/metadata_editor/components/table_utils.js";
+import {
+    dispatchValidateFieldsEvent,
+} from "/static/metadata_editor/components/validation/utils/events.js";
 
 
 export class StandardIdentifiersTable extends DynamicEditorTable {
@@ -56,6 +59,10 @@ export class StandardIdentifiersTable extends DynamicEditorTable {
             input.addEventListener("input", () => {
                 checkAndSetRequiredAttributesForFields(inputs, inputs);
                 this.exportTableDataToJsonAndStoreInOutputElement();
+                if (inputs.some(field => field.required)) {
+                    return dispatchValidateFieldsEvent([input]);
+                }
+                return dispatchValidateFieldsEvent(inputs);
             });
         });
     }

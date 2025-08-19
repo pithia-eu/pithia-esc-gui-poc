@@ -1,0 +1,23 @@
+{% extends 'metadata_editor/platform_editor.html' %}
+{% load static %}
+
+{# Registration-specific editor scripts #}
+{% block editor_setup_scripts %}
+{% include 'register_with_support/components/registration_scripts.html' %}
+<script src="{% static 'register_with_support/new_platform_editor.js' %}" type="module"></script>
+{% endblock editor_setup_scripts %}
+
+{# Add organisation field #}
+{% block name_section %}
+{% include 'register_with_support/new_name_and_organisation_section.html' %}
+{% endblock name_section %}
+
+{# Add localID and namespace fields #}
+{% block identifier_section %}
+{% include 'register_with_support/sections/new_identifier_section.html' %}
+{% endblock identifier_section %}
+
+{# TOC link to name and organisation section #}
+{% block name_toc_list_item_link %}
+<a href="#name-and-organisation-section">Full Name, Short Name and Organisation</a>
+{% endblock name_toc_list_item_link %}

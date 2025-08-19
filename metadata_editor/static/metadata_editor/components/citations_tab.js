@@ -4,6 +4,9 @@ import {
 import {
     checkAndSetRequiredAttributesForFields,
 } from "/static/metadata_editor/components/conditional_required_fields.js";
+import {
+    dispatchValidateFieldsEvent,
+} from "/static/metadata_editor/components/validation/utils/events.js";
 
 
 class CitationsTab extends DynamicEditorTab {
@@ -41,12 +44,16 @@ class CitationsTab extends DynamicEditorTab {
 
     setupTabPaneEventListeners(tabPane) {
         super.setupTabPaneEventListeners(tabPane);
-        const inputsAndTextareas = tabPane.querySelectorAll("input, textarea");
+        const inputsAndTextareas = Array.from(tabPane.querySelectorAll("input, textarea"));
     
         inputsAndTextareas.forEach(inputOrTextarea => {
             inputOrTextarea.addEventListener("input", () => {
                 this.exportTabData();
                 this.updateTabPaneConditionalRequiredFieldStates(tabPane);
+                if (inputsAndTextareas.some(field => field.required)) {
+                    return dispatchValidateFieldsEvent([inputOrTextarea]);
+                }
+                return dispatchValidateFieldsEvent(inputsAndTextareas);
             });
         });
     }

@@ -192,8 +192,6 @@ class CitationDocumentationEditorFormComponent(forms.Form):
     )
 
 
-
-
 class RelatedPartiesEditorFormComponent(forms.Form):
     def __init__(self, *args, related_party_role_choices=(), related_party_choices=(), **kwargs):
         super().__init__(*args, **kwargs)

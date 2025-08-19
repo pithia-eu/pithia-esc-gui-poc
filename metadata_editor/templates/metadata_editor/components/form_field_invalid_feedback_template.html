@@ -1,0 +1,6 @@
+<div
+    id="invalid-feedback-{{ field.auto_id }}"
+    class="{% if extra_classes %} {{ extra_classes }} {% endif %}invalid-feedback"
+    data-field="{{ field.auto_id }}">
+    {% block invalid_feedback_content %}{% endblock invalid_feedback_content %}
+</div>

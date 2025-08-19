@@ -1,12 +1,13 @@
 import logging
 from django.contrib import messages
-from django.http import HttpResponseBadRequest
+from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.html import escape
 from django.utils.text import slugify
 from django.views.generic import FormView
+from http import HTTPStatus
 
 from .editor_dataclasses import (
 
@@ -116,7 +117,13 @@ class ResourceEditorFormView(
 
     def form_invalid(self, form):
         logger.exception(f'An invalid XML wizard form was submitted: {form.errors}')
-        return HttpResponseBadRequest('The form submitted was not valid. Please check the form for any errors.')
+        return JsonResponse(
+            {
+                'message': 'The form submitted was not valid. Please check the form for any errors.',
+                'errors': form.errors,
+            },
+            status=HTTPStatus.BAD_REQUEST
+        )
     
     def dispatch(self, request, *args, **kwargs):
         self.institution_id = get_institution_id_for_login_session(request.session)

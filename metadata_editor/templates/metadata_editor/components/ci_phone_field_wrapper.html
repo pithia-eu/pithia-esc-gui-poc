@@ -1,0 +1,5 @@
+{% extends 'metadata_editor/components/form_field_wrapper_template.html' %}
+{% block field_wrapper_content %}
+<input type="tel" name="{{ form.phone.name }}" id="{{ form.phone.auto_id }}" class="form-control pe-2" value="{{ form.phone.value|default:'' }}">
+<div class="form-text">{{ form.phone.help_text }}</div>
+{% endblock field_wrapper_content %}

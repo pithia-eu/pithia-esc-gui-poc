@@ -1,6 +1,5 @@
 import {
-    editorForm,
-    validateAndRegister,
+    BaseEditor,
 } from "/static/metadata_editor/components/base_editor.js";
 import {
     setupCitationsTab,
@@ -17,26 +16,28 @@ import {
 import {
     setupPlatformStandardIdentifiersTable,
 } from "/static/metadata_editor/components/platform/platform_standard_identifiers_table.js";
+import {
+    PlatformEditorValidator,
+} from "/static/metadata_editor/components/validation/platform_editor_validator.js";
 
-let relatedPartiesTable;
-let platformStandardIdentifiersTable;
 
+export class PlatformEditor extends BaseEditor {
+    setup() {
+        super.setup();
+        setupWizardManualAndAutoSave();
+        setupCitationsTab();
+        setupGeometryLocationSection();
+        this.relatedPartiesTable = setupRelatedPartiesTable();
+        this.platformStandardIdentifiersTable = setupPlatformStandardIdentifiersTable();
+    }
 
-function prepareFormForSubmission() {
-    relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
-    platformStandardIdentifiersTable.exportTableDataToJsonAndStoreInOutputElement();
+    getValidator() {
+        return new PlatformEditorValidator();
+    }
+
+    async submitAndGenerateXml() {
+        this.relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
+        this.platformStandardIdentifiersTable.exportTableDataToJsonAndStoreInOutputElement();
+        return super.submitAndGenerateXml();
+    }
 }
-
-editorForm.addEventListener("submit", async e => {
-    e.preventDefault();
-    prepareFormForSubmission();
-    await validateAndRegister();
-});
-
-window.addEventListener("load", () => {
-    setupWizardManualAndAutoSave();
-    setupCitationsTab();
-    setupGeometryLocationSection();
-    relatedPartiesTable = setupRelatedPartiesTable();
-    platformStandardIdentifiersTable = setupPlatformStandardIdentifiersTable();
-});

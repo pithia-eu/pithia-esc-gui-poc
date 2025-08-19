@@ -4,6 +4,9 @@ import {
 import {
     checkAndSetRequiredAttributesForFields,
 } from "/static/metadata_editor/components/conditional_required_fields.js";
+import {
+    dispatchValidateFieldsEvent,
+} from "/static/metadata_editor/components/validation/utils/events.js";
 
 
 class CapabilitiesTab extends DynamicEditorTab {
@@ -47,13 +50,17 @@ class CapabilitiesTab extends DynamicEditorTab {
         super.setup();
         const firstTabPane = this.tabContent.querySelector(".tab-pane");
         this.updateTabPaneConditionalRequiredFieldStates(firstTabPane);
-        this.updateTabPaneConditionalRequiredCadenceRelatedFieldStates(firstTabPane);        
+        this.updateTabPaneConditionalRequiredCadenceRelatedFieldStates(firstTabPane);
     }
 
     setupTabPaneEventListeners(tabPane) {
         super.setupTabPaneEventListeners(tabPane);
         const inputs = tabPane.querySelectorAll("input");
         const selects = tabPane.querySelectorAll("select");
+        const allFieldsInTabPane = [
+            ...inputs,
+            ...selects
+        ];
     
         inputs.forEach(input => {
             input.addEventListener("input", () => {
@@ -62,6 +69,10 @@ class CapabilitiesTab extends DynamicEditorTab {
                 if (input.name === 'capability_cadence') {
                     this.updateTabPaneConditionalRequiredCadenceRelatedFieldStates(tabPane);
                 }
+                if (allFieldsInTabPane.some(field => field.required)) {
+                    return dispatchValidateFieldsEvent([input]);
+                }
+                return dispatchValidateFieldsEvent(allFieldsInTabPane);
             });
         });
     
@@ -72,6 +83,10 @@ class CapabilitiesTab extends DynamicEditorTab {
                 if (select.name === 'capability_cadence_units') {
                     this.updateTabPaneConditionalRequiredCadenceRelatedFieldStates(tabPane);
                 }
+                if (allFieldsInTabPane.some(field => field.required)) {
+                    return dispatchValidateFieldsEvent([select]);
+                }
+                return dispatchValidateFieldsEvent(allFieldsInTabPane);
             });
         });
     }

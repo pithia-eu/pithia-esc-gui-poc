@@ -1,0 +1,13 @@
+<div class="input-group local-id-input-group has-validation">
+    <span class="input-group-text" id="input-group-prepend">{{ localid_base }}_</span>
+    <input
+        type="text"
+        class="{{ form.localid.field.widget.attrs.class }}"
+        name="{{ form.localid.name }}"
+        id="{{ form.localid.auto_id }}"
+        aria-describedby="input-group-prepend"
+        value="{{ form.localid.value|default:'' }}" required readonly>
+    {% with field=form.localid %}
+    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+    {% endwith %}
+</div>

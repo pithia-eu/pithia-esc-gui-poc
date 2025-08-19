@@ -3,12 +3,18 @@
         {{ form.capability_link_time_span_begin_position.label_tag }}
     </div>
     <input type="date" name="{{ form.capability_link_time_span_begin_position.name }}" id="{{ form.capability_link_time_span_begin_position.auto_id }}" class="form-control" value="{{ form.capability_link_time_span_begin_position.value|default:'' }}">
+    {% with field=form.capability_link_time_span_begin_position %}
+    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+    {% endwith %}
 </td>
 <td class="col-xl-6 col-lg-12">
     <div class="d-xl-none d-block">
         {{ form.capability_link_time_span_end_position.label_tag }}
     </div>
     {{ form.capability_link_time_span_end_position }}
+    {% with field=form.capability_link_time_span_end_position %}
+    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+    {% endwith %}
 </td>
 <td>
     <button class="btn btn-outline-danger remove-dtrow-button remove-cltsrow-button" type="button" disabled>

@@ -1,16 +1,14 @@
 {% extends 'metadata_editor/components/base_editor.html' %}
 {% load static %}
-{% block extra_scripts %}
-<script src="{% static 'metadata_editor/acquisition_and_computation_editor.js' %}" type="module" defer></script>
+{% block editor_scripts %}
 {{ capability_links_tab_pane_content_template|json_script:'capability-links-tab-pane-content-template' }}
 {{ capability_link_standard_identifier_row_content_template|json_script:'capability-link-standard-identifier-row-content-template' }}
 {{ capability_link_time_span_row_content_template|json_script:'capability-link-time-span-row-content-template' }}
-{% endblock extra_scripts %}
+{% endblock editor_scripts %}
+{% block editor_setup_scripts %}
+<script src="{% static 'update_with_support/computation_update_editor.js' %}" type="module"></script>
+{% endblock editor_setup_scripts %}
 {% block form_content %}
-{% include 'metadata_editor/components/name_and_organisation_section.html' %}
-<hr class="my-5">
-{% include 'metadata_editor/components/identifier.html' %}
-<hr class="my-5">
 <section id="description-section">
     <div class="row gy-3">
         <div class="col-lg-12">
@@ -20,17 +18,20 @@
         </div>
         <div class="col-xl-9 col-lg-12">
             {{ form.description }}
+            {% with field=form.description %}
+            {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+            {% endwith %}
         </div>
     </div>
 </section>
 <hr class="my-5">
-{% include 'metadata_editor/components/capability_links.html' %}
+{% include 'metadata_editor/sections/capability_links_section.html' %}
 {% endblock form_content %}
 {% block table_of_contents %}
 <li class="list-group-item">
-    <a href="#name-and-organisation-section">
-        Full Name and Organisation
-    </a>
+    {% block name_toc_list_item_link %}
+    <a href="#name-and-organisation-section">Full Name</a>
+    {% endblock name_toc_list_item_link %}
 </li>
 <li class="list-group-item">
     <a href="#identifier-section">

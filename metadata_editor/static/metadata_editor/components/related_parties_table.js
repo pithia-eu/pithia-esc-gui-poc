@@ -7,6 +7,9 @@ import {
 import {
     DynamicEditorTable,
 } from "/static/metadata_editor/components/table_utils.js";
+import {
+    dispatchValidateFieldsEvent,
+} from "/static/metadata_editor/components/validation/utils/events.js";
 
 
 class RelatedPartiesTable extends DynamicEditorTable {
@@ -68,6 +71,10 @@ class RelatedPartiesTable extends DynamicEditorTable {
             s.addEventListener("change", e => {
                 checkAndSetRequiredAttributesForFields(selects);
                 this.exportTableDataToJsonAndStoreInOutputElement();
+                if (selects.some(field => field.required)) {
+                    return dispatchValidateFieldsEvent([s]);
+                }
+                return dispatchValidateFieldsEvent(selects);
             });
         });
     }

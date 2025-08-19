@@ -1,6 +1,5 @@
 import {
-    editorForm,
-    validateAndRegister,
+    BaseEditor,
 } from "/static/metadata_editor/components/base_editor.js";
 import {
     setupWizardManualAndAutoSave,
@@ -8,14 +7,19 @@ import {
 import {
     setupCapabilityLinksTab,
 } from "/static/metadata_editor/components/acquisition_and_computation/capability_links_tab.js";
+import {
+    AcquisitionAndComputationEditorValidator,
+} from "/static/metadata_editor/components/validation/acquisition_and_computation_editor_validator.js";
 
 
-editorForm.addEventListener("submit", async e => {
-    e.preventDefault();
-    await validateAndRegister();
-});
+export class AcquisitionAndComputationEditor extends BaseEditor {
+    setup() {
+        super.setup();
+        setupWizardManualAndAutoSave();
+        setupCapabilityLinksTab();
+    }
 
-window.addEventListener("load", () => {
-    setupWizardManualAndAutoSave();
-    setupCapabilityLinksTab();
-});
+    getValidator() {
+        return new AcquisitionAndComputationEditorValidator();
+    }
+}

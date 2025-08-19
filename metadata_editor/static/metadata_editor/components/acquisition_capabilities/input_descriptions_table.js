@@ -4,6 +4,9 @@ import {
 import {
     checkAndSetRequiredAttributesForFields,
 } from "/static/metadata_editor/components/conditional_required_fields.js";
+import {
+    dispatchValidateFieldsEvent,
+} from "/static/metadata_editor/components/validation/utils/events.js";
 
 
 class InputDescriptionsTable extends DynamicEditorTableWithTextArea {
@@ -35,6 +38,10 @@ class InputDescriptionsTable extends DynamicEditorTableWithTextArea {
                     [inputParameterNameInput]
                 );
                 this.exportTableDataToJsonAndStoreInOutputElement();
+                if (fields.some(field => field.required)) {
+                    return dispatchValidateFieldsEvent([field]);
+                }
+                return dispatchValidateFieldsEvent(fields);
             });
         });
     }

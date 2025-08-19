@@ -5,6 +5,9 @@
 {% endblock si_authority_field_label_tag %}
 {% block si_authority_field %}
 {{ form.standard_identifier_authority }}
+{% with field=form.standard_identifier_authority %}
+{% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+{% endwith %}
 {% endblock si_authority_field %}
 
 {% block si_field_label_tag %}
@@ -12,6 +15,9 @@
 {% endblock si_field_label_tag %}
 {% block si_field %}
 {{ form.standard_identifier }}
+{% with field=form.standard_identifier %}
+{% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+{% endwith %}
 {% endblock si_field %}
 
 {% block remove_standard_identifier_btn_class %}remove-sirow-button{% endblock remove_standard_identifier_btn_class %}

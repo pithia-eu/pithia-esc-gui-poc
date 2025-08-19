@@ -1,0 +1,106 @@
+{% load countries %}
+<section id="contact-info-section" class="d-flex flex-column row-gap-5">
+    <div class="row flex-column gy-3">
+        <div class="col-lg-12">
+            <h2>Contact Info</h2>
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {{ form.email_addresses_json }}
+            {% with field=form.email_addresses_json %}
+            {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+            {% endwith %}
+            <ul id="email-address-input-list" class="d-flex flex-column row-gap-3 list-unstyled mb-3">
+                <li>
+                    {% with field=form.email_address disabled=True %}
+                    {% include 'metadata_editor/components/ci_email_address_field_content_template.html' %}
+                    {% endwith %}
+                </li>
+            </ul>
+            <button id="add-email-address-btn" class="btn btn-light btn-light-togglable" type="button">
+                <span class="me-2">+</span>Add another email address
+            </button>
+        </div>
+        <div class="col-xl-5 col-lg-8">
+            <div class="d-flex flex-column">
+                {{ form.phone.label_tag }}
+                {% with field=form.phone %}
+                {% include 'metadata_editor/components/ci_phone_field_wrapper.html' %}
+                {% endwith %}
+                {% with field=form.phone %}
+                {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+    <div class="row flex-column gy-3">
+        <div class="col-lg-12">
+            <h3>Address</h3>
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with field=form.delivery_point %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-5 col-lg-8">
+            {% with field=form.city %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-5 col-lg-8">
+            {% with field=form.administrative_area %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-3 col-lg-5">
+            {% with field=form.postal_code %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with field=form.country %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+    </div>
+    <div class="row flex-column gy-3">
+        <h3>Other Information</h3>
+        <div class="col-xl-9 col-lg-12">
+            {% with field=form.online_resource %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            <label for="{{ form.hours_of_service_start.id_for_label }}">Hours of Service</label>
+            <div class="d-flex align-items-center column-gap-2">
+                <div>
+                    <input
+                        type="time"
+                        name="{{ form.hours_of_service_start.name }}"
+                        id="{{ form.hours_of_service_start.auto_id }}"
+                        class="form-control w-auto"
+                        value="{{ form.hours_of_service_start.value|default:'' }}">
+                    {% with field=form.hours_of_service_start %}
+                    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+                    {% endwith %}
+                </div>
+                -
+                <div>
+                    <input
+                        type="time"
+                        name="{{ form.hours_of_service_end.name }}"
+                        id="{{ form.hours_of_service_end.auto_id }}"
+                        class="form-control w-auto"
+                        value="{{ form.hours_of_service_end.value|default:'' }}">
+                    {% with field=form.hours_of_service_end %}
+                    {% include 'metadata_editor/components/form_field_invalid_feedback_template.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-5 col-lg-8">
+            {% with field=form.contact_instructions %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+    </div>
+</section>

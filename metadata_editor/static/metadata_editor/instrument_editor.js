@@ -1,6 +1,5 @@
 import {
-    editorForm,
-    validateAndRegister,
+    BaseEditor,
 } from "/static/metadata_editor/components/base_editor.js";
 import {
     setupCitationsTab,
@@ -14,25 +13,27 @@ import {
 import {
     setupOperationalModesTable,
 } from "/static/metadata_editor/components/instrument/operational_modes_table.js";
+import {
+    InstrumentEditorValidator,
+} from "/static/metadata_editor/components/validation/instrument_editor_validator.js";
 
-let operationalModesTable;
-let relatedPartiesTable;
 
+export class InstrumentEditor extends BaseEditor {
+    setup() {
+        super.setup();
+        setupWizardManualAndAutoSave();
+        setupCitationsTab();
+        this.relatedPartiesTable = setupRelatedPartiesTable();
+        this.operationalModesTable = setupOperationalModesTable();
+    }
 
-function prepareFormForSubmission() {
-    operationalModesTable.exportTableDataToJsonAndStoreInOutputElement();
-    relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
+    getValidator() {
+        return new InstrumentEditorValidator();
+    }
+
+    async submitAndGenerateXml() {
+        this.operationalModesTable.exportTableDataToJsonAndStoreInOutputElement();
+        this.relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
+        return super.submitAndGenerateXml();
+    }
 }
-
-editorForm.addEventListener("submit", async e => {
-    e.preventDefault();
-    prepareFormForSubmission();
-    await validateAndRegister();
-});
-
-window.addEventListener("load", () => {
-    setupWizardManualAndAutoSave();
-    setupCitationsTab();
-    relatedPartiesTable = setupRelatedPartiesTable();
-    operationalModesTable = setupOperationalModesTable();
-});

@@ -1,0 +1,6 @@
+<div
+    id="field-wrapper-{{ field.auto_id }}"
+    data-field="{{ field.auto_id }}"
+    class="{% if field_wrapper_extra_classes %}{{ field_wrapper_extra_classes }} {% endif %}field-wrapper">
+    {% block field_wrapper_content %}{% endblock field_wrapper_content %}
+</div>
