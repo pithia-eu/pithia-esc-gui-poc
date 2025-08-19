@@ -36,6 +36,11 @@ export class BaseEditor {
             return this.stopInProgressAnimationAndContent();
         });
 
+        this.formSubmitButton.addEventListener("click", () => {
+            const fields = Array.from(this.editorForm.querySelectorAll("input, select, textarea"));
+            this.validator.validateFields(fields);
+        });
+
         editorForm.addEventListener("submit", async e => {
             e.preventDefault();
             await this.submitAndGenerateXml();
