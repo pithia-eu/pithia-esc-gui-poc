@@ -56,6 +56,21 @@ export class BaseEditor {
     async runAfterInitialEditorSetup() {
     }
 
+    validateFieldsAfterInitialLoad() {
+        const elementNameSelectors = [
+            "input",
+            "textarea",
+        ];
+        const fieldsWithValues = Array.from(this.editorForm.querySelectorAll(
+            elementNameSelectors.join(", ")
+        )).filter(field => field.value);
+        const selectsWithSelectedOptions = Array.from(
+            this.editorForm.querySelectorAll("select")
+        ).filter(select => select.selectedOptions.length > 0);
+        fieldsWithValues.push(...selectsWithSelectedOptions);
+        this.getValidator().validateFields(fieldsWithValues);
+    }
+
     getFieldsToValidateOnInput() {
         return this.editorForm.querySelectorAll("input:not(input[type='email']), textarea");
     }
