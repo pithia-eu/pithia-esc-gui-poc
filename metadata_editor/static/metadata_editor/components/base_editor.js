@@ -66,7 +66,7 @@ export class BaseEditor {
         )).filter(field => field.value);
         const selectsWithSelectedOptions = Array.from(
             this.editorForm.querySelectorAll("select")
-        ).filter(select => select.selectedOptions.length > 0);
+        ).filter(select => select.selectedOptions.length > 0 && select.value);
         fieldsWithValues.push(...selectsWithSelectedOptions);
         this.getValidator().validateFields(fieldsWithValues);
     }
