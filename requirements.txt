@@ -5,6 +5,8 @@ charset-normalizer==3.3.2
 DateTime==5.4
 decorator==5.1.1
 Django==5.0.1
+django-appconf==1.1.0
+django-compressor==4.5.1
 django-countries==7.5.1
 django-environ==0.11.2
 django-phonenumber-field==8.0.0
@@ -31,10 +33,12 @@ pyparsing==3.1.1
 python-dateutil==2.8.2
 pytz==2023.3.post1
 PyYAML==6.0.1
+rcssmin==1.1.2
 rdflib==7.0.0
 referencing==0.31.1
 requests==2.31.0
 rfc3339-validator==0.1.4
+rjsmin==1.2.2
 rpds-py==0.17.1
 six==1.16.0
 sqlparse==0.4.4
