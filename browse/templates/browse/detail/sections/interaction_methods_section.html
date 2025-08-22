@@ -1,6 +1,6 @@
 {% if num_interaction_methods %}
 <section class="resource-detail-section">
-    <h2 id="access-the-data" class="mb-1">{{ section_heading|default:'Access the Data' }} <span class="text-body-secondary">({{ num_interaction_methods }})</span></h2>
+    <h2 id="access-the-data" class="mb-0">{{ section_heading|default:'Access the Data' }} <span class="text-body-secondary">({{ num_interaction_methods }})</span></h2>
     <div class="d-flex flex-column">
         {% for type, interaction_methods_for_type in interaction_methods_by_type.items %}
         {% if type == 'api' %}

@@ -1,5 +1,5 @@
 {% load project_tags %}
-<div class="d-flex flex-column align-items-start row-gap-3 px-0 p-3">
+<div class="d-flex flex-column align-items-start row-gap-3">
     <div class="d-flex flex-column row-gap-2">
         {% if online_resource.linkage|is_email %}
         {% with online_resource_url='mailto:'|add:online_resource.linkage %}
@@ -56,7 +56,7 @@
     {% if online_resource.protocol or online_resource.data_format %}
     <details class="details-interaction-methods" name="details-collection-results">
         <summary>
-            <span style="font-size: 0.975rem;">Additional details</span>
+            <span class="fs-sm-2 fw-semibold text-body-secondary">Additional details</span>
         </summary>
         <dl class="d-flex flex-column row-gap-2 my-2">
             {% if online_resource.protocol %}
