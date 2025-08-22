@@ -165,3 +165,4 @@ credentials.json
 perun/ListOfOrganisations.json
 staticfiles/
 datahub/
+.DS_Store
