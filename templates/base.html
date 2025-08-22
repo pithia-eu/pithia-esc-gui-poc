@@ -45,7 +45,6 @@
     <!-- Apply site theme settings to UI elements -->
     <script type="module" src="{% static 'utils/bs_component_colour_schemes_updater.js' %}"></script>
     <script type="module" src="{% static 'utils/bs_theme_picker.js' %}"></script>
-    {% comment %} <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}?{% now 'U' %}"> {% endcomment %}
     {% compress css %}
     <link rel="stylesheet" type="text/x-scss" href="{% static 'scss/style.scss' %}">
     {% endcompress %}
