@@ -2,10 +2,7 @@
 <ul class="list-group list-group-flush ps-0 pb-0 mb-0">
     {% for online_resource in online_resources|wrap_in_list_if_dict %}
     {% with forloop_counter_str=forloop.counter|stringformat:'s' %}
-    <li
-        {% with online_resource_access_type=online_resource_access_type|default:'' %}
-        class="list-group-item {% if online_resource_access_type %}api{% endif %} px-0 py-3"
-        {% endwith %}>
+    <li class="list-group-item px-0 py-3">
         {% include 'browse/detail/components/online_resource.html' %}
     </li>
     {% endwith %}

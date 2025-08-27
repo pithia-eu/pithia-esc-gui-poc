@@ -485,18 +485,6 @@ class OnlineResourcesViewMixin:
             
         return interaction_methods_by_type
 
-    def get_online_resources_from_resource_by_type(self, resource: models.DataCollection | models.DataSubset):
-        interaction_methods_by_type = {}
-        # Link interaction methods
-        for online_resource in resource.properties.online_resources:
-            service_function = online_resource.get('service_function')
-            if not service_function:
-                service_function = 'unknown'
-            if service_function not in interaction_methods_by_type:
-                interaction_methods_by_type[service_function] = []
-            interaction_methods_by_type[service_function].append(online_resource)
-        return interaction_methods_by_type
-
 
 class OrganisationDetailView(ResourceDetailView):
     """A subclass of ResourceDetailView.
@@ -897,7 +885,11 @@ class DataCollectionDetailView(ResourceDetailView, OnlineResourcesViewMixin):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['interaction_methods_by_type'] = dict(sorted(self.interaction_methods_by_type.items()))
+        categorised_interaction_methods = dict(sorted(self.interaction_methods_by_type.items()))
+        interaction_methods_merged = list()
+        for interaction_methods in categorised_interaction_methods.values():
+            interaction_methods_merged = interaction_methods_merged + interaction_methods
+        context['interaction_methods'] = interaction_methods_merged
         context['num_interaction_methods'] = len(list(itertools.chain(*self.interaction_methods_by_type.values())))
         context['data_collection_id'] = self.resource_id
         
@@ -1029,7 +1021,11 @@ class DataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['interaction_methods_by_type'] = dict(sorted(self.interaction_methods_by_type.items()))
+        categorised_interaction_methods = dict(sorted(self.interaction_methods_by_type.items()))
+        interaction_methods_merged = list()
+        for interaction_methods in categorised_interaction_methods.values():
+            interaction_methods_merged = interaction_methods_merged + interaction_methods
+        context['interaction_methods'] = interaction_methods_merged
         context['num_interaction_methods'] = len(list(itertools.chain(*self.interaction_methods_by_type.values())))
         return context
 

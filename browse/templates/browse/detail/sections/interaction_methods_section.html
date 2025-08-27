@@ -2,25 +2,9 @@
 <section class="resource-detail-section">
     <h2 id="access-the-data" class="mb-0">{{ section_heading|default:'Access the Data' }} <span class="text-body-secondary">({{ num_interaction_methods }})</span></h2>
     <div class="d-flex flex-column">
-        {% for type, interaction_methods_for_type in interaction_methods_by_type.items %}
-        {% if type == 'api' %}
-        <section class="interaction-methods-subsection py-0">
-            <div>
-                {% with online_resources=interaction_methods_for_type pill_type='none bg-primary-subtle text-primary-emphasis' online_resource_access_type='API Access' %}
-                {% include 'browse/detail/components/online_resource_list.html' %}
-                {% endwith %}
-            </div>
-        </section>
-        {% elif type == 'online_resource' %}
-        <section class="interaction-methods-subsection py-0">
-            <div>
-                {% with online_resources=interaction_methods_for_type pill_type='none bg-dark-subtle text-dark' %}
-                {% include 'browse/detail/components/online_resource_list.html' %}
-                {% endwith %}
-            </div>
-        </section>
-        {% endif %}
-        {% endfor %}
+        {% with online_resources=interaction_methods %}
+        {% include 'browse/detail/components/online_resource_list.html' %}
+        {% endwith %}
     </div>
 </section>
 {% endif %}
