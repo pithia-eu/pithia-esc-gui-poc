@@ -2490,6 +2490,16 @@ ul.tree ul {
     .card-menu {
         grid-template-columns: repeat(auto-fit, 12rem);
     }
+
+    .card-menu-guides {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .card-menu-guides li {
+        width: 12rem;
+    }
 }
 
 /* sm-width screens */
