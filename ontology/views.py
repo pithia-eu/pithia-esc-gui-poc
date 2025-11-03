@@ -55,10 +55,10 @@ def ontology(request):
 
 def ontology_guide(request):
     try:
-        return FileResponse(open(os.path.join(BASE_DIR, 'ontology', 'PITHIA-NRF_SpacePhysicsOntology_1.4.pdf'), 'rb'), content_type='application/pdf')
+        return FileResponse(open(os.path.join(BASE_DIR, 'ontology', 'PITHIA Space Physics Ontology Guide.pdf'), 'rb'), content_type='application/pdf')
     except IOError:
-        return HttpResponseNotFound('The ontology guide was not found.')
-    
+        return HttpResponseNotFound('The Space Physics Ontology guide was not found.')
+
 def _get_ontology_category_term_list_page_title_from_category(category):
     title_base = ' '.join(split_camel_case(category)).title()
     if category.lower() == 'crs':
@@ -104,7 +104,7 @@ def ontology_category_terms_list_only(request, category):
         'registered_ontology_terms': registered_ontology_terms,
         'parents_of_registered_ontology_terms': parents_of_registered_ontology_terms,
     })
- 
+
 class OntologyTermDetailView(TemplateView):
     template_name = 'ontology/detail/bases/base.html'
 
@@ -153,7 +153,7 @@ class OntologyTermDetailView(TemplateView):
         if not xml_string_for_ontology_term:
             raise Http404(f'An ontology term with ID, <b>"{self.term_id}"</b>, was not found.')
         self.ontology_term_metadata = self.apply_wrapper_to_ontology_term_metadata(xml_string_for_ontology_term)
-        
+
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

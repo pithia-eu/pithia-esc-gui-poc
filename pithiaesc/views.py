@@ -61,12 +61,30 @@ def index(request):
 def data_provider_home(request):
     return redirect('home')
 
-def resource_registration_user_guide(request):
+def data_collection_registration_guide(request):
     try:
-        return FileResponse(open(os.path.join(BASE_DIR, 'resource_management', 'PITHIA-NRF Data Registration User Guide.pdf'), 'rb'), content_type='application/pdf')
+        return FileResponse(open(os.path.join(BASE_DIR, 'resource_management', 'PITHIA Data Collection Registration Guide.pdf'), 'rb'), content_type='application/pdf')
     except IOError:
-        return HttpResponseNotFound('The data resource registration guide was not found.')
-    
+        return HttpResponseNotFound('The data collection registration guide was not found.')
+
+def static_dataset_registration_guide(request):
+    try:
+        return FileResponse(open(os.path.join(BASE_DIR, 'resource_management', 'PITHIA Static Dataset Registration Guide.pdf'), 'rb'), content_type='application/pdf')
+    except IOError:
+        return HttpResponseNotFound('The static dataset registration guide was not found.')
+
+def workflow_registration_guide(request):
+    try:
+        return FileResponse(open(os.path.join(BASE_DIR, 'resource_management', 'PITHIA Workflow Registration Guide.pdf'), 'rb'), content_type='application/pdf')
+    except IOError:
+        return HttpResponseNotFound('The workflow registration guide was not found.')
+
+def user_registration_guide(request):
+    try:
+        return FileResponse(open(os.path.join(BASE_DIR, 'user_management', 'PITHIA User Registration Guide.pdf'), 'rb'), content_type='application/pdf')
+    except IOError:
+        return HttpResponseNotFound('The user registration guide was not found.')
+
 def terms_of_use(request):
     return render(request, 'terms-of-use.html', {
         'title': 'PITHIA e-Science Centre Acceptable Use Policy and Conditions of Use'

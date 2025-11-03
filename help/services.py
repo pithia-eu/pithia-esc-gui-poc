@@ -59,7 +59,7 @@ class AbstractHelpArticleContent(ABC):
     @abstractmethod
     def dialog_id(self):
         pass
-    
+
     @classmethod
     def as_dict(cls):
         return {
@@ -85,7 +85,7 @@ class DataCollectionsHelpArticleContent(AbstractHelpArticleContent):
         ('Simple Search', reverse_lazy('help:data_collection_simple_search')),
     ]
     related_guides = [
-        ('Data Registration Guide', reverse_lazy('resource_registration_user_guide')),
+        ('Data Collection Registration Guide', reverse_lazy('data_collection_registration_guide')),
     ]
     article_url = reverse_lazy('help:data_collections')
     dialog_id = 'dialog-data-collections-help'
