@@ -4,6 +4,12 @@
 {% breadcrumb_item resource_management_index_page_breadcrumb_text 'resource_management:index' %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
+{% block info_section %}
+{% include 'resource_management/workflow_management_info_section.html' %}
+{% endblock info_section %}
+{% block info_section_lg %}
+{% include 'resource_management/workflow_management_info_section.html' %}
+{% endblock info_section_lg %}
 {% block resource_list_inner %}
 {% with resource_list=resources %}
 {% include 'resource_management/workflow_management_list_inner.html' %}

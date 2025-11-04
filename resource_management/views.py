@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, TemplateView
 
@@ -217,18 +216,6 @@ class DataSubsetManagementListView(DataSubsetManagementListViewMixin, ResourceMa
 
 class WorkflowManagementListView(WorkflowManagementListViewMixin, ResourceManagementListView):
     template_name = 'resource_management/workflow_management_list_outer.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
-            'description': render_to_string(
-                'resource_management/workflow_management_list_info_section_content.html',
-                {
-                    'description': self.model.type_description_readable,
-                }
-            ),
-        })
-        return context
 
 
 class OutdatedResourcesCheckTemplateView(
