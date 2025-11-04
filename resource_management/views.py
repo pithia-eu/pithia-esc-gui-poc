@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, TemplateView
 
@@ -83,7 +84,7 @@ def data_collection_related_metadata_index(request):
 @login_session_institution_required
 def static_dataset_related_metadata_index(request):
     institution_id = get_institution_id_for_login_session(request.session)
-    
+
     num_current_static_dataset_entries = models.StaticDatasetEntry.objects.owned_by_institution(institution_id).count()
     num_current_data_subsets = models.DataSubset.objects.owned_by_institution(institution_id).count()
     return render(request, 'resource_management/static_dataset_index.html', {
@@ -99,7 +100,7 @@ def static_dataset_related_metadata_index(request):
 class ResourceManagementListView(ListView):
     template_name = 'resource_management/resource_management_list_by_type_outer.html'
     context_object_name = 'resources'
-    
+
     resource_delete_page_url_name = ''
     resource_update_page_url_name = ''
     resource_update_with_wizard_page_url_name = ''
@@ -216,6 +217,18 @@ class DataSubsetManagementListView(DataSubsetManagementListViewMixin, ResourceMa
 
 class WorkflowManagementListView(WorkflowManagementListViewMixin, ResourceManagementListView):
     template_name = 'resource_management/workflow_management_list_outer.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'description': render_to_string(
+                'resource_management/workflow_management_list_info_section_content.html',
+                {
+                    'description': self.model.type_description_readable,
+                }
+            ),
+        })
+        return context
 
 
 class OutdatedResourcesCheckTemplateView(
