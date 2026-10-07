@@ -12,7 +12,7 @@ from .services import (
 
 def index(request):
     return render(request, 'help/index.html', {
-        'title': 'Help'
+        'title': 'Help Articles'
     })
 
 

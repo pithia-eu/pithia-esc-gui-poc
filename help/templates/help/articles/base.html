@@ -3,42 +3,46 @@
 {% load static %}
 {% block breadcrumbs %}
 {% breadcrumb_item 'Help & Support' 'support' %}
-{% breadcrumb_item 'Help' 'help:index' %}
+{% breadcrumb_item 'Help Articles' 'help:index' %}
 {% breadcrumb_item_active help_topic %}
 {% endblock breadcrumbs %}
 {% block content %}
 <div class="row justify-content-between align-items-baseline gx-md-5">
     <section class="col-xl-8 col-lg-9">
-        <hgroup class="d-flex flex-column-reverse mb-4">
+        <hgroup class="d-flex flex-column-reverse mb-0">
             <h1 class="text-body">{{ help_topic }}</h1>
-            <p class="fs-3 text-body-secondary mb-0">Help</p>
+            <p class="fs-6 text-body-secondary mb-0">Help Articles</p>
         </hgroup>
-        {% if functionality %}
-        <section class="help-section">
-            <h2 class="fs-6 fw-normal text-body-secondary">
-                Covered in this article
-            </h2>
-            <a href="{{ functionality.1 }}" class="link-underline-by-default">{{ functionality.0 }}</a>
-        </section>
-        {% endif %}
-        {% if hover_text %}
-        <section class="help-section">
-            <h2>
-                Introduction
-            </h2>
-            {% autoescape off %}
-            {{ hover_text }}
-            {% endautoescape %}
-        </section>
-        {% endif %}
-        <section class="help-section">
-            <h2>Description</h2>
+        <section class="pt-0">
+            {% if hover_text %}
+            <section class="border-start border-2 border-primary bg-body-tertiary p-3 my-4">
+                <h2 class="fs-sm-2 text-body-secondary fw-semibold">
+                    In Brief
+                </h2>
+                <i class="fs-sm-2">
+                    {% autoescape off %}
+                    {{ hover_text }}
+                    {% endautoescape %}
+                </i>
+            </section>
+            {% endif %}
+            <h2 class="visually-hidden">Description</h2>
             {% block help_description %}
             <p>
                 <i class="text-body-secondary">No description yet.</i>
             </p>
             {% endblock help_description %}
         </section>
+        {% if functionality %}
+        <section class="help-section">
+            <h2 class="fs-sm-2 text-body-secondary">
+                Covered in this article
+            </h2>
+            <a
+                href="{{ functionality.1 }}"
+                class="fs-sm-2 link-underline-by-default">{{ functionality.0 }}</a>
+        </section>
+        {% endif %}
         {% if links %}
         <section class="help-section">
             <h2>Links</h2>
