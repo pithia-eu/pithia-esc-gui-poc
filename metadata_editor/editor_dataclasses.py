@@ -55,7 +55,7 @@ class CitationPropertyTypeMetadataUpdate:
 @dataclass(kw_only=True)
 class ContactInfoMetadataUpdate:
     phone: Optional[str] = None
-    address: Optional[ContactInfoAddressMetadataUpdate] = ContactInfoAddressMetadataUpdate()
+    address: Optional[ContactInfoAddressMetadataUpdate] = field(default_factory=ContactInfoAddressMetadataUpdate)
     online_resource: Optional[str] = None
     hours_of_service: Optional[str] = None
     contact_instructions: Optional[str] = None
