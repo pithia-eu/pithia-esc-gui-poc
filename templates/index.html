@@ -7,13 +7,29 @@
 <script type="module" src="{% static 'utils/home_page_foi_search.js' %}?{% now 'U' %}" defer></script>
 {% endblock scripts %}
 {% block content %}
-<h1 class="fs-4 mb-4">PITHIA e-Science Centre</h1>
+<h1 class="visually-hidden">PITHIA e-Science Centre</h1>
 <div class="row gx-lg-4 gy-4">
     {% if request.session.is_logged_in and not request.session.institution_for_login_session %}
     <div class="col-lg-12">
         {% include 'home/institution_selection.html' %}
     </div>
     {% endif %}
+    <div class="col-lg-8">
+        <div
+            class="d-inline-block rounded bg-body-secondary p-2 mb-4"
+            style="width: 5em;"></div>
+        <p class="lead mb-4">
+            The PITHIA e-Science Centre brings together and facilitates access to FAIR data, models
+            and scientific services.
+        </p>
+        <p class="text-body-secondary">
+            Explore our <a href="{% url 'browse:list_data_collections' %}">data collections</a>,
+            <a href="{% url 'browse:static_dataset_tree' %}">static datasets</a> and
+            <a href="{% url 'browse:list_workflows' %}">workflows</a>. Additional resources (such as the
+            <a href="{% url 'ontology:index' %}" class="link-secondary">Space Physics Ontology browser</a>,
+            search features and how to register data with the PeSC) are also available below.
+        </p>
+    </div>
     <div class="col-lg-8">
         <div class="row g-4">
             <section class="col-xl-7 col-lg-12 section-hm">
