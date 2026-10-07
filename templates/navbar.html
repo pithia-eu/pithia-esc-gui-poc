@@ -28,22 +28,38 @@
                                 <a href="{{ data_collections_url }}" class="dropdown-item">All Data Collections</a>
                             </li>
                             <li>
-                                {% url 'data_collection_search:index' as search_url %}
-                                <a href="{{ search_url }}" class="dropdown-item">
-                                    Search by Content</a>
-                            </li>
-                            <li>
-                                {% url 'simple_search:index' as simple_search_url %}
-                                <a href="{{ simple_search_url }}" class="dropdown-item">
-                                    Simple Search</a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
                                 {% url 'browse:data_collection_related_resource_types' as data_collection_related_resource_types_url %}
                                 <a href="{{ data_collection_related_resource_types_url }}" class="dropdown-item">
                                     Data Collection-related Metadata</a>
+                            </li>
+                            <li class="dropdown-header">
+                                Search Data Collections
+                            </li>
+                            <li>
+                                {% url 'simple_search:index' as simple_search_url %}
+                                <a
+                                    href="{{ simple_search_url }}"
+                                    class="icon-link link-underline-opacity-0 link-underline-opacity-100-hover dropdown-item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                    </svg>
+                                    <span>
+                                        Search
+                                        <span class="fs-sm-1 font-monospace">(simple)</span>
+                                    </span></a>
+                            </li>
+                            <li>
+                                {% url 'data_collection_search:index' as search_url %}
+                                <a
+                                    href="{{ search_url }}"
+                                    class="icon-link link-underline-opacity-0 link-underline-opacity-100-hover dropdown-item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-ui-checks-grid" viewBox="0 0 16 16">
+                                        <path d="M2 10h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1m9-9h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 9a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1zm0-10a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM2 9a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2zm7 2a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-3a2 2 0 0 1-2-2zM0 2a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.354.854a.5.5 0 1 0-.708-.708L3 3.793l-.646-.647a.5.5 0 1 0-.708.708l1 1a.5.5 0 0 0 .708 0z"/>
+                                    </svg>
+                                    <span>
+                                        Search
+                                        <span class="fs-sm-1 font-monospace">(by content)</span>
+                                    </span></a>
                             </li>
                         </ul>
                     </div>
@@ -57,10 +73,19 @@
                                 {% url 'browse:list_workflows' as workflows_url %}
                                 <a href="{{ workflows_url }}" class="dropdown-item">All Workflows</a>
                             </li>
+                            <li class="dropdown-header">
+                                Search Workflows
+                            </li>
                             <li>
                                 {% url 'workflow_search:index' as workflow_search_url %}
-                                <a href="{{ workflow_search_url }}" class="dropdown-item">
-                                    Search by Content</a>
+                                <a href="{{ workflow_search_url }}" class="icon-link link-underline-opacity-0 link-underline-opacity-100-hover dropdown-item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-ui-checks-grid" viewBox="0 0 16 16">
+                                        <path d="M2 10h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1m9-9h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 9a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1zm0-10a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM2 9a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2zm7 2a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-3a2 2 0 0 1-2-2zM0 2a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.354.854a.5.5 0 1 0-.708-.708L3 3.793l-.646-.647a.5.5 0 1 0-.708.708l1 1a.5.5 0 0 0 .708 0z"/>
+                                    </svg>
+                                    <span>
+                                        Search
+                                        <span class="fs-sm-1 font-monospace">(by content)</span>
+                                    </span></a>
                             </li>
                         </ul>
                     </div>
@@ -74,10 +99,19 @@
                                 {% url 'browse:static_dataset_tree' as static_datasets_url %}
                                 <a href="{{ static_datasets_url }}" class="dropdown-item">All Static Datasets</a>
                             </li>
+                            <li class="dropdown-header">
+                                Search Static Datasets
+                            </li>
                             <li>
                                 {% url 'static_dataset_search:index' as static_dataset_search_url %}
-                                <a href="{{ static_dataset_search_url }}" class="dropdown-item">
-                                    Search by Content</a>
+                                <a href="{{ static_dataset_search_url }}" class="icon-link link-underline-opacity-0 link-underline-opacity-100-hover dropdown-item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-ui-checks-grid" viewBox="0 0 16 16">
+                                        <path d="M2 10h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1m9-9h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 9a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1zm0-10a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM2 9a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2zm7 2a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-3a2 2 0 0 1-2-2zM0 2a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.354.854a.5.5 0 1 0-.708-.708L3 3.793l-.646-.647a.5.5 0 1 0-.708.708l1 1a.5.5 0 0 0 .708 0z"/>
+                                    </svg>
+                                    <span>
+                                        Search
+                                        <span class="fs-sm-1 font-monospace">(by content)</span>
+                                    </span></a>
                             </li>
                         </ul>
                     </div>
