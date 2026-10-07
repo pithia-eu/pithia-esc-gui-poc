@@ -15,19 +15,17 @@
     </div>
     {% endif %}
     <div class="col-lg-8">
-        <div
-            class="d-inline-block rounded bg-body-secondary p-2 mb-4"
-            style="width: 5em;"></div>
+        <hr class="mt-0 mb-4" style="width: 5em;"></hr>
         <p class="lead mb-4">
             The PITHIA e-Science Centre brings together and facilitates access to FAIR data, models
             and scientific services.
         </p>
         <p class="text-body-secondary">
-            Explore our <a href="{% url 'browse:list_data_collections' %}">data collections</a>,
+            <a href="{% url 'browse:list_data_collections' %}">Data collections</a>,
             <a href="{% url 'browse:static_dataset_tree' %}">static datasets</a> and
-            <a href="{% url 'browse:list_workflows' %}">workflows</a>. Additional resources (such as the
-            <a href="{% url 'ontology:index' %}" class="link-secondary">Space Physics Ontology browser</a>,
-            search features and how to register data with the PeSC) are also available below.
+            <a href="{% url 'browse:list_workflows' %}">workflows</a> are available to browse or run on-demand.
+            Additional resources (like the <a href="{% url 'ontology:index' %}" class="link-secondary">Space Physics
+            Ontology browser</a>, search features and how to register data with the PeSC) are also available.
         </p>
     </div>
     <div class="col-lg-8">
