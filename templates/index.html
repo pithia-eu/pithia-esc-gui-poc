@@ -269,6 +269,11 @@
                     Real-world object that carries the property which is
                     observed or modelled to produce a Data Collection.
                 </p>
+                {% if total_data_collection_count == 0 %}
+                <p class="text-body-secondary mb-0">
+                    No data collections found.
+                </p>
+                {% else %}
                 <ul class="list-unstyled list-foi-search">
                     {% for foi_url, foi_properties in data_collection_counts_by_fois.items %}
                     {% if foi_properties.count %}
@@ -291,6 +296,7 @@
                     {% endif %}
                     {% endfor %}
                 </ul>
+                {% endif %}
             </div>
         </div>
     </section>

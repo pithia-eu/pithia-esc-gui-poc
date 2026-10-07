@@ -40,6 +40,8 @@ def index(request):
         DataCollectionsSimpleSearchHelpArticleContent.as_dict(),
         SearchDataCollectionsByContentHelpArticleContent.as_dict(),
     ]
+    # Data Collections (grouped by features of interest)
+    total_data_collection_count = 0
     xml_of_features_of_interest = get_ontology_category_terms_in_xml_format('featureOfInterest')
     features_of_interest = OntologyCategoryMetadataService(xml_of_features_of_interest)
     unsorted_data_collection_counts_by_fois = features_of_interest.get_first_two_layers_of_ontology_category()
@@ -48,6 +50,7 @@ def index(request):
     ))
     for foi_url, foi_properties in data_collection_counts_by_fois.items():
         num_data_collections_using_foi = DataCollection.objects.referencing_feature_of_interest_urls([foi_url] + foi_properties.get('descendents', [])).count()
+        total_data_collection_count += num_data_collections_using_foi
         data_collection_counts_by_fois[foi_url].update({
             'count': num_data_collections_using_foi,
         })
@@ -56,6 +59,7 @@ def index(request):
         'create_institution_url': CREATION_URL_BASE,
         'help_content_dicts': help_content_dicts,
         'data_collection_counts_by_fois': data_collection_counts_by_fois,
+        'total_data_collection_count': total_data_collection_count,
     })
 
 def data_provider_home(request):
