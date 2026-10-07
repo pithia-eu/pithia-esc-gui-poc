@@ -166,3 +166,8 @@ perun/ListOfOrganisations.json
 staticfiles/
 datahub/
 .DS_Store
+
+# Node
+node_modules
+build
+npm-debug.log

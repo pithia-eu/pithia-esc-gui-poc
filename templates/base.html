@@ -24,19 +24,13 @@
     <meta name="msapplication-TileColor" content="#e9ecef">
     <meta name="theme-color" content="#e9ecef">
     <title>{{ title }}</title>
+    {% load compress %}
+    <!-- Bootstrap JS -->
+    {% compress js %}
+    <script src="{% static 'bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    {% endcompress %}
     <!-- Initialise site theme settings -->
     <script type="module" src="{% static 'utils/bs_theme_updater.js' %}" async></script>
-    <!-- Bootstrap - Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-    {% load compress %}
-    <!-- Bootstrap - SCSS -->
-    {% compress css %}
-    <link rel="stylesheet" type="text/x-scss" href="{% static 'bootstrap/scss/bootstrap.scss' %}">
-    {% endcompress %}
-    <!-- Bootstrap - JS -->
-    {% compress js %}
-    <script src="{% static 'bootstrap/js/bootstrap.bundle.js' %}"></script>
-    {% endcompress %}
     <!-- Tom Select -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.bootstrap5.min.css">
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/js/tom-select.complete.min.js"></script>

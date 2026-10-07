@@ -1,0 +1,26 @@
+{
+  "name": "pithiaesc",
+  "version": "1.0.0",
+  "description": "A web portal to access Data Collection, Catalogues, Workflows and other scientific metadata.",
+  "homepage": "https://github.com/pithia-eu/pithia-esc-gui-poc#readme",
+  "bugs": {
+    "url": "https://github.com/pithia-eu/pithia-esc-gui-poc/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pithia-eu/pithia-esc-gui-poc.git"
+  },
+  "license": "Apache-2.0",
+  "author": "PITHIA",
+  "type": "commonjs",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.8"
+  }
+}
