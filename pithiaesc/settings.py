@@ -45,6 +45,14 @@ ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 # Application definition
 
 INSTALLED_APPS = [
+    'django_countries',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'compressor',
     'common.apps.CommonConfig',
     'browse.apps.BrowseConfig',
     'data_collection_search.apps.DataCollectionSearchConfig',
@@ -67,14 +75,6 @@ INSTALLED_APPS = [
     'utils.apps.UtilsConfig',
     'validation.apps.ValidationConfig',
     'workflow_search.apps.WorkflowSearchConfig',
-    'django_countries',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'compressor',
 ]
 
 MIDDLEWARE = [
@@ -182,7 +182,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'node_modules'),
 ]
 
 STATIC_ROOT = BASE_DIR / 'staticfiles/'
