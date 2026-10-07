@@ -20,6 +20,7 @@ urlpatterns = [
     path('help/', include('help.urls')),
     path('admin/', admin.site.urls),
     path('schemas/', schemas, name='schemas'),
+    path('registration-help/', views.registration_help, name='registration_help'),
     path('data-collection-registration-guide', views.data_collection_registration_guide, name='data_collection_registration_guide'),
     path('static-dataset-registration-guide', views.static_dataset_registration_guide, name='static_dataset_registration_guide'),
     path('workflow-registration-guide', views.workflow_registration_guide, name='workflow_registration_guide'),

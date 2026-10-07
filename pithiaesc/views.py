@@ -106,3 +106,8 @@ def support(request):
         'search_data_collections_by_content_help_article_title': SearchDataCollectionsByContentHelpArticleContent.title,
         'data_collection_simple_search_help_article_title': DataCollectionsSimpleSearchHelpArticleContent.title,
     })
+
+def registration_help(request):
+    return render(request, 'registration_help.html', {
+        'title': 'Registration Help',
+    })

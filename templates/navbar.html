@@ -116,23 +116,9 @@
                             Manage Registrations</a>
                         <ul class="dropdown-menu" data-bs-popper="static">
                             <li>
-                                <a href="{% url 'data_collection_registration_guide' %}" class="dropdown-item external-link">
-                                    Data Collection Registration Guide
+                                <a href="{% url 'registration_help' %}" class="dropdown-item">
+                                    Registration Help
                                 </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'workflow_registration_guide' %}" class="dropdown-item external-link">
-                                    Workflow Registration Guide
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'static_dataset_registration_guide' %}" class="dropdown-item external-link">
-                                    Static Dataset Registration Guide
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'user_registration_guide' %}" class="dropdown-item external-link">
-                                    User Registration Guide</a>
                             </li>
                             <li>
                                 <a href="{% url 'resource_management:index' %}" class="dropdown-item">
@@ -141,33 +127,9 @@
                             </li>
                         </ul>
                         {% else %}
-                        <a
-                            href="#"
-                            class="nav-link dropdown-toggle"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Registration Help</a>
-                        <ul class="dropdown-menu" data-bs-popper="static">
-                            <li>
-                                <a href="{% url 'data_collection_registration_guide' %}" class="dropdown-item external-link">
-                                    Data Collection Registration Guide
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'workflow_registration_guide' %}" class="dropdown-item external-link">
-                                    Workflow Registration Guide
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'static_dataset_registration_guide' %}" class="dropdown-item external-link">
-                                    Static Dataset Registration Guide
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'user_registration_guide' %}" class="dropdown-item external-link">
-                                    User Registration Guide</a>
-                            </li>
-                        </ul>
+                        <a href="{% url 'registration_help' %}" class="nav-link link-plain-by-default">
+                            Registration Help
+                        </a>
                         {% endif %}
                     </div>
                 </li>
