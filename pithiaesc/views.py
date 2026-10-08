@@ -90,13 +90,13 @@ def user_registration_guide(request):
         return HttpResponseNotFound('The user registration guide was not found.')
 
 def terms_of_use(request):
-    return render(request, 'terms-of-use.html', {
-        'title': 'PITHIA e-Science Centre Acceptable Use Policy and Conditions of Use'
+    return render(request, 'terms_of_use.html', {
+        'title': 'Acceptable Use Policy and Conditions of Use'
     })
 
 def privacy_policy(request):
-    return render(request, 'privacy-policy.html', {
-        'title': 'PITHIA e-Science Centre Privacy Policy'
+    return render(request, 'privacy_policy.html', {
+        'title': 'Privacy Policy'
     })
 
 def support(request):
