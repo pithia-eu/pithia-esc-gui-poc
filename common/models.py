@@ -81,22 +81,25 @@ class ScientificMetadata(models.Model):
     )
     institution_id = models.CharField(
         max_length=200,
-        db_column='inst_id'
+        db_column='inst_id',
+        null=True
     )
     owner_id = models.CharField(
         max_length=200,
-        db_column='owner_id'
+        db_column='owner_id',
+        null=True
     )
     type = models.CharField(
         max_length=100,
         choices=TYPE_CHOICES,
-        db_column='sm_type'
+        db_column='sm_type',
+        null=True
     )
-    xml = models.TextField(db_column='sm_metadata_file')
-    json = models.JSONField(db_column='sm_json_support')
-    deactivated = models.BooleanField(default=False, db_column='sm_deactivated')
-    created_at = models.DateTimeField(auto_now_add=True, db_column='sm_reg_date')
-    updated_at = models.DateTimeField(auto_now=True, db_column='sm_upd_date')
+    xml = models.TextField(db_column='sm_metadata_file', null=True)
+    json = models.JSONField(db_column='sm_json_support', null=True)
+    deactivated = models.BooleanField(default=False, db_column='sm_deactivated', null=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_column='sm_reg_date', null=True)
+    updated_at = models.DateTimeField(auto_now=True, db_column='sm_upd_date', null=True)
 
     # JSON field properties
     @property
@@ -315,9 +318,9 @@ class InteractionMethod(models.Model):
     scientific_metadata = models.ForeignKey(
         'ScientificMetadata',
         on_delete=models.CASCADE,
-        null=True,
         limit_choices_to=Q(type=ScientificMetadata.DATA_COLLECTION) | Q(type=ScientificMetadata.WORKFLOW),
-        db_column='sm_id'
+        db_column='sm_id',
+        default=""
     )
     # owner = models.ForeignKey(
     #   'Member',
@@ -339,12 +342,13 @@ class InteractionMethod(models.Model):
         choices=TYPE_CHOICES,
         default=API,
         max_length=100,
-        db_column='intm_type'
+        db_column='intm_type',
+        null=True
     )
-    config = models.JSONField(db_column='intm_config')
-    deactivated = models.BooleanField(default=False, db_column='intm_deactivated')
-    created_at = models.DateTimeField(auto_now_add=True, db_column='intm_reg_date')
-    updated_at = models.DateTimeField(auto_now=True, db_column='intm_upd_date')
+    config = models.JSONField(db_column='intm_config', null=True)
+    deactivated = models.BooleanField(default=False, db_column='intm_deactivated', null=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_column='intm_reg_date', null=True)
+    updated_at = models.DateTimeField(auto_now=True, db_column='intm_upd_date', null=True)
 
     objects = InteractionMethodManager()
     api_interaction_methods = APIInteractionMethodManager()
