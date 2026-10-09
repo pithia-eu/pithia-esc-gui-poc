@@ -1,5 +1,5 @@
 {% load project_tags %}
-<ul class="d-flex flex-wrap row-gap-1 column-gap-1 list-unstyled pt-3 mb-0">
+<ul class="d-inline-flex flex-wrap row-gap-1 column-gap-1 list-unstyled pt-0 mb-0">
     {% for type in types|wrap_in_list_if_dict %}
     <li>
         {% with value=type url_text_extra_classes='fs-sm-2 text-body' %}

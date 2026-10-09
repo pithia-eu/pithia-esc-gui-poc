@@ -28,11 +28,15 @@
                 <span class="text-body-secondary">({{ resource.json.shortName }})</span>
                 {% endif %}
             </div>
-            <p class="text-body-secondary mb-0">
+            <div class="text-body-secondary">
                 Last modified on {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y' }}
-            </p>
+                {% block inline_post_last_modified_date_content %}{% endblock inline_post_last_modified_date_content %}
+            </div>
             {% block post_last_modified_date_content %}{% endblock post_last_modified_date_content %}
         </div>
+        {% block pre_responsible_parties_content %}{% endblock pre_responsible_parties_content %}
+        {# Responsible parties section #}
+        {% include 'browse/detail/sections/top/responsible_parties_top_section.html' %}
         <section class="d-lg-none d-block resource-detail-section">
             <details>
                 <summary class="summary-marker-custom summary-marker-custom-baseline">
@@ -48,9 +52,6 @@
                 </ul>
             </details>
         </section>
-        {% block pre_responsible_parties_content %}{% endblock pre_responsible_parties_content %}
-        {# Responsible parties section #}
-        {% include 'browse/detail/sections/top/responsible_parties_top_section.html' %}
         {% block pre_description_content %}{% endblock pre_description_content %}
         {% block description_section %}
         {% include 'browse/detail/sections/description_section.html' %}

@@ -8,6 +8,21 @@
 <script src="{% static 'browse/data_collection.js' %}" defer></script>
 {% endblock extra_scripts %}
 
+{# Appears inline, after the last modified date #}
+{% block inline_post_last_modified_date_content %}
+{% if resource.properties.types %}
+<span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-sm-1 bi bi-dot" viewBox="0 0 16 16">
+        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+    </svg>
+</span>
+{# Types #}
+{% with types=resource.properties.types %}
+{% include 'browse/detail/components/type_section_list.html' %}
+{% endwith %}
+{% endif %}
+{% endblock inline_post_last_modified_date_content %}
+
 {# Appears after the last modified date #}
 {% block post_last_modified_date_content %}
 {# Permissions #}
@@ -36,12 +51,6 @@
     </li>
     {% endfor %}
 </ul>
-{% endif %}
-{% if resource.properties.types %}
-{# Types #}
-{% with types=resource.properties.types %}
-{% include 'browse/detail/components/type_section_list.html' %}
-{% endwith %}
 {% endif %}
 {% endblock post_last_modified_date_content %}
 
