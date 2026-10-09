@@ -1,8 +1,8 @@
 {% load project_tags %}
-<ul class="d-inline-flex flex-wrap row-gap-1 column-gap-1 list-unstyled pt-1 mb-0">
+<ul class="d-inline-flex flex-wrap row-gap-1 column-gap-1 list-unstyled {{ top_padding|default:'pt-3' }} mb-0">
     {% for type in types|wrap_in_list_if_dict %}
     <li>
-        {% with value=type url_text_extra_classes='fs-sm-2 text-body' %}
+        {% with value=type url_text_extra_classes='text-body' %}
         <span class="d-inline-flex align-items-center column-gap-1">
             {% block ontology_placeholder_include %}
             {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}

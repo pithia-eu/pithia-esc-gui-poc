@@ -17,7 +17,7 @@
     </svg>
 </span>
 {# Types #}
-{% with types=resource.properties.types %}
+{% with types=resource.properties.types top_padding='pt-1' %}
 {% include 'browse/detail/components/type_section_list.html' %}
 {% endwith %}
 {% endif %}
