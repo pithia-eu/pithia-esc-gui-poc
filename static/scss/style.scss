@@ -730,6 +730,7 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
 }
 
 .list-foi-search button {
+    border: var(--bs-border-width) var(--bs-border-style) transparent;
     background-color: var(--bs-tertiary-bg);
     font-size: var(--fs-sm-2);
     text-decoration: none;
@@ -738,6 +739,7 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
 .list-foi-search button:hover,
 .list-foi-search button:focus,
 .list-foi-search button:active {
+    border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color);
     background-color: rgba(var(--bs-tertiary-bg-rgb), 0.5);
 }
 

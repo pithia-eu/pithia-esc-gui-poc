@@ -294,16 +294,23 @@
                     <li class="list-group-item">
                         <button
                             type="button"
-                            class="d-inline-flex flex-column btn btn-link btn-foi-search text-start w-100 rounded px-3 py-2 mt-2"
+                            class="btn btn-link btn-foi-search text-start w-100 rounded px-3 py-2 mt-2"
                             data-foi-url="{{ foi_url }}">
-                            <span>{{ foi_properties.name }}</span>
-                            <span class="text-body-secondary">
-                                {{ foi_properties.count }}
-                                {% if foi_properties.count == 1 %}
-                                Data Collection
-                                {% else %}
-                                Data Collections
-                                {% endif %}
+                            <span class="d-inline-flex align-items-center justify-content-between w-100">
+                                <span class="d-inline-flex flex-column">
+                                    <span>{{ foi_properties.name }}</span>
+                                    <span class="text-body-secondary">
+                                        {{ foi_properties.count }}
+                                        {% if foi_properties.count == 1 %}
+                                        Data Collection
+                                        {% else %}
+                                        Data Collections
+                                        {% endif %}
+                                    </span>
+                                </span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search text-body-secondary" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                </svg>
                             </span>
                         </button>
                     </li>
