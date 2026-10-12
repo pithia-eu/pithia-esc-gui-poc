@@ -11,6 +11,8 @@
     {% endwith %}
 </section>
 {% endif %}
+{# Website #}
+{% include 'browse/detail/sections/website_section.html' %}
 {% endblock post_last_modified_date_content %}
 
 {# Appears before the responsible parties section #}
@@ -71,7 +73,6 @@
 
 {# Appears after the description #}
 {% block post_description_content %}
-{% include 'browse/detail/sections/website_section.html' %}
 {% include 'browse/detail/sections/documentations_section.html' %}
 {% endblock post_description_content %}
 

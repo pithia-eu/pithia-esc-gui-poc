@@ -1,6 +1,13 @@
 {% if resource.properties.gmd_url %}
-<section class="resource-detail-section">
-    <h2 id="website" class="mb-1">Website</h2>
-    <a href="{{ resource.properties.gmd_url }}" class="link-underline-by-default">{{ resource.properties.gmd_url }}</a>
-</section>
+<div class="d-flex align-items-center flex-wrap row-gap-1 column-gap-1 fs-sm-2 text-body-secondary pt-3">
+    <h2 id="website" class="d-inline fs-sm-2 text-body-secondary mb-0">
+        Website
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-sm-1 bi bi-dot" viewBox="0 0 16 16">
+            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+        </svg>
+    </h2>
+    <a href="{{ resource.properties.gmd_url }}" class="link-underline-by-default icon-link external-link">
+        Open {{ resource.type|title }} website
+    </a>
+</div>
 {% endif %}

@@ -16,11 +16,12 @@
 {% include 'browse/detail/components/type_section_list.html' %}
 {% endwith %}
 {% endif %}
+{# Website #}
+{% include 'browse/detail/sections/website_section.html' %}
 {% endblock post_last_modified_date_content %}
 
 {# Appears after the description #}
 {% block post_description_content %}
-{% include 'browse/detail/sections/website_section.html' %}
 {% if resource.properties.operational_modes %}
 <section class="resource-detail-section">
     <h2 id="operational-modes">Operational Modes</h2>

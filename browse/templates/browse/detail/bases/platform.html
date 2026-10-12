@@ -8,6 +8,8 @@
 {% include 'browse/detail/components/platform/platform_type_section_list.html' %}
 {% endwith %}
 {% endif %}
+{# Website #}
+{% include 'browse/detail/sections/website_section.html' %}
 {# Standard identifiers #}
 {% if resource.properties.standard_identifiers %}
 <ul class="d-flex flex-wrap row-gap-1 column-gap-1 list-unstyled fs-sm-2 text-body-secondary pt-3 mb-0">
@@ -60,7 +62,6 @@
 
 {# Appears after the description #}
 {% block post_description_content %}
-{% include 'browse/detail/sections/website_section.html' %}
 {% if resource.properties.location %}
 <section class="resource-detail-section">
     <h2 id="location" class="mb-2">Location</h2>
