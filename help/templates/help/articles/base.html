@@ -23,18 +23,18 @@
                 class="fs-sm-2 link-underline-by-default">{{ functionality.0 }}</a>
         </section>
         {% endif %}
-        {% if hover_text %}
-        <section class="help-section">
-            <h2>In Brief</h2>
-            <p class="fs-sm-2 text-body-secondary">
-                {% autoescape off %}
-                {{ hover_text }}
-                {% endautoescape %}
-            </p>
-        </section>
-        {% endif %}
         <section class="help-section">
             <h2>Description</h2>
+            {% if hover_text %}
+            <section class="bg-body-tertiary border-start border-2 border-primary fs-sm-2 px-3 my-4">
+                <h3 class="fs-sm-2">In Brief</h3>
+                <p class="text-body-secondary">
+                    {% autoescape off %}
+                    {{ hover_text }}
+                    {% endautoescape %}
+                </p>
+            </section>
+            {% endif %}
             {% block help_description %}
             <p>
                 <i class="text-body-secondary">No description yet.</i>
