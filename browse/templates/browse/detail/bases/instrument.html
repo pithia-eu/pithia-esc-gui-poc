@@ -1,20 +1,34 @@
 {% extends 'browse/detail/bases/base.html' %}
 {% load project_tags %}
 
+{# Appears inline, after the last modified date #}
+{% block inline_post_last_modified_date_content %}
+{% if resource.properties.type %}
+<span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-sm-1 bi bi-dot" viewBox="0 0 16 16">
+        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+    </svg>
+</span>
+{# Type #}
+{% with types=resource.properties.type top_padding='pt-1' %}
+{% include 'browse/detail/components/type_section_list.html' %}
+{% endwith %}
+{% endif %}
+{% endblock inline_post_last_modified_date_content %}
+
 {# Appears after the last modified date #}
 {% block post_last_modified_date_content %}
 {# Version #}
 {% if resource.properties.instrument_version %}
 <div class="d-flex align-items-center flex-wrap row-gap-1 column-gap-1 fs-sm-2 text-body-secondary pt-3">
-    <h2 id="version" class="d-inline fs-sm-2 text-body-secondary mb-0">Version:</h2>
+    <h2 id="version" class="d-inline fs-sm-2 text-body-secondary mb-0">
+        Version
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-sm-1 bi bi-dot" viewBox="0 0 16 16">
+            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+        </svg>
+    </h2>
     <p class="mb-0">{{ resource.properties.instrument_version }}</p>
 </div>
-{% endif %}
-{# Type #}
-{% if resource.properties.type %}
-{% with types=resource.properties.type %}
-{% include 'browse/detail/components/type_section_list.html' %}
-{% endwith %}
 {% endif %}
 {# Website #}
 {% include 'browse/detail/sections/website_section.html' %}

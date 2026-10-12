@@ -1,13 +1,22 @@
 {% extends 'browse/detail/bases/base.html' %}
 
-{# Appears after the last modified date #}
-{% block post_last_modified_date_content %}
-{# Types #}
+{# Appears inline, after the last modified date #}
+{% block inline_post_last_modified_date_content %}
 {% if resource.properties.type %}
-{% with types=resource.properties.type %}
+<span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-sm-1 bi bi-dot" viewBox="0 0 16 16">
+        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+    </svg>
+</span>
+{# Type #}
+{% with types=resource.properties.type top_padding='pt-1' %}
 {% include 'browse/detail/components/platform/platform_type_section_list.html' %}
 {% endwith %}
 {% endif %}
+{% endblock inline_post_last_modified_date_content %}
+
+{# Appears after the last modified date #}
+{% block post_last_modified_date_content %}
 {# Website #}
 {% include 'browse/detail/sections/website_section.html' %}
 {# Standard identifiers #}
