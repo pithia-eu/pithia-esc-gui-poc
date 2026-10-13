@@ -295,51 +295,28 @@ a.link-underline-by-default:focus-visible,
 }
 
 /* || External link styling */
+a.external-link {
+    position: relative;
+    padding-right: 1.125em;
+}
+
 a.external-link::after {
+    content: "​" / " (external)"; /* alternative text rules */
     display: inline-block;
-    width: 1em;
-    height: 1em;
-    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/><path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/></svg>');
-    background-repeat: no-repeat;
-    background-position: center right;
-    background-size: 75% auto;
-    /* turn font colour to pithia colour scheme */
-    filter: invert(24%) sepia(72%) saturate(2416%) hue-rotate(178deg)
-        brightness(103%) contrast(101%);
-    /* alternative text rules */
-    content: "";
-    overflow: hidden;
-    white-space: nowrap;
-    text-indent: 1em; /* the width of the icon */
+    mask-image: url("/static/external-link.svg");
+    mask-size: cover;
+    background-color: currentColor;
+    width: 0.85em;
+    height: 0.85em;
 }
 
-.navbar a.dropdown-item.external-link::after {
-    filter: none;
-}
-
-.navbar a.dropdown-item.external-link:active::after {
-    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(227deg)
-        brightness(104%) contrast(101%);
+a.external-link:not(a.icon-link)::after {
+    margin-inline-start: 0.5em;
+    transform: translateY(calc(-0.5em + 0.5lh));
 }
 
 .metadata-server-url.loading a.external-link::after {
     display: none;
-}
-
-a.external-link.btn-primary::after,
-a.external-link.btn-secondary::after {
-    filter: invert(98%) sepia(2%) saturate(10%) hue-rotate(41deg)
-        brightness(103%) contrast(105%);
-}
-
-a.external-link.btn-outline-dark::after {
-    transition: filter 150ms ease-in-out;
-}
-
-a.external-link.btn-outline-dark:hover::after,
-a.external-link.btn-outline-dark:focus-visible::after {
-    filter: invert(100%) sepia(2%) saturate(7490%) hue-rotate(224deg)
-        brightness(107%) contrast(99%);
 }
 
 /* || Bootstrap custom elements */
@@ -2763,23 +2740,6 @@ $color-mode-type: data;
 @include color-mode(dark) {
     .breadcrumb-item + .breadcrumb-item::before {
         content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/></svg>');
-    }
-
-    .external-link::after {
-        /* Match pithia colour scheme */
-        filter: invert(64%) sepia(37%) saturate(2304%) hue-rotate(167deg)
-            brightness(94%) contrast(91%);
-    }
-
-    .navbar a.dropdown-item.external-link::after {
-        /* Match body text colour */
-        filter: invert(90%) sepia(17%) saturate(55%) hue-rotate(169deg)
-            brightness(102%) contrast(85%);
-    }
-
-    .navbar a.dropdown-item.external-link:active::after {
-        filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(227deg)
-            brightness(104%) contrast(101%);
     }
 
     .header-logo-light {
