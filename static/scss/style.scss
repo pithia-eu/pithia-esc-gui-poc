@@ -1,3 +1,4 @@
+@use "sass:map";
 // Required
 @import "../../node_modules/bootstrap/scss/functions";
 
@@ -2757,44 +2758,56 @@ ul.tree ul {
 }
 
 /* || Dark mode styles */
-@media (min-width: 768px) {
-    html[data-bs-theme="dark"] .breadcrumb-item + .breadcrumb-item::before {
-        content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="white" class="bi bi-chevron-right" viewBox="0 0 12 12"><path fill-rule="evenodd" d="M3.4845 1.2345a.375.375 90 01.531 0l4.5 4.5a.375.375 90 010 .531l-4.5 4.5a.375.375 90 01-.531-.531L7.7197 6 3.4845 1.7655a.375.375 90 010-.531z"/></svg>') !important;
+$color-mode-type: data;
+
+@include color-mode(dark) {
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/></svg>');
     }
-}
 
-html[data-bs-theme="dark"] .breadcrumb-item + .breadcrumb-item::before {
-    content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/></svg>');
-}
+    .external-link::after {
+        /* Match pithia colour scheme */
+        filter: invert(64%) sepia(37%) saturate(2304%) hue-rotate(167deg)
+            brightness(94%) contrast(91%);
+    }
 
-/* Tom select - dark mode styles */
-html[data-bs-theme="dark"] .ts-control input::placeholder {
-    color: var(--bs-secondary-color);
-}
+    .navbar a.dropdown-item.external-link::after {
+        /* Match body text colour */
+        filter: invert(90%) sepia(17%) saturate(55%) hue-rotate(169deg)
+            brightness(102%) contrast(85%);
+    }
 
-html[data-bs-theme="dark"] .external-link::after {
-    /* Match pithia colour scheme */
-    filter: invert(64%) sepia(37%) saturate(2304%) hue-rotate(167deg)
-        brightness(94%) contrast(91%);
-}
+    .navbar a.dropdown-item.external-link:active::after {
+        filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(227deg)
+            brightness(104%) contrast(101%);
+    }
 
-html[data-bs-theme="dark"] .navbar a.dropdown-item.external-link::after {
-    /* Match body text colour */
-    filter: invert(90%) sepia(17%) saturate(55%) hue-rotate(169deg)
-        brightness(102%) contrast(85%);
-}
+    .header-logo-light {
+        display: none;
+    }
 
-html[data-bs-theme="dark"] .navbar a.dropdown-item.external-link:active::after {
-    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(227deg)
-        brightness(104%) contrast(101%);
-}
+    .header-logo-dark {
+        display: inline;
+    }
 
-html[data-bs-theme="dark"] .header-logo-light {
-    display: none;
-}
+    .btn-light,
+    .btn-dark,
+    .btn-outline-dark {
+        --bs-btn-bg: transparent;
+        @include button-outline-variant(map.get($theme-colors, "light"));
+    }
 
-html[data-bs-theme="dark"] .header-logo-dark {
-    display: inline;
+    /* Tom select - dark mode styles */
+    .ts-control input::placeholder {
+        color: var(--bs-secondary-color);
+    }
+
+    // Dark mode - media queries
+    @media (min-width: 768px) {
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="white" class="bi bi-chevron-right" viewBox="0 0 12 12"><path fill-rule="evenodd" d="M3.4845 1.2345a.375.375 90 01.531 0l4.5 4.5a.375.375 90 010 .531l-4.5 4.5a.375.375 90 01-.531-.531L7.7197 6 3.4845 1.7655a.375.375 90 010-.531z"/></svg>') !important;
+        }
+    }
 }
 
 /* Dark mode variables */
