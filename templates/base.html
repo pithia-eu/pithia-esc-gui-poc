@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
+    {% load compress %}
+    <!-- Use colour mode toggler implementation from Bootstrap docs -->
+    {% compress js %}
+    <script src="{% static 'bs_colour_modes.js' %}"></script>
+    {% endcompress %}
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-NJ2M32ZDE7"></script>
     <script type="text/javascript">
@@ -15,7 +21,6 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
@@ -24,21 +29,20 @@
     <meta name="msapplication-TileColor" content="#e9ecef">
     <meta name="theme-color" content="#e9ecef">
     <title>{{ title }}</title>
-    {% load compress %}
     <!-- Bootstrap JS -->
     {% compress js %}
     <script src="{% static 'bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
     {% endcompress %}
     <!-- Initialise site theme settings -->
-    <script type="module" src="{% static 'utils/bs_theme_updater.js' %}" async></script>
+    {% comment %} <script type="module" src="{% static 'utils/bs_theme_updater.js' %}" async></script> {% endcomment %}
     <!-- Tom Select -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.bootstrap5.min.css">
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/js/tom-select.complete.min.js"></script>
     <!-- Initialises Tom Selects -->
     <script src="{% static 'utils/custom_select_initialiser.js' %}" type="module" defer></script>
     <!-- Apply site theme settings to UI elements -->
-    <script type="module" src="{% static 'utils/bs_component_colour_schemes_updater.js' %}"></script>
-    <script type="module" src="{% static 'utils/bs_theme_picker.js' %}"></script>
+    {% comment %} <script type="module" src="{% static 'utils/bs_component_colour_schemes_updater.js' %}"></script> {% endcomment %}
+    {% comment %} <script type="module" src="{% static 'utils/bs_theme_picker.js' %}"></script> {% endcomment %}
     {% compress css %}
     <link rel="stylesheet" type="text/x-scss" href="{% static 'scss/style.scss' %}">
     {% endcompress %}

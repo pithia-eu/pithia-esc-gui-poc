@@ -27,29 +27,38 @@
                         </symbol>
                     </svg>
                     <div id="theme-picker" class="dropdown">
-                        <button class="btn text-body-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <svg class="bi me-2" role="img">
-                                <use xlink:href="#circle-half"/>
-                            </svg>Theme
+                        <button
+                            id="site-theme"
+                            class="btn btn-link nav-link text-body-secondary dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <svg class="bi text-body-secondary theme-icon-active me-2" role="img">
+                                <use href="#circle-half"/>
+                            </svg>
+                            <span id="site-theme-text" class="d-lg-none ms-2">Toggle Theme</span>
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a id="option-theme-light" class="dropdown-item" href="#theme-picker">
+                                <button class="dropdown-item" data-bs-theme-value="light">
                                     <svg class="bi text-body-secondary me-2" role="img">
-                                        <use xlink:href="#sun"/>
+                                        <use href="#sun"/>
                                     </svg>Light</a>
+                                </button>
                             </li>
                             <li>
-                                <a id="option-theme-dark" class="dropdown-item" href="#theme-picker">
+                                <button class="dropdown-item" data-bs-theme-value="dark">
                                     <svg class="bi text-body-secondary me-2" role="img">
-                                        <use xlink:href="#moon-fill"/>
-                                    </svg>Dark</a>
+                                        <use href="#moon-fill"/>
+                                    </svg>Dark
+                                </button>
                             </li>
                             <li>
-                                <a id="option-theme-auto" class="dropdown-item" href="#theme-picker">
+                                <button class="dropdown-item" data-bs-theme-value="auto">
                                     <svg class="bi text-body-secondary me-2" role="img">
-                                        <use xlink:href="#circle-half"/>
-                                    </svg>OS Default</a>
+                                        <use href="#circle-half"/>
+                                    </svg>Auto
+                                </button>
                             </li>
                         </ul>
                     </div>
