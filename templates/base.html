@@ -33,16 +33,11 @@
     {% compress js %}
     <script src="{% static 'bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
     {% endcompress %}
-    <!-- Initialise site theme settings -->
-    {% comment %} <script type="module" src="{% static 'utils/bs_theme_updater.js' %}" async></script> {% endcomment %}
     <!-- Tom Select -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.bootstrap5.min.css">
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/js/tom-select.complete.min.js"></script>
     <!-- Initialises Tom Selects -->
     <script src="{% static 'utils/custom_select_initialiser.js' %}" type="module" defer></script>
-    <!-- Apply site theme settings to UI elements -->
-    {% comment %} <script type="module" src="{% static 'utils/bs_component_colour_schemes_updater.js' %}"></script> {% endcomment %}
-    {% comment %} <script type="module" src="{% static 'utils/bs_theme_picker.js' %}"></script> {% endcomment %}
     {% compress css %}
     <link rel="stylesheet" type="text/x-scss" href="{% static 'scss/style.scss' %}">
     {% endcompress %}
