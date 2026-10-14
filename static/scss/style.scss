@@ -113,6 +113,12 @@ dialog .btn-close {
     right: auto;
 }
 
+// Prevents layout shift caused by the scrollbar appearing/disappearing.
+body > .container-xxl {
+    position: relative;
+    left: calc((100vw - 100%) / 2);
+}
+
 /* || Heading styles */
 h1 {
     overflow-wrap: break-word;
