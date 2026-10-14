@@ -2609,8 +2609,7 @@ ul.tree ul {
 }
 
 @media print {
-    body > *:not(#main-container),
-    body > #main-container > *:not(main) {
+    body > .container-xxl > *:not(main){
         display: none;
     }
 }
