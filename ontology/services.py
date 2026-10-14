@@ -301,19 +301,8 @@ def get_ontology_category_terms_in_xml_format(ontology_category):
     return get_rdf_text_locally(ontology_category)
 
 
-# Continued - existing
-def get_rdf_text_for_ontology_component(ontology_component):
-    try:
-        return get_rdf_text_remotely(ontology_component)
-    except BaseException as err:
-        logger.exception('Encountered error whilst fetching RDF for ontology category.')
-    
-    # Read ontology from file - alt method if connection to ontology server fails
-    return get_rdf_text_locally(ontology_component)
-
-
 def get_graph_of_pithia_ontology_component(ontology_component):
-    ontology_text = get_rdf_text_for_ontology_component(ontology_component)
+    ontology_text = get_ontology_category_terms_in_xml_format(ontology_component)
 
     # Create a graph object with rdflib and parse fetched text
     g = Graph()
