@@ -427,95 +427,114 @@ def categorise_observed_property_dict_by_top_level_phenomenons(observed_property
 
 
 def create_dictionary_from_pithia_ontology_component(
-    ontology_component,
-    instrument_types_grouped_by_observed_property={},
-    computation_types_grouped_by_observed_property={}
-):
-    g = get_graph_of_pithia_ontology_component(ontology_component)
-    ontology_dictionary = {}
-    for s, p, o in g.triples((None, SKOS.member, None)):
-        # o_value is the localID after the ontology_component_url
-        o_value = o.split('/')[-1]
-        if o_value not in ontology_dictionary:
-            ontology_dictionary[o_value] = {
-                'id': f'{ontology_component}{o_value}',
-                'value': o_value,
+        ontology_component: str,
+        instrument_types_grouped_by_observed_property: dict | None = None,
+        computation_types_grouped_by_observed_property: dict | None = None):
+    result = {}
+    graph = get_graph_of_pithia_ontology_component(ontology_component)
+    for term_url in graph.objects(predicate=SKOS.member):
+        # Extract the localID from the last part of the term URL.
+        # e.g., ../featureOfInterest/SolarSystem
+        local_id = term_url.split('/')[-1]
+        if local_id in result:
+            continue
+        result[local_id] = {
+            'id': f'{ontology_component}{local_id}',
+            'value': local_id,
+            'narrowers': {},
+            'iri': f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/{ontology_component}/{local_id}',
+        }
+        term = Resource(graph, term_url)
+        for predicate in term.predicates():
+            # Extract the property name from the last part of the
+            # predicate identifier.
+            # e.g., http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+            property = predicate.identifier.split('#')[-1]
+            if len(predicate.identifier.split('#')) == 1:
+                property = predicate.identifier.split('/')[-1]
+            if property in result[local_id]:
+                continue
+            # The property's value may become a string if only one
+            # instance of the property value is found.
+            result[local_id][property] = []
+            if property == 'phenomenon':
+                for s, p, phenomenon_url in graph.triples((term_url, predicate.identifier, None)):
+                    labelled_local_id = f'phenomenon{phenomenon_url.split("/")[-1]}'
+                    result[local_id][property].append(labelled_local_id)
+                continue
+            if property == 'featureOfInterest':
+                for s, p, feature_of_interest_url in graph.triples((term_url, predicate.identifier, None)):
+                    labelled_local_id = f'featureOfInterest{feature_of_interest_url.split("/")[-1]}'
+                    result[local_id][property].append(labelled_local_id)
+                continue
+            if property == 'measurand':
+                for s, p, measurand_url in graph.triples((term_url, predicate.identifier, None)):
+                    labelled_local_id = f'measurand{measurand_url.split("/")[-1]}'
+                    result[local_id][property].append(labelled_local_id)
+                continue
+            for s, p, property_item in graph.triples((term_url, predicate.identifier, None)):
+                result[local_id][property].append(str(property_item))
+            if len(result[local_id][property]) == 1:
+                result[local_id][property] = next(iter(result[local_id][property]), None)
+
+        # Find child terms of the current term by doing searching backwards with SKOS.broader.
+        for child_term_url, p, o in graph.triples((None, SKOS.broader, term_url)):
+            child_term_local_id = child_term_url.split('/')[-1]
+            if child_term_local_id == local_id:
+                continue
+            if child_term_local_id in result[local_id]['narrowers']:
+                continue
+            result[local_id]['narrowers'][child_term_local_id] = {
+                'id': f'{ontology_component}{child_term_local_id}',
+                'value': child_term_local_id,
                 'narrowers': {},
-                'iri': f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/{ontology_component}/{o_value}',
             }
-            o_resource = Resource(g, o)
-            for op in o_resource.predicates():
-                op_identifier_no_prefix = op.identifier.split('#')[-1]
-                if len(op.identifier.split('#')) == 1:
-                    op_identifier_no_prefix = op.identifier.split('/')[-1]
-                if op_identifier_no_prefix not in ontology_dictionary[o_value] and (op_identifier_no_prefix == 'phenomenon' or op_identifier_no_prefix == 'featureOfInterest' or op_identifier_no_prefix == 'measurand'):
-                    ontology_dictionary[o_value][op_identifier_no_prefix] = []
-                    if op_identifier_no_prefix == 'phenomenon':
-                        for ops, opp, opo in g.triples((o, op.identifier, None)):
-                            opo_value_with_prefix = f'phenomenon{opo.split("/")[-1]}'
-                            ontology_dictionary[o_value][op_identifier_no_prefix].append(opo_value_with_prefix)
-                    if op_identifier_no_prefix == 'featureOfInterest':
-                        for ops, opp, opo in g.triples((o, op.identifier, None)):
-                            opo_value_with_prefix = f'featureOfInterest{opo.split("/")[-1]}'
-                            ontology_dictionary[o_value][op_identifier_no_prefix].append(opo_value_with_prefix)
-                    if op_identifier_no_prefix == 'measurand':
-                        for ops, opp, opo in g.triples((o, op.identifier, None)):
-                            opo_value_with_prefix = f'measurand{opo.split("/")[-1]}'
-                            ontology_dictionary[o_value][op_identifier_no_prefix].append(opo_value_with_prefix)
-                elif op_identifier_no_prefix not in ontology_dictionary[o_value]:
-                    if len(list(g.triples((o, op.identifier, None)))) > 1:
-                        ontology_dictionary[o_value][op_identifier_no_prefix] = []
-                        for ops, opp, opo in g.triples((o, op.identifier, None)):
-                            ontology_dictionary[o_value][op_identifier_no_prefix].append(str(opo))
-                    else:
-                        ontology_dictionary[o_value][op_identifier_no_prefix] = str(list(g.triples((o, op.identifier, None)))[0][2])
 
-            # SKOS.broader covers more than SKOS.narrower
-            for broader_s, broader_p, broader_o in g.triples((None, SKOS.broader, o)):
-                broader_o_value = broader_o.split('/')[-1]
-                broader_s_value = broader_s.split('/')[-1]
-                if broader_o_value != broader_s_value and broader_s_value not in ontology_dictionary[o_value]['narrowers']:
-                    ontology_dictionary[o_value]['narrowers'][broader_s_value] = {
-                        'id': f'{ontology_component}{broader_s_value}',
-                        'value': broader_s_value,
-                        'narrowers': {},
-                    }
-
-            # Do SKOS.narrower JIC
-            for narrower_s, narrower_p, narrower_o in g.triples((o, SKOS.narrower, None)):
-                narrower_s_value = narrower_s.split('/')[-1]
-                narrower_o_value = narrower_o.split('/')[-1]
-                if narrower_o_value != narrower_s_value and narrower_o_value not in ontology_dictionary[o_value]['narrowers']:
-                    ontology_dictionary[o_value]['narrowers'][narrower_o_value] = {
-                        'id': f'{ontology_component}{narrower_o_value}',
-                        'value': narrower_o_value,
-                        'narrowers': {},
-                    }
-
-    if instrument_types_grouped_by_observed_property != {}:
-        for op, value in instrument_types_grouped_by_observed_property.items():
-            if op not in ontology_dictionary:
+        # Find more child terms by doing a forward search with SKOS.narrower. Usually, the above
+        # check with SKOS.broader finds everything this check does and more, but there may be cases
+        # where this doesn't happen.
+        for s, p, child_term_url in graph.triples((term_url, SKOS.narrower, None)):
+            child_term_local_id = child_term_url.split('/')[-1]
+            if child_term_local_id == local_id:
                 continue
-            ontology_dictionary[op]['instrumentType'] = value
-
-    if computation_types_grouped_by_observed_property != {}:
-        for op, value in computation_types_grouped_by_observed_property.items():
-            if op not in ontology_dictionary:
+            if child_term_local_id in result[local_id]['narrowers']:
                 continue
-            ontology_dictionary[op]['computationType'] = value
+            result[local_id]['narrowers'][child_term_local_id] = {
+                'id': f'{ontology_component}{child_term_local_id}',
+                'value': child_term_local_id,
+                'narrowers': {},
+            }
 
-    # Property dictionaries for child terms are nested within
-    # the property dictionaries for parent terms, but the keys
-    # for the child terms will still be present at the top level
-    # of the ontology dictionary and should be removed.
-    keys_to_remove_at_top_level = []
-    for key in ontology_dictionary:
-        for nestedKey in ontology_dictionary[key]['narrowers']:
-            if nestedKey in ontology_dictionary:
-                ontology_dictionary[key]['narrowers'][nestedKey] = ontology_dictionary[nestedKey]
-                keys_to_remove_at_top_level.append(nestedKey)
-    
-    for key in keys_to_remove_at_top_level:
-        ontology_dictionary.pop(key, None)
+    # Assumes that the ontology component is "Observed Property".
+    if instrument_types_grouped_by_observed_property is None:
+        instrument_types_grouped_by_observed_property = dict()
+    if len(instrument_types_grouped_by_observed_property) > 0:
+        for local_id, instrument_types in instrument_types_grouped_by_observed_property.items():
+            if local_id not in result:
+                continue
+            result[local_id]['instrumentType'] = instrument_types
 
-    return ontology_dictionary
+    # Assumes that the ontology component is "Observed Property".
+    if computation_types_grouped_by_observed_property is None:
+        computation_types_grouped_by_observed_property = dict()
+    if len(computation_types_grouped_by_observed_property) > 0:
+        for local_id, computation_types in computation_types_grouped_by_observed_property.items():
+            if local_id not in result:
+                continue
+            result[local_id]['computationType'] = computation_types
+
+    # If a term in "result" appears as a child of another term, then
+    # it will be moved within that term. The move happens in two steps:
+    # copy over to the parent term, then delete the child term from the
+    # top-level of "result".
+    top_level_local_ids_to_remove = []
+    for local_id in result:
+        for child_term_local_id in result[local_id]['narrowers']:
+            if child_term_local_id not in result:
+                continue
+            result[local_id]['narrowers'][child_term_local_id] = result[child_term_local_id]
+            top_level_local_ids_to_remove.append(child_term_local_id)
+    for local_id in top_level_local_ids_to_remove:
+        result.pop(local_id, None)
+
+    return result
