@@ -2,14 +2,14 @@ const CONVERSION_URL = JSON.parse(document.getElementById("server-url-conversion
 
 
 export class ServerURLConverter {
-    constructor(serverUrlElementClassSelector, requestParamName, responseUrlsKey) {
-        this.serverUrlElementClassSelector = serverUrlElementClassSelector;
-        this.requestParamName = requestParamName;
-        this.responseUrlsKey = responseUrlsKey;
+    constructor(config) {
+        this.serverUrlElementSelector = config.serverUrlElementSelector;
+        this.requestParamName = config.requestParamName;
+        this.propertyNameForConvertedUrls = config.propertyNameForConvertedUrls;
     }
     
     getURLsToConvert() {
-        const elementsWithUrls = Array.from(document.querySelectorAll(`.${this.serverUrlElementClassSelector}[data-metadata-server-url]`));
+        const elementsWithUrls = Array.from(document.querySelectorAll(`${this.serverUrlElementSelector}[data-metadata-server-url]`));
         return Array.from(new Set(elementsWithUrls.map(e => e.dataset.metadataServerUrl)));
     }
     
@@ -17,7 +17,10 @@ export class ServerURLConverter {
         try {
             const formData = new FormData();
             formData.append(this.requestParamName, JSON.stringify(urls));
-            formData.append("csrfmiddlewaretoken", document.querySelector("input[name='csrfmiddlewaretoken']").value);
+            formData.append(
+                "csrfmiddlewaretoken",
+                document.querySelector("input[name='csrfmiddlewaretoken']").value
+            );
             const response = await fetch(`${CONVERSION_URL}`, {
                 method: "POST",
                 body: formData,
@@ -27,15 +30,19 @@ export class ServerURLConverter {
             }
     
             const json = await response.json();
-            return json[this.responseUrlsKey];
+            return json[this.propertyNameForConvertedUrls];
         } catch (error) {
             console.error(error);
         }
         return [];
     }
     
-    swapAnchorElementUrlsWithConvertedUrlInPage(encodedOriginalServerUrl, originalServerUrl, convertedUrl, convertedUrlText) {
-        const anchorContainerElements = document.querySelectorAll(`.${this.serverUrlElementClassSelector}[data-metadata-server-url="${encodedOriginalServerUrl}"]`);
+    swapAnchorElementUrlsWithConvertedUrlInPage(
+        encodedOriginalServerUrl,
+        originalServerUrl,
+        convertedUrl,
+        convertedUrlText) {
+        const anchorContainerElements = document.querySelectorAll(`${this.serverUrlElementSelector}[data-metadata-server-url="${encodedOriginalServerUrl}"]`);
         for (const e of anchorContainerElements) {
             const metadataUrlTextElement = e.querySelector(".metadata-server-url-text");
             metadataUrlTextElement.textContent = convertedUrlText;
@@ -59,7 +66,7 @@ export class ServerURLConverter {
                 urlMapping.converted_url_text
             );
         }
-        const remainingElements = document.querySelectorAll(`.${this.serverUrlElementClassSelector}[data-metadata-server-url].loading`);
+        const remainingElements = document.querySelectorAll(`${this.serverUrlElementSelector}[data-metadata-server-url].loading`);
         for (const e of remainingElements) {
             this.showElementWithConvertedUrlInPage(e);
         }

@@ -4,10 +4,10 @@ import {
 
 
 window.addEventListener("load", async () => {
-    const serverUrlConverter = new ServerURLConverter(
-        "resource-server-url",
-        "resource-server-urls",
-        "resource_urls"
-    );
+    const serverUrlConverter = new ServerURLConverter({
+        serverUrlElementSelector: ".resource-server-url",
+        requestParamName: "resource-server-urls",
+        propertyNameForConvertedUrls: "resource_urls"
+    });
     await serverUrlConverter.convertServerUrlsToDetailPageUrlsAndDisplayInPage();
 });
