@@ -127,7 +127,7 @@ def results(request):
             )
             ]
     )
-    print('results', results)
+
     return render(request, 'workflow_search/results.html', {
         'title': 'Workflow Search by Content Results',
         'results': results,
