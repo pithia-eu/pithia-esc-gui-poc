@@ -128,8 +128,47 @@ def results(request):
             ]
     )
 
+    # Display parameters user inputted in case they want to refine for the next search.
+    parameters = dict()
+    if len(request.session.get('wf_features_of_interest', [])):
+        parameters.update({
+            'Features of Interest': [
+                f'{FEATURE_OF_INTEREST_URL_BASE}/{local_id}'
+                for local_id in request.session.get('wf_features_of_interest', [])
+            ],
+        })
+    if len(request.session.get('wf_computation_types', [])):
+        parameters.update({
+            'Computation Types': [
+                f'{COMPUTATION_TYPE_URL_BASE}/{local_id}'
+                for local_id in request.session.get('wf_computation_types', [])
+            ],
+        })
+    if len(request.session.get('wf_instrument_types', [])):
+        parameters.update({
+            'Instrument Types': [
+                f'{INSTRUMENT_TYPE_URL_BASE}/{local_id}'
+                for local_id in request.session.get('wf_instrument_types', [])
+            ],
+        })
+    if len(request.session.get('wf_annotation_types', [])):
+        parameters.update({
+            'Annotation Types': [
+                f'{ANNOTATION_TYPE_URL_BASE}/{local_id}'
+                for local_id in request.session.get('wf_annotation_types', [])
+            ],
+        })
+    if len(request.session.get('wf_observed_properties', [])):
+        parameters.update({
+            'Observed Properties': [
+                f'{OBSERVED_PROPERTY_URL_BASE}/{local_id}'
+                for local_id in request.session.get('wf_observed_properties', [])
+            ],
+        })
+
     return render(request, 'workflow_search/results.html', {
         'title': 'Workflow Search by Content Results',
+        'parameters': parameters,
         'results': results,
         'search_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
     })

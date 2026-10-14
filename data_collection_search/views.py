@@ -94,15 +94,39 @@ def index(request):
 
 def results(request):
     data_collections = get_data_collections_for_search(
-        annotation_type_urls=[f'{ANNOTATION_TYPE_URL_BASE}/{annotation_type_localid}' for annotation_type_localid in request.session.get('annotation_types', [])],
-        computation_type_urls=[f'{COMPUTATION_TYPE_URL_BASE}/{computation_type_localid}' for computation_type_localid in request.session.get('computation_types', [])],
-        feature_of_interest_urls=[f'{FEATURE_OF_INTEREST_URL_BASE}/{feature_of_interest_localid}' for feature_of_interest_localid in request.session.get('features_of_interest', [])],
-        instrument_type_urls=[f'{INSTRUMENT_TYPE_URL_BASE}/{instrument_type_localid}' for instrument_type_localid in request.session.get('instrument_types', [])],
-        observed_property_urls=[f'{OBSERVED_PROPERTY_URL_BASE}/{op_localid}' for op_localid in request.session.get('observed_properties', [])]
+        annotation_type_urls=[f'{ANNOTATION_TYPE_URL_BASE}/{local_id}' for local_id in request.session.get('annotation_types', [])],
+        computation_type_urls=[f'{COMPUTATION_TYPE_URL_BASE}/{local_id}' for local_id in request.session.get('computation_types', [])],
+        feature_of_interest_urls=[f'{FEATURE_OF_INTEREST_URL_BASE}/{local_id}' for local_id in request.session.get('features_of_interest', [])],
+        instrument_type_urls=[f'{INSTRUMENT_TYPE_URL_BASE}/{local_id}' for local_id in request.session.get('instrument_types', [])],
+        observed_property_urls=[f'{OBSERVED_PROPERTY_URL_BASE}/{local_id}' for local_id in request.session.get('observed_properties', [])]
     )
+
+    # Display parameters user inputted in case they want to refine for the next search.
+    parameters = dict()
+    if len(request.session.get('features_of_interest', [])):
+        parameters.update({
+            'Features of Interest': [f'{FEATURE_OF_INTEREST_URL_BASE}/{local_id}' for local_id in request.session.get('features_of_interest', [])],
+        })
+    if len(request.session.get('computation_types', [])):
+        parameters.update({
+            'Computation Types': [f'{COMPUTATION_TYPE_URL_BASE}/{local_id}' for local_id in request.session.get('computation_types', [])],
+        })
+    if len(request.session.get('instrument_types', [])):
+        parameters.update({
+            'Instrument Types': [f'{INSTRUMENT_TYPE_URL_BASE}/{local_id}' for local_id in request.session.get('instrument_types', [])],
+        })
+    if len(request.session.get('annotation_types', [])):
+        parameters.update({
+            'Annotation Types': [f'{ANNOTATION_TYPE_URL_BASE}/{local_id}' for local_id in request.session.get('annotation_types', [])],
+        })
+    if len(request.session.get('observed_properties', [])):
+        parameters.update({
+            'Observed Properties': [f'{OBSERVED_PROPERTY_URL_BASE}/{local_id}' for local_id in request.session.get('observed_properties', [])],
+        })
 
     return render(request, 'data_collection_search/results.html', {
         'title': 'Data Collection Search by Content Results',
+        'parameters': parameters,
         'results': data_collections,
         'search_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
     })
