@@ -21,26 +21,7 @@ from pithiaesc.settings import BASE_DIR
 logger = logging.getLogger(__name__)
 
 PITHIA = Namespace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/')
-
-
-def get_object_names_from_triple(triple):
-    s, p, o = triple
-    if 'phenomenon' in o:
-        return o.replace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/phenomenon/', 'phenomenon')
-    if 'measurand' in o:
-        return o.replace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/measurand/', 'measurand')
-    if 'featureOfInterest' in o:
-        return o.replace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/featureOfInterest/', 'featureOfInterest')
-
-
-def map_ontology_components_to_observed_property_dictionary(op_uri, op_dict, g):
-    op_phenomenons = list(map(get_object_names_from_triple, g.triples((op_uri, PITHIA.phenomenon, None))))
-    op_measurands = list(map(get_object_names_from_triple, g.triples((op_uri, PITHIA.measurand, None))))
-    op_featuresOfInterest = list(map(get_object_names_from_triple, g.triples((op_uri, PITHIA.featureOfInterest, None))))
-    op_dict['phenomenons'] = op_phenomenons
-    op_dict['measurands'] = op_measurands
-    op_dict['featuresOfInterest'] = op_featuresOfInterest
-    return op_dict
+    
 
 def get_rdf_text_remotely(ontology_component):
     ontology_component_url = f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/{ontology_component}/'
@@ -291,12 +272,6 @@ class ObservedPropertyMetadataService(OntologyCategoryMetadataService):
         )))
 
 
-def get_xml_of_ontology_category_terms_remotely(ontology_category):
-    ontology_component_url = f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/{ontology_category}/'
-    ontology_response = get(ontology_component_url)
-    return ontology_response.text
-
-
 def get_xml_of_ontology_category_terms_locally(ontology_category):
     try:
         local_ontology_files_path = os.path.join(BASE_DIR, 'ontology', 'local_ontology_files')
@@ -345,39 +320,23 @@ def get_graph_of_pithia_ontology_component(ontology_component):
     return g.parse(data=ontology_text, format='application/rdf+xml')
 
 
-def get_observed_property_hrefs_from_features_of_interest(features_of_interest):
-    op_hrefs = []
-    g = get_graph_of_pithia_ontology_component('observedProperty')
-    for s, p, o in g.triples((None, PITHIA.featureOfInterest, None)):
-        if any(x in str(o) for x in features_of_interest):
-            op_hrefs.append(str(s))
-    return op_hrefs
-
-def get_observed_property_urls_from_feature_of_interest_urls(feature_of_interest_urls):
-    op_urls = []
-    g = get_graph_of_pithia_ontology_component('observedProperty')
-    for s, p, o in g.triples((None, PITHIA.featureOfInterest, None)):
-        if any(x in str(o) for x in feature_of_interest_urls):
-            op_urls.append(str(s))
-    return op_urls
-
 def get_phenomenon_ids_from_observed_property_id(observed_property_id, g, phenomenon_ids):
     for s, p, o in g.triples((URIRef(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/observedProperty/{observed_property_id}'), PITHIA.phenomenon, None)):
         phenomenon_ids.append(o.split('/')[-1])
     return phenomenon_ids
+
 
 def get_measurand_ids_from_observed_property_id(observed_property_id, g, measurand_ids):
     for s, p, o in g.triples((URIRef(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/observedProperty/{observed_property_id}'), PITHIA.measurand, None)):
         measurand_ids.append(o.split('/')[-1])
     return measurand_ids
 
+
 def get_parent_node_ids_of_node_id(node_id, ontology_component, parent_node_ids, g):
     for s, p, o in g.triples((URIRef(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/{ontology_component}/{node_id}'), SKOS.broader, None)):
         parent_node_ids.append(o.split('/')[-1])
     return parent_node_ids
 
-def get_localid_from_ontology_node_iri(ontology_node_iri):
-    return ontology_node_iri.split('/')[-1]
 
 def get_pref_label_from_ontology_node_iri(ontology_node_iri, g=None):
     if g is None:
@@ -388,6 +347,7 @@ def get_pref_label_from_ontology_node_iri(ontology_node_iri, g=None):
         return None
     return str(pref_label)
 
+
 def get_skos_properties_from_ontology_node(iri, skos_properties, g=None):
     if not g:
         g = get_graph_of_pithia_ontology_component(iri.split('/')[-2])
@@ -395,6 +355,7 @@ def get_skos_properties_from_ontology_node(iri, skos_properties, g=None):
         sp: str(g.value(URIRef(iri), SKOS[sp]))
     for sp in skos_properties}
     return property_dict
+
 
 # Credit for get_path: https://stackoverflow.com/a/22171182
 def getpath(nested_dict, value, prepath=()):
@@ -406,6 +367,7 @@ def getpath(nested_dict, value, prepath=()):
             p = getpath(v, value, path) # recursive call
             if p is not None:
                 return p
+
 
 # Credit for gen_dict_extract: https://stackoverflow.com/a/29652561
 def gen_dict_extract(key, var):
@@ -421,11 +383,13 @@ def gen_dict_extract(key, var):
                     for result in gen_dict_extract(key, d):
                         yield result
 
+
 def get_nested_phenomenons_in_observed_property(observed_property):
     all_phenomenons_of_observed_property = list(gen_dict_extract('phenomenon', observed_property))
     # Credit for list flattening code: https://stackoverflow.com/a/952952
     all_phenomenons_of_observed_property_flattened = [item for sublist in all_phenomenons_of_observed_property for item in sublist]
     return all_phenomenons_of_observed_property_flattened
+
 
 def categorise_observed_property_dict_by_top_level_phenomenons(observed_property_dict):
     categorised_observed_property_dict = {}
@@ -460,6 +424,7 @@ def categorise_observed_property_dict_by_top_level_phenomenons(observed_property
     if 'None' in categorised_observed_property_dict and len(categorised_observed_property_dict['None']) == 0:
         categorised_observed_property_dict.pop('None', None)
     return categorised_observed_property_dict
+
 
 def create_dictionary_from_pithia_ontology_component(
     ontology_component,
