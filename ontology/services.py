@@ -10,7 +10,7 @@ from rdflib import (
 from rdflib.namespace._SKOS import SKOS
 from rdflib.resource import Resource
 
-from .xml_metadata_utils import (
+from .namespaces import (
     NamespacePrefix as PithiaOntologyNamespacePrefix,
     ontology_namespaces,
 )

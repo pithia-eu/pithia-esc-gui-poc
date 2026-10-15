@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from lxml import etree
 
 from .services import get_ontology_category_terms_in_xml_format
-from .xml_metadata_utils import Namespace, NamespacePrefix
+from .namespaces import Namespace, NamespacePrefix
 
 from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
 
