@@ -20,12 +20,12 @@
 {% include 'browse/detail/sections/website_section.html' %}
 {% endblock post_last_modified_date_content %}
 
-{# Appears before the responsible parties section #}
-{% block pre_responsible_parties_content %}
+{# Appears after the last modified date, before the description #}
+{% block pre_description_content %}
 {% if resource.properties.sub_projects %}
 <section class="resource-detail-section">
     <details>
-        <summary class="summary-marker-custom">
+        <summary class="summary-hover">
             <h2 id="sub-projects" class="fs-6">
                 Sub-projects
                 <span class="text-body-secondary">({{ resource.properties.sub_projects|length }})</span>
@@ -43,10 +43,6 @@
     </details>
 </section>
 {% endif %}
-{% endblock pre_responsible_parties_content %}
-
-{# Appears after the last modified date, before the description #}
-{% block pre_description_content %}
 {% if resource.abstract.strip|length > 0 %}
 <section class="resource-detail-section">
     <h2 id="abstract" class="mb-2">Abstract</h2>

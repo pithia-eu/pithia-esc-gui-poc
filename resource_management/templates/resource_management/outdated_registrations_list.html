@@ -5,7 +5,7 @@
     {% for outdated_registration_id, outdated_registration_data in outdated_registrations.items %}
     <li class="list-group-item bg-transparent p-0">
         <details>
-            <summary class="summary-marker-custom summary-marker-custom-sm summary-marker-custom-baseline py-2 {% if forloop.first %}pt-2{% endif %} mb-0">
+            <summary class="summary-marker-baseline py-2 {% if forloop.first %}pt-2{% endif %} mb-0">
                 <div class="d-inline-flex flex-column row-gap-1">
                     {{ outdated_registration_data.registration.name }}
                     <span class="fs-sm-1 text-body-secondary line-clamp line-clamp-2 text-break w-100">{{ outdated_registration_id }}</span>

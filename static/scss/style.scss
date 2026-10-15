@@ -289,14 +289,17 @@ a.link-plain-by-default:focus-visible,
 }
 
 a.link-underline-by-default,
-.btn-link.link-underline-by-default {
+.btn-link.link-underline-by-default,
+span.link-underline-by-default {
     text-decoration: underline !important;
 }
 
 a.link-underline-by-default:hover,
 a.link-underline-by-default:focus-visible,
 .btn-link.link-underline-by-default:hover,
-.btn-link.link-underline-by-default:focus-visible {
+.btn-link.link-underline-by-default:focus-visible,
+span.link-underline-by-default:hover,
+span.link-underline-by-default:focus-visible {
     text-decoration: none !important;
 }
 
@@ -360,53 +363,57 @@ a.external-link:not(a.icon-link)::after {
     background-color: var(--pithia-blue);
 }
 
-/* Custom summary marker */
-summary.summary-marker-custom {
+/* Disable default summary marker for more consistency across browsers */
+summary {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
+    column-gap: 0.5em;
 }
 
-summary.summary-marker-custom-baseline {
-    align-items: baseline;
-}
-
-summary.summary-marker-custom.summary-marker-custom-sm::before {
-    font-size: 0.75rem;
-    transform: translateY(-0.125rem);
-}
-
-summary.summary-marker-custom::-webkit-details-marker,
-summary.summary-marker-custom::marker {
+summary::-webkit-details-marker,
+summary::marker {
     content: none;
     display: none;
-    color: #fff;
+    color: transparent;
     z-index: -1;
 }
 
-summary.summary-marker-custom::before {
-    content: "\25B6\FE0E";
+summary::before {
+    content: "▸ ";
+    font-size: 1.5em;
     font-family:
         -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
         sans-serif, "Segoe UI Symbol";
-    margin: 0 1em 0 0;
+    line-height: 0;
+    transform: translateY(-0.1em);
 }
 
-details[open] > summary.summary-marker-custom::before {
-    content: "▼";
+details[open] > summary::before {
+    content: "▾ ";
 }
 
-details[open] > summary.summary-marker-custom {
-    margin-bottom: 1rem;
-}
-
-details[open] > summary.summary-marker-custom-highlight {
+details[open] > summary.summary-highlight {
     background-color: var(--bs-tertiary-bg);
 }
 
-summary.summary-marker-custom h2,
-summary.summary-marker-custom h3 {
-    margin-bottom: 0;
+summary.summary-marker-lg::before {
+    font-size: 2em;
+    padding-inline-end: 0.25em;
+    transform: translateY(-0.25em);
+}
+
+summary.summary-hover:hover,
+summary.summary-hover:focus-visible {
+    background-color: var(--bs-tertiary-bg);
+}
+
+summary.summary-marker-baseline {
+    align-items: baseline;
+}
+
+summary.summary-marker-baseline::before {
+    transform: translateY(0);
 }
 
 @counter-style paren-lower-alpha {
@@ -1002,91 +1009,9 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
     padding-block-end: calc(var(--resource-detail-section-padding) / 2);
 }
 
-.resource-detail-section > details:only-child summary.summary-marker-custom {
+.resource-detail-section > details:only-child > summary {
     padding-block-start: var(--resource-detail-section-padding);
     padding-block-end: var(--resource-detail-section-padding);
-}
-
-.resource-detail-section
-    > details:only-child
-    summary.summary-marker-custom:hover,
-.resource-detail-section
-    > details:only-child
-    summary.summary-marker-custom:focus-visible,
-.resource-detail-section
-    details[name="details-capabilities"]
-    summary.summary-marker-custom:hover,
-.resource-detail-section
-    details[name="details-capabilities"]
-    summary.summary-marker-custom:focus-visible,
-.resource-detail-section
-    details[name="details-capability-links"]
-    summary.summary-marker-custom:hover,
-.resource-detail-section
-    details[name="details-capability-links"]
-    summary.summary-marker-custom:focus-visible,
-.resource-detail-section
-    details[name="details-permissions"]
-    summary.summary-marker-custom:hover,
-.resource-detail-section
-    details[name="details-permissions"]
-    summary.summary-marker-custom:focus-visible {
-    background-color: var(--bs-tertiary-bg);
-}
-
-.resource-detail-section
-    > details:only-child[open]
-    > summary.summary-marker-custom {
-    margin-bottom: 0;
-}
-
-.resource-detail-section
-    details[name="details-permissions"][open]
-    summary.summary-marker-custom {
-    margin-bottom: 0;
-}
-
-.resource-detail-section
-    details[name="details-permissions"]
-    .permission-definition {
-    padding-bottom: 1.5rem;
-}
-
-.resource-detail-section
-    li:last-of-type
-    details[name="details-permissions"]
-    .permission-definition {
-    padding-bottom: 0;
-}
-
-.resource-detail-section
-    details.details-capabilities-top
-    > summary
-    .link-underline-by-default,
-.resource-detail-section
-    details.details-capability-links-top
-    > summary
-    .link-underline-by-default {
-    text-decoration: underline;
-}
-
-.resource-detail-section
-    details.details-capabilities-top
-    > summary:hover
-    .link-underline-by-default,
-.resource-detail-section
-    details.details-capabilities-top
-    > summary:focus-visible
-    .link-underline-by-default,
-.resource-detail-section
-    details.details-capability-links-top
-    > summary:hover
-    .link-underline-by-default,
-.resource-detail-section
-    details.details-capability-links-top
-    > summary:focus-visible
-    .link-underline-by-default {
-    text-decoration: none;
 }
 
 .resource-detail-section details.details-capabilities-top[open] > summary .open,
@@ -1143,25 +1068,6 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
     > summary
     > div::after {
     content: "Hide details";
-}
-
-.resource-detail-section
-    > details[name="details-capabilities"]
-    > summary.summary-marker-custom,
-.resource-detail-section
-    > details[name="details-capability-links"]
-    > summary.summary-marker-custom {
-    border-radius: var(--bs-border-radius);
-}
-
-.resource-detail-section
-    > details[name="details-capabilities"][open]
-    > summary.summary-marker-custom,
-.resource-detail-section
-    > details[name="details-capability-links"][open]
-    > summary.summary-marker-custom {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
 }
 
 .resource-detail-section
@@ -1441,23 +1347,6 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-}
-
-.resource-detail-top-section-extra-content > dl > div {
-    font-size: var(--fs-sm-2);
-}
-
-details[name="details-permissions"] summary > span::after {
-    font-size: var(--fs-sm-1);
-    color: var(--bs-secondary-color);
-}
-
-details[name="details-permissions"]:not([open]) summary > span::after {
-    content: "Show full description";
-}
-
-details[name="details-permissions"][open] summary > span::after {
-    content: "Hide full description";
 }
 
 details.details-documentation summary > span::after {
@@ -2039,10 +1928,6 @@ ul.tree ul {
 
 .ontology-browser-terms ul.tree ul li:not(li:has(> details)) {
     padding-left: calc((var(--list-item-left-padding) * 2) + 0.4em);
-}
-
-.ontology-browser-terms .summary-marker-custom::before {
-    margin: 0 var(--list-item-left-padding) 0 0;
 }
 
 .ontology-browser-terms ul.tree li:last-child hr,

@@ -74,7 +74,7 @@
         {% if number_of_registrations_referencing_ontology_term > 0 %}
         <section class="resource-detail-section">
             <details>
-                <summary class="summary-marker-custom summary-marker-custom-baseline">
+                <summary class="summary-hover summary-marker-baseline">
                     <h2>Registrations Using this Term ({{ number_of_registrations_referencing_ontology_term }})</h2>
                 </summary>
                 {% for category, registrations in registrations_referencing_ontology_term.items %}
@@ -109,7 +109,7 @@
         {% if ontology_term_metadata.urls_of_narrower_terms %}
         <section class="resource-detail-aside-section">
             <details open>
-                <summary class="summary-marker-custom summary-marker-custom-sm summary-marker-custom-baseline">
+                <summary class="summary-marker-baseline mb-3">
                     {% include 'ontology/detail/narrower_terms_heading.html' %}
                 </summary>
                 {% with ontology_browser_urls=ontology_term_metadata.urls_of_narrower_terms %}
@@ -122,7 +122,7 @@
         {% if ontology_term_metadata.urls_of_broader_terms %}
         <section class="resource-detail-aside-section">
             <details open>
-                <summary class="summary-marker-custom summary-marker-custom-sm summary-marker-custom-baseline">
+                <summary class="summary-marker-baseline mb-3">
                     {% include 'ontology/detail/broader_terms_heading.html' %}
                 </summary>
                 {% with ontology_browser_urls=ontology_term_metadata.urls_of_broader_terms %}
