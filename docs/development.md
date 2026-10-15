@@ -1,63 +1,46 @@
 # Development Setup Guide
 
 ## Prerequisites
-- Python 3.10 or later
-- PostgreSQL - download packages/installers from the [PostgreSQL Downloads](https://www.postgresql.org/download/) page. The [PgAdmin 4 client](https://www.pgadmin.org/download/) is an easy way to interact with the PostgreSQL database if you are not comfortable with using the CLI.
+- Python 3.10
+- npm package manager
+- Dart Sass
+- PostgreSQL
 
-## Change to the project directory
-Download the code and `cd` into the project's root folder from the command line.
-
-## Install Python dependencies
-```
-pip3 install -r requirements.txt --no-deps
-```
-
-## Create the .env file
-```
+## Quickstart
+```bash
+git clone https://github.com/pithia-eu/pithia-esc-gui-poc.git pithiaesc
 cd pithiaesc
-sudo touch .env
+# Create and activate a virtual environment
+python3 -m venv venv
+source venv/bin/activate # or source ./venv.sh
+# Install project requirements
+pip install -r requirements.txt
+# Install Bootstrap files
+npm install
+# Set up environment variables
+cp .env_example pithiaesc/.env
 ```
 
-## Set up the .env file variables
-The project uses environment variables which are stored in a `.env` file in the `/pithiaesc` folder. Use the following example .env file contents as a template to help fill out your .env file:
-```
-SECRET_KEY=escdevsecretkey
-
-DATABASE_NAME=esc-dev
-DATABASE_ENGINE=django.db.backends.postgresql
-DATABASE_HOST=127.0.0.1
-DATABASE_PORT=5432
-
-DATABASE_READ_USER=escuser-r
-DATABASE_WRITE_USER=escuser-rw
-DATABASE_READ_PASSWORD=password123
-DATABASE_WRITE_PASSWORD=password123
-
-DJANGO_RW_DATABASE_NAME=default
-```
-**Note:** This guide does not provide instructions for setting up the Handle features for development, so the environment variables for those features have been excluded here.
-
-## Set up the PostgreSQL database
-Create the development database and database users with the same details you entered in your .env file. Next, create all the project database tables by running the following in the command line:
-```
+## PostgreSQL database setup
+- Create a development database and users with the details specified in the `.env` file (e.g., using pgAdmin).
+- Next, generate the database structure by running the following command:
+```bash
 python3 manage.py migrate
 ```
 
-## Verify the project runs
-To test the project runs enter the following in the command line:
+## Run the project locally
+To run the project, enter the following:
+```bash
+python3 manage.py runserver # or ./run.sh
 ```
-python3 manage.py runserver
-```
-Upon entering this, the command line should produce output similar to the following:
-```
+which should print out something similar to below:
+```bash
 System check identified no issues (0 silenced).
-January 18, 2024 - 17:18:37
-Django version 4.0.5, using settings 'pithiaesc.settings'
+October 15, 2026 - 11:50:53
+Django version 5.2.18, using settings 'pithiaesc.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
-All the e-Science Centre's features should be now be available, with the exception of the Handle features.
-
-To view it in your browser, enter [http://localhost:8000](http://localhost:8000) in your address bar.
+The project should be running at [http://localhost:8000](http://localhost:8000) (with the exception of Handle features, and currently, user authentication).
 
 
