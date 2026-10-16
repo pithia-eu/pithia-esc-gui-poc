@@ -21,13 +21,15 @@
             </div>
             {% else %}
             <details>
-                <summary class="summary-service-functions fw-medium">
-                    {% with value=service_functions.0 %}
-                    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-                    {% endwith %} and
-                    {% with num_remaining_service_functions=service_functions|length|add:-1 %}
-                    {{ num_remaining_service_functions }} other service function{% if num_remaining_service_functions > 1 %}s{% endif %}
-                    {% endwith %}
+                <summary class="summary-marker-baseline summary-service-functions fw-medium">
+                    <span>
+                        {% with value=service_functions.0 %}
+                        {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+                        {% endwith %} and
+                        {% with num_remaining_service_functions=service_functions|length|add:-1 %}
+                        {{ num_remaining_service_functions }} other service function{% if num_remaining_service_functions > 1 %}s{% endif %}
+                        {% endwith %}
+                    </span>
                 </summary>
                 <ul class="fs-sm-2 list-group list-group-flush pt-2">
                     {% for service_function_url in service_functions %}
