@@ -34,10 +34,7 @@ def get_hours_of_service_from_form(form_cleaned_data):
         time_end_formatted = _format_time_to_12_hour_format(time_end_parsed)
         return f'{time_start_formatted}-{time_end_formatted}'
     except BaseException:
-        logger.warning('''
-            ORGANISATION/INDIVIDUAL WIZARD:
-            Hours of service not processed (form data is blank or malformed). Returning a blank string.
-        ''')
+        logger.warning('ORGANISATION/INDIVIDUAL WIZARD: Hours of service not processed (form data is blank or malformed). Returning a blank string.')
         return ''
 
 def get_phone_field_string_value(form_cleaned_data):
