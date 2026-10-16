@@ -1384,12 +1384,25 @@ details.details-documentation[open] summary > span::after {
     font-size: 1rem !important;
 }
 
+.resource-detail-section details[name="details-collection-results"] table li:not(:last-child) .metadata-server-url::after,
+ul.service-function-list > li:not(:last-child) .metadata-server-url.loading::after,
+ul.service-function-list > li:not(:last-child) .metadata-server-url-text::after {
+    content: ", ";
+}
+
+ul.service-function-list > li .metadata-server-url.loading::after,
+ul.service-function-list > li .metadata-server-url-text::after {
+    display: none;
+}
+
 ul.service-function-list > li:not(:first-child) {
     display: none;
 }
 
-ul.service-function-list.show-all > li {
-    display: list-item;
+ul.service-function-list.show-all > li,
+ul.service-function-list.show-all > li .metadata-server-url.loading::after,
+ul.service-function-list.show-all > li .metadata-server-url-text::after {
+    display: inline;
 }
 
 section .keyword-list {

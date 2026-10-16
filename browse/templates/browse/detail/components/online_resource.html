@@ -16,7 +16,7 @@
         {% with service_function_list_id='service-function-list-'|add:forloop_counter_str %}
         <ul
             id="{{ service_function_list_id }}"
-            class="d-inline-flex flex-column gap-2 fs-sm-2 list-unstyled service-function-list">
+            class="d-inline list-unstyled service-function-list fs-sm-2">
             {% for service_function in service_functions %}
             <li>
                 {% with value=service_function %}
@@ -74,9 +74,9 @@
                 <tr>
                     <th scope="row">Data Formats</th>
                     <td>
-                        <ul class="d-flex flex-column row-gap-1 list-unstyled">
+                        <ul class="d-inline list-unstyled">
                             {% for data_format in online_resource.data_format|wrap_in_list_if_dict %}
-                            <li>
+                            <li class="d-inline">
                                 {% with value=data_format %}
                                 {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
                                 {% endwith %}
@@ -90,9 +90,9 @@
                 <tr>
                     <th scope="row">Service Functions</th>
                     <td>
-                        <ul class="d-flex flex-column row-gap-1 list-unstyled">
+                        <ul class="d-inline list-unstyled">
                             {% for service_function_url in online_resource.service_functions %}
-                            <li>
+                            <li class="d-inline">
                                 {% with value=service_function_url %}
                                 {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
                                 {% endwith %}
