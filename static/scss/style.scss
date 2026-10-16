@@ -1177,11 +1177,6 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
     border-top-right-radius: 0;
 }
 
-.online-resource-list li > div:has(> details:not([open])) .or-service-function,
-.online-resource-list li > div:has(> details:not([open])) > details > summary {
-    color: var(--bs-secondary-color);
-}
-
 #further-information-section .resource-detail-section:first-child {
     border-top: none;
     padding-top: var(--resource-detail-section-padding);
@@ -1389,29 +1384,12 @@ details.details-documentation[open] summary > span::after {
     font-size: 1rem !important;
 }
 
-.online-resource-list > li.api {
-    border-color: var(--bs-border-color);
+ul.service-function-list > li:not(:first-child) {
+    display: none;
 }
 
-.online-resource-list .service-function-list,
-.online-resource-list .service-function-list li,
-.online-resource-list .service-function-list .metadata-server-url-text {
-    max-width: 100%;
-}
-
-.online-resource-list .service-function-list .badge {
-    white-space: wrap;
-    text-align: left;
-    line-height: 1.2;
-}
-
-.online-resource-list .online-resource-description p {
-    font-size: 1rem !important;
-    color: var(--bs-secondary-text-emphasis);
-}
-
-.online-resource-list .summary-service-functions .loading {
-    margin-inline-end: 0.5em;
+ul.service-function-list.show-all > li {
+    display: list-item;
 }
 
 section .keyword-list {

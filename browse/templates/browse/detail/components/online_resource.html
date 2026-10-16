@@ -1,6 +1,6 @@
 {% load project_tags %}
 <div class="d-flex flex-column align-items-start row-gap-3">
-    <div class="d-flex flex-column row-gap-2">
+    <div class="d-flex flex-column align-items-start row-gap-2">
         {% if online_resource.linkage|is_email %}
         {% with online_resource_url='mailto:'|add:online_resource.linkage %}
         {% include 'browse/detail/components/online_resource_link.html' %}
@@ -12,37 +12,33 @@
         {% endif %}
         {% with service_functions=online_resource.service_functions %}
         {% if service_functions %}
-        <div>
-            {% if service_functions|length == 1 %}
-            <div class="fw-medium">
-                {% with value=service_functions.0 %}
+        {% with forloop_counter_str=forloop.counter|stringformat:'s' %}
+        {% with service_function_list_id='service-function-list-'|add:forloop_counter_str %}
+        <ul
+            id="{{ service_function_list_id }}"
+            class="d-inline-flex flex-column gap-2 fs-sm-2 list-unstyled service-function-list">
+            {% for service_function in service_functions %}
+            <li>
+                {% with value=service_function %}
                 {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
                 {% endwith %}
-            </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% if service_functions|length > 1 %}
+        <button
+            data-for="{{ service_function_list_id }}"
+            class="btn btn-link text-body-secondary align-baseline show-all-btn link-underline-by-default fs-sm-2 lh-1 p-0">
+            {{ service_functions|length|add:-1 }} other
+            {% if service_functions|length|add:-1 == 1 %}
+            service function
             {% else %}
-            <details>
-                <summary class="summary-marker-baseline summary-service-functions fw-medium">
-                    <span>
-                        {% with value=service_functions.0 %}
-                        {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-                        {% endwith %} and
-                        {% with num_remaining_service_functions=service_functions|length|add:-1 %}
-                        {{ num_remaining_service_functions }} other service function{% if num_remaining_service_functions > 1 %}s{% endif %}
-                        {% endwith %}
-                    </span>
-                </summary>
-                <ul class="fs-sm-2 list-group list-group-flush pt-2">
-                    {% for service_function_url in service_functions %}
-                    <li class="list-group-item bg-transparent">
-                        {% with value=service_function_url %}
-                        {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-                        {% endwith %}
-                    </li>
-                    {% endfor %}
-                </ul>
-            </details>
+            service functions
             {% endif %}
-        </div>
+        </button>
+        {% endif %}
+        {% endwith %}
+        {% endwith %}
         {% endif %}
         {% endwith %}
     </div>
