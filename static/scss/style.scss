@@ -290,7 +290,7 @@ a.link-plain-by-default:focus-visible,
 
 a.link-underline-by-default,
 .btn-link.link-underline-by-default,
-summary span.link-underline-by-default {
+summary span.link-underline-by-default:not(.metadata-server-url-no-link .link-underline-by-default) {
     text-decoration: underline !important;
 }
 
@@ -298,8 +298,8 @@ a.link-underline-by-default:hover,
 a.link-underline-by-default:focus-visible,
 .btn-link.link-underline-by-default:hover,
 .btn-link.link-underline-by-default:focus-visible,
-summary span.link-underline-by-default:hover,
-summary span.link-underline-by-default:focus-visible {
+summary span.link-underline-by-default:not(.metadata-server-url-no-link .link-underline-by-default):hover,
+summary span.link-underline-by-default:not(.metadata-server-url-no-link .link-underline-by-default):focus-visible {
     text-decoration: none !important;
 }
 
