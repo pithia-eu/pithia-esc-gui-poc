@@ -5,7 +5,14 @@
 {# Version #}
 {% if resource.properties.computation_version %}
 <div class="d-flex align-items-center flex-wrap row-gap-1 column-gap-1 fs-sm text-body-secondary pt-3">
-    <h2 id="version" class="d-inline fs-sm text-body-secondary mb-0">Version:</h2>
+    <h2 id="version" class="d-inline fs-sm text-body-secondary mb-0">
+        Version
+        <span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-xs bi bi-dot" viewBox="0 0 16 16">
+                <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+            </svg>
+        </span>
+    </h2>
     <p class="mb-0">{{ resource.properties.computation_version }}</p>
 </div>
 {% endif %}
