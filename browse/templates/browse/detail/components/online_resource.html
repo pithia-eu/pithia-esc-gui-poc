@@ -34,7 +34,7 @@
             {% if service_functions %}
             <ul
                 id="{{ service_function_list_id }}"
-                class="d-inline list-unstyled text-body-secondary service-function-list fs-sm-2">
+                class="d-inline list-unstyled text-body-secondary service-function-list fs-sm">
                 {% for service_function in service_functions %}
                 <li>
                     {% with value=service_function %}
@@ -47,7 +47,7 @@
         {% if service_functions|length > 1 %}
         <button
             data-for="{{ service_function_list_id }}"
-            class="btn btn-link text-body-secondary align-baseline show-all-btn link-underline-by-default fs-sm-2 lh-1 p-0">
+            class="btn btn-link text-body-secondary align-baseline show-all-btn link-underline-by-default fs-sm lh-1 p-0">
             Show {{ service_functions|length|add:-1 }} other
             {% if service_functions|length|add:-1 == 1 %}
             service function
@@ -65,7 +65,7 @@
     {% if online_resource.protocol or online_resource.data_format %}
     <details class="details-interaction-methods mt-2" name="details-collection-results">
         <summary>
-            <span class="fs-sm-2 fw-semibold text-body-secondary">Additional details</span>
+            <span class="fs-sm fw-semibold text-body-secondary">Additional details</span>
         </summary>
         <table class="table mb-4">
             <thead>

@@ -44,7 +44,7 @@
     </div>
     <!-- Definition -->
     {% if node.definition %}
-    <div class="fs-sm-2 text-body-secondary line-clamp line-clamp-5 ontology-term-description">
+    <div class="fs-sm text-body-secondary line-clamp line-clamp-5 ontology-term-description">
         {% autoescape off %}
         {{ node.definition|default:'' }}
         {% endautoescape %}

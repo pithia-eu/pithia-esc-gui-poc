@@ -132,12 +132,12 @@ hgroup p {
 }
 
 /* || Font sizes */
-.fs-sm-1 {
-    font-size: var(--fs-sm-1) !important;
+.fs-xs {
+    font-size: var(--fs-xs) !important;
 }
 
-.fs-sm-2 {
-    font-size: var(--fs-sm-2) !important;
+.fs-sm {
+    font-size: var(--fs-sm) !important;
 }
 
 .fs-base-2 {
@@ -541,7 +541,7 @@ header a.support-link {
 
 header a.support-link,
 header a.logout-link {
-    font-size: var(--fs-sm-1);
+    font-size: var(--fs-xs);
 }
 
 header .dropdown-menu {
@@ -549,11 +549,11 @@ header .dropdown-menu {
 }
 
 header .user-dropdown .dropdown-toggle {
-    font-size: var(--fs-sm-1);
+    font-size: var(--fs-xs);
 }
 
 header .login-link {
-    font-size: var(--fs-sm-1);
+    font-size: var(--fs-xs);
 }
 
 /* || Navbar */
@@ -723,7 +723,7 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
 .list-foi-search button {
     border: var(--bs-border-width) var(--bs-border-style) transparent;
     background-color: var(--bs-tertiary-bg);
-    font-size: var(--fs-sm-2);
+    font-size: var(--fs-sm);
     text-decoration: none;
 }
 
@@ -758,7 +758,7 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
     text-decoration-color: var(--bs-body-color);
     flex-direction: column;
     gap: 0.5rem;
-    font-size: var(--fs-sm-1);
+    font-size: var(--fs-xs);
 }
 
 .card-menu.card-menu-hm a.card:hover,
@@ -915,7 +915,7 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
 
 /* Resource detail page - responsible parties section */
 #responsible-parties-top-section {
-    font-size: var(--fs-sm-2);
+    font-size: var(--fs-sm);
 }
 
 #responsible-parties-top-section dl {
@@ -940,7 +940,7 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
 }
 
 #responsible-parties-top-section dd svg {
-    font-size: var(--fs-sm-2);
+    font-size: var(--fs-sm);
     color: var(--bs-secondary-text-emphasis);
     transform: translateY(0.15em);
     flex-shrink: 0;
@@ -1052,7 +1052,7 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
     content: "Show details";
     display: block;
     color: var(--bs-secondary-color);
-    font-size: var(--fs-sm-2);
+    font-size: var(--fs-sm);
 }
 
 .resource-detail-section
@@ -1162,7 +1162,7 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
 }
 
 #result-times-table {
-    font-size: var(--fs-sm-2);
+    font-size: var(--fs-sm);
 }
 
 .resource-detail-subsection {
@@ -1229,7 +1229,7 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
 .resource-detail-aside {
     display: flex;
     flex-direction: column;
-    font-size: var(--fs-sm-2);
+    font-size: var(--fs-sm);
 }
 
 .resource-detail-aside .resource-detail-aside-section {
@@ -1305,7 +1305,7 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
 }
 
 .col-lg-3 .resource-key-details {
-    font-size: var(--fs-sm-1);
+    font-size: var(--fs-xs);
 }
 
 .resource-key-details {
@@ -1345,7 +1345,7 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
 }
 
 details.details-documentation summary > span::after {
-    font-size: var(--fs-sm-1);
+    font-size: var(--fs-xs);
     color: var(--bs-secondary-color);
 }
 
@@ -1607,7 +1607,7 @@ section .keyword-list li:last-child:after {
 
 /* Metadata editor */
 #wizard-toc a {
-    font-size: var(--fs-sm-2);
+    font-size: var(--fs-sm);
     color: var(--bs-body-color);
     text-decoration-color: var(--bs-body-color);
 }
@@ -1736,7 +1736,7 @@ label.required::after {
 }
 
 #search-by-content-accordion legend h4 {
-    font-size: var(--fs-sm-1);
+    font-size: var(--fs-xs);
     color: var(--bs-secondary-color);
     margin-top: 0.15rem;
 }
@@ -2214,7 +2214,7 @@ ul.tree ul {
 
     .resource-detail-aside .resource-detail-aside-section,
     .resource-detail-aside #related-aside-section li {
-        font-size: var(--fs-sm-2);
+        font-size: var(--fs-sm);
     }
 
     #further-information-section
@@ -2272,7 +2272,7 @@ ul.tree ul {
     }
 
     .breadcrumb {
-        font-size: var(--fs-sm-2);
+        font-size: var(--fs-sm);
     }
 
     .breadcrumb-item + .breadcrumb-item {
@@ -2392,7 +2392,7 @@ ul.tree ul {
     .navbar .dropdown-menu:not(.user-dropdown .dropdown-menu) {
         background: transparent;
         border: none;
-        font-size: var(--fs-sm-1);
+        font-size: var(--fs-xs);
         padding-top: 0;
     }
 
@@ -2601,8 +2601,8 @@ ul.tree ul {
     --resource-registration-upload-section-padding: 2rem;
 
     /* Custom font sizes */
-    --fs-sm-1: 0.875rem;
-    --fs-sm-2: 0.925rem;
+    --fs-xs: 0.875rem;
+    --fs-sm: 0.925rem;
     --fs-base-2: 1.1rem;
 
     /* Bootstrap font weight variables */

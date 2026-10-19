@@ -15,7 +15,7 @@
                     {% endif %}
                 </h3>
                 {% if documentation.date %}
-                <span class="fs-sm-2 text-body-secondary"> — {{ documentation.date|date:'Y' }}</span>
+                <span class="fs-sm text-body-secondary"> — {{ documentation.date|date:'Y' }}</span>
                 {% endif %}
             </div>
         </span>
@@ -25,7 +25,7 @@
         <p class="text-body-secondary mb-0">{{ documentation.other_documentation_details }}</p>
         {% endif %}
         {% if documentation.date %}
-        <p class="fs-sm-2 fw-medium text-body-secondary mb-0">
+        <p class="fs-sm fw-medium text-body-secondary mb-0">
             {% if documentation.date_type|cut:' '|lower == 'publicationdate' %}
             Published {{ documentation.date|date:'SHORT_DATE_FORMAT' }}
             {% else %}
@@ -34,8 +34,8 @@
         </p>
         {% endif %}
         {% if documentation.identifier %}
-        <div class="fs-sm-2">
-            <h4 class="d-inline fs-sm-2 bg-body-secondary rounded p-1 px-2 mb-1">
+        <div class="fs-sm">
+            <h4 class="d-inline fs-sm bg-body-secondary rounded p-1 px-2 mb-1">
                 {% if 'doi' in documentation.identifier|lower %}DOI{% else %}Identifier{% endif %}</h4>
             <span class="text-wrap text-break">{{ documentation.identifier|urlize }}</span>
         </div>

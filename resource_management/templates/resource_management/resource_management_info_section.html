@@ -1,6 +1,6 @@
 {% load project_tags %}
-<div class="fs-sm-1 text-body-secondary bg-body-tertiary rounded p-3">
-    <h2 class="fs-sm-1 text-secondary-emphasis">{{ resource_type_plural.title }}</h2>
+<div class="fs-xs text-body-secondary bg-body-tertiary rounded p-3">
+    <h2 class="fs-xs text-secondary-emphasis">{{ resource_type_plural.title }}</h2>
     {% if description %}
     <div class="mb-3">
         {% with description_urlized=description|urlize %}
@@ -14,7 +14,7 @@
     <div class="border-top pt-3 mt-3">
         <p class="fw-semibold mb-0">
             <button
-                class="fs-sm-1 align-items-start btn btn-link btn-show-outdated-regs-dialog icon-link text-body text-start p-0"
+                class="fs-xs align-items-start btn btn-link btn-show-outdated-regs-dialog icon-link text-body text-start p-0"
                 type="button">
                 <span class="spinner-grow spinner-grow-sm text-body-tertiary mt-1" role="status">
                     <span class="visually-hidden">Loading...</span>

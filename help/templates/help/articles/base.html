@@ -15,19 +15,19 @@
         </hgroup>
         {% if functionality %}
         <section class="help-section">
-            <h2 class="fs-sm-2 text-body-secondary">
+            <h2 class="fs-sm text-body-secondary">
                 Covered in this article
             </h2>
             <a
                 href="{{ functionality.1 }}"
-                class="fs-sm-2 link-underline-by-default">{{ functionality.0 }}</a>
+                class="fs-sm link-underline-by-default">{{ functionality.0 }}</a>
         </section>
         {% endif %}
         <section class="help-section">
             <h2>Description</h2>
             {% if hover_text %}
-            <section class="bg-body-tertiary border-start border-2 border-primary fs-sm-2 px-3 my-4">
-                <h3 class="fs-sm-2">In Brief</h3>
+            <section class="bg-body-tertiary border-start border-2 border-primary fs-sm px-3 my-4">
+                <h3 class="fs-sm">In Brief</h3>
                 <p class="text-body-secondary">
                     {% autoescape off %}
                     {{ hover_text }}

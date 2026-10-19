@@ -12,7 +12,7 @@
 {% block inline_post_last_modified_date_content %}
 {% if resource.properties.types %}
 <span>
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-sm-1 bi bi-dot" viewBox="0 0 16 16">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-xs bi bi-dot" viewBox="0 0 16 16">
         <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
     </svg>
 </span>
@@ -29,20 +29,20 @@
 {% if resource.properties.permissions %}
 <ul class="d-flex flex-wrap row-gap-1 column-gap-1 list-unstyled text-body-secondary pt-3 mb-0">
     <li>
-        <h2 class="d-inline fs-sm-2 mb-0">Permissions</h2>
+        <h2 class="d-inline fs-sm mb-0">Permissions</h2>
         <span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-sm-1 bi bi-dot" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-xs bi bi-dot" viewBox="0 0 16 16">
                 <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
             </svg>
         </span>
     </li>
     {% for permission in resource.properties.permissions|wrap_in_list_if_dict %}
     <li>
-        {% with value=permission url_text_extra_classes='fs-sm-2 text-body-secondary' %}
+        {% with value=permission url_text_extra_classes='fs-sm text-body-secondary' %}
         <span class="d-inline-flex align-items-center column-gap-1">
             {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
             {% if not forloop.last %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-sm-1 bi bi-dot" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-xs bi bi-dot" viewBox="0 0 16 16">
                 <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
             </svg>
             {% endif %}
