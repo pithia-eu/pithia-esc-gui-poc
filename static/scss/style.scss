@@ -1387,7 +1387,14 @@ details.details-documentation[open] summary > span::after {
 .resource-detail-section details[name="details-collection-results"] table li:not(:last-child) .metadata-server-url::after,
 ul.service-function-list > li:not(:last-child) .metadata-server-url.loading::after,
 ul.service-function-list > li:not(:last-child) .metadata-server-url-text::after {
-    content: ", ";
+    content: "";
+    mask-image: url("/static/dot.svg");
+    mask-size: cover;
+    background-color: currentColor;
+    width: 0.85em;
+    height: 0.85em;
+    transform: translateY(0.125em);
+    margin-inline-start: 0.25em;
 }
 
 ul.service-function-list > li .metadata-server-url.loading::after,
@@ -1402,7 +1409,7 @@ ul.service-function-list > li:not(:first-child) {
 ul.service-function-list.show-all > li,
 ul.service-function-list.show-all > li .metadata-server-url.loading::after,
 ul.service-function-list.show-all > li .metadata-server-url-text::after {
-    display: inline;
+    display: inline-block;
 }
 
 section .keyword-list {

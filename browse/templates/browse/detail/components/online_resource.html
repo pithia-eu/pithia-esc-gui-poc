@@ -1,35 +1,54 @@
 {% load project_tags %}
 <div class="d-flex flex-column align-items-start row-gap-3">
     <div class="d-flex flex-column align-items-start row-gap-2">
-        {% if online_resource.linkage|is_email %}
-        {% with online_resource_url='mailto:'|add:online_resource.linkage %}
-        {% include 'browse/detail/components/online_resource_link.html' %}
-        {% endwith %}
-        {% else %}
-        {% with online_resource_url=online_resource.linkage %}
-        {% include 'browse/detail/components/online_resource_link.html' %}
-        {% endwith %}
+        {# Online resource - name #}
+        <span class="d-inline-block fw-semibold fs-base-2 bg-body-tertiary border-start border-2 border-primary p-3 mt-3">
+            {{ online_resource.name }}
+        </span>
+        {# Online resource - description #}
+        {% if online_resource.description.strip %}
+        <div>
+            {% with type_id=type|server_url_id|lower line_clamp_number=3 %}
+            {% with text_block_paragraphs=online_resource.description|wrap_in_list_if_dict text_block_id='online-resource-description-'|add:type_id|add:'-'|add:forloop_counter_str expand_btn_type='sm btn-link' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
+            {% include 'utils/expandable_text_block.html' %}
+            {% endwith %}
+            {% endwith %}
+        </div>
         {% endif %}
-        {% with service_functions=online_resource.service_functions %}
-        {% if service_functions %}
+        {# Forloop for the online resources, not the service functions. #}
         {% with forloop_counter_str=forloop.counter|stringformat:'s' %}
         {% with service_function_list_id='service-function-list-'|add:forloop_counter_str %}
-        <ul
-            id="{{ service_function_list_id }}"
-            class="d-inline list-unstyled service-function-list fs-sm-2">
-            {% for service_function in service_functions %}
-            <li>
-                {% with value=service_function %}
-                {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-                {% endwith %}
-            </li>
-            {% endfor %}
-        </ul>
+        {% with service_functions=online_resource.service_functions %}
+        <div class="d-flex flex-column row-gap-1 align-items-start pt-3">
+            {# Online resource - link #}
+            {% if online_resource.linkage|is_email %}
+            {% with online_resource_url='mailto:'|add:online_resource.linkage %}
+            {% include 'browse/detail/components/online_resource_link.html' %}
+            {% endwith %}
+            {% else %}
+            {% with online_resource_url=online_resource.linkage %}
+            {% include 'browse/detail/components/online_resource_link.html' %}
+            {% endwith %}
+            {% endif %}
+            {# Online resource - service functions available by accessing link #}
+            {% if service_functions %}
+            <ul
+                id="{{ service_function_list_id }}"
+                class="d-inline list-unstyled text-body-secondary service-function-list fs-sm-2">
+                {% for service_function in service_functions %}
+                <li>
+                    {% with value=service_function %}
+                    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+                    {% endwith %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
         {% if service_functions|length > 1 %}
         <button
             data-for="{{ service_function_list_id }}"
             class="btn btn-link text-body-secondary align-baseline show-all-btn link-underline-by-default fs-sm-2 lh-1 p-0">
-            {{ service_functions|length|add:-1 }} other
+            Show {{ service_functions|length|add:-1 }} other
             {% if service_functions|length|add:-1 == 1 %}
             service function
             {% else %}
@@ -37,22 +56,14 @@
             {% endif %}
         </button>
         {% endif %}
-        {% endwith %}
-        {% endwith %}
         {% endif %}
-        {% endwith %}
     </div>
-    {% if online_resource.description.strip %}
-    <div class="online-resource-description">
-        {% with type_id=type|server_url_id|lower line_clamp_number=3 %}
-        {% with text_block_paragraphs=online_resource.description|wrap_in_list_if_dict text_block_id='online-resource-description-'|add:type_id|add:'-'|add:forloop_counter_str expand_btn_type='sm btn-link' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
-        {% include 'utils/expandable_text_block.html' %}
-        {% endwith %}
-        {% endwith %}
-    </div>
-    {% endif %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+    {# Online resource - additional information #}
     {% if online_resource.protocol or online_resource.data_format %}
-    <details class="details-interaction-methods" name="details-collection-results">
+    <details class="details-interaction-methods mt-2" name="details-collection-results">
         <summary>
             <span class="fs-sm-2 fw-semibold text-body-secondary">Additional details</span>
         </summary>
