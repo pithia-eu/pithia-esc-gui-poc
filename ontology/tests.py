@@ -1,7 +1,7 @@
 from django.test import SimpleTestCase
 
 from .services import (
-    get_xml_of_ontology_category_terms_locally,
+    get_rdf_string_from_local_space_physics_ontology_file_or_none,
     OntologyCategoryMetadataService,
 )
 from .utils import (
@@ -11,12 +11,12 @@ from .utils import (
 
 # Create your tests here.
 class OntologyFileRetrievalTestCase(SimpleTestCase):
-    def test_get_xml_of_ontology_category_terms_locally(self):
+    def test_get_rdf_string_from_local_space_physics_ontology_file_or_none(self):
         """Returns the XML string of a given ontology category
         from a locally stored XML file.
         """
         ontology_category = 'observedProperty'
-        xml_for_ontology_category = get_xml_of_ontology_category_terms_locally(ontology_category)
+        xml_for_ontology_category = get_rdf_string_from_local_space_physics_ontology_file_or_none(ontology_category)
         self.assertIsInstance(xml_for_ontology_category, str)
 
 
@@ -71,7 +71,7 @@ class OntologyCategoryMetadataTestCase(SimpleTestCase):
         URL from the XML string of a given ontology category.
         """
         ontology_category = 'observedProperty'
-        xml_for_ontology_category = get_xml_of_ontology_category_terms_locally(ontology_category)
+        xml_for_ontology_category = get_rdf_string_from_local_space_physics_ontology_file_or_none(ontology_category)
         observed_property_terms = OntologyCategoryMetadata(xml_for_ontology_category)
         xml_for_electron_density_term = observed_property_terms.get_term_with_iri('https://metadata.pithia.eu/ontology/2.2/observedProperty/ElectronDensity')
         print('xml_for_electron_density_term', xml_for_electron_density_term)
@@ -82,7 +82,7 @@ class OntologyCategoryMetadataTestCase(SimpleTestCase):
         ID from the XML string of a given ontology category.
         """
         ontology_category = 'observedProperty'
-        xml_for_ontology_category = get_xml_of_ontology_category_terms_locally(ontology_category)
+        xml_for_ontology_category = get_rdf_string_from_local_space_physics_ontology_file_or_none(ontology_category)
         observed_property_terms = OntologyCategoryMetadata(xml_for_ontology_category)
         xml_for_electron_density_term = observed_property_terms.get_term_with_id('ElectronDensity')
         print('xml_for_electron_density_term', xml_for_electron_density_term)
@@ -92,7 +92,7 @@ class OntologyCategoryMetadataTestCase(SimpleTestCase):
         """Returns the number of terms in an ontology category.
         """
         ontology_category = 'observedProperty'
-        xml_for_ontology_category = get_xml_of_ontology_category_terms_locally(ontology_category)
+        xml_for_ontology_category = get_rdf_string_from_local_space_physics_ontology_file_or_none(ontology_category)
         observed_property_terms = OntologyCategoryMetadata(xml_for_ontology_category)
         number_of_observed_property_terms = observed_property_terms.number_of_terms
         print('number_of_observed_property_terms', number_of_observed_property_terms)
@@ -106,7 +106,7 @@ class OntologyCategoryMetadataServiceTestCase(SimpleTestCase):
         narrowers of a given ontology term .
         """
         ontology_category = 'computationType'
-        xml_for_ontology_category = get_xml_of_ontology_category_terms_locally(ontology_category)
+        xml_for_ontology_category = get_rdf_string_from_local_space_physics_ontology_file_or_none(ontology_category)
         ontology_category_metadata = OntologyCategoryMetadataService(xml_for_ontology_category)
         descendents_by_skos_narrower = ontology_category_metadata._get_immediate_descendents_by_skos_narrower_for_ontology_term(
             'https://metadata.pithia.eu/ontology/2.2/computationType/ActivityIndicator'
@@ -118,7 +118,7 @@ class OntologyCategoryMetadataServiceTestCase(SimpleTestCase):
         URL of a given ontology term as a SKOS broader.
         """
         ontology_category = 'computationType'
-        xml_for_ontology_category = get_xml_of_ontology_category_terms_locally(ontology_category)
+        xml_for_ontology_category = get_rdf_string_from_local_space_physics_ontology_file_or_none(ontology_category)
         ontology_category_metadata = OntologyCategoryMetadataService(xml_for_ontology_category)
         descendents_by_skos_broader = ontology_category_metadata._get_immediate_descendents_by_skos_broader_for_ontology_term(
             'https://metadata.pithia.eu/ontology/2.2/computationType/ActivityIndicator'
@@ -130,7 +130,7 @@ class OntologyCategoryMetadataServiceTestCase(SimpleTestCase):
         ontology term.
         """
         ontology_category = 'computationType'
-        xml_for_ontology_category = get_xml_of_ontology_category_terms_locally(ontology_category)
+        xml_for_ontology_category = get_rdf_string_from_local_space_physics_ontology_file_or_none(ontology_category)
         ontology_category_metadata = OntologyCategoryMetadataService(xml_for_ontology_category)
         immediate_descendents = ontology_category_metadata._get_immediate_descendents_of_ontology_term(
             'https://metadata.pithia.eu/ontology/2.2/computationType/ActivityIndicator'
@@ -141,7 +141,7 @@ class OntologyCategoryMetadataServiceTestCase(SimpleTestCase):
         """Returns the URLs of all descendents of a given ontology term.
         """
         ontology_category = 'computationType'
-        xml_for_ontology_category = get_xml_of_ontology_category_terms_locally(ontology_category)
+        xml_for_ontology_category = get_rdf_string_from_local_space_physics_ontology_file_or_none(ontology_category)
         ontology_category_metadata = OntologyCategoryMetadataService(xml_for_ontology_category)
         all_descendents = ontology_category_metadata.get_all_descendents_of_ontology_term(
             'https://metadata.pithia.eu/ontology/2.2/computationType/ActivityIndicator'

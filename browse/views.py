@@ -45,7 +45,7 @@ from common.xml_metadata_mapping_shortcuts import DoiKernelMetadataMappingShortc
 from handle_management.services import HandleClient
 from ontology.services import (
     get_ontology_category_terms_in_xml_format,
-    get_xml_of_ontology_category_terms_locally,
+    get_rdf_string_from_local_space_physics_ontology_file_or_none,
     OntologyCategoryMetadataService,
 )
 
@@ -103,7 +103,7 @@ def static_dataset_tree(request):
         static_dataset_categories = OntologyCategoryMetadataService(xml_of_static_dataset_categories)
     except XMLSyntaxError:
         logger.exception('Encountered a syntax error whilst parsing the XML for the Static Dataset Category ontology branch. Using local version.')
-        static_dataset_categories = OntologyCategoryMetadataService(get_xml_of_ontology_category_terms_locally('staticDatasetCategory'))
+        static_dataset_categories = OntologyCategoryMetadataService(get_rdf_string_from_local_space_physics_ontology_file_or_none('staticDatasetCategory'))
     static_dataset_category_properties_by_iri = static_dataset_categories.get_name_and_definition_of_ontology_terms_by_iri()
     static_dataset_entries = set(models.StaticDatasetEntry.objects.all())
     for key, value in static_dataset_category_properties_by_iri.items():

@@ -3,7 +3,7 @@ from lxml import etree
 from common import models
 from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
 from ontology.services import (
-    get_xml_of_ontology_category_terms_locally,
+    get_rdf_string_from_local_space_physics_ontology_file_or_none,
 )
 
 # Utilities
@@ -157,7 +157,7 @@ def get_rdfs_from_ontology_urls(ontology_urls):
             ontology_rdfs[ontology_component_name] = ''
     
     for key in ontology_rdfs.keys():
-        ontology_rdfs[key] = get_xml_of_ontology_category_terms_locally(key)
+        ontology_rdfs[key] = get_rdf_string_from_local_space_physics_ontology_file_or_none(key)
 
     return ontology_rdfs
 
