@@ -5,7 +5,7 @@ from django.urls import reverse
 from common.forms import InstitutionForLoginSessionForm
 from user_management.services import (
     delete_institution_for_login_session,
-    get_user_info,
+    query_user_info_api,
     get_highest_subgroup_of_each_institution_for_logged_in_user,
     get_institution_id_for_login_session,
     get_institution_memberships_of_logged_in_user,
@@ -19,83 +19,73 @@ logger = logging.getLogger(__name__)
 
 
 class LoginMiddleware(object):
-    ACCESS_TOKEN_DICT_KEY = 'OIDC_access_token'
-    USER_INSTITUTION_SUBGROUPS_DICT_KEY = 'user_institution_subgroups'
-
     def __init__(self, get_response):
         # One-time configuration and initialisation.
         self.get_response = get_response
 
     # User info
-    def _set_user_info_related_session_variables(self, request, user_info):
-        # Configuring login session variables
-        # Store user info in session to minimise
-        # calls to the User Info API.
-        request.session['is_logged_in'] = True
+    def _get_user_info(self, request, access_token: str):
+        # Access token verification
+        user_info = query_user_info_api(access_token)
+        if 'error' in user_info:
+            return None
+        return user_info
+
+    def _set_user_info_related_session_variables(self, request, user_info: dict):
+        USER_INSTITUTION_SUBGROUPS_DICT_KEY = 'user_institution_subgroups'
         try:
-            request.session[self.USER_INSTITUTION_SUBGROUPS_DICT_KEY] = get_highest_subgroup_of_each_institution_for_logged_in_user(user_info['eduperson_entitlement'])
+            request.session[USER_INSTITUTION_SUBGROUPS_DICT_KEY] = get_highest_subgroup_of_each_institution_for_logged_in_user(user_info['eduperson_entitlement'])
         except KeyError:
-            request.session[self.USER_INSTITUTION_SUBGROUPS_DICT_KEY] = {}
+            request.session[USER_INSTITUTION_SUBGROUPS_DICT_KEY] = {}
         request.session['user_given_name'] = user_info.get('given_name')
 
-    def _verify_access_token_and_set_user_info_session_variables(self, request, access_token):
-        # Access token verification
-        user_info = get_user_info(access_token)
-        if 'error' in user_info:
-            # The User Info API will return an error if
-            # the access token has been invalidated.
-            raise Exception(f'An error was found in/whilst processing the user info response.')
-        self._set_user_info_related_session_variables(request, user_info)
-
-    # Request META variables
-    def _set_request_meta_variable_in_session_if_possible(self, request, key_in_request_meta: str, key_in_session: str = None):
-        request_meta_variable = request.META.get(key_in_request_meta)
-        if not request_meta_variable:
-            return None
-        if not key_in_session:
-            request.session[key_in_request_meta] = request_meta_variable
-            return None
-        request.session[key_in_session] = request_meta_variable
-        return None
-
-    def _set_request_meta_variables_for_login_session_if_possible(self, request):
-        """The access token is stored in the session to allow the login
-        status to be checked when accessing a non-protected route, as
-        it's only present in the request headers when accessing a protected
-        route.
-        The token in the session is updated whenever it's present in the
-        request headers to ensure any outdated session access tokens are
-        overwritten.
-        """
-        self._set_request_meta_variable_in_session_if_possible(request, self.ACCESS_TOKEN_DICT_KEY)
-        self._set_request_meta_variable_in_session_if_possible(request, 'OIDC_CLAIM_sub', key_in_session='user_id')
+    def logout_and_return_response(self, request):
+        remove_login_session_variables(request.session)
+        if '/authorised' not in request.path:
+            # If not in a protected path, no need for further
+            # login session management, just carry on with the
+            # request.
+            return self.get_response(request)
+        return HttpResponseRedirect(reverse('home'))
 
     def __call__(self, request):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
+        # Check that the access token is still valid. First, check that
+        # there is an access token to check. If there isn't one, perform
+        # a logout.
+        OIDC_ACCESS_TOKEN_KEY = 'OIDC_access_token'
+        access_token = request.session.get(OIDC_ACCESS_TOKEN_KEY)
+        if request.META.get(OIDC_ACCESS_TOKEN_KEY):
+            # request.META is assumed to have the latest access
+            # token available, so refresh the one in the session
+            # when it is available in request.META.
+            access_token = request.META.get(OIDC_ACCESS_TOKEN_KEY)
+            request.session.update({
+                OIDC_ACCESS_TOKEN_KEY: access_token,
+            })
+        if not access_token:
+            return self.logout_and_return_response(request)
+        
+        # Now that an access token has been found, verify that it can
+        # still be used to query the UserInfo API. If it can't, perform
+        # a logout.
+        user_info = self._get_user_info(request, access_token)
+        if not user_info:
+            return self.logout_and_return_response(request)
+
+        # The access token is still valid - so the login session can
+        # be populated with relevant metadata.
+        # "OIDC_CLAIM_sub" acts as the identifier for the current
+        # session - it's better than other available identifiers.
+        if request.META.get('OIDC_CLAIM_sub'):
+            request.session.update({
+                'user_id': request.META.get('OIDC_CLAIM_sub'),
+            })
+        self._set_user_info_related_session_variables(request, user_info)
+
         try:
-            # Verify if the user is logged in or not.
-            # Check if an OIDC_access_token exists in
-            # request.META, and perform the appropriate
-            # action.
-            self._set_request_meta_variables_for_login_session_if_possible(request)
-
-
-            # The access token should always be retrieved from the
-            # session. This is because the access token may not
-            # always be present in the headers.
-            access_token_in_session = request.session.get(self.ACCESS_TOKEN_DICT_KEY)
-            if not access_token_in_session:
-                # Access token is not present, so assume that the
-                # user is logged out.
-                remove_login_session_variables(request.session)
-                if '/authorised' in request.path:
-                    return HttpResponseRedirect(reverse('home'))
-            else:
-                self._verify_access_token_and_set_user_info_session_variables(request, access_token_in_session)
-
-            
             # Check if the user is still a member of the institution
             # they are logged in with. If not, perform the appropriate
             # action.

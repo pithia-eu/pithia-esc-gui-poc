@@ -20,14 +20,14 @@ JOIN_URL_BASE = 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=o
 logger = logging.getLogger(__name__)
 
 
-def get_user_info(access_token):
-    """Contacts the EGI Check-in UserInfo API to retrieve
-    the logged in user's details - e.g., which institution
-    they are a part of, ID, etc.
+def query_user_info_api(access_token):
+    """Contacts the UserInfo API to retrieve the logged
+    in user's details - e.g., which institution they are
+    a part of, ID, etc.
     """
     response_text = None
     try:
-        url = 'https://aai.egi.eu/auth/realms/egi/protocol/openid-connect/userinfo'
+        url = f'{os.environ["AUTH_ADDR"]}/realms/{os.environ["AUTH_REALM"]}/protocol/openid-connect/userinfo'
         headers = {
             'Content-type': 'application/json',
             'Authorization': 'Bearer' + ' ' + access_token
