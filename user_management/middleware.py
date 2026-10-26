@@ -6,10 +6,10 @@ from common.forms import InstitutionForLoginSessionForm
 from user_management.services import (
     delete_institution_for_login_session,
     query_user_info_api,
-    get_highest_subgroup_of_each_institution_for_logged_in_user,
     get_institution_id_for_login_session,
     get_institution_memberships_of_logged_in_user,
     get_subgroup_id_for_login_session,
+    parse_eduperson_entitlement,
     remove_login_session_variables,
     set_institution_for_login_session,
 )
@@ -34,13 +34,12 @@ class LoginMiddleware(object):
     def copy_user_privilege_info_to_session(self, request, user_info: dict):
         USER_INSTITUTION_SUBGROUPS_DICT_KEY = 'user_institution_subgroups'
         try:
-            request.session[USER_INSTITUTION_SUBGROUPS_DICT_KEY] = get_highest_subgroup_of_each_institution_for_logged_in_user(user_info['eduperson_entitlement'])
+            request.session[USER_INSTITUTION_SUBGROUPS_DICT_KEY] = parse_eduperson_entitlement(user_info['eduperson_entitlement'])
         except KeyError:
             request.session[USER_INSTITUTION_SUBGROUPS_DICT_KEY] = {}
 
     def copy_user_given_name_to_session(self, request, user_info: dict):
         request.session['user_given_name'] = user_info.get('given_name')
-        
 
     def logout_and_return_response(self, request):
         remove_login_session_variables(request.session)
