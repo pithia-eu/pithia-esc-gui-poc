@@ -24,7 +24,7 @@ class LoginMiddleware(object):
         self.get_response = get_response
 
     # User info
-    def _get_user_info(self, request, access_token: str):
+    def get_user_info(self, request, access_token: str):
         # Access token verification
         user_info = query_user_info_api(access_token)
         if 'error' in user_info:
@@ -74,7 +74,7 @@ class LoginMiddleware(object):
         # Now that an access token has been found, verify that it can
         # still be used to query the UserInfo API. If it can't, perform
         # a logout.
-        user_info = self._get_user_info(request, access_token)
+        user_info = self.get_user_info(request, access_token)
         if not user_info:
             return self.logout_and_return_response(request)
 
