@@ -40,8 +40,8 @@ def query_user_info_api(access_token):
         return {'error': 'An error occurred whilst trying to decode the User Info API response.'}
 
 def _get_institution_subgroup_pairs_from_eduperson_entitlement(eduperson_entitlement):
-    # Find all groups that are a part of
-    # the 'organizations' parent group.
+    # Extracts the institutions the logged in user is a member of, and the
+    # privilege level ("admin" or "member").
     organisations = []
     for s in eduperson_entitlement:
         index = s.rfind('organizations', 0, -1)
