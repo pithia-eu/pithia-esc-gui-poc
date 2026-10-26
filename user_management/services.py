@@ -39,35 +39,48 @@ def query_user_info_api(access_token):
         logger.exception(f'Could not decode user info: "{response_text}"')
         return {'error': 'An error occurred whilst trying to decode the User Info API response.'}
 
-def _get_institution_subgroup_pairs_from_eduperson_entitlement(eduperson_entitlement):
-    # Extracts the institutions the logged in user is a member of, and the
-    # privilege level ("admin" or "member").
-    organisations = []
-    for s in eduperson_entitlement:
-        index = s.rfind('organizations', 0, -1)
-        if index == -1:
-            # The 'organizations' group is not mentioned.
+def parse_eduperson_entitlement(eduperson_entitlement: list[str]) -> dict[str, str]:
+    """Extracts the institutions the logged in user is a member of, and the
+    privilege level, described by the group name ("admins" or "members").
+    The institution and group name (called a membership declaration) are specified
+    in each entitlement with the format: "institution_name:group_name" and are
+    sandwiched in-between two boundary values.
+    """
+    result = dict()
+    # urn:mace:egi.eu:group:vo.abc.test.eu:organizations:<membership_declaration>:role=member#aai.egi.eu
+    start_boundary = 'organizations:'
+    values_with_start_boundary = filter(
+        lambda value: start_boundary in value,
+        eduperson_entitlement
+    )
+    # <membership_declaration>:role
+    end_boundary = ':role'
+    values_with_start_and_end_boundary = filter(
+        lambda value: end_boundary in value,
+        values_with_start_boundary
+    )
+    # <membership_declaration>
+    membership_declarations = map(
+        lambda value: value[
+            (value.rfind(start_boundary) + len(start_boundary))
+            :(value.rfind(end_boundary))
+        ],
+        values_with_start_and_end_boundary
+    )
+    # <membership_declaration> = institution_name:group_name
+    valid_membership_declarations = filter(
+        lambda value: ':' in value,
+        membership_declarations
+    )
+    # institution_name: group_name
+    for value in valid_membership_declarations:
+        institution_name, group_name = unquote(value).split(':')
+        if result.get(institution_name) == 'admins':
             continue
-
-        index1 = s.rfind('role', 0, -1)
-        new_string = s[index: index1 - 1]
-        if len(new_string) <= len('organizations'):
-            # No subgroup of 'organizations' found, just
-            # the string for the 'organizations' group
-            # itself.
-            continue
-
-        index2 = new_string.find(':', 0, -1)
-        organisations.append(new_string[index2 + 1:])
-    
-    # Find the subgroups
-    subgroups = []
-    for o in organisations:
-        index = o.find(':')
-        if index == -1:
-            continue
-        subgroups.append(unquote(o[:]))
-    return subgroups
+        result.update({
+            institution_name: group_name,
+        })
+    return result
 
 def _is_highest_inst_subgroup_pair_in_inst_subgroup_pair_dict(
         institution_name,
@@ -82,7 +95,7 @@ def _is_highest_inst_subgroup_pair_in_inst_subgroup_pair_dict(
 
 
 def get_highest_subgroup_of_each_institution_for_logged_in_user(eduperson_entitlement):
-    institution_subgroup_pairs = _get_institution_subgroup_pairs_from_eduperson_entitlement(eduperson_entitlement)
+    institution_subgroup_pairs = parse_eduperson_entitlement(eduperson_entitlement)
     result = {}
     for isgp in institution_subgroup_pairs:
         isgp_split = isgp.split(':')

@@ -7,7 +7,7 @@ from django.urls import reverse
 from http import HTTPStatus
 
 from .services import (
-    _get_institution_subgroup_pairs_from_eduperson_entitlement,
+    parse_eduperson_entitlement,
     delete_institution_for_login_session,
     get_highest_subgroup_of_each_institution_for_logged_in_user,
     get_institution_id_for_login_session,
@@ -192,18 +192,24 @@ class LoginSessionRegressionTestCase(TestCase):
         self.assertEqual(get_institution_id_for_login_session(session), None)
         self.assertEqual(get_subgroup_id_for_login_session(session), None)
 
-    def test_get_institution_subgroup_pairs_from_eduperson_entitlement(self):
+    def test_parse_eduperson_entitlement(self):
         """Returns institutions with subgroups from an eduperson_entitlement dict.
         """
-        institution_subgroup_pairs = _get_institution_subgroup_pairs_from_eduperson_entitlement(
+        unsorted_entitlement_data = parse_eduperson_entitlement(
             self.eduperson_entitlement_test_data()
         )
-        print('institution_subgroup_pairs', institution_subgroup_pairs)
-        self.assertIn('group-1:admins', institution_subgroup_pairs)
-        self.assertIn('group-1:members', institution_subgroup_pairs)
-        self.assertIn('group-2:members', institution_subgroup_pairs)
-        self.assertNotIn('bad-group', institution_subgroup_pairs)
-        self.assertListEqual(
-            sorted(institution_subgroup_pairs),
-            ['group-1:admins', 'group-1:members', 'group-2:members']
-        )
+        # Sort to reliably check test results.
+        entitlement_data = {
+            key: unsorted_entitlement_data.get(key)
+            for key in sorted(unsorted_entitlement_data.keys())
+        }
+        print('entitlement_data', entitlement_data)
+        self.assertIn('group-1', entitlement_data)
+        self.assertEqual(entitlement_data.get('group-1'), 'admins')
+        self.assertIn('group-2', entitlement_data)
+        self.assertEqual(entitlement_data.get('group-2'), 'members')
+        self.assertNotIn('bad-group', entitlement_data)
+        self.assertDictEqual(entitlement_data, {
+            'group-1': 'admins',
+            'group-2': 'members',
+        })
