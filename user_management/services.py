@@ -83,7 +83,7 @@ def _is_highest_inst_subgroup_pair_in_inst_subgroup_pair_dict(
 
 def get_highest_subgroup_of_each_institution_for_logged_in_user(eduperson_entitlement):
     institution_subgroup_pairs = _get_institution_subgroup_pairs_from_eduperson_entitlement(eduperson_entitlement)
-    subgroups_by_institution = {}
+    result = {}
     for isgp in institution_subgroup_pairs:
         isgp_split = isgp.split(':')
         institution_name = isgp_split[0]
@@ -91,11 +91,11 @@ def get_highest_subgroup_of_each_institution_for_logged_in_user(eduperson_entitl
         if (_is_highest_inst_subgroup_pair_in_inst_subgroup_pair_dict(
             institution_name,
             subgroup_name,
-            subgroups_by_institution)):
+            result)):
             continue
-        subgroups_by_institution[institution_name] = subgroup_name
+        result[institution_name] = subgroup_name
         
-    return subgroups_by_institution
+    return result
 
 
 # Login session management
