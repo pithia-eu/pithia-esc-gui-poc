@@ -1,5 +1,6 @@
 import environ
 import os
+from django.contrib.auth import logout as auth_logout
 from django.http import (
     FileResponse,
     HttpResponseNotFound,
@@ -8,6 +9,8 @@ from django.shortcuts import (
     redirect,
     render,
 )
+from django.urls import reverse_lazy
+from django.utils.http import urlencode
 
 from common.models import DataCollection
 from help.services import (
@@ -26,13 +29,9 @@ from user_management.services import CREATION_URL_BASE
 env = environ.Env()
 
 
-from user_management.services import (
-    CREATION_URL_BASE,
-    remove_login_session_variables_and_redirect_user_to_logout_page,
-)
-
 def logout(request):
-    return remove_login_session_variables_and_redirect_user_to_logout_page(request)
+    auth_logout(request)
+    return redirect(f'/authorised/?{urlencode({"logout": request.build_absolute_uri(reverse_lazy("home"))})}')
 
 def index(request):
     help_content_dicts = [
