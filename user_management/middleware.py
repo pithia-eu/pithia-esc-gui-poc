@@ -31,13 +31,16 @@ class LoginMiddleware(object):
             return None
         return user_info
 
-    def _set_user_info_related_session_variables(self, request, user_info: dict):
+    def copy_user_privilege_info_to_session(self, request, user_info: dict):
         USER_INSTITUTION_SUBGROUPS_DICT_KEY = 'user_institution_subgroups'
         try:
             request.session[USER_INSTITUTION_SUBGROUPS_DICT_KEY] = get_highest_subgroup_of_each_institution_for_logged_in_user(user_info['eduperson_entitlement'])
         except KeyError:
             request.session[USER_INSTITUTION_SUBGROUPS_DICT_KEY] = {}
+
+    def copy_user_given_name_to_session(self, request, user_info: dict):
         request.session['user_given_name'] = user_info.get('given_name')
+        
 
     def logout_and_return_response(self, request):
         remove_login_session_variables(request.session)
@@ -83,7 +86,8 @@ class LoginMiddleware(object):
             request.session.update({
                 'user_id': request.META.get('OIDC_CLAIM_sub'),
             })
-        self._set_user_info_related_session_variables(request, user_info)
+        self.copy_user_given_name_to_session(request, user_info)
+        self.copy_user_privilege_info_to_session(request, user_info)
 
         try:
             # Check if the user is still a member of the institution
