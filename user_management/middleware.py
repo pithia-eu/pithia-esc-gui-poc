@@ -133,9 +133,7 @@ class LoginMiddleware(object):
                 )
         except Exception:
             logger.exception('An unexpected error occurred during authentication.')
-            remove_login_session_variables(request.session)
-            if '/authorised' in request.path:
-                return HttpResponseRedirect(reverse('home'))
+            return self.logout_and_return_response(request)
 
         response = self.get_response(request)
 
