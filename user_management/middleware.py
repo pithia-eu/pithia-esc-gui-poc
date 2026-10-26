@@ -32,14 +32,16 @@ class LoginMiddleware(object):
         return user_info
 
     def copy_user_privilege_info_to_session(self, request, user_info: dict):
-        USER_INSTITUTION_SUBGROUPS_DICT_KEY = 'user_institution_subgroups'
-        try:
-            request.session[USER_INSTITUTION_SUBGROUPS_DICT_KEY] = parse_eduperson_entitlement(user_info['eduperson_entitlement'])
-        except KeyError:
-            request.session[USER_INSTITUTION_SUBGROUPS_DICT_KEY] = {}
+        request.session.update({
+            'user_institution_subgroups': parse_eduperson_entitlement(
+                user_info.get('eduperson_entitlement', [])
+            )
+        })
 
     def copy_user_given_name_to_session(self, request, user_info: dict):
-        request.session['user_given_name'] = user_info.get('given_name')
+        request.session.update({
+            'user_given_name': user_info.get('given_name')
+        })
 
     def logout_and_return_response(self, request):
         remove_login_session_variables(request.session)
