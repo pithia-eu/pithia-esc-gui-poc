@@ -43,17 +43,16 @@ class AuthViewDecoratorsTestCase(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
 class LoginSessionRegressionTestCase(TestCase):
-    test_eduperson_entitlement = {
-        'urn:mace:egi.eu:group:vo.abc.test.eu:members:role=member#aai.egi.eu',
-        'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc-test:admins:role=member#aai.egi.eu',
-        'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc-test:members:role=member#aai.egi.eu',
-        'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc-test:role=member#aai.egi.eu',
-        'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:xyz:role=member#aai.egi.eu',
-        'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:role=member#aai.egi.eu',
-        'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc:role=member#aai.egi.eu',
-        'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc:members:role=member#aai.egi.eu',
-        'urn:mace:egi.eu:group:vo.abc.test.eu:role=member#aai.egi.eu'
-    }
+    def eduperson_entitlement_test_data(self) -> dict:
+        return {
+            'urn:mace:egi.eu:group:vo.abc.test.eu:members:role=member#aai.egi.eu',
+            'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:group-1:admins:role=member#aai.egi.eu',
+            'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:group-1:members:role=member#aai.egi.eu',
+            'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:group-2:members:role=member#aai.egi.eu',
+            'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:bad-group:role=member#aai.egi.eu',
+            'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:role=member#aai.egi.eu',
+            'urn:mace:egi.eu:group:vo.abc.test.eu:role=member#aai.egi.eu'
+        }
 
     def test_get_user_id_for_login_session(self):
         """
@@ -115,7 +114,7 @@ class LoginSessionRegressionTestCase(TestCase):
         of each institution that a user is a
         member of.
         """
-        test_value = self.test_eduperson_entitlement
+        test_value = self.eduperson_entitlement_test_data()
         subgroups = get_highest_subgroup_of_each_institution_for_logged_in_user(test_value)
         self.assertEqual(subgroups.get('abc-test'), 'admins')
         self.assertEqual(subgroups.get('abc'), 'members')
@@ -194,15 +193,17 @@ class LoginSessionRegressionTestCase(TestCase):
         self.assertEqual(get_subgroup_id_for_login_session(session), None)
 
     def test_get_institution_subgroup_pairs_from_eduperson_entitlement(self):
+        """Returns institutions with subgroups from an eduperson_entitlement dict.
         """
-        Returns institutions with subgroups from
-        an eduperson_entitlement dict.
-        """
-        institution_subgroup_pairs = _get_institution_subgroup_pairs_from_eduperson_entitlement(self.test_eduperson_entitlement)
+        institution_subgroup_pairs = _get_institution_subgroup_pairs_from_eduperson_entitlement(
+            self.eduperson_entitlement_test_data()
+        )
         print('institution_subgroup_pairs', institution_subgroup_pairs)
-        self.assertTrue('abc-test:admins' in institution_subgroup_pairs)
-        self.assertTrue('abc-test:members' in institution_subgroup_pairs)
-        self.assertTrue('abc:members' in institution_subgroup_pairs)
-        self.assertTrue('abc-test' not in institution_subgroup_pairs)
-        self.assertTrue('abc' not in institution_subgroup_pairs)
-        self.assertTrue('xyz' not in institution_subgroup_pairs)
+        self.assertIn('group-1:admins', institution_subgroup_pairs)
+        self.assertIn('group-1:members', institution_subgroup_pairs)
+        self.assertIn('group-2:members', institution_subgroup_pairs)
+        self.assertNotIn('bad-group', institution_subgroup_pairs)
+        self.assertListEqual(
+            sorted(institution_subgroup_pairs),
+            ['group-1:admins', 'group-1:members', 'group-2:members']
+        )
