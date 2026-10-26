@@ -31,6 +31,14 @@ class LoginMiddleware(object):
             return None
         return user_info
 
+    def copy_user_id_to_session(self, request):
+        # "OIDC_CLAIM_sub" acts as the identifier for the current
+        # session - it's better than other available identifiers,
+        # like "OIDC_CLAIM_email", which isn't always guaranteed.
+        request.session.update({
+            'user_id': request.META.get('OIDC_CLAIM_sub'),
+        })
+
     def copy_user_privilege_info_to_session(self, request, user_info: dict):
         request.session.update({
             'user_institution_subgroups': parse_eduperson_entitlement(
@@ -81,12 +89,7 @@ class LoginMiddleware(object):
 
         # The access token is still valid - so the login session can
         # be populated with relevant metadata.
-        # "OIDC_CLAIM_sub" acts as the identifier for the current
-        # session - it's better than other available identifiers.
-        if request.META.get('OIDC_CLAIM_sub'):
-            request.session.update({
-                'user_id': request.META.get('OIDC_CLAIM_sub'),
-            })
+        self.copy_user_id_to_session(request)
         self.copy_user_given_name_to_session(request, user_info)
         self.copy_user_privilege_info_to_session(request, user_info)
 
