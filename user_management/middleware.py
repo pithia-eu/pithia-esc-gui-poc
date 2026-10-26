@@ -132,7 +132,9 @@ class LoginMiddleware(object):
                     memberships_of_logged_in_user.get(institution_id_logged_in_with)
                 )
         except Exception:
-            logger.exception('An unexpected error occurred during authentication.')
+            logger.exception(
+                'Could not complete authentication due to an unexpected error. Resetting login session.'
+            )
             return self.logout_and_return_response(request)
 
         response = self.get_response(request)
