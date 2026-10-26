@@ -9,7 +9,6 @@ from http import HTTPStatus
 from .services import (
     parse_eduperson_entitlement,
     delete_institution_for_login_session,
-    get_highest_subgroup_of_each_institution_for_logged_in_user,
     get_institution_id_for_login_session,
     get_institution_memberships_of_logged_in_user,
     get_subgroup_id_for_login_session,
@@ -107,18 +106,6 @@ class LoginSessionRegressionTestCase(TestCase):
 
         memberships = get_institution_memberships_of_logged_in_user(session)
         self.assertEqual(memberships, test_value)
-
-    def test_get_highest_subgroup_of_each_institution_for_logged_in_user(self):
-        """
-        Returns the highest authority subgroup
-        of each institution that a user is a
-        member of.
-        """
-        test_value = self.eduperson_entitlement_test_data()
-        subgroups = get_highest_subgroup_of_each_institution_for_logged_in_user(test_value)
-        self.assertEqual(subgroups.get('abc-test'), 'admins')
-        self.assertEqual(subgroups.get('abc'), 'members')
-
     
     def test_set_institution_for_login_session(self):
         """

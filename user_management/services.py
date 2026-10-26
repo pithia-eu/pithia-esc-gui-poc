@@ -10,6 +10,7 @@ from urllib.parse import unquote
 
 from pithiaesc.settings import BASE_DIR
 
+
 # Used in the main menu. Used as the base link for creating new institutions.
 CREATION_URL_BASE = 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizationRequests'
 # Used in institutions list page. Used as the base link for joining organisations.
@@ -38,6 +39,7 @@ def query_user_info_api(access_token):
     except json.decoder.JSONDecodeError:
         logger.exception(f'Could not decode user info: "{response_text}"')
         return {'error': 'An error occurred whilst trying to decode the User Info API response.'}
+
 
 def parse_eduperson_entitlement(eduperson_entitlement: list[str]) -> dict[str, str]:
     """Extracts the institutions the logged in user is a member of, and the
@@ -82,39 +84,12 @@ def parse_eduperson_entitlement(eduperson_entitlement: list[str]) -> dict[str, s
         })
     return result
 
-def _is_highest_inst_subgroup_pair_in_inst_subgroup_pair_dict(
-        institution_name,
-        subgroup_name,
-        subgroups_by_institution_dict):
-    if (subgroup_name == 'admins'):
-        return False
-    elif (institution_name not in subgroups_by_institution_dict):
-        return False
-    else:
-        return True
-
-
-def get_highest_subgroup_of_each_institution_for_logged_in_user(eduperson_entitlement):
-    institution_subgroup_pairs = parse_eduperson_entitlement(eduperson_entitlement)
-    result = {}
-    for isgp in institution_subgroup_pairs:
-        isgp_split = isgp.split(':')
-        institution_name = isgp_split[0]
-        subgroup_name = isgp_split[1]
-        if (_is_highest_inst_subgroup_pair_in_inst_subgroup_pair_dict(
-            institution_name,
-            subgroup_name,
-            result)):
-            continue
-        result[institution_name] = subgroup_name
-        
-    return result
-
 
 # Login session management
 def delete_institution_for_login_session(session):
     session.pop('institution_for_login_session', None)
     session.pop('subgroup_for_login_session', None)
+
 
 def remove_login_session_variables(session):
     session.pop('OIDC_access_token', None)
@@ -124,21 +99,27 @@ def remove_login_session_variables(session):
     session.pop('user_given_name', None)
     delete_institution_for_login_session(session)
 
+
 def get_user_id_for_login_session(session):
     return session.get('user_id')
+
 
 def get_institution_id_for_login_session(session):
     return session.get('institution_for_login_session')
 
+
 def get_subgroup_id_for_login_session(session):
     return session.get('subgroup_for_login_session')
+
 
 def get_institution_memberships_of_logged_in_user(session):
     return session.get('user_institution_subgroups')
 
+
 def set_institution_for_login_session(session, institution, subgroup):
     session['institution_for_login_session'] = institution
     session['subgroup_for_login_session'] = subgroup
+
 
 def remove_login_session_variables_and_redirect_user_to_logout_page(request):
     remove_login_session_variables(request.session)
@@ -157,6 +138,7 @@ def _get_local_perun_data():
     
     return None
 
+
 def _get_organisations_from_local_perun_data(perun_data):
     try:
         return perun_data.get('organizations', [])
@@ -168,6 +150,7 @@ def _get_organisations_from_local_perun_data(perun_data):
 
     return []
 
+
 def _get_users_from_local_perun_data(perun_data):
     try:
         return perun_data.get('users', [])
@@ -178,6 +161,7 @@ def _get_users_from_local_perun_data(perun_data):
         pass
 
     return []
+
 
 def _get_users_and_organisations_from_local_perun_data():
     local_perun_data = _get_local_perun_data()
@@ -196,6 +180,7 @@ def _get_users_and_organisations_from_local_perun_data():
         'users': users,
         'organisations': perun_organisations,
     }
+
 
 def get_members_by_institution_id(institution_id):
     local_perun_users_and_organisations = _get_users_and_organisations_from_local_perun_data()
@@ -221,6 +206,7 @@ def get_members_by_institution_id(institution_id):
 
     return members
 
+
 def get_admins_by_institution_id(institution_id):
     local_perun_users_and_organisations = _get_users_and_organisations_from_local_perun_data()
     if not local_perun_users_and_organisations:
@@ -244,6 +230,7 @@ def get_admins_by_institution_id(institution_id):
         admins.append(u)
 
     return admins
+
 
 def get_members_without_admins_by_institution_id(institution_id):
     local_perun_users_and_organisations = _get_users_and_organisations_from_local_perun_data()
