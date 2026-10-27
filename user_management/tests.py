@@ -1,4 +1,5 @@
-from django.http import HttpResponse
+from django.conf import settings
+from django.contrib.sessions.backends.db import SessionStore
 from django.test import (
     Client,
     TestCase,
@@ -7,13 +8,13 @@ from django.urls import reverse
 from http import HTTPStatus
 
 from .services import (
-    parse_eduperson_entitlement,
+    clear_user_data_from_session,
     delete_institution_for_login_session,
     get_institution_id_for_login_session,
     get_institution_memberships_of_logged_in_user,
     get_subgroup_id_for_login_session,
     get_user_id_for_login_session,
-    remove_login_session_variables,
+    parse_eduperson_entitlement,
     set_institution_for_login_session,
 )
 
@@ -41,7 +42,11 @@ class AuthViewDecoratorsTestCase(TestCase):
         response = self.client.post(reverse('register:organisation'))
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
+
 class LoginSessionRegressionTestCase(TestCase):
+    class DummyRequest:
+        session: SessionStore
+
     def eduperson_entitlement_test_data(self) -> dict:
         return {
             'urn:mace:egi.eu:group:vo.abc.test.eu:members:role=member#aai.egi.eu',
@@ -136,48 +141,85 @@ class LoginSessionRegressionTestCase(TestCase):
         self.assertEqual(get_institution_id_for_login_session(session), None)
         self.assertEqual(get_subgroup_id_for_login_session(session), None)
 
-    def test_remove_login_session_variables(self):
+    def test_clear_user_data_from_session(self):
+        """Clears all user data from the current session and preserves session
+        data used for search by content functionalities.
         """
-        Removes all login-related variables from the
-        session.
-        """
-        test_access_token = 'access_token'
-        test_is_logged_in = True
-        test_user_institution_subgroups = 'user_institution_subgroups'
-        test_user_id = 'user_id'
-        test_user_given_name = 'user_given_name'
-        test_institution_for_login_session = 'institution_for_login_session'
-        test_subgroup_for_login_session = 'subgroup_for_login_session'
-        
+        test_session_data = {
+            'OIDC_access_token': 'access_token',
+            'user_institution_subgroups': 'user_institution_subgroups',
+            'user_id': 'user_id',
+            'user_given_name': 'user_given_name',
+            'institution_for_login_session': 'institution_for_login_session',
+            'subgroup_for_login_session': 'subgroup_for_login_session',
+            'data_collection_search': 'data_collection_search',
+            'static_dataset_search': 'static_dataset_search',
+            'workflow_search': 'workflow_search',
+            'simple_search': 'simple_search',
+        }
+
+        # SessionStore is created every time self.client.session is called,
+        # so needs to be stored in a variable.
         session = self.client.session
-        # Set the login-related session variables
-        session['OIDC_access_token'] = test_access_token
-        session['is_logged_in'] = test_is_logged_in
-        session['user_institution_subgroups'] = test_user_institution_subgroups
-        session['user_id'] = test_user_id
-        session['user_given_name'] = test_user_given_name
-        session['institution_for_login_session'] = test_institution_for_login_session
-        session['subgroup_for_login_session'] = test_subgroup_for_login_session
+        session.update(test_session_data)
+        request = self.DummyRequest()
+        request.session = session
 
-        # Check that they were set
-        self.assertEqual(session.get('OIDC_access_token'), test_access_token)
-        self.assertEqual(session.get('is_logged_in'), test_is_logged_in)
-        self.assertEqual(get_institution_memberships_of_logged_in_user(session), test_user_institution_subgroups)
-        self.assertEqual(get_user_id_for_login_session(session), test_user_id)
-        self.assertEqual(session.get('user_given_name'), test_user_given_name)
-        self.assertEqual(get_institution_id_for_login_session(session), test_institution_for_login_session)
-        self.assertEqual(get_subgroup_id_for_login_session(session), test_subgroup_for_login_session)
+        # Check session data was set
+        self.assertEqual(
+            request.session.get('OIDC_access_token'),
+            test_session_data.get('OIDC_access_token')
+        )
+        self.assertEqual(
+            get_institution_memberships_of_logged_in_user(request.session),
+            test_session_data.get('user_institution_subgroups')
+        )
+        self.assertEqual(
+            get_user_id_for_login_session(request.session),
+            test_session_data.get('user_id')
+        )
+        self.assertEqual(
+            request.session.get('user_given_name'),
+            test_session_data.get('user_given_name')
+        )
+        self.assertEqual(
+            get_institution_id_for_login_session(request.session),
+            test_session_data.get('institution_for_login_session')
+        )
+        self.assertEqual(
+            get_subgroup_id_for_login_session(request.session),
+            test_session_data.get('subgroup_for_login_session')
+        )
+        self.assertEqual(
+            request.session.get('data_collection_search'),
+            test_session_data.get('data_collection_search')
+        )
+        self.assertEqual(
+            request.session.get('static_dataset_search'),
+            test_session_data.get('static_dataset_search')
+        )
+        self.assertEqual(
+            request.session.get('workflow_search'),
+            test_session_data.get('workflow_search')
+        )
+        self.assertEqual(
+            request.session.get('simple_search'),
+            test_session_data.get('simple_search')
+        )
 
-        # Check that they were removed
-        remove_login_session_variables(session)
+        clear_user_data_from_session(request)
 
-        self.assertEqual(session.get('OIDC_access_token'), None)
-        self.assertEqual(session.get('is_logged_in'), None)
-        self.assertEqual(get_institution_memberships_of_logged_in_user(session), None)
-        self.assertEqual(get_user_id_for_login_session(session), None)
-        self.assertEqual(session.get('user_given_name'), None)
-        self.assertEqual(get_institution_id_for_login_session(session), None)
-        self.assertEqual(get_subgroup_id_for_login_session(session), None)
+        # Check that only user session was cleared
+        self.assertEqual(request.session.get('OIDC_access_token'), None)
+        self.assertEqual(get_institution_memberships_of_logged_in_user(request.session), None)
+        self.assertEqual(get_user_id_for_login_session(request.session), None)
+        self.assertEqual(request.session.get('user_given_name'), None)
+        self.assertEqual(get_institution_id_for_login_session(request.session), None)
+        self.assertEqual(get_subgroup_id_for_login_session(request.session), None)
+        self.assertIn('data_collection_search', request.session)
+        self.assertIn('static_dataset_search', request.session)
+        self.assertIn('workflow_search', request.session)
+        self.assertIn('simple_search', request.session)
 
     def test_parse_eduperson_entitlement(self):
         """Returns institutions with subgroups from an eduperson_entitlement dict.
