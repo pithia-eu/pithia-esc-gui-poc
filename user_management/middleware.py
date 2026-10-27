@@ -151,6 +151,7 @@ class UserInfoMiddleware(object):
             return self.get_response(request)
         return HttpResponseRedirect(reverse('home'))
 
+
 class InstitutionSelectionMiddleware:
     def __init__(self, get_response):
         # One-time configuration and initialisation.
@@ -179,6 +180,7 @@ class InstitutionSelectionMiddleware:
         # the view is called.
 
         return response
+
 
 class InstitutionSelectionFormMiddleware:
     def __init__(self, get_response):
