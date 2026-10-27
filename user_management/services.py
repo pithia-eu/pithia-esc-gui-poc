@@ -92,15 +92,6 @@ def delete_institution_for_login_session(session):
     session.pop('subgroup_for_login_session', None)
 
 
-def remove_login_session_variables(session):
-    session.pop('OIDC_access_token', None)
-    session.pop('is_logged_in', None)
-    session.pop('user_institution_subgroups', None)
-    session.pop('user_id', None)
-    session.pop('user_given_name', None)
-    delete_institution_for_login_session(session)
-
-
 def get_user_id_for_login_session(session):
     return session.get('user_id')
 
@@ -122,16 +113,10 @@ def set_institution_for_login_session(session, institution, subgroup):
     session['subgroup_for_login_session'] = subgroup
 
 
-def remove_login_session_variables_and_redirect_user_to_logout_page(request):
-    remove_login_session_variables(request.session)
-    absolute_home_page_uri = re.sub(r'^http\b', 'https', request.build_absolute_uri(reverse("home")))
-    return HttpResponseRedirect(f'/authorised/?{urlencode({"logout": absolute_home_page_uri})}')
-
-
 def clear_user_data_from_session(request):
     preserved_session_data = {
         key: value
-        for key, value in request.session.items()
+        for key, value in dict(request.session).items()
         if key in settings.PRESERVE_IN_SESSION_ON_LOGOUT
     }
     auth_logout(request)
