@@ -45,10 +45,10 @@ class LoginSessionRegressionTestCase(TestCase):
     def eduperson_entitlement_test_data(self) -> dict:
         return {
             'urn:mace:egi.eu:group:vo.abc.test.eu:members:role=member#aai.egi.eu',
-            'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:group-1:admins:role=member#aai.egi.eu',
-            'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:group-1:members:role=member#aai.egi.eu',
-            'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:group-2:members:role=member#aai.egi.eu',
-            'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:bad-group:role=member#aai.egi.eu',
+            'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:institution-1:admins:role=member#aai.egi.eu',
+            'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:institution-1:members:role=member#aai.egi.eu',
+            'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:institution-2:members:role=member#aai.egi.eu',
+            'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:incomplete-membership-declaration:role=member#aai.egi.eu',
             'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:role=member#aai.egi.eu',
             'urn:mace:egi.eu:group:vo.abc.test.eu:role=member#aai.egi.eu'
         }
@@ -191,12 +191,12 @@ class LoginSessionRegressionTestCase(TestCase):
             for key in sorted(unsorted_entitlement_data.keys())
         }
         print('entitlement_data', entitlement_data)
-        self.assertIn('group-1', entitlement_data)
-        self.assertEqual(entitlement_data.get('group-1'), 'admins')
-        self.assertIn('group-2', entitlement_data)
-        self.assertEqual(entitlement_data.get('group-2'), 'members')
-        self.assertNotIn('bad-group', entitlement_data)
+        self.assertIn('institution-1', entitlement_data)
+        self.assertEqual(entitlement_data.get('institution-1'), 'admins')
+        self.assertIn('institution-2', entitlement_data)
+        self.assertEqual(entitlement_data.get('institution-2'), 'members')
+        self.assertNotIn('incomplete-membership-declaration', entitlement_data)
         self.assertDictEqual(entitlement_data, {
-            'group-1': 'admins',
-            'group-2': 'members',
+            'institution-1': 'admins',
+            'institution-2': 'members',
         })
