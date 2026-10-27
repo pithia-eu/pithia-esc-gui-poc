@@ -28,30 +28,36 @@ class UserInfoMiddleware(object):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
-        # Check that the access token is still valid. First, check that
-        # there is an access token to check. If there isn't one, perform
-        # a logout.
-        # Latest (request.META), otherwise, use access token in session.
-        access_token = self.get_latest_access_token(request)
-        if not access_token:
+        user_info = None
+        try:
+            # Check that an access token exists, and if there is one, that
+            # it's valid. If there isn't one, clear out any outdated login
+            # sessions.
+            access_token = self.get_latest_access_token(request)
+            if not access_token:
+                return self.logout_and_return_response(request)
+            self.copy_access_token_to_session(request, access_token)
+            
+            # Now that an access token has been found, verify that it can
+            # still be used to query the UserInfo API. If it can't, clear
+            # out any outdated login sessions.
+            user_info = self.get_user_info(request, access_token)
+            if not user_info:
+                messages.info(request, 'You have been logged out due to a period of inactivity.')
+                return self.logout_and_return_response(request)
+        except Exception:
+            logger.exception(
+                'Could not finish verifying access token due to an unexpected error. Logging out of the current session.'
+            )
             return self.logout_and_return_response(request)
-        self.copy_access_token_to_session(request, access_token)
-        
-        # Now that an access token has been found, verify that it can
-        # still be used to query the UserInfo API. If it can't, perform
-        # a logout.
-        user_info = self.get_user_info(request, access_token)
-        if not user_info:
-            messages.info(request, 'You have been logged out due to a period of inactivity.')
-            return self.logout_and_return_response(request)
-
-        # The access token is still valid - so the login session can
-        # be populated with relevant metadata.
-        self.copy_user_id_to_session(request)
-        self.copy_user_given_name_to_session(request, user_info)
-        self.copy_user_privilege_info_to_session(request, user_info)
 
         try:
+            # The access token is still valid - so this login session can
+            # be populated with metadata from the UserInfo API.
+            self.copy_user_id_to_session(request)
+            self.copy_user_given_name_to_session(request, user_info)
+            self.copy_user_privilege_info_to_session(request, user_info)
+
             institution_id_logged_in_with = get_institution_id_for_login_session(request.session)
             if institution_id_logged_in_with is None:
                 return self.get_response(request)
@@ -85,7 +91,7 @@ class UserInfoMiddleware(object):
                 )
         except Exception:
             logger.exception(
-                'Could not complete authentication due to an unexpected error. Resetting login session.'
+                'Could not complete login session configuration due to an unexpected error. Logging out of the current session.'
             )
             return self.logout_and_return_response(request)
 
@@ -98,6 +104,7 @@ class UserInfoMiddleware(object):
 
     ACCESS_TOKEN_SESSION_KEY = 'OIDC_access_token'
     def get_latest_access_token(self, request) -> str:
+        # Latest (request.META), otherwise, use access token in session.
         return request.META.get(
             self.ACCESS_TOKEN_SESSION_KEY,
             request.session.get(self.ACCESS_TOKEN_SESSION_KEY)
