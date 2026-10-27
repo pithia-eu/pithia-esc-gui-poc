@@ -3,12 +3,13 @@ import logging
 import os
 import re
 import requests
+
+from django.conf import settings
+from django.contrib.auth import logout as auth_logout
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.http import urlencode
 from urllib.parse import unquote
-
-from pithiaesc.settings import BASE_DIR
 
 
 # Used in the main menu. Used as the base link for creating new institutions.
@@ -127,10 +128,23 @@ def remove_login_session_variables_and_redirect_user_to_logout_page(request):
     return HttpResponseRedirect(f'/authorised/?{urlencode({"logout": absolute_home_page_uri})}')
 
 
+def clear_user_data_from_session(request):
+    preserved_session_data = {
+        key: value
+        for key, value in request.session.items()
+        if key in settings.PRESERVE_IN_SESSION_ON_LOGOUT
+    }
+    auth_logout(request)
+    request.session.update(preserved_session_data)
+
+
 # Templates
 def _get_local_perun_data():
     try:
-        with open(os.path.join(BASE_DIR, 'perun', 'ListOfOrganisations.json')) as organisation_list_file:
+        with open(os.path.join(
+            settings.BASE_DIR,
+            'perun',
+            'ListOfOrganisations.json')) as organisation_list_file:
             perun_data = json.loads(organisation_list_file.read())
         return perun_data
     except FileNotFoundError:

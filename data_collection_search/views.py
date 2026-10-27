@@ -74,11 +74,13 @@ class PhenomenonSearchByContentTemplateView(BasePhenomenonSearchByContentTemplat
 def index(request):
     if request.method == 'POST':
         request.session.update({
-            'features_of_interest': request.POST.getlist('featureOfInterest'),
-            'computation_types': request.POST.getlist('computationType'),
-            'instrument_types': request.POST.getlist('instrumentType'),
-            'annotation_types': request.POST.getlist('annotationType'),
-            'observed_properties': request.POST.getlist('observedProperty'),
+            'data_collection_search': {
+                'features_of_interest': request.POST.getlist('featureOfInterest'),
+                'computation_types': request.POST.getlist('computationType'),
+                'instrument_types': request.POST.getlist('instrumentType'),
+                'annotation_types': request.POST.getlist('annotationType'),
+                'observed_properties': request.POST.getlist('observedProperty'),
+            }
         })
         return HttpResponseRedirect(reverse('data_collection_search:results'))
     return render(request, 'data_collection_search/index.html', {
@@ -93,35 +95,72 @@ def index(request):
     })
 
 def results(request):
+    local_ids = request.session.get('data_collection_search', {})
+    feature_of_interest_local_ids = local_ids.get('features_of_interest', [])
+    computation_type_local_ids = local_ids.get('computation_types', [])
+    instrument_type_local_ids = local_ids.get('instrument_types', [])
+    annotation_type_local_ids = local_ids.get('annotation_types', [])
+    observed_property_local_ids = local_ids.get('observed_properties', [])
+
     data_collections = get_data_collections_for_search(
-        annotation_type_urls=[f'{ANNOTATION_TYPE_URL_BASE}/{local_id}' for local_id in request.session.get('annotation_types', [])],
-        computation_type_urls=[f'{COMPUTATION_TYPE_URL_BASE}/{local_id}' for local_id in request.session.get('computation_types', [])],
-        feature_of_interest_urls=[f'{FEATURE_OF_INTEREST_URL_BASE}/{local_id}' for local_id in request.session.get('features_of_interest', [])],
-        instrument_type_urls=[f'{INSTRUMENT_TYPE_URL_BASE}/{local_id}' for local_id in request.session.get('instrument_types', [])],
-        observed_property_urls=[f'{OBSERVED_PROPERTY_URL_BASE}/{local_id}' for local_id in request.session.get('observed_properties', [])]
+        feature_of_interest_urls=[
+            f'{FEATURE_OF_INTEREST_URL_BASE}/{local_id}'
+            for local_id in feature_of_interest_local_ids
+        ],
+        computation_type_urls=[
+            f'{COMPUTATION_TYPE_URL_BASE}/{local_id}'
+            for local_id in computation_type_local_ids
+        ],
+        instrument_type_urls=[
+            f'{INSTRUMENT_TYPE_URL_BASE}/{local_id}'
+            for local_id in instrument_type_local_ids
+        ],
+        annotation_type_urls=[
+            f'{ANNOTATION_TYPE_URL_BASE}/{local_id}'
+            for local_id in annotation_type_local_ids
+        ],
+        observed_property_urls=[
+            f'{OBSERVED_PROPERTY_URL_BASE}/{local_id}'
+            for local_id in observed_property_local_ids
+        ]
     )
 
     # Display parameters user inputted in case they want to refine for the next search.
     parameters = dict()
-    if len(request.session.get('features_of_interest', [])):
+    if len(feature_of_interest_local_ids):
         parameters.update({
-            'Features of Interest': [f'{FEATURE_OF_INTEREST_URL_BASE}/{local_id}' for local_id in request.session.get('features_of_interest', [])],
+            'Features of Interest': [
+                f'{FEATURE_OF_INTEREST_URL_BASE}/{local_id}'
+                for local_id in feature_of_interest_local_ids
+            ],
         })
-    if len(request.session.get('computation_types', [])):
+    if len(computation_type_local_ids):
         parameters.update({
-            'Computation Types': [f'{COMPUTATION_TYPE_URL_BASE}/{local_id}' for local_id in request.session.get('computation_types', [])],
+            'Computation Types': [
+                f'{COMPUTATION_TYPE_URL_BASE}/{local_id}'
+                for local_id in computation_type_local_ids
+            ],
         })
-    if len(request.session.get('instrument_types', [])):
+    if len(instrument_type_local_ids):
         parameters.update({
-            'Instrument Types': [f'{INSTRUMENT_TYPE_URL_BASE}/{local_id}' for local_id in request.session.get('instrument_types', [])],
+            'Instrument Types': [
+                f'{INSTRUMENT_TYPE_URL_BASE}/{local_id}'
+                for local_id in instrument_type_local_ids
+            ],
         })
-    if len(request.session.get('annotation_types', [])):
+    if len(annotation_type_local_ids):
         parameters.update({
-            'Annotation Types': [f'{ANNOTATION_TYPE_URL_BASE}/{local_id}' for local_id in request.session.get('annotation_types', [])],
+            'Annotation Types': [
+                f'{ANNOTATION_TYPE_URL_BASE}/{local_id}'
+                for local_id in annotation_type_local_ids
+            ],
         })
-    if len(request.session.get('observed_properties', [])):
+    if len(observed_property_local_ids):
         parameters.update({
-            'Observed Properties': [f'{OBSERVED_PROPERTY_URL_BASE}/{local_id}' for local_id in request.session.get('observed_properties', [])],
+            'Observed Properties': [
+                f'{OBSERVED_PROPERTY_URL_BASE}/{local_id}'
+                for local_id in observed_property_local_ids
+            ],
         })
 
     return render(request, 'data_collection_search/results.html', {

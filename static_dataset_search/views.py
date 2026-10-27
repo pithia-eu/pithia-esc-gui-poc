@@ -22,8 +22,11 @@ class FeatureOfInterestSearchByContentTemplateView(BaseFeatureOfInterestSearchBy
 
 def index(request):
     if request.method == 'POST':
-        features_of_interests = request.POST.getlist('featureOfInterest')
-        request.session['sde_features_of_interest'] = features_of_interests
+        request.session.update({
+            'static_dataset_search': {
+                'features_of_interest': request.POST.getlist('featureOfInterest'),
+            }
+        })
         return HttpResponseRedirect(reverse('static_dataset_search:results'))
     return render(request, 'static_dataset_search/index.html', {
         'title': _INDEX_PAGE_TITLE,
@@ -32,19 +35,21 @@ def index(request):
 
 
 def results(request):
+    local_ids = request.session.get('static_dataset_search', {})
+    feature_of_interest_local_ids = local_ids.get('features_of_interest', [])
     feature_of_interest_urls = [
-        f'{FEATURE_OF_INTEREST_URL_BASE}/{feature_of_interest_localid}'
-        for feature_of_interest_localid in request.session.get('sde_features_of_interest', [])
+        f'{FEATURE_OF_INTEREST_URL_BASE}/{feature_of_interest_local_id}'
+        for feature_of_interest_local_id in feature_of_interest_local_ids
     ]
     results = StaticDatasetEntry.objects.for_search(feature_of_interest_urls)
 
     # Display parameters user inputted in case they want to refine for the next search.
     parameters = dict()
-    if len(request.session.get('sde_features_of_interest', [])):
+    if len(feature_of_interest_local_ids):
         parameters.update({
             'Features of Interest': [
                 f'{FEATURE_OF_INTEREST_URL_BASE}/{local_id}'
-                for local_id in request.session.get('sde_features_of_interest', [])
+                for local_id in feature_of_interest_local_ids
             ],
         })
 

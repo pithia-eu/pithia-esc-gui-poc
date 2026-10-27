@@ -259,3 +259,12 @@ LOGGING = {
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.RemoteUserBackend",
 ]
+
+# Login session data management
+
+PRESERVE_IN_SESSION_ON_LOGOUT = [
+    'data_collection_search',
+    'simple_search',
+    'static_dataset_search',
+    'workflow_search',
+]

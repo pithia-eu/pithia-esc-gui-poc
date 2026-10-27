@@ -1,11 +1,11 @@
 import logging
 from django.contrib import messages
-from django.contrib.auth import logout as auth_logout
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 from common.forms import InstitutionForLoginSessionForm
 from user_management.services import (
+    clear_user_data_from_session,
     delete_institution_for_login_session,
     query_user_info_api,
     get_institution_id_for_login_session,
@@ -143,7 +143,7 @@ class UserInfoMiddleware(object):
         })
 
     def logout_and_return_response(self, request):
-        auth_logout(request)
+        clear_user_data_from_session(request)
         if '/authorised' not in request.path:
             # If not in a protected path, no need for further
             # login session management, just carry on with the

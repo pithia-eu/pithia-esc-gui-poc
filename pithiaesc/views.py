@@ -1,6 +1,5 @@
 import environ
 import os
-from django.contrib.auth import logout as auth_logout
 from django.http import (
     FileResponse,
     HttpResponseNotFound,
@@ -23,14 +22,14 @@ from ontology.services import (
     OntologyCategoryMetadataService,
 )
 from pithiaesc.settings import BASE_DIR
-from user_management.services import CREATION_URL_BASE
+from user_management.services import clear_user_data_from_session, CREATION_URL_BASE
 
 # Initialise environment variables
 env = environ.Env()
 
 
 def logout(request):
-    auth_logout(request)
+    clear_user_data_from_session(request)
     return redirect(f'/authorised/?{urlencode({"logout": request.build_absolute_uri(reverse_lazy("home"))})}')
 
 def index(request):
