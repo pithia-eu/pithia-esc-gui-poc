@@ -31,9 +31,10 @@ env = environ.Env()
 
 def logout(request):
     clear_user_data_from_session(request)
-    return redirect(f'/authorised/?{urlencode({
+    post_logout_params = urlencode({
         "logout": re.sub(r'^http\b', 'https', request.build_absolute_uri(reverse("home")))
-    })}')
+    })
+    return redirect(f'/authorised/?{post_logout_params}')
 
 
 def index(request):
