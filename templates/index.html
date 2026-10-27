@@ -9,7 +9,7 @@
 {% block content %}
 <h1 class="visually-hidden">PITHIA e-Science Centre</h1>
 <div class="row gx-lg-4 gy-4">
-    {% if request.user.is_authenticated and not request.session.institution_for_login_session %}
+    {% if request.session.is_authenticated and not request.session.institution_for_login_session %}
     <div class="col-lg-12">
         {% include 'home/institution_selection.html' %}
     </div>
@@ -247,7 +247,7 @@
                 </div>
             </section>
             {% endif %}
-            {% if request.user.is_authenticated and request.session.user_institution_subgroups %}
+            {% if request.session.is_authenticated and request.session.user_institution_subgroups %}
             <section class="col-lg-auto flex-grow-1 section-hm management-section-hm">
                 <div class="card card-hm-container h-100">
                     <div class="card-header">

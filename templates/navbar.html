@@ -177,7 +177,7 @@
                 </li>
             </ul>
             <div class="d-md-none d-block border-top py-3">
-                {% if request.user.is_authenticated %}
+                {% if request.session.is_authenticated %}
                 <div class="d-flex justify-content-between">
                     {% include 'header/help_and_support_link.html' %}
                     <a href="{% url 'logout' %}" class="link-plain-by-default logout-link">

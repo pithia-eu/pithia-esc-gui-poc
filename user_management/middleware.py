@@ -54,6 +54,7 @@ class UserInfoMiddleware(object):
         try:
             # The access token is still valid - so this login session can
             # be populated with metadata from the UserInfo API.
+            request.session.is_authenticated = True
             self.copy_user_id_to_session(request)
             self.copy_user_given_name_to_session(request, user_info)
             self.copy_user_privilege_info_to_session(request, user_info)

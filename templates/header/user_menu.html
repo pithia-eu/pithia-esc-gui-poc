@@ -1,4 +1,4 @@
-{% if request.user.is_authenticated %}
+{% if request.session.is_authenticated %}
 <div class="dropdown user-dropdown text-start">
     <a
         href="#"
@@ -26,7 +26,7 @@
         </div>
         <hr class="dropdown-divider">
         {% endif %}
-        {% if request.user.is_authenticated %}
+        {% if request.session.is_authenticated %}
         {% if request.session.user_institution_subgroups|length > 1 %}
         <form
             action="{% url 'choose_institution_for_login_session' %}?next={{ request.path }}"
