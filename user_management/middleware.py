@@ -19,7 +19,7 @@ from user_management.services import (
 logger = logging.getLogger(__name__)
 
 
-class LoginMiddleware(object):
+class UserInfoMiddleware(object):
     def __init__(self, get_response):
         # One-time configuration and initialisation.
         self.get_response = get_response

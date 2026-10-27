@@ -88,7 +88,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.PersistentRemoteUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'user_management.middleware.LoginMiddleware',
+    'user_management.middleware.UserInfoMiddleware',
     'user_management.middleware.InstitutionSelectionMiddleware',
     'user_management.middleware.InstitutionSelectionFormMiddleware',
     'common.middleware.ExceptionLoggingMiddleware',
