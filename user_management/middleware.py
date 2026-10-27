@@ -1,4 +1,5 @@
 import logging
+from django.contrib.auth import logout as auth_logout
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
@@ -10,7 +11,6 @@ from user_management.services import (
     get_institution_memberships_of_logged_in_user,
     get_subgroup_id_for_login_session,
     parse_eduperson_entitlement,
-    remove_login_session_variables,
     set_institution_for_login_session,
 )
 
@@ -134,7 +134,7 @@ class LoginMiddleware(object):
         })
 
     def logout_and_return_response(self, request):
-        remove_login_session_variables(request.session)
+        auth_logout(request)
         if '/authorised' not in request.path:
             # If not in a protected path, no need for further
             # login session management, just carry on with the
