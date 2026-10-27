@@ -1,5 +1,6 @@
 import environ
 import os
+import re
 from django.http import (
     FileResponse,
     HttpResponseNotFound,
@@ -8,7 +9,7 @@ from django.shortcuts import (
     redirect,
     render,
 )
-from django.urls import reverse_lazy
+from django.urls import reverse
 from django.utils.http import urlencode
 
 from common.models import DataCollection
@@ -30,7 +31,10 @@ env = environ.Env()
 
 def logout(request):
     clear_user_data_from_session(request)
-    return redirect(f'/authorised/?{urlencode({"logout": request.build_absolute_uri(reverse_lazy("home"))})}')
+    return redirect(f'/authorised/?{urlencode({
+        "logout": re.sub(r'^http\b', 'https', request.build_absolute_uri(reverse("home")))
+    })}')
+
 
 def index(request):
     help_content_dicts = [
@@ -60,8 +64,10 @@ def index(request):
         'total_data_collection_count': total_data_collection_count,
     })
 
+
 def data_provider_home(request):
     return redirect('home')
+
 
 def data_collection_registration_guide(request):
     try:
@@ -69,11 +75,13 @@ def data_collection_registration_guide(request):
     except IOError:
         return HttpResponseNotFound('The data collection registration guide was not found.')
 
+
 def static_dataset_registration_guide(request):
     try:
         return FileResponse(open(os.path.join(BASE_DIR, 'resource_management', 'PITHIA Static Dataset Registration Guide.pdf'), 'rb'), content_type='application/pdf')
     except IOError:
         return HttpResponseNotFound('The static dataset registration guide was not found.')
+
 
 def workflow_registration_guide(request):
     try:
@@ -81,21 +89,25 @@ def workflow_registration_guide(request):
     except IOError:
         return HttpResponseNotFound('The workflow registration guide was not found.')
 
+
 def user_registration_guide(request):
     try:
         return FileResponse(open(os.path.join(BASE_DIR, 'user_management', 'PITHIA User Registration Guide.pdf'), 'rb'), content_type='application/pdf')
     except IOError:
         return HttpResponseNotFound('The user registration guide was not found.')
 
+
 def terms_of_use(request):
     return render(request, 'terms_of_use.html', {
         'title': 'Acceptable Use Policy and Conditions of Use'
     })
 
+
 def privacy_policy(request):
     return render(request, 'privacy_policy.html', {
         'title': 'Privacy Policy'
     })
+
 
 def support(request):
     return render(request, 'support.html', {
@@ -104,6 +116,7 @@ def support(request):
         'search_data_collections_by_content_help_article_title': SearchDataCollectionsByContentHelpArticleContent.title,
         'data_collection_simple_search_help_article_title': DataCollectionsSimpleSearchHelpArticleContent.title,
     })
+
 
 def registration_help(request):
     return render(request, 'registration_help.html', {
