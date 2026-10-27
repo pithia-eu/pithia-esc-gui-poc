@@ -30,18 +30,11 @@ class LoginMiddleware(object):
         # Check that the access token is still valid. First, check that
         # there is an access token to check. If there isn't one, perform
         # a logout.
-        OIDC_ACCESS_TOKEN_KEY = 'OIDC_access_token'
-        access_token = request.session.get(OIDC_ACCESS_TOKEN_KEY)
-        if request.META.get(OIDC_ACCESS_TOKEN_KEY):
-            # request.META is assumed to have the latest access
-            # token available, so refresh the one in the session
-            # when it is available in request.META.
-            access_token = request.META.get(OIDC_ACCESS_TOKEN_KEY)
-            request.session.update({
-                OIDC_ACCESS_TOKEN_KEY: access_token,
-            })
+        # Latest (request.META), otherwise, use access token in session.
+        access_token = self.get_latest_access_token(request)
         if not access_token:
             return self.logout_and_return_response(request)
+        self.copy_access_token_to_session(request, access_token)
         
         # Now that an access token has been found, verify that it can
         # still be used to query the UserInfo API. If it can't, perform
@@ -101,12 +94,24 @@ class LoginMiddleware(object):
 
         return response
 
+    ACCESS_TOKEN_SESSION_KEY = 'OIDC_access_token'
+    def get_latest_access_token(self, request) -> str:
+        return request.META.get(
+            self.ACCESS_TOKEN_SESSION_KEY,
+            request.session.get(self.ACCESS_TOKEN_SESSION_KEY)
+        )
+
     def get_user_info(self, request, access_token: str):
         # Access token verification
         user_info = query_user_info_api(access_token)
         if 'error' in user_info:
             return None
         return user_info
+
+    def copy_access_token_to_session(self, request, access_token: str):
+        request.session.update({
+            self.ACCESS_TOKEN_SESSION_KEY: access_token,
+        })
 
     def copy_user_id_to_session(self, request):
         # "OIDC_CLAIM_sub" acts as the identifier for the current
