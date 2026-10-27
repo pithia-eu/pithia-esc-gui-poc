@@ -94,41 +94,32 @@ class LoginMiddleware(object):
         self.copy_user_privilege_info_to_session(request, user_info)
 
         try:
-            # Check if the user is still a member of the institution
-            # they are logged in with. If not, perform the appropriate
-            # action.
             institution_id_logged_in_with = get_institution_id_for_login_session(request.session)
+            if institution_id_logged_in_with is None:
+                return self.get_response(request)
+
             memberships_of_logged_in_user = get_institution_memberships_of_logged_in_user(request.session)
+            if memberships_of_logged_in_user is None:
+                return self.get_response(request)
+
+            # Check if still a member of the institution being used for the login
+            # session. If not, invalidate the current login session's institution.
             is_user_still_member_of_institution_logged_in_with = (
-                # User is logged in with an institution
-                institution_id_logged_in_with is not None
-                # User is a member of an institution
-                and memberships_of_logged_in_user is not None
-                # User is still a member of the institution they are logged in with
-                and institution_id_logged_in_with in memberships_of_logged_in_user
+                institution_id_logged_in_with in memberships_of_logged_in_user
             )
-
-            # The logged in user's memberships should be updated with
-            # every request, so it can be used to verify if a user's
-            # authorisation level (decided by the highest level of
-            # subgroup they are currently in), is still valid.
-            institution_subgroup_id_logged_in_with = get_subgroup_id_for_login_session(request.session)
-            is_user_authorisation_level_correct = (
-                institution_subgroup_id_logged_in_with is not None
-                and memberships_of_logged_in_user is not None
-                # Subgroup the user is logged in with still matches
-                # the information from the User Info API.
-                and institution_subgroup_id_logged_in_with == memberships_of_logged_in_user.get(institution_id_logged_in_with)
-            )
-
-            if (institution_id_logged_in_with is not None
-                and not is_user_still_member_of_institution_logged_in_with):
+            if not is_user_still_member_of_institution_logged_in_with:
                 delete_institution_for_login_session(request.session)
-            elif (institution_id_logged_in_with is not None
-                and not is_user_authorisation_level_correct):
-                # If the user's permissions changed whilst
-                # they are logged in, update the user's
-                # permission level here.
+                return self.get_response(request)
+
+            # User info is refreshed every request, so privileges stay up-to-date
+            # and can be used to check and correct outdated privileges.
+            is_user_authorisation_level_correct = get_subgroup_id_for_login_session(
+                request.session
+            ) == memberships_of_logged_in_user.get(institution_id_logged_in_with)
+
+            if not is_user_authorisation_level_correct:
+                # If authorisation level changed during the login
+                # session, correct it here.
                 set_institution_for_login_session(
                     request.session,
                     institution_id_logged_in_with,
