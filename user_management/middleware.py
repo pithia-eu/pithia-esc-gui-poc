@@ -23,43 +23,6 @@ class LoginMiddleware(object):
         # One-time configuration and initialisation.
         self.get_response = get_response
 
-    # User info
-    def get_user_info(self, request, access_token: str):
-        # Access token verification
-        user_info = query_user_info_api(access_token)
-        if 'error' in user_info:
-            return None
-        return user_info
-
-    def copy_user_id_to_session(self, request):
-        # "OIDC_CLAIM_sub" acts as the identifier for the current
-        # session - it's better than other available identifiers,
-        # like "OIDC_CLAIM_email", which isn't always guaranteed.
-        request.session.update({
-            'user_id': request.META.get('OIDC_CLAIM_sub'),
-        })
-
-    def copy_user_privilege_info_to_session(self, request, user_info: dict):
-        request.session.update({
-            'user_institution_subgroups': parse_eduperson_entitlement(
-                user_info.get('eduperson_entitlement', [])
-            )
-        })
-
-    def copy_user_given_name_to_session(self, request, user_info: dict):
-        request.session.update({
-            'user_given_name': user_info.get('given_name')
-        })
-
-    def logout_and_return_response(self, request):
-        remove_login_session_variables(request.session)
-        if '/authorised' not in request.path:
-            # If not in a protected path, no need for further
-            # login session management, just carry on with the
-            # request.
-            return self.get_response(request)
-        return HttpResponseRedirect(reverse('home'))
-
     def __call__(self, request):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
@@ -137,6 +100,42 @@ class LoginMiddleware(object):
         # the view is called.
 
         return response
+
+    def get_user_info(self, request, access_token: str):
+        # Access token verification
+        user_info = query_user_info_api(access_token)
+        if 'error' in user_info:
+            return None
+        return user_info
+
+    def copy_user_id_to_session(self, request):
+        # "OIDC_CLAIM_sub" acts as the identifier for the current
+        # session - it's better than other available identifiers,
+        # like "OIDC_CLAIM_email", which isn't always guaranteed.
+        request.session.update({
+            'user_id': request.META.get('OIDC_CLAIM_sub'),
+        })
+
+    def copy_user_privilege_info_to_session(self, request, user_info: dict):
+        request.session.update({
+            'user_institution_subgroups': parse_eduperson_entitlement(
+                user_info.get('eduperson_entitlement', [])
+            )
+        })
+
+    def copy_user_given_name_to_session(self, request, user_info: dict):
+        request.session.update({
+            'user_given_name': user_info.get('given_name')
+        })
+
+    def logout_and_return_response(self, request):
+        remove_login_session_variables(request.session)
+        if '/authorised' not in request.path:
+            # If not in a protected path, no need for further
+            # login session management, just carry on with the
+            # request.
+            return self.get_response(request)
+        return HttpResponseRedirect(reverse('home'))
 
 class InstitutionSelectionMiddleware:
     def __init__(self, get_response):
