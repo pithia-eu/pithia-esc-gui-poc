@@ -1,4 +1,5 @@
 import logging
+from django.contrib import messages
 from django.contrib.auth import logout as auth_logout
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -41,6 +42,7 @@ class LoginMiddleware(object):
         # a logout.
         user_info = self.get_user_info(request, access_token)
         if not user_info:
+            messages.info(request, 'You have been logged out due to a period of inactivity.')
             return self.logout_and_return_response(request)
 
         # The access token is still valid - so the login session can
