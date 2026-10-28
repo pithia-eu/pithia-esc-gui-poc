@@ -35,7 +35,7 @@ def index(request):
     })
 
 def results(request):
-    search_parameters = request.session.get('simple_search')
+    search_parameters = request.session.get('simple_search', {})
     query = search_parameters.get('query')
     is_exact = search_parameters.get('is_exact')
 
