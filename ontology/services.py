@@ -45,8 +45,9 @@ def get_rdf_string_from_local_space_physics_ontology_file_or_none(branch_name):
     try:
         return get_rdf_string_from_local_space_physics_ontology_file(branch_name)
     except FileNotFoundError:
+        local_file_path = os.path.join(LOCAL_ONTOLOGY_FILES_PATH, f'{branch_name}.xml')
         logger.exception(
-            f'A local ontology file at "{os.path.join(LOCAL_ONTOLOGY_FILES_PATH, f'{branch_name.xml}')}" was not found.'
+            f'A local ontology file at "{local_file_path}" was not found.'
         )
     return None
 
