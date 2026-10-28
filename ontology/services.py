@@ -21,6 +21,11 @@ from pithiaesc.settings import BASE_DIR
 logger = logging.getLogger(__name__)
 
 PITHIA = Namespace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/')
+LOCAL_ONTOLOGY_FILES_PATH = os.path.join(
+    BASE_DIR,
+    'ontology',
+    'local_ontology_files'
+)
     
 
 def get_rdf_string_from_live_space_physics_ontology_branch(branch_name):
@@ -31,9 +36,7 @@ def get_rdf_string_from_live_space_physics_ontology_branch(branch_name):
 
 def get_rdf_string_from_local_space_physics_ontology_file(branch_name):
     return open(os.path.join(
-        BASE_DIR,
-        'ontology',
-        'local_ontology_files',
+        LOCAL_ONTOLOGY_FILES_PATH,
         f'{branch_name}.xml'
     ), 'r', encoding='utf-8').read()
 
@@ -42,7 +45,9 @@ def get_rdf_string_from_local_space_physics_ontology_file_or_none(branch_name):
     try:
         return get_rdf_string_from_local_space_physics_ontology_file(branch_name)
     except FileNotFoundError:
-        logger.exception(f'A local file for the ontology branch "{branch_name}" was not found.')
+        logger.exception(
+            f'A local ontology file at "{os.path.join(LOCAL_ONTOLOGY_FILES_PATH, f'{branch_name.xml}')}" was not found.'
+        )
     return None
 
 
