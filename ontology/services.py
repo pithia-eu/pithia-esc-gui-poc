@@ -34,14 +34,21 @@ def get_rdf_string_from_live_space_physics_ontology_branch(branch_name):
     ).text
 
 
-def get_rdf_string_from_local_space_physics_ontology_file(branch_name):
+def find_local_file_name_for_ontology_branch(branch_name: str):
+    return next(iter(filter(
+        lambda file_name: file_name[:-len('.xml')].lower() == branch_name.lower(),
+        os.listdir(LOCAL_ONTOLOGY_FILES_PATH)
+    )), None)
+
+
+def get_rdf_string_from_local_space_physics_ontology_file(branch_name: str):
     return open(os.path.join(
         LOCAL_ONTOLOGY_FILES_PATH,
-        f'{branch_name}.xml'
+        find_local_file_name_for_ontology_branch(branch_name)
     ), 'r', encoding='utf-8').read()
 
 
-def get_rdf_string_from_local_space_physics_ontology_file_or_none(branch_name):
+def get_rdf_string_from_local_space_physics_ontology_file_or_none(branch_name: str):
     try:
         return get_rdf_string_from_local_space_physics_ontology_file(branch_name)
     except FileNotFoundError:
