@@ -1,6 +1,7 @@
 from django.test import SimpleTestCase
 
 from .services import (
+    find_local_file_name_for_ontology_branch,
     get_rdf_string_from_local_space_physics_ontology_file_or_none,
     OntologyCategoryMetadataService,
 )
@@ -10,14 +11,27 @@ from .utils import (
 )
 
 # Create your tests here.
-class OntologyFileRetrievalTestCase(SimpleTestCase):
-    def test_get_rdf_string_from_local_space_physics_ontology_file_or_none(self):
-        """Returns the XML string of a given ontology category
-        from a locally stored XML file.
+class LocalOntologyFilesTestCase(SimpleTestCase):
+    def test_get_rdf_string_from_local_space_physics_ontology_file_or_none_returns_string(self):
+        """Returns the RDF string for an ontology branch from a locally stored .xml file.
         """
-        ontology_category = 'observedProperty'
-        xml_for_ontology_category = get_rdf_string_from_local_space_physics_ontology_file_or_none(ontology_category)
-        self.assertIsInstance(xml_for_ontology_category, str)
+        branch_name = 'observedProperty'
+        rdf_string = get_rdf_string_from_local_space_physics_ontology_file_or_none(branch_name)
+        self.assertIsInstance(rdf_string, str)
+
+    def test_find_local_file_name_for_ontology_branch_is_case_insensitive(self):
+        """Finds the name of the local file for an ontology branch, ignoring letter casing.
+        """
+        branch_name = 'metadataqualityflag'
+        file_name = find_local_file_name_for_ontology_branch(branch_name)
+        self.assertIsNotNone(file_name)
+
+    def test_get_rdf_string_from_local_space_physics_ontology_file_or_none_returns_none(self):
+        """Returns None when a local file for an ontology branch is not found.
+        """
+        branch_name = 'fake_branch_name'
+        rdf_string = get_rdf_string_from_local_space_physics_ontology_file_or_none(branch_name)
+        self.assertIsNone(rdf_string)
 
 
 class OntologyTermMetadataTestCase(SimpleTestCase):

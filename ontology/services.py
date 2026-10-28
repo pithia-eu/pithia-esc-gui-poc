@@ -28,20 +28,20 @@ LOCAL_ONTOLOGY_FILES_PATH = os.path.join(
 )
     
 
-def get_rdf_string_from_live_space_physics_ontology_branch(branch_name):
+def get_rdf_string_from_live_space_physics_ontology_branch(branch_name) -> str:
     return get(
         f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/{branch_name}/'
     ).text
 
 
-def find_local_file_name_for_ontology_branch(branch_name: str):
+def find_local_file_name_for_ontology_branch(branch_name: str) -> str | None:
     return next(iter(filter(
         lambda file_name: file_name[:-len('.xml')].lower() == branch_name.lower(),
         os.listdir(LOCAL_ONTOLOGY_FILES_PATH)
     )), None)
 
 
-def get_rdf_string_from_local_space_physics_ontology_file(branch_name: str):
+def get_rdf_string_from_local_space_physics_ontology_file(branch_name: str) -> bytes:
     return open(os.path.join(
         LOCAL_ONTOLOGY_FILES_PATH,
         find_local_file_name_for_ontology_branch(branch_name)
@@ -51,10 +51,11 @@ def get_rdf_string_from_local_space_physics_ontology_file(branch_name: str):
 def get_rdf_string_from_local_space_physics_ontology_file_or_none(branch_name: str):
     try:
         return get_rdf_string_from_local_space_physics_ontology_file(branch_name)
-    except FileNotFoundError:
-        local_file_path = os.path.join(LOCAL_ONTOLOGY_FILES_PATH, f'{branch_name}.xml')
+    except TypeError:
         logger.exception(
-            f'A local ontology file at "{local_file_path}" was not found.'
+            'Local ontology file "%s" was not found.' % (
+                os.path.join(LOCAL_ONTOLOGY_FILES_PATH, f'{branch_name}.xml')
+            )
         )
     return None
 
