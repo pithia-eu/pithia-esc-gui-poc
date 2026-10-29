@@ -6,7 +6,7 @@ from .services import (
 )
 
 from ontology.services import (
-    create_dictionary_from_pithia_ontology_component,
+    generate_dict_of_space_physics_ontology_branch,
     categorise_observed_property_dict_by_top_level_phenomenons,
     get_nested_phenomenons_in_observed_property,
 )
@@ -20,7 +20,7 @@ class ObservedPropertyCategorisationForSearchFormTestCase(TestCase):
         """
         instrument_types_grouped_by_observed_property = setup_instrument_types_for_observed_property_search_form()
         computation_types_grouped_by_observed_property = setup_computation_types_for_observed_property_search_form()
-        observed_property_dict = create_dictionary_from_pithia_ontology_component(
+        observed_property_dict = generate_dict_of_space_physics_ontology_branch(
             'observedProperty',
             instrument_types_grouped_by_observed_property=instrument_types_grouped_by_observed_property,
             computation_types_grouped_by_observed_property=computation_types_grouped_by_observed_property
@@ -40,7 +40,7 @@ class ObservedPropertyCategorisationForSearchFormTestCase(TestCase):
         # highest level phenomenons (e.g. Field, Particle).
         instrument_types_grouped_by_observed_property = setup_instrument_types_for_observed_property_search_form()
         computation_types_grouped_by_observed_property = setup_computation_types_for_observed_property_search_form()
-        observed_property_dict = create_dictionary_from_pithia_ontology_component(
+        observed_property_dict = generate_dict_of_space_physics_ontology_branch(
             'observedProperty',
             instrument_types_grouped_by_observed_property=instrument_types_grouped_by_observed_property,
             computation_types_grouped_by_observed_property=computation_types_grouped_by_observed_property

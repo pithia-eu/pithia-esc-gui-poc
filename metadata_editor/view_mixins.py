@@ -31,7 +31,7 @@ from .services import (
 
 from common import models
 from common.helpers import clean_localid_or_namespace
-from ontology.services import get_graph_of_pithia_ontology_component
+from ontology.services import create_graph_of_space_physics_ontology_branch
 
 logger = logging.getLogger(__name__)
 
@@ -132,7 +132,7 @@ class RelatedPartiesViewMixin:
 
 class OntologyCategoryChoicesViewMixin:
     def get_terms_from_ontology_category(self, ontology_category):
-        g = get_graph_of_pithia_ontology_component(ontology_category)
+        g = create_graph_of_space_physics_ontology_branch(ontology_category)
         term_dict = {}
         for s, p, o in g.triples((None, SKOS.member, None)):
             o_pref_label = g.value(o, SKOS.prefLabel)

@@ -1,3 +1,4 @@
+import copy
 import logging
 import os
 from lxml import etree
@@ -305,12 +306,13 @@ def get_ontology_category_terms_in_xml_format(ontology_category):
     return get_rdf_string_from_local_space_physics_ontology_file(ontology_category)
 
 
-def get_graph_of_pithia_ontology_component(ontology_component):
-    ontology_text = get_ontology_category_terms_in_xml_format(ontology_component)
-
-    # Create a graph object with rdflib and parse fetched text
-    g = Graph()
-    return g.parse(data=ontology_text, format='application/rdf+xml')
+def create_graph_of_space_physics_ontology_branch(branch_name):
+    """Create a graph object with rdflib.Graph() with an RDF string
+    of the ontology branch."""
+    return Graph().parse(
+        data=get_ontology_category_terms_in_xml_format(branch_name),
+        format='application/rdf+xml'
+    )
 
 
 def get_phenomenon_ids_from_observed_property_id(observed_property_id, g, phenomenon_ids):
@@ -334,7 +336,7 @@ def get_parent_node_ids_of_node_id(node_id, ontology_component, parent_node_ids,
 def get_pref_label_from_ontology_node_iri(ontology_node_iri, g=None):
     if g is None:
         ontology_term_category = ontology_node_iri.split('/')[-2]
-        g = get_graph_of_pithia_ontology_component(ontology_term_category)
+        g = create_graph_of_space_physics_ontology_branch(ontology_term_category)
     pref_label = g.value(URIRef(ontology_node_iri), SKOS.prefLabel)
     if not pref_label:
         return None
@@ -343,7 +345,7 @@ def get_pref_label_from_ontology_node_iri(ontology_node_iri, g=None):
 
 def get_skos_properties_from_ontology_node(iri, skos_properties, g=None):
     if not g:
-        g = get_graph_of_pithia_ontology_component(iri.split('/')[-2])
+        g = create_graph_of_space_physics_ontology_branch(iri.split('/')[-2])
     property_dict = {
         sp: str(g.value(URIRef(iri), SKOS[sp]))
     for sp in skos_properties}
@@ -386,7 +388,7 @@ def get_nested_phenomenons_in_observed_property(observed_property):
 
 def categorise_observed_property_dict_by_top_level_phenomenons(observed_property_dict):
     categorised_observed_property_dict = {}
-    phenomen_dict = create_dictionary_from_pithia_ontology_component('phenomenon')
+    phenomen_dict = generate_dict_of_space_physics_ontology_branch('phenomenon')
     added_observed_properties = []
 
     def add_observed_property_to_category(key, observed_property, category):
@@ -419,115 +421,159 @@ def categorise_observed_property_dict_by_top_level_phenomenons(observed_property
     return categorised_observed_property_dict
 
 
-def create_dictionary_from_pithia_ontology_component(
-        ontology_component: str,
+def generate_dict_of_space_physics_ontology_branch(
+        branch_name: str,
         instrument_types_grouped_by_observed_property: dict | None = None,
-        computation_types_grouped_by_observed_property: dict | None = None):
-    result = {}
-    graph = get_graph_of_pithia_ontology_component(ontology_component)
-    for term_url in graph.objects(predicate=SKOS.member):
+        computation_types_grouped_by_observed_property: dict | None = None) -> dict:
+
+    def extract_local_id(term_url: str) -> str:
         # Extract the localID from the last part of the term URL.
         # e.g., ../featureOfInterest/SolarSystem
-        local_id = term_url.split('/')[-1]
-        if local_id in result:
-            continue
-        result[local_id] = {
-            'id': f'{ontology_component}{local_id}',
+        return term_url.split('/')[-1]
+
+    def term_urls(graph: Graph):
+        return graph.objects(predicate=SKOS.member)
+
+    def extract_property(predicate: Resource):
+        # Extract the property name from the last part of the
+        # predicate identifier.
+        # e.g., http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+        result = predicate.identifier.split('#')[-1]
+        if len(predicate.identifier.split('#')) == 1:
+            result = predicate.identifier.split('/')[-1]
+        return result
+
+    def search_by_content_input_id(branch_name: str, local_id: str):
+        return f'{branch_name}{local_id}'
+
+    def is_property_used_in_search_by_content_form(property: str):
+        return (property == 'featureOfInterest'
+                or property == 'measurand'
+                or property == 'phenomenon')
+
+    def extract_filter_options_for_observed_property_search_by_content_form(
+            local_id: str,
+            grouped_filter_options: dict[str, list]) -> list[str]:
+        if grouped_filter_options is None:
+            grouped_filter_options = dict()
+        return grouped_filter_options.get(local_id)
+
+    def get_term_metadata(term_url: str, branch_name: str, graph: Graph):
+        local_id = extract_local_id(term_url)
+        result = {
+            'id': search_by_content_input_id(branch_name, local_id),
             'value': local_id,
             'narrowers': {},
-            'iri': f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/{ontology_component}/{local_id}',
+            'iri': term_url,
         }
         term = Resource(graph, term_url)
         for predicate in term.predicates():
             # Extract the property name from the last part of the
             # predicate identifier.
             # e.g., http://www.w3.org/1999/02/22-rdf-syntax-ns#type
-            property = predicate.identifier.split('#')[-1]
-            if len(predicate.identifier.split('#')) == 1:
-                property = predicate.identifier.split('/')[-1]
-            if property in result[local_id]:
+            property = extract_property(predicate)
+            if property in result:
                 continue
-            # The property's value may become a string if only one
-            # instance of the property value is found.
-            result[local_id][property] = []
-            if property == 'phenomenon':
-                for s, p, phenomenon_url in graph.triples((term_url, predicate.identifier, None)):
-                    labelled_local_id = f'phenomenon{phenomenon_url.split("/")[-1]}'
-                    result[local_id][property].append(labelled_local_id)
-                continue
-            if property == 'featureOfInterest':
-                for s, p, feature_of_interest_url in graph.triples((term_url, predicate.identifier, None)):
-                    labelled_local_id = f'featureOfInterest{feature_of_interest_url.split("/")[-1]}'
-                    result[local_id][property].append(labelled_local_id)
-                continue
-            if property == 'measurand':
-                for s, p, measurand_url in graph.triples((term_url, predicate.identifier, None)):
-                    labelled_local_id = f'measurand{measurand_url.split("/")[-1]}'
-                    result[local_id][property].append(labelled_local_id)
+            result[property] = []
+            if is_property_used_in_search_by_content_form(property):
+                # These properties are used as HTML data attributes to
+                # filter terms in search by content forms. The local IDs
+                # (the list of values passed to the property) are transformed
+                # to match the input IDs in the search by content page.
+                result[property] = [
+                    search_by_content_input_id(
+                        property,
+                        property_url.split("/")[-1]
+                    )
+                    for s, p, property_url in graph.triples((term_url, predicate.identifier, None))
+                ]
                 continue
             for s, p, property_item in graph.triples((term_url, predicate.identifier, None)):
-                result[local_id][property].append(str(property_item))
-            if len(result[local_id][property]) == 1:
-                result[local_id][property] = next(iter(result[local_id][property]), None)
+                result[property].append(str(property_item))
+            if len(result[property]) == 1:
+                # The property's value becomes a string if only one
+                # instance of the property value is found.
+                result[property] = next(iter(result[property]), None)
 
-        # Find child terms of the current term by doing searching backwards with SKOS.broader.
-        for child_term_url, p, o in graph.triples((None, SKOS.broader, term_url)):
-            child_term_local_id = child_term_url.split('/')[-1]
+        # Combine child terms found by both SKOS.narrower and SKOS.broader.
+        narrowers_from_skos_narrower = narrowers_for(
+            local_id,
+            branch_name,
+            graph,
+            (None, SKOS.broader, term_url)
+        )
+        narrowers_from_skos_broader = narrowers_for(
+            local_id,
+            branch_name,
+            graph,
+            (term_url, SKOS.narrower, None)
+        )
+        result.update({
+            'narrowers': narrowers_from_skos_narrower | narrowers_from_skos_broader
+        })
+
+        # Instrument and computation type properties are used as HTML data attributes
+        # in "search by content" forms to supplement observed property filtering.
+        instrument_type_local_ids = extract_filter_options_for_observed_property_search_by_content_form(
+            local_id,
+            instrument_types_grouped_by_observed_property
+        )
+        if instrument_type_local_ids:
+            result['instrumentType'] = instrument_type_local_ids
+
+        computation_type_local_ids = extract_filter_options_for_observed_property_search_by_content_form(
+            local_id,
+            computation_types_grouped_by_observed_property
+        )
+        if computation_type_local_ids:
+            result['computationType'] = computation_type_local_ids
+        return result
+
+    def narrowers_for(local_id: str, branch_name: str, graph: Graph, triple_tuple: tuple) -> dict:
+        results = {}
+        for s, p, o in graph.triples(triple_tuple):
+            child_term_url = s
+            if triple_tuple[1] == SKOS.narrower:
+                child_term_url = o
+            child_term_local_id = extract_local_id(child_term_url)
             if child_term_local_id == local_id:
                 continue
-            if child_term_local_id in result[local_id]['narrowers']:
+            if child_term_local_id in results:
                 continue
-            result[local_id]['narrowers'][child_term_local_id] = {
-                'id': f'{ontology_component}{child_term_local_id}',
+            results[child_term_local_id] = {
+                'id': search_by_content_input_id(branch_name, child_term_local_id),
                 'value': child_term_local_id,
                 'narrowers': {},
             }
+        return results
 
-        # Find more child terms by doing a forward search with SKOS.narrower. Usually, the above
-        # check with SKOS.broader finds everything this check does and more, but there may be cases
-        # where this doesn't happen.
-        for s, p, child_term_url in graph.triples((term_url, SKOS.narrower, None)):
-            child_term_local_id = child_term_url.split('/')[-1]
-            if child_term_local_id == local_id:
-                continue
-            if child_term_local_id in result[local_id]['narrowers']:
-                continue
-            result[local_id]['narrowers'][child_term_local_id] = {
-                'id': f'{ontology_component}{child_term_local_id}',
-                'value': child_term_local_id,
-                'narrowers': {},
-            }
+    def transform_hierarchically(branch_dict: dict):
+        # If a term in the branch dict appears as a child of another term, then
+        # it will be moved within that term. The move happens in two steps:
+        # copy over to the parent term, then delete the child term from the
+        # top-level of the branch dict.
+        result = copy.deepcopy(branch_dict)
+        top_level_local_ids_to_remove = []
+        for local_id in result:
+            for child_term_local_id in result[local_id]['narrowers']:
+                if child_term_local_id not in result:
+                    continue
+                result[local_id]['narrowers'][child_term_local_id] = result[child_term_local_id]
+                top_level_local_ids_to_remove.append(child_term_local_id)
+        for local_id in top_level_local_ids_to_remove:
+            result.pop(local_id, None)
+        return result
 
-    # Assumes that the ontology component is "Observed Property".
-    if instrument_types_grouped_by_observed_property is None:
-        instrument_types_grouped_by_observed_property = dict()
-    if len(instrument_types_grouped_by_observed_property) > 0:
-        for local_id, instrument_types in instrument_types_grouped_by_observed_property.items():
-            if local_id not in result:
-                continue
-            result[local_id]['instrumentType'] = instrument_types
+    graph = create_graph_of_space_physics_ontology_branch(branch_name)
+    result = {
+        extract_local_id(term_url): get_term_metadata(
+            term_url,
+            branch_name,
+            graph
+        )
+        for term_url in term_urls(graph)    
+    }
 
-    # Assumes that the ontology component is "Observed Property".
-    if computation_types_grouped_by_observed_property is None:
-        computation_types_grouped_by_observed_property = dict()
-    if len(computation_types_grouped_by_observed_property) > 0:
-        for local_id, computation_types in computation_types_grouped_by_observed_property.items():
-            if local_id not in result:
-                continue
-            result[local_id]['computationType'] = computation_types
-
-    # If a term in "result" appears as a child of another term, then
-    # it will be moved within that term. The move happens in two steps:
-    # copy over to the parent term, then delete the child term from the
-    # top-level of "result".
-    top_level_local_ids_to_remove = []
-    for local_id in result:
-        for child_term_local_id in result[local_id]['narrowers']:
-            if child_term_local_id not in result:
-                continue
-            result[local_id]['narrowers'][child_term_local_id] = result[child_term_local_id]
-            top_level_local_ids_to_remove.append(child_term_local_id)
-    for local_id in top_level_local_ids_to_remove:
-        result.pop(local_id, None)
+    result = transform_hierarchically(result)
 
     return result

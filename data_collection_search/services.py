@@ -15,7 +15,7 @@ from common.models import (
     Process,
 )
 from ontology.services import (
-    get_graph_of_pithia_ontology_component,
+    create_graph_of_space_physics_ontology_branch,
     get_measurand_ids_from_observed_property_id,
     get_phenomenon_ids_from_observed_property_id,
 )
@@ -249,7 +249,7 @@ def get_registered_annotation_types():
 
 def get_registered_phenomenons(registered_observed_property_ids):
     phenomenon_ids = []
-    g_op = get_graph_of_pithia_ontology_component('observedProperty')
+    g_op = create_graph_of_space_physics_ontology_branch('observedProperty')
     for id in registered_observed_property_ids:
         get_phenomenon_ids_from_observed_property_id(id, g_op, phenomenon_ids)
     return phenomenon_ids
@@ -257,7 +257,7 @@ def get_registered_phenomenons(registered_observed_property_ids):
 
 def get_registered_measurands(registered_observed_property_ids):
     measurand_ids = []
-    g_op = get_graph_of_pithia_ontology_component('observedProperty')
+    g_op = create_graph_of_space_physics_ontology_branch('observedProperty')
     for id in registered_observed_property_ids:
         get_measurand_ids_from_observed_property_id(id, g_op, measurand_ids)
     return measurand_ids

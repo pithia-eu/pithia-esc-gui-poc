@@ -11,7 +11,7 @@ from common.models import (
     ScientificMetadata,
 )
 from ontology.services import (
-    get_graph_of_pithia_ontology_component,
+    create_graph_of_space_physics_ontology_branch,
     get_skos_properties_from_ontology_node,
     get_pref_label_from_ontology_node_iri,
 )
@@ -47,7 +47,7 @@ def get_properties_for_ontology_server_urls(ontology_server_urls: list, skos_pro
             category_from_url = url.split('/')[-2]
             ontology_graphs_by_category = {}
             if category_from_url not in ontology_graphs_by_category:
-                ontology_graphs_by_category[category_from_url] = get_graph_of_pithia_ontology_component(category_from_url)
+                ontology_graphs_by_category[category_from_url] = create_graph_of_space_physics_ontology_branch(category_from_url)
             corresponding_graph = ontology_graphs_by_category[category_from_url]
             corresponding_properties = get_skos_properties_from_ontology_node(
                 url,
@@ -95,7 +95,7 @@ def map_ontology_server_urls_to_browse_urls(ontology_server_urls: list) -> list:
             if ontology_term_category in ontology_term_category_graphs:
                 graph_for_ontology_term = ontology_term_category_graphs[ontology_term_category]
             else:
-                graph_for_ontology_term = get_graph_of_pithia_ontology_component(ontology_term_category)
+                graph_for_ontology_term = create_graph_of_space_physics_ontology_branch(ontology_term_category)
                 ontology_term_category_graphs[ontology_term_category] = graph_for_ontology_term
             pref_label = get_pref_label_from_ontology_node_iri(ontology_server_url, g=graph_for_ontology_term)
             if pref_label:

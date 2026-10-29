@@ -4,7 +4,7 @@ from common.models import (
     Instrument,
 )
 from ontology.services import (
-    get_graph_of_pithia_ontology_component,
+    create_graph_of_space_physics_ontology_branch,
     get_parent_node_ids_of_node_id,
 )
 
@@ -58,7 +58,7 @@ def setup_computation_types_for_observed_property_search_form():
 
 def get_parents_of_registered_ontology_terms(ontology_term_ids, ontology_component, parent_node_ids, g=None):
     if g is None:
-        g = get_graph_of_pithia_ontology_component(ontology_component)
+        g = create_graph_of_space_physics_ontology_branch(ontology_component)
     for id in ontology_term_ids:
         parent_node_ids_of_id = get_parent_node_ids_of_node_id(id, ontology_component, [], g)
         if len(parent_node_ids_of_id) == 0:

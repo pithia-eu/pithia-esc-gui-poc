@@ -10,7 +10,7 @@ from django.urls import reverse
 from django.views.generic import TemplateView
 
 from .services import (
-    create_dictionary_from_pithia_ontology_component,
+    generate_dict_of_space_physics_ontology_branch,
     get_ontology_category_terms_in_xml_format,
 )
 from .utils import (
@@ -53,11 +53,13 @@ def ontology(request):
         'title': _ONTOLOGY_INDEX_PAGE_TITLE
     })
 
+
 def ontology_guide(request):
     try:
         return FileResponse(open(os.path.join(BASE_DIR, 'ontology', 'PITHIA Space Physics Ontology Guide.pdf'), 'rb'), content_type='application/pdf')
     except IOError:
         return HttpResponseNotFound('The Space Physics Ontology guide was not found.')
+
 
 def _get_ontology_category_term_list_page_title_from_category(category):
     title_base = ' '.join(split_camel_case(category)).title()
@@ -66,6 +68,7 @@ def _get_ontology_category_term_list_page_title_from_category(category):
     elif category.lower() == 'verticalcrs':
         title_base = 'Vertical Co-ordinate Reference System'
     return f'{title_base} Terms'
+
 
 def ontology_category_terms_list(request, category):
     xml_for_ontology_category = get_ontology_category_terms_in_xml_format(category)
@@ -79,9 +82,10 @@ def ontology_category_terms_list(request, category):
         'ontology_index_page_breadcrumb_text': _ONTOLOGY_INDEX_PAGE_TITLE,
     })
 
+
 def ontology_category_terms_list_only(request, category):
     try:
-        dictionary = create_dictionary_from_pithia_ontology_component(category)
+        dictionary = generate_dict_of_space_physics_ontology_branch(category)
     except FileNotFoundError:
         return HttpResponseServerError('Could not load terms due to a server error.')
     registered_ontology_terms = list()
@@ -104,6 +108,7 @@ def ontology_category_terms_list_only(request, category):
         'registered_ontology_terms': registered_ontology_terms,
         'parents_of_registered_ontology_terms': parents_of_registered_ontology_terms,
     })
+
 
 class OntologyTermDetailView(TemplateView):
     template_name = 'ontology/detail/bases/base.html'

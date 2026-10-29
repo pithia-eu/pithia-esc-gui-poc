@@ -11,7 +11,7 @@ from .services import (
 
 from ontology.services import (
     categorise_observed_property_dict_by_top_level_phenomenons,
-    create_dictionary_from_pithia_ontology_component,
+    generate_dict_of_space_physics_ontology_branch,
 )
 
 
@@ -25,7 +25,7 @@ class SearchByContentTemplateView(TemplateView):
     terms_load_error_msg = render_to_string('search/search_form_load_error.html', {})
 
     def get_dict_of_ontology_branch(self):
-        return create_dictionary_from_pithia_ontology_component(self.ontology_branch_name)
+        return generate_dict_of_space_physics_ontology_branch(self.ontology_branch_name)
 
     def get_registered_ontology_terms(self):
         return []
@@ -118,7 +118,7 @@ class BaseObservedPropertySearchByContentTemplateView(SearchByContentTemplateVie
 
     def get_dict_of_ontology_branch(self, **kwargs):
         return categorise_observed_property_dict_by_top_level_phenomenons(
-            create_dictionary_from_pithia_ontology_component(
+            generate_dict_of_space_physics_ontology_branch(
                 self.ontology_branch_name,
                 instrument_types_grouped_by_observed_property=setup_instrument_types_for_observed_property_search_form(),
                 computation_types_grouped_by_observed_property=setup_computation_types_for_observed_property_search_form()
