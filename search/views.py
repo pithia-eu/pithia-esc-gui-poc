@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from .services import (
     get_parents_of_registered_ontology_terms,
     setup_computation_types_for_observed_property_search_form,
-    setup_instrument_types_for_observed_property_search_form,
+    map_instrument_type_local_ids_to_observed_property_local_ids,
 )
 
 from ontology.services import (
@@ -120,7 +120,7 @@ class BaseObservedPropertySearchByContentTemplateView(SearchByContentTemplateVie
         return categorise_observed_property_dict_by_top_level_phenomenons(
             generate_tree_of_space_physics_ontology_branch(
                 self.ontology_branch_name,
-                instrument_types_grouped_by_observed_property=setup_instrument_types_for_observed_property_search_form(),
+                instrument_types_grouped_by_observed_property=map_instrument_type_local_ids_to_observed_property_local_ids(),
                 computation_types_grouped_by_observed_property=setup_computation_types_for_observed_property_search_form()
             )
         )

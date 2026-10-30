@@ -10,29 +10,31 @@ from ontology.services import (
 
 
 # Search form setup
-def setup_instrument_types_for_observed_property_search_form():
-    instrument_types_grouped_by_observed_property = {}
+def map_instrument_type_local_ids_to_observed_property_local_ids() -> dict[str, list]:
+    def extract_local_id(url: str):
+        return url.split('/')[-1]
+
+    result = {}
     instruments = Instrument.objects.all()
     for i in instruments:
-        # Find the Acquisition Capabilities relating to each Instrument.
-        acquisition_capability_sets = AcquisitionCapabilities.objects.referencing_instrument_url(i.metadata_server_url)
-        
-        # If any Acquisition Capabilities are found, return its Observed
-        # Property URLs.
-        observed_property_urls = []
-        for ac in acquisition_capability_sets:
-            observed_property_urls = list(set(observed_property_urls + ac.observed_property_urls))
-        
-        instrument_type_id = i.instrument_type_url.split('/')[-1]
-        for url in observed_property_urls:
+        # Extract Observed Property URLs from any Acquisition Capabilities related
+        # to each instrument.
+        observed_property_urls = list(set(
+            observed_property_url
+            for ac in AcquisitionCapabilities.objects.referencing_instrument_url(
+                i.metadata_server_url
+            )
+            for observed_property_url in ac.observed_property_urls
+        ))
+        for observed_property_url in observed_property_urls:
             # Map the Instrument Type URL of
             # the Instrument to each Observed Property URL.
-            observed_property_id = url.split('/')[-1]
-            if observed_property_id not in instrument_types_grouped_by_observed_property:
-                instrument_types_grouped_by_observed_property[observed_property_id] = []
-            instrument_types_grouped_by_observed_property[observed_property_id].append(f'instrumentType{instrument_type_id}')
-            instrument_types_grouped_by_observed_property[observed_property_id] = list(set(instrument_types_grouped_by_observed_property[observed_property_id]))
-    return instrument_types_grouped_by_observed_property
+            observed_property_local_id = extract_local_id(observed_property_url)
+            if observed_property_local_id not in result:
+                result[observed_property_local_id] = []
+            result[observed_property_local_id].append(f'instrumentType{extract_local_id(i.instrument_type_url)}')
+            result[observed_property_local_id] = list(set(result[observed_property_local_id]))
+    return result
 
 
 def setup_computation_types_for_observed_property_search_form():
@@ -47,11 +49,11 @@ def setup_computation_types_for_observed_property_search_form():
             # Map the Computation Type URLs of the Computation Capabilities
             # registration to each Observed Property URL of the Computation
             # Capabilities registration.
-            observed_property_id = url.split('/')[-1]
-            if observed_property_id not in computation_types_grouped_by_observed_property:
-                computation_types_grouped_by_observed_property[observed_property_id] = []
-            computation_types_grouped_by_observed_property[observed_property_id] = list(set(
-                computation_types_grouped_by_observed_property[observed_property_id] + [f'computationType{id}' for id in computation_type_ids]
+            observed_property_local_id = url.split('/')[-1]
+            if observed_property_local_id not in computation_types_grouped_by_observed_property:
+                computation_types_grouped_by_observed_property[observed_property_local_id] = []
+            computation_types_grouped_by_observed_property[observed_property_local_id] = list(set(
+                computation_types_grouped_by_observed_property[observed_property_local_id] + [f'computationType{id}' for id in computation_type_ids]
             ))
     return computation_types_grouped_by_observed_property
 

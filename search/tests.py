@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from .services import (
     setup_computation_types_for_observed_property_search_form,
-    setup_instrument_types_for_observed_property_search_form,
+    map_instrument_type_local_ids_to_observed_property_local_ids,
 )
 
 from ontology.services import (
@@ -18,7 +18,7 @@ class ObservedPropertyCategorisationForSearchFormTestCase(TestCase):
         """Returns a flat list of the phenomenons of an observed property
         and the observed properties child terms.
         """
-        instrument_types_grouped_by_observed_property = setup_instrument_types_for_observed_property_search_form()
+        instrument_types_grouped_by_observed_property = map_instrument_type_local_ids_to_observed_property_local_ids()
         computation_types_grouped_by_observed_property = setup_computation_types_for_observed_property_search_form()
         observed_property_dict = generate_tree_of_space_physics_ontology_branch(
             'observedProperty',
@@ -38,7 +38,7 @@ class ObservedPropertyCategorisationForSearchFormTestCase(TestCase):
         # The Observed Properties search form is broken up
         # into sections by headings. These headings are the
         # highest level phenomenons (e.g. Field, Particle).
-        instrument_types_grouped_by_observed_property = setup_instrument_types_for_observed_property_search_form()
+        instrument_types_grouped_by_observed_property = map_instrument_type_local_ids_to_observed_property_local_ids()
         computation_types_grouped_by_observed_property = setup_computation_types_for_observed_property_search_form()
         observed_property_dict = generate_tree_of_space_physics_ontology_branch(
             'observedProperty',
@@ -54,7 +54,7 @@ class ObservedPropertySearchFormSetupTestCase(TestCase):
         """Returns a dict of instrument types correctly
         grouped by their observed properties.
         """
-        instrument_types_grouped_by_observed_property = setup_instrument_types_for_observed_property_search_form()
+        instrument_types_grouped_by_observed_property = map_instrument_type_local_ids_to_observed_property_local_ids()
         # print('instrument_types_grouped_by_observed_property', instrument_types_grouped_by_observed_property)
         self.assertTrue(isinstance(instrument_types_grouped_by_observed_property, dict))
 
