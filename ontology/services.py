@@ -388,7 +388,7 @@ def get_nested_phenomenons_in_observed_property(observed_property):
 
 def categorise_observed_property_dict_by_top_level_phenomenons(observed_property_dict):
     categorised_observed_property_dict = {}
-    phenomen_dict = generate_tree_of_space_physics_ontology_branch('phenomenon')
+    phenomen_dict = OntologyBranchTree('phenomenon').to_dict()
     added_observed_properties = []
 
     def add_observed_property_to_category(key, observed_property, category):
@@ -421,17 +421,16 @@ def categorise_observed_property_dict_by_top_level_phenomenons(observed_property
     return categorised_observed_property_dict
 
 
-def generate_tree_of_space_physics_ontology_branch(
-        branch_name: str,
-        instrument_types_grouped_by_observed_property: dict | None = None,
-        computation_types_grouped_by_observed_property: dict | None = None) -> dict:
+class OntologyBranchTree:
+    def __init__(self, branch_name: str):
+        self.branch_name = branch_name
 
-    def extract_local_id(term_url: str) -> str:
+    def extract_local_id(self, term_url: str) -> str:
         # Extract the localID from the last part of the term URL.
         # e.g., ../featureOfInterest/SolarSystem
         return term_url.split('/')[-1]
 
-    def extract_property(predicate: Resource):
+    def extract_property(self, predicate: Resource):
         # Extract the property name from the last part of the
         # predicate identifier.
         # e.g., http://www.w3.org/1999/02/22-rdf-syntax-ns#type
@@ -440,25 +439,27 @@ def generate_tree_of_space_physics_ontology_branch(
             result = predicate.identifier.split('/')[-1]
         return result
 
-    def search_by_content_input_id(branch_name: str, local_id: str):
+    def id_for_html_element(self, branch_name: str, local_id: str):
         return f'{branch_name}{local_id}'
 
-    def is_property_used_in_search_by_content_form(property: str):
-        return (property == 'featureOfInterest'
-                or property == 'measurand'
-                or property == 'phenomenon')
+    def find_property_value(
+            self, 
+            term_url: str,
+            predicate: Resource,
+            graph: Graph):
+        result = []
+        for s, p, property_item in graph.triples((term_url, predicate.identifier, None)):
+            result.append(str(property_item))
+        if len(result) == 1:
+            # The property's value becomes a string if only one
+            # instance of the property value is found.
+            result = next(iter(result), None)
+        return result
 
-    def extract_filter_options_for_observed_property_search_by_content_form(
-            local_id: str,
-            grouped_filter_options: dict[str, list]) -> list[str]:
-        if grouped_filter_options is None:
-            grouped_filter_options = dict()
-        return grouped_filter_options.get(local_id)
-
-    def get_term_metadata(term_url: str, branch_name: str, graph: Graph):
-        local_id = extract_local_id(term_url)
+    def get_term_metadata(self, term_url: str, branch_name: str, graph: Graph):
+        local_id = self.extract_local_id(term_url)
         result = {
-            'id': search_by_content_input_id(branch_name, local_id),
+            'id_for_html_element': self.id_for_html_element(branch_name, local_id),
             'value': local_id,
             'narrowers': {},
             'iri': term_url,
@@ -468,38 +469,19 @@ def generate_tree_of_space_physics_ontology_branch(
             # Extract the property name from the last part of the
             # predicate identifier.
             # e.g., http://www.w3.org/1999/02/22-rdf-syntax-ns#type
-            property = extract_property(predicate)
+            property = self.extract_property(predicate)
             if property in result:
                 continue
-            result[property] = []
-            if is_property_used_in_search_by_content_form(property):
-                # These properties are used as HTML data attributes to
-                # filter terms in search by content forms. The local IDs
-                # (the list of values passed to the property) are transformed
-                # to match the input IDs in the search by content page.
-                result[property] = [
-                    search_by_content_input_id(
-                        property,
-                        property_url.split("/")[-1]
-                    )
-                    for s, p, property_url in graph.triples((term_url, predicate.identifier, None))
-                ]
-                continue
-            for s, p, property_item in graph.triples((term_url, predicate.identifier, None)):
-                result[property].append(str(property_item))
-            if len(result[property]) == 1:
-                # The property's value becomes a string if only one
-                # instance of the property value is found.
-                result[property] = next(iter(result[property]), None)
+            result[property] = self.find_property_value(term_url, predicate, graph)
 
         # Combine child terms found by both SKOS.narrower and SKOS.broader.
-        narrowers_from_skos_narrower = narrowers_for(
+        narrowers_from_skos_narrower = self.narrowers_for(
             local_id,
             branch_name,
             graph,
             (None, SKOS.broader, term_url)
         )
-        narrowers_from_skos_broader = narrowers_for(
+        narrowers_from_skos_broader = self.narrowers_for(
             local_id,
             branch_name,
             graph,
@@ -509,42 +491,30 @@ def generate_tree_of_space_physics_ontology_branch(
             'narrowers': narrowers_from_skos_narrower | narrowers_from_skos_broader
         })
 
-        # Instrument and computation type properties are used as HTML data attributes
-        # in "search by content" forms to supplement observed property filtering.
-        instrument_type_local_ids = extract_filter_options_for_observed_property_search_by_content_form(
-            local_id,
-            instrument_types_grouped_by_observed_property
-        )
-        if instrument_type_local_ids:
-            result['instrumentType'] = instrument_type_local_ids
-
-        computation_type_local_ids = extract_filter_options_for_observed_property_search_by_content_form(
-            local_id,
-            computation_types_grouped_by_observed_property
-        )
-        if computation_type_local_ids:
-            result['computationType'] = computation_type_local_ids
         return result
 
-    def narrowers_for(local_id: str, branch_name: str, graph: Graph, triple_tuple: tuple) -> dict:
+    def narrowers_for(self, local_id: str, branch_name: str, graph: Graph, triple_tuple: tuple) -> dict:
         results = {}
         for s, p, o in graph.triples(triple_tuple):
             child_term_url = s
             if triple_tuple[1] == SKOS.narrower:
                 child_term_url = o
-            child_term_local_id = extract_local_id(child_term_url)
+            child_term_local_id = self.extract_local_id(child_term_url)
             if child_term_local_id == local_id:
                 continue
             if child_term_local_id in results:
                 continue
             results[child_term_local_id] = {
-                'id': search_by_content_input_id(branch_name, child_term_local_id),
+                'id_for_html_element': self.id_for_html_element(branch_name, child_term_local_id),
                 'value': child_term_local_id,
                 'narrowers': {},
             }
         return results
 
-    def transform_hierarchically(branch_dict: dict):
+    def term_urls(self, graph: Graph):
+        return graph.objects(predicate=SKOS.member)
+
+    def arrange_hierarchically(self, branch_dict: dict):
         # If a term in the branch dict appears as a child of another term, then
         # it will be moved within that term. The move happens in two steps:
         # copy over to the parent term, then delete the child term from the
@@ -561,19 +531,80 @@ def generate_tree_of_space_physics_ontology_branch(
             result.pop(local_id, None)
         return result
 
-    def term_urls(graph: Graph):
-        return graph.objects(predicate=SKOS.member)
+    def to_dict(self):
+        graph = create_graph_of_space_physics_ontology_branch(self.branch_name)
+        result = {
+            self.extract_local_id(term_url): self.get_term_metadata(
+                term_url,
+                self.branch_name,
+                graph
+            )
+            for term_url in self.term_urls(graph)    
+        }
 
-    graph = create_graph_of_space_physics_ontology_branch(branch_name)
-    result = {
-        extract_local_id(term_url): get_term_metadata(
-            term_url,
-            branch_name,
-            graph
+        result = self.arrange_hierarchically(result)
+
+        return result
+
+
+class ObservedPropertySearchByContentTree(OntologyBranchTree):
+    def __init__(
+            self,
+            branch_name: str,
+            instrument_types_grouped_by_observed_property: dict | None = None,
+            computation_types_grouped_by_observed_property: dict | None = None):
+        super().__init__(branch_name)
+        self.instrument_types_grouped_by_observed_property = instrument_types_grouped_by_observed_property
+        self.computation_types_grouped_by_observed_property = computation_types_grouped_by_observed_property
+
+    def is_property_used_in_search_by_content_form(self, property: str):
+        return (property == 'featureOfInterest'
+                or property == 'measurand'
+                or property == 'phenomenon')
+
+    def find_property_value(
+            self, 
+            term_url: str,
+            predicate: Resource,
+            graph: Graph):
+        if self.is_property_used_in_search_by_content_form(self.extract_property(predicate)):
+            # These properties are used as HTML data attributes to
+            # filter terms in search by content forms. The local IDs
+            # (the list of values passed to the property) are transformed
+            # to match the input IDs in the search by content page.
+            return [
+                self.id_for_html_element(
+                    self.extract_property(predicate),
+                    property_url.split("/")[-1]
+                )
+                for s, p, property_url in graph.triples((term_url, predicate.identifier, None))
+            ]
+        return super().find_property_value(term_url, predicate, graph)
+
+    def extract_filter_options_for_observed_property_search_by_content_form(
+            self, 
+            local_id: str,
+            grouped_filter_options: dict[str, list]) -> list[str]:
+        if grouped_filter_options is None:
+            grouped_filter_options = dict()
+        return grouped_filter_options.get(local_id)
+
+    def get_term_metadata(self, term_url: str, branch_name: str, graph: Graph):
+        result = super().get_term_metadata(term_url, branch_name, graph)
+        local_id = self.extract_local_id(term_url)
+        # Instrument and computation type properties are used as HTML data attributes
+        # in "search by content" forms to supplement observed property filtering.
+        instrument_type_local_ids = self.extract_filter_options_for_observed_property_search_by_content_form(
+            local_id,
+            self.instrument_types_grouped_by_observed_property
         )
-        for term_url in term_urls(graph)    
-    }
+        if instrument_type_local_ids:
+            result['instrumentType'] = instrument_type_local_ids
 
-    result = transform_hierarchically(result)
-
-    return result
+        computation_type_local_ids = self.extract_filter_options_for_observed_property_search_by_content_form(
+            local_id,
+            self.computation_types_grouped_by_observed_property
+        )
+        if computation_type_local_ids:
+            result['computationType'] = computation_type_local_ids
+        return result

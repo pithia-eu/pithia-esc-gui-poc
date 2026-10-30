@@ -10,8 +10,8 @@ from django.urls import reverse
 from django.views.generic import TemplateView
 
 from .services import (
-    generate_tree_of_space_physics_ontology_branch,
     get_ontology_category_terms_in_xml_format,
+    OntologyBranchTree,
 )
 from .utils import (
     LicenceOntologyTermMetadata,
@@ -85,7 +85,7 @@ def ontology_category_terms_list(request, category):
 
 def ontology_category_terms_list_only(request, category):
     try:
-        dictionary = generate_tree_of_space_physics_ontology_branch(category)
+        dictionary = OntologyBranchTree(category).to_dict()
     except FileNotFoundError:
         return HttpResponseServerError('Could not load terms due to a server error.')
     registered_ontology_terms = list()

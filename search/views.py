@@ -11,7 +11,8 @@ from .services import (
 
 from ontology.services import (
     categorise_observed_property_dict_by_top_level_phenomenons,
-    generate_tree_of_space_physics_ontology_branch,
+    ObservedPropertySearchByContentTree,
+    OntologyBranchTree,
 )
 
 
@@ -25,7 +26,7 @@ class SearchByContentTemplateView(TemplateView):
     terms_load_error_msg = render_to_string('search/search_form_load_error.html', {})
 
     def get_dict_of_ontology_branch(self):
-        return generate_tree_of_space_physics_ontology_branch(self.ontology_branch_name)
+        return OntologyBranchTree(self.ontology_branch_name).to_dict()
 
     def get_registered_ontology_terms(self):
         return []
@@ -118,11 +119,11 @@ class BaseObservedPropertySearchByContentTemplateView(SearchByContentTemplateVie
 
     def get_dict_of_ontology_branch(self, **kwargs):
         return categorise_observed_property_dict_by_top_level_phenomenons(
-            generate_tree_of_space_physics_ontology_branch(
+            ObservedPropertySearchByContentTree(
                 self.ontology_branch_name,
                 instrument_types_grouped_by_observed_property=map_instrument_type_local_ids_to_observed_property_local_ids(),
                 computation_types_grouped_by_observed_property=setup_computation_types_for_observed_property_search_form()
-            )
+            ).to_dict()
         )
 
     def get(self, request, *args, **kwargs):

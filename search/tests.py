@@ -6,9 +6,9 @@ from .services import (
 )
 
 from ontology.services import (
-    generate_tree_of_space_physics_ontology_branch,
     categorise_observed_property_dict_by_top_level_phenomenons,
     get_nested_phenomenons_in_observed_property,
+    ObservedPropertySearchByContentTree,
 )
 
 
@@ -20,11 +20,11 @@ class ObservedPropertyCategorisationForSearchFormTestCase(TestCase):
         """
         instrument_types_grouped_by_observed_property = map_instrument_type_local_ids_to_observed_property_local_ids()
         computation_types_grouped_by_observed_property = setup_computation_types_for_observed_property_search_form()
-        observed_property_dict = generate_tree_of_space_physics_ontology_branch(
+        observed_property_dict = ObservedPropertySearchByContentTree(
             'observedProperty',
             instrument_types_grouped_by_observed_property=instrument_types_grouped_by_observed_property,
             computation_types_grouped_by_observed_property=computation_types_grouped_by_observed_property
-        )
+        ).to_dict()
         first_observed_property = list(observed_property_dict.values())[0]
         phenomenons = get_nested_phenomenons_in_observed_property(first_observed_property)
         print('phenomenons', phenomenons)
@@ -40,11 +40,11 @@ class ObservedPropertyCategorisationForSearchFormTestCase(TestCase):
         # highest level phenomenons (e.g. Field, Particle).
         instrument_types_grouped_by_observed_property = map_instrument_type_local_ids_to_observed_property_local_ids()
         computation_types_grouped_by_observed_property = setup_computation_types_for_observed_property_search_form()
-        observed_property_dict = generate_tree_of_space_physics_ontology_branch(
+        observed_property_dict = ObservedPropertySearchByContentTree(
             'observedProperty',
             instrument_types_grouped_by_observed_property=instrument_types_grouped_by_observed_property,
             computation_types_grouped_by_observed_property=computation_types_grouped_by_observed_property
-        )
+        ).to_dict()
         categorised_observed_property_dict = categorise_observed_property_dict_by_top_level_phenomenons(observed_property_dict)
         self.assertIsInstance(categorised_observed_property_dict, dict)
 

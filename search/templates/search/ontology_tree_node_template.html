@@ -5,7 +5,7 @@
     {% else %}
     class="form-check d-inline-block"
     {% endif %}>
-    <input type="checkbox" id="{{ node.id }}" name="{{ ontology_component_name }}" value="{{ node.value }}"
+    <input type="checkbox" id="{{ node.id_for_html_element }}" name="{{ ontology_component_name }}" value="{{ node.value }}"
         data-is-parent-node="{{ is_parent_node|default_if_none:"false" }}"
         data-parent-node-in-ontology="{{ parent_node_in_ontology|default_if_none:"" }}"
         {% if node.phenomenon %}data-phenomenons="{{ node.phenomenon|join:" " }}"{% endif %}
@@ -18,7 +18,7 @@
         {% else %}
         class="search-term-checkbox form-check-input"
         {% endif %}>
-    <label for="{{ node.id }}"
+    <label for="{{ node.id_for_html_element }}"
         {% if registered_ontology_terms and node.value not in registered_ontology_terms and node.value not in parents_of_registered_ontology_terms %}
         class="form-check-label"
         {% else %}

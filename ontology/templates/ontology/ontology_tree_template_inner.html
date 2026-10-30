@@ -11,7 +11,7 @@ class="border-bottom pb-3 mb-3"
         </summary>
         <ul>
         {% for key, value in node.narrowers.items|dictsort:0 %}
-            {% with node=value category=category parent_node_in_ontology=node.id is_parent_node="false" template_name="ontology/ontology_tree_template_inner.html" registered_ontology_terms=registered_ontology_terms parents_of_registered_ontology_terms=parents_of_registered_ontology_terms %}
+            {% with node=value category=category parent_node_in_ontology=node.id_for_html_element is_parent_node="false" template_name="ontology/ontology_tree_template_inner.html" registered_ontology_terms=registered_ontology_terms parents_of_registered_ontology_terms=parents_of_registered_ontology_terms %}
             {% include template_name %}
             {% endwith %}
         {% endfor %}
