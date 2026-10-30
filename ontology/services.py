@@ -388,7 +388,7 @@ def get_nested_phenomenons_in_observed_property(observed_property):
 
 def categorise_observed_property_dict_by_top_level_phenomenons(observed_property_dict):
     categorised_observed_property_dict = {}
-    phenomen_dict = generate_dict_of_space_physics_ontology_branch('phenomenon')
+    phenomen_dict = generate_tree_of_space_physics_ontology_branch('phenomenon')
     added_observed_properties = []
 
     def add_observed_property_to_category(key, observed_property, category):
@@ -421,7 +421,7 @@ def categorise_observed_property_dict_by_top_level_phenomenons(observed_property
     return categorised_observed_property_dict
 
 
-def generate_dict_of_space_physics_ontology_branch(
+def generate_tree_of_space_physics_ontology_branch(
         branch_name: str,
         instrument_types_grouped_by_observed_property: dict | None = None,
         computation_types_grouped_by_observed_property: dict | None = None) -> dict:
@@ -430,9 +430,6 @@ def generate_dict_of_space_physics_ontology_branch(
         # Extract the localID from the last part of the term URL.
         # e.g., ../featureOfInterest/SolarSystem
         return term_url.split('/')[-1]
-
-    def term_urls(graph: Graph):
-        return graph.objects(predicate=SKOS.member)
 
     def extract_property(predicate: Resource):
         # Extract the property name from the last part of the
@@ -563,6 +560,9 @@ def generate_dict_of_space_physics_ontology_branch(
         for local_id in top_level_local_ids_to_remove:
             result.pop(local_id, None)
         return result
+
+    def term_urls(graph: Graph):
+        return graph.objects(predicate=SKOS.member)
 
     graph = create_graph_of_space_physics_ontology_branch(branch_name)
     result = {
