@@ -1384,7 +1384,10 @@ details.details-documentation[open] summary > span::after {
     font-size: 1rem !important;
 }
 
-.resource-detail-section details[name="details-collection-results"] table li:not(:last-child) .metadata-server-url::after,
+.resource-detail-section details[name="details-collection-results"] table li:not(:last-child) .metadata-server-url::after {
+    content: ", ";
+}
+
 ul.service-function-list > li:not(:last-child) .metadata-server-url.loading::after,
 ul.service-function-list > li:not(:last-child) .metadata-server-url-text::after {
     content: "";
