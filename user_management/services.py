@@ -47,13 +47,13 @@ def parse_eduperson_entitlement(eduperson_entitlement: list[str]) -> dict[str, s
     """
     result = dict()
     # urn:mace:egi.eu:group:vo.abc.test.eu:organizations:<membership_declaration>:role=member#aai.egi.eu
-    start_boundary = 'organizations:'
+    start_boundary = os.environ['MEMBERSHIP_START_BOUNDARY']
     values_with_start_boundary = filter(
         lambda value: start_boundary in value,
         eduperson_entitlement
     )
     # <membership_declaration>:role
-    end_boundary = ':role'
+    end_boundary = os.environ['MEMBERSHIP_END_BOUNDARY']
     values_with_start_and_end_boundary = filter(
         lambda value: end_boundary in value,
         values_with_start_boundary
@@ -68,12 +68,12 @@ def parse_eduperson_entitlement(eduperson_entitlement: list[str]) -> dict[str, s
     )
     # <membership_declaration> = institution_name:group_name
     valid_membership_declarations = filter(
-        lambda value: ':' in value,
+        lambda value: os.environ['MEMBERSHIP_DELIMITER'] in value,
         membership_declarations
     )
     # institution_name: group_name
     for value in valid_membership_declarations:
-        institution_name, group_name = unquote(value).split(':')
+        institution_name, group_name = unquote(value).split(os.environ['MEMBERSHIP_DELIMITER'])
         if result.get(institution_name) == 'admins':
             continue
         result.update({
