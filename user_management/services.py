@@ -1,14 +1,10 @@
 import json
 import logging
 import os
-import re
 import requests
 
 from django.conf import settings
 from django.contrib.auth import logout as auth_logout
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-from django.utils.http import urlencode
 from urllib.parse import unquote
 
 
