@@ -1,6 +1,6 @@
 import logging
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse
 
 from common.forms import InstitutionForLoginSessionForm
@@ -150,7 +150,7 @@ class UserInfoMiddleware(object):
             # login session management, just carry on with the
             # request.
             return self.get_response(request)
-        return HttpResponseRedirect(reverse('home'))
+        return redirect(reverse('home'))
 
 
 class InstitutionSelectionMiddleware:
