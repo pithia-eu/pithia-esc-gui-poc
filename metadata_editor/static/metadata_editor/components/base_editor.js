@@ -23,7 +23,10 @@ export class BaseEditor {
         this.isRequestAborted = false;
         // Error messages
         this.NETWORK_ERROR_MSG = "The connection to the server timed out. Please try submitting the form again, and if the problem persists please let our support team know.";
-        this.REFRESH_PAGE_MSG = "Your login session has expired. Please refresh the page. If you added any files through the wizard before submitting your changes to the server, these will need to be added again.";
+        this.REFRESH_PAGE_MSG = "Your login session needs to be refreshed. Please refresh the \
+                                page. Any changes you have made have been saved locally in your \
+                                browser, but if you added any files to the wizard before sending \
+                                your changes to the server, these will need to be added again.";
     }
 
     setupEventListeners() {
