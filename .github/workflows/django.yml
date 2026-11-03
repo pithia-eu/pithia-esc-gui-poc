@@ -51,6 +51,9 @@ jobs:
         MONGODB_CONNECTION_STRING: mongodb://localhost:27017
         DB_NAME: test
         DJANGO_RW_DATABASE_NAME: default
+        MEMBERSHIP_START_BOUNDARY: organizations:
+        MEMBERSHIP_END_BOUNDARY: :role
+        MEMBERSHIP_DELIMITER: :
       run: |
         touch pithiaesc/.env
         echo SECRET_KEY="$SECRET_KEY" >> pithiaesc/.env
@@ -65,6 +68,9 @@ jobs:
         echo MONGODB_CONNECTION_STRING="$MONGODB_CONNECTION_STRING" >> pithiaesc/.env
         echo DB_NAME="$DB_NAME" >> pithiaesc/.env
         echo DJANGO_RW_DATABASE_NAME="$DJANGO_RW_DATABASE_NAME" >> pithiaesc/.env
+        echo MEMBERSHIP_START_BOUNDARY="$MEMBERSHIP_START_BOUNDARY" >> pithiaesc/.env
+        echo MEMBERSHIP_END_BOUNDARY="$MEMBERSHIP_END_BOUNDARY" >> pithiaesc/.env
+        echo MEMBERSHIP_DELIMITER="$MEMBERSHIP_DELIMITER" >> pithiaesc/.env
         
         echo "cat pithiaesc/.env"
         cat pithiaesc/.env
