@@ -23,6 +23,7 @@ export class BaseEditor {
         this.isRequestAborted = false;
         // Error messages
         this.NETWORK_ERROR_MSG = "The connection to the server timed out. Please try submitting the form again, and if the problem persists please let our support team know.";
+        this.REFRESH_PAGE_MSG = "Your login session has expired. Please refresh the page. If you added any files through the wizard before submitting your changes to the server, these will need to be added again.";
     }
 
     setupEventListeners() {
@@ -169,6 +170,11 @@ export class BaseEditor {
             
             if (response.status === 504) {
                 this.updateFormStatusAlert(this.NETWORK_ERROR_MSG);
+                throw new Error(`Response status: ${response.status}`);
+            }
+
+            if (response.status === 401) {
+                this.updateFormStatusAlert(this.REFRESH_PAGE_MSG);
                 throw new Error(`Response status: ${response.status}`);
             }
     
