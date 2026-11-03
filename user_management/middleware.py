@@ -47,7 +47,7 @@ class UserInfoMiddleware(object):
                 return self.logout_and_return_response(request)
         except Exception:
             logger.exception(
-                'Could not finish verifying access token due to an unexpected error. Logging out of the current session.'
+                'Could not finish verifying access token due to an unexpected error. Clearing current login session.'
             )
             return self.logout_and_return_response(request)
 
@@ -92,7 +92,7 @@ class UserInfoMiddleware(object):
                 )
         except Exception:
             logger.exception(
-                'Could not complete login session configuration due to an unexpected error. Logging out of the current session.'
+                'Could not complete user info configuration with session due to an unexpected error. Clearing current login session.'
             )
             return self.logout_and_return_response(request)
 
