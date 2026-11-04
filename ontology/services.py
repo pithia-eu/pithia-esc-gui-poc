@@ -421,14 +421,15 @@ def categorise_observed_property_dict_by_top_level_phenomenons(observed_property
     return categorised_observed_property_dict
 
 
+def extract_local_id(term_url: str) -> str:
+    # Extract the localID from the last part of the term URL.
+    # e.g., ../featureOfInterest/SolarSystem
+    return term_url.split('/')[-1]
+
+
 class OntologyBranchTree:
     def __init__(self, branch_name: str):
         self.branch_name = branch_name
-
-    def extract_local_id(self, term_url: str) -> str:
-        # Extract the localID from the last part of the term URL.
-        # e.g., ../featureOfInterest/SolarSystem
-        return term_url.split('/')[-1]
 
     def extract_property(self, predicate: Resource):
         # Extract the property name from the last part of the
@@ -457,7 +458,7 @@ class OntologyBranchTree:
         return result
 
     def get_term_metadata(self, term_url: str, branch_name: str, graph: Graph):
-        local_id = self.extract_local_id(term_url)
+        local_id = extract_local_id(term_url)
         result = {
             'id_for_html_element': self.id_for_html_element(branch_name, local_id),
             'value': local_id,
@@ -499,7 +500,7 @@ class OntologyBranchTree:
             child_term_url = s
             if triple_tuple[1] == SKOS.narrower:
                 child_term_url = o
-            child_term_local_id = self.extract_local_id(child_term_url)
+            child_term_local_id = extract_local_id(child_term_url)
             if child_term_local_id == local_id:
                 continue
             if child_term_local_id in results:
@@ -534,7 +535,7 @@ class OntologyBranchTree:
     def to_dict(self):
         graph = create_graph_of_space_physics_ontology_branch(self.branch_name)
         result = {
-            self.extract_local_id(term_url): self.get_term_metadata(
+            extract_local_id(term_url): self.get_term_metadata(
                 term_url,
                 self.branch_name,
                 graph
@@ -591,7 +592,7 @@ class ObservedPropertySearchByContentTree(OntologyBranchTree):
 
     def get_term_metadata(self, term_url: str, branch_name: str, graph: Graph):
         result = super().get_term_metadata(term_url, branch_name, graph)
-        local_id = self.extract_local_id(term_url)
+        local_id = extract_local_id(term_url)
         # Instrument and computation type properties are used as HTML data attributes
         # in "search by content" forms to supplement observed property filtering.
         instrument_type_local_ids = self.extract_filter_options_for_observed_property_search_by_content_form(
