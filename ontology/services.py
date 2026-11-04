@@ -431,86 +431,8 @@ class OntologyBranchTree:
     def __init__(self, branch_name: str):
         self.branch_name = branch_name
 
-    def extract_property(self, predicate: Resource):
-        # Extract the property name from the last part of the
-        # predicate identifier.
-        # e.g., http://www.w3.org/1999/02/22-rdf-syntax-ns#type
-        result = predicate.identifier.split('#')[-1]
-        if len(predicate.identifier.split('#')) == 1:
-            result = predicate.identifier.split('/')[-1]
-        return result
-
-    def id_for_html_element(self, branch_name: str, local_id: str):
-        return f'{branch_name}{local_id}'
-
-    def find_property_value(
-            self, 
-            term_url: str,
-            predicate: Resource,
-            graph: Graph):
-        result = []
-        for s, p, property_item in graph.triples((term_url, predicate.identifier, None)):
-            result.append(str(property_item))
-        if len(result) == 1:
-            # The property's value becomes a string if only one
-            # instance of the property value is found.
-            result = next(iter(result), None)
-        return result
-
     def get_term_metadata(self, term_url: str, branch_name: str, graph: Graph):
-        local_id = extract_local_id(term_url)
-        result = {
-            'id_for_html_element': self.id_for_html_element(branch_name, local_id),
-            'value': local_id,
-            'narrowers': {},
-            'iri': term_url,
-        }
-        term = Resource(graph, term_url)
-        for predicate in term.predicates():
-            # Extract the property name from the last part of the
-            # predicate identifier.
-            # e.g., http://www.w3.org/1999/02/22-rdf-syntax-ns#type
-            property = self.extract_property(predicate)
-            if property in result:
-                continue
-            result[property] = self.find_property_value(term_url, predicate, graph)
-
-        # Combine child terms found by both SKOS.narrower and SKOS.broader.
-        narrowers_from_skos_narrower = self.narrowers_for(
-            local_id,
-            branch_name,
-            graph,
-            (None, SKOS.broader, term_url)
-        )
-        narrowers_from_skos_broader = self.narrowers_for(
-            local_id,
-            branch_name,
-            graph,
-            (term_url, SKOS.narrower, None)
-        )
-        result.update({
-            'narrowers': narrowers_from_skos_narrower | narrowers_from_skos_broader
-        })
-
-        return result
-
-    def narrowers_for(self, local_id: str, branch_name: str, graph: Graph, triple_tuple: tuple) -> dict:
-        results = {}
-        for s, p, o in graph.triples(triple_tuple):
-            child_term_url = s
-            if triple_tuple[1] == SKOS.narrower:
-                child_term_url = o
-            child_term_local_id = extract_local_id(child_term_url)
-            if child_term_local_id == local_id:
-                continue
-            if child_term_local_id in results:
-                continue
-            results[child_term_local_id] = {
-                'id_for_html_element': self.id_for_html_element(branch_name, child_term_local_id),
-                'value': child_term_local_id,
-                'narrowers': {},
-            }
-        return results
+        return OntologyBranchTreeTerm(term_url, branch_name, graph).metadata
 
     def term_urls(self, graph: Graph):
         return graph.objects(predicate=SKOS.member)
@@ -548,6 +470,95 @@ class OntologyBranchTree:
         return result
 
 
+class OntologyBranchTreeTerm:
+    def __init__(self, term_url: str, branch_name: str, graph: Graph):
+        self.term_url = term_url
+        self.branch_name = branch_name
+        self.graph = graph
+
+    def extract_property(self, predicate: Resource):
+        # Extract the property name from the last part of the
+        # predicate identifier.
+        # e.g., http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+        result = predicate.identifier.split('#')[-1]
+        if len(predicate.identifier.split('#')) == 1:
+            result = predicate.identifier.split('/')[-1]
+        return result
+
+    def id_for_html_element(self, branch_name: str, local_id: str):
+        return f'{branch_name}{local_id}'
+
+    def find_property_value(
+            self, 
+            term_url: str,
+            predicate: Resource,
+            graph: Graph):
+        result = []
+        for s, p, property_item in graph.triples((term_url, predicate.identifier, None)):
+            result.append(str(property_item))
+        if len(result) == 1:
+            # The property's value becomes a string if only one
+            # instance of the property value is found.
+            result = next(iter(result), None)
+        return result
+
+    @property
+    def metadata(self):
+        local_id = extract_local_id(self.term_url)
+        result = {
+            'id_for_html_element': self.id_for_html_element(self.branch_name, local_id),
+            'value': local_id,
+            'narrowers': {},
+            'iri': self.term_url,
+        }
+        term = Resource(self.graph, self.term_url)
+        for predicate in term.predicates():
+            # Extract the property name from the last part of the
+            # predicate identifier.
+            # e.g., http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+            property = self.extract_property(predicate)
+            if property in result:
+                continue
+            result[property] = self.find_property_value(self.term_url, predicate, self.graph)
+
+        # Combine child terms found by both SKOS.narrower and SKOS.broader.
+        narrowers_from_skos_narrower = self.narrowers_for(
+            local_id,
+            self.branch_name,
+            self.graph,
+            (None, SKOS.broader, self.term_url)
+        )
+        narrowers_from_skos_broader = self.narrowers_for(
+            local_id,
+            self.branch_name,
+            self.graph,
+            (self.term_url, SKOS.narrower, None)
+        )
+        result.update({
+            'narrowers': narrowers_from_skos_narrower | narrowers_from_skos_broader
+        })
+
+        return result
+
+    def narrowers_for(self, local_id: str, branch_name: str, graph: Graph, triple_tuple: tuple) -> dict:
+        results = {}
+        for s, p, o in graph.triples(triple_tuple):
+            child_term_url = s
+            if triple_tuple[1] == SKOS.narrower:
+                child_term_url = o
+            child_term_local_id = extract_local_id(child_term_url)
+            if child_term_local_id == local_id:
+                continue
+            if child_term_local_id in results:
+                continue
+            results[child_term_local_id] = {
+                'id_for_html_element': self.id_for_html_element(branch_name, child_term_local_id),
+                'value': child_term_local_id,
+                'narrowers': {},
+            }
+        return results
+
+
 class ObservedPropertySearchByContentTree(OntologyBranchTree):
     def __init__(
             self,
@@ -555,6 +566,28 @@ class ObservedPropertySearchByContentTree(OntologyBranchTree):
             instrument_types_grouped_by_observed_property: dict | None = None,
             computation_types_grouped_by_observed_property: dict | None = None):
         super().__init__(branch_name)
+        self.instrument_types_grouped_by_observed_property = instrument_types_grouped_by_observed_property
+        self.computation_types_grouped_by_observed_property = computation_types_grouped_by_observed_property
+
+    def get_term_metadata(self, term_url: str, branch_name: str, graph: Graph):
+        return ObservedPropertySearchByContentTreeTerm(
+            term_url,
+            branch_name,
+            graph,
+            instrument_types_grouped_by_observed_property=self.instrument_types_grouped_by_observed_property,
+            computation_types_grouped_by_observed_property=self.computation_types_grouped_by_observed_property
+        ).metadata
+
+
+class ObservedPropertySearchByContentTreeTerm(OntologyBranchTreeTerm):
+    def __init__(
+            self,
+            term_url: str,
+            branch_name: str,
+            graph: Graph,
+            instrument_types_grouped_by_observed_property: dict | None = None,
+            computation_types_grouped_by_observed_property: dict | None = None):
+        super().__init__(term_url, branch_name, graph)
         self.instrument_types_grouped_by_observed_property = instrument_types_grouped_by_observed_property
         self.computation_types_grouped_by_observed_property = computation_types_grouped_by_observed_property
 
@@ -590,9 +623,10 @@ class ObservedPropertySearchByContentTree(OntologyBranchTree):
             grouped_filter_options = dict()
         return grouped_filter_options.get(local_id)
 
-    def get_term_metadata(self, term_url: str, branch_name: str, graph: Graph):
-        result = super().get_term_metadata(term_url, branch_name, graph)
-        local_id = extract_local_id(term_url)
+    @property
+    def metadata(self):
+        result = super().metadata
+        local_id = extract_local_id(self.term_url)
         # Instrument and computation type properties are used as HTML data attributes
         # in "search by content" forms to supplement observed property filtering.
         instrument_type_local_ids = self.extract_filter_options_for_observed_property_search_by_content_form(
