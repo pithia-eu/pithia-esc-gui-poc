@@ -121,8 +121,10 @@ class BaseObservedPropertySearchByContentTemplateView(SearchByContentTemplateVie
         return categorise_observed_property_dict_by_top_level_phenomenons(
             ObservedPropertySearchByContentTree(
                 self.ontology_branch_name,
-                instrument_types_grouped_by_observed_property=map_instrument_type_local_ids_to_observed_property_local_ids(),
-                computation_types_grouped_by_observed_property=setup_computation_types_for_observed_property_search_form()
+                extra_metadata={
+                    'instrumentType': map_instrument_type_local_ids_to_observed_property_local_ids(),
+                    'computationType': setup_computation_types_for_observed_property_search_form(),
+                }
             ).to_dict()
         )
 

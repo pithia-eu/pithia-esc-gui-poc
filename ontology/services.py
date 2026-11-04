@@ -563,19 +563,16 @@ class ObservedPropertySearchByContentTree(OntologyBranchTree):
     def __init__(
             self,
             branch_name: str,
-            instrument_types_grouped_by_observed_property: dict | None = None,
-            computation_types_grouped_by_observed_property: dict | None = None):
+            extra_metadata: dict | None = None):
         super().__init__(branch_name)
-        self.instrument_types_grouped_by_observed_property = instrument_types_grouped_by_observed_property
-        self.computation_types_grouped_by_observed_property = computation_types_grouped_by_observed_property
+        self.extra_metadata = extra_metadata
 
     def get_term_metadata(self, term_url: str, branch_name: str, graph: Graph):
         return ObservedPropertySearchByContentTreeTerm(
             term_url,
             branch_name,
             graph,
-            instrument_types_grouped_by_observed_property=self.instrument_types_grouped_by_observed_property,
-            computation_types_grouped_by_observed_property=self.computation_types_grouped_by_observed_property
+            extra_metadata=self.extra_metadata
         ).metadata
 
 
@@ -585,11 +582,13 @@ class ObservedPropertySearchByContentTreeTerm(OntologyBranchTreeTerm):
             term_url: str,
             branch_name: str,
             graph: Graph,
-            instrument_types_grouped_by_observed_property: dict | None = None,
-            computation_types_grouped_by_observed_property: dict | None = None):
+            extra_metadata: dict | None = None):
         super().__init__(term_url, branch_name, graph)
-        self.instrument_types_grouped_by_observed_property = instrument_types_grouped_by_observed_property
-        self.computation_types_grouped_by_observed_property = computation_types_grouped_by_observed_property
+        # Extra metadata are other ontology terms used for narrowing
+        # down observed properties inputs in search by content pages.
+        self.extra_metadata = extra_metadata
+        if not isinstance(extra_metadata, dict):
+            self.extra_metadata = dict()
 
     def is_property_used_in_search_by_content_form(self, property: str):
         return (property == 'featureOfInterest'
@@ -627,19 +626,13 @@ class ObservedPropertySearchByContentTreeTerm(OntologyBranchTreeTerm):
     def metadata(self):
         result = super().metadata
         local_id = extract_local_id(self.term_url)
-        # Instrument and computation type properties are used as HTML data attributes
-        # in "search by content" forms to supplement observed property filtering.
-        instrument_type_local_ids = self.extract_filter_options_for_observed_property_search_by_content_form(
-            local_id,
-            self.instrument_types_grouped_by_observed_property
-        )
-        if instrument_type_local_ids:
-            result['instrumentType'] = instrument_type_local_ids
-
-        computation_type_local_ids = self.extract_filter_options_for_observed_property_search_by_content_form(
-            local_id,
-            self.computation_types_grouped_by_observed_property
-        )
-        if computation_type_local_ids:
-            result['computationType'] = computation_type_local_ids
+        if not self.extra_metadata:
+            return result
+        for property, property_value in self.extra_metadata.items():
+            result.update({
+                property: self.extract_filter_options_for_observed_property_search_by_content_form(
+                    local_id,
+                    property_value
+                )
+            })
         return result

@@ -22,8 +22,10 @@ class ObservedPropertyCategorisationForSearchFormTestCase(TestCase):
         computation_types_grouped_by_observed_property = setup_computation_types_for_observed_property_search_form()
         observed_property_dict = ObservedPropertySearchByContentTree(
             'observedProperty',
-            instrument_types_grouped_by_observed_property=instrument_types_grouped_by_observed_property,
-            computation_types_grouped_by_observed_property=computation_types_grouped_by_observed_property
+            extra_metadata={
+                'instrumentType': instrument_types_grouped_by_observed_property,
+                'computationType': computation_types_grouped_by_observed_property,
+            }
         ).to_dict()
         first_observed_property = list(observed_property_dict.values())[0]
         phenomenons = get_nested_phenomenons_in_observed_property(first_observed_property)
@@ -42,8 +44,10 @@ class ObservedPropertyCategorisationForSearchFormTestCase(TestCase):
         computation_types_grouped_by_observed_property = setup_computation_types_for_observed_property_search_form()
         observed_property_dict = ObservedPropertySearchByContentTree(
             'observedProperty',
-            instrument_types_grouped_by_observed_property=instrument_types_grouped_by_observed_property,
-            computation_types_grouped_by_observed_property=computation_types_grouped_by_observed_property
+            extra_metadata={
+                'instrumentType': instrument_types_grouped_by_observed_property,
+                'computationType': computation_types_grouped_by_observed_property,
+            }
         ).to_dict()
         categorised_observed_property_dict = categorise_observed_property_dict_by_top_level_phenomenons(observed_property_dict)
         self.assertIsInstance(categorised_observed_property_dict, dict)
