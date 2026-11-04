@@ -572,7 +572,7 @@ class ObservedPropertySearchByContentTree(OntologyBranchTree):
             term_url,
             branch_name,
             graph,
-            extra_metadata=self.extra_metadata
+            extra_term_metadata=self.extra_metadata
         ).metadata
 
 
@@ -582,13 +582,13 @@ class ObservedPropertySearchByContentTreeTerm(OntologyBranchTreeTerm):
             term_url: str,
             branch_name: str,
             graph: Graph,
-            extra_metadata: dict | None = None):
+            extra_term_metadata: dict | None = None):
         super().__init__(term_url, branch_name, graph)
         # Extra metadata are other ontology terms used for narrowing
         # down observed properties inputs in search by content pages.
-        self.extra_metadata = extra_metadata
-        if not isinstance(extra_metadata, dict):
-            self.extra_metadata = dict()
+        self.extra_term_metadata = extra_term_metadata
+        if not isinstance(extra_term_metadata, dict):
+            self.extra_term_metadata = dict()
 
     def is_property_used_in_search_by_content_form(self, property: str):
         return (property == 'featureOfInterest'
@@ -626,9 +626,9 @@ class ObservedPropertySearchByContentTreeTerm(OntologyBranchTreeTerm):
     def metadata(self):
         result = super().metadata
         local_id = extract_local_id(self.term_url)
-        if not self.extra_metadata:
+        if not self.extra_term_metadata:
             return result
-        for property, property_value in self.extra_metadata.items():
+        for property, property_value in self.extra_term_metadata.items():
             result.update({
                 property: self.extract_filter_options_for_observed_property_search_by_content_form(
                     local_id,
