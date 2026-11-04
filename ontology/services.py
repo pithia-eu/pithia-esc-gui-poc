@@ -566,13 +566,26 @@ class ObservedPropertySearchByContentTree(OntologyBranchTree):
             extra_metadata: dict | None = None):
         super().__init__(branch_name)
         self.extra_metadata = extra_metadata
+        if not isinstance(extra_metadata, dict):
+            self.extra_metadata = dict()
+
+    def find_extra_term_metadata(self, term_url: str) -> dict:
+        result = dict()
+        local_id = extract_local_id(term_url)
+        for property, term_to_property_mappings in self.extra_metadata.items():
+            if not term_to_property_mappings.get(local_id):
+                continue
+            result.update({
+                property: term_to_property_mappings.get(local_id)
+            })
+        return result
 
     def get_term_metadata(self, term_url: str, branch_name: str, graph: Graph):
         return ObservedPropertySearchByContentTreeTerm(
             term_url,
             branch_name,
             graph,
-            extra_term_metadata=self.extra_metadata
+            extra_term_metadata=self.find_extra_term_metadata(term_url)
         ).metadata
 
 
@@ -625,14 +638,10 @@ class ObservedPropertySearchByContentTreeTerm(OntologyBranchTreeTerm):
     @property
     def metadata(self):
         result = super().metadata
-        local_id = extract_local_id(self.term_url)
         if not self.extra_term_metadata:
             return result
-        for property, property_value in self.extra_term_metadata.items():
+        for property, value in self.extra_term_metadata.items():
             result.update({
-                property: self.extract_filter_options_for_observed_property_search_by_content_form(
-                    local_id,
-                    property_value
-                )
+                property: value,
             })
         return result
