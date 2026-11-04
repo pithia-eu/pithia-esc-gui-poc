@@ -627,14 +627,6 @@ class ObservedPropertySearchByContentTreeTerm(OntologyBranchTreeTerm):
             ]
         return super().find_property_value(term_url, predicate, graph)
 
-    def extract_filter_options_for_observed_property_search_by_content_form(
-            self, 
-            local_id: str,
-            grouped_filter_options: dict[str, list]) -> list[str]:
-        if grouped_filter_options is None:
-            grouped_filter_options = dict()
-        return grouped_filter_options.get(local_id)
-
     @property
     def metadata(self):
         result = super().metadata
