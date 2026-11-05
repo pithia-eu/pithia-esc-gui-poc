@@ -53,7 +53,7 @@ jobs:
         DJANGO_RW_DATABASE_NAME: default
         MEMBERSHIP_START_BOUNDARY: organizations:
         MEMBERSHIP_END_BOUNDARY: :role
-        MEMBERSHIP_DELIMITER: :
+        MEMBERSHIP_DELIMITER: ':'
       run: |
         touch pithiaesc/.env
         echo SECRET_KEY="$SECRET_KEY" >> pithiaesc/.env
