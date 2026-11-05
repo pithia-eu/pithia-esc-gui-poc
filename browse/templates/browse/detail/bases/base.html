@@ -30,7 +30,7 @@
                     {% endif %}
                 </div>
                 <div class="text-body-secondary">
-                    Last modified on {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y' }}
+                    Last updated on {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y' }}
                     {% block inline_post_last_modified_date_content %}{% endblock inline_post_last_modified_date_content %}
                 </div>
                 {% block post_last_modified_date_content %}{% endblock post_last_modified_date_content %}
