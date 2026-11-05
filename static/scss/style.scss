@@ -1223,10 +1223,6 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
     margin-bottom: 0;
 }
 
-.resource-detail-section-from-aside {
-    display: block;
-}
-
 .resource-detail-aside .resource-detail-aside-key-section {
     display: none;
 }
@@ -2187,10 +2183,6 @@ ul.tree ul {
     aside .resource-detail-section h2 {
         font-size: var(--fs-base-2) !important;
         font-weight: 600;
-    }
-
-    .resource-detail-section-from-aside {
-        display: none;
     }
 
     .resource-detail-aside .resource-detail-aside-key-section {
