@@ -975,6 +975,10 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
     flex-shrink: 0;
 }
 
+#responsible-parties-top-section a {
+    display: inline-flex;
+}
+
 .standard-identifier-list,
 .standard-identifier-list li {
     display: inline;
