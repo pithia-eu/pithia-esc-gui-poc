@@ -51,7 +51,7 @@ jobs:
         MONGODB_CONNECTION_STRING: mongodb://localhost:27017
         DB_NAME: test
         DJANGO_RW_DATABASE_NAME: default
-        MEMBERSHIP_START_BOUNDARY: organizations:
+        MEMBERSHIP_START_BOUNDARY: 'organizations:'
         MEMBERSHIP_END_BOUNDARY: :role
         MEMBERSHIP_DELIMITER: ':'
       run: |
