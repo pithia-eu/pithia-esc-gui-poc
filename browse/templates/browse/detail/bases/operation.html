@@ -2,6 +2,20 @@
 
 {# Appears after the last modified date #}
 {% block post_last_modified_date_content %}
+{# Operation time #}
+{% if resource.properties.operation_time.time_period.begin.time_position or resource.properties.operation_time.time_period.end.time_position %}
+<section class="fs-sm pt-3 pb-0">
+    <div class="d-flex align-items-baseline gap-2">
+        <h2 id="operation-time" class="text-body-secondary fs-sm mb-0">
+            Active Between
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-xs bi bi-dot" viewBox="0 0 16 16">
+                <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+            </svg>
+        </h2>
+        {% include 'browse/detail/components/operation/operation_time_section_content.html' %}
+    </div>
+</section>
+{% endif %}
 {# Status #}
 {% if resource.properties.status %}
 <section class="d-flex align-items-center flex-wrap row-gap-1 column-gap-1 fs-sm text-body-secondary pt-3 pb-0">
@@ -17,16 +31,6 @@
 </section>
 {% endif %}
 {% endblock post_last_modified_date_content %}
-
-{# Appears before the description #}
-{% block pre_description_content %}
-{% if resource.properties.operation_time.time_period.begin.time_position or resource.properties.operation_time.time_period.end.time_position %}
-<section class="resource-detail-section">
-    <h2 id="operation-time" class="mb-2">Operation Time</h2>
-    {% include 'browse/detail/components/operation/operation_time_section_content.html' %}
-</section>
-{% endif %}
-{% endblock pre_description_content %}
 
 {# Appears after the description #}
 {% block post_description_content %}

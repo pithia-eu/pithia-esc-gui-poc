@@ -1,11 +1,15 @@
 {% if resource.properties.operation_time.time_period.begin.time_position %}
-{{ resource.properties.operation_time.time_period.begin.time_position|date:'M jS Y, H:i' }}
+<span class="d-inline-block rounded font-monospace fs-xs bg-body-tertiary px-2 py-1">
+    {{ resource.properties.operation_time.time_period.begin.time_position|date:'M jS Y, H:i' }}
+</span>
 {% else %}
 N/A
 {% endif %}
 –
 {% if resource.properties.operation_time.time_period.end.time_position %}
-{{ resource.properties.operation_time.time_period.end.time_position|date:'M jS Y, H:i' }}
+<span class="d-inline-block rounded font-monospace fs-xs bg-body-tertiary px-2 py-1">
+    {{ resource.properties.operation_time.time_period.end.time_position|date:'M jS Y, H:i' }}
+</span>
 {% else %}
 N/A
 {% endif %}
