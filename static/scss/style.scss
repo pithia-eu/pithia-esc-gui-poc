@@ -896,6 +896,35 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
 }
 
 /* || Resource detail page */
+
+.metadata-detail-layout {
+    display: grid;
+    column-gap: 2rem;
+    grid-template-areas:
+        "header"
+        "toc"
+        "body";
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, auto);
+}
+
+.metadata-detail-layout__content {
+    grid-area: content;
+    display: contents;
+}
+
+.metadata-detail-layout__header {
+    grid-area: header;
+}
+
+.metadata-detail-layout__toc {
+    grid-area: toc;
+}
+
+.metadata-detail-layout__body {
+    grid-area: body;
+}
+
 .interaction-method-table td:first-child,
 .interaction-method-table td:nth-child(3),
 .interaction-method-table td:nth-child(4),
@@ -966,7 +995,6 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
 }
 
 .resource-detail-section h2:first-child,
-.resource-detail-aside h2:first-child,
 #further-information-section h3,
 #related-metadata-section h3 {
     font-size: var(--fs-base-2);
@@ -1193,11 +1221,6 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
 
 .resource-detail-aside .resource-detail-aside-section :last-child {
     margin-bottom: 0;
-}
-
-.resource-detail-aside .resource-detail-aside-section > h2 {
-    font-weight: var(--fw-semibold);
-    margin-bottom: 1rem;
 }
 
 .resource-detail-section-from-aside {
@@ -2147,6 +2170,25 @@ ul.tree ul {
         text-align: end;
     }
 
+    .metadata-detail-layout {
+        grid-template-areas:
+            "header toc"
+            "body toc";
+        grid-template-columns: minmax(0, 3fr) 1fr;
+    }
+
+    aside .resource-detail-section {
+        padding: 0;
+        padding-inline-start: 2rem;
+        border-top: none;
+        border-inline-start:  var(--bs-border-color) var(--bs-border-style) var(--bs-border-width);;
+    }
+
+    aside .resource-detail-section h2 {
+        font-size: var(--fs-base-2) !important;
+        font-weight: 600;
+    }
+
     .resource-detail-section-from-aside {
         display: none;
     }
@@ -2277,6 +2319,13 @@ ul.tree ul {
 
 /* sm-width screens */
 @media (min-width: 576px) {
+    .editor-layout {
+        grid-template-areas:
+            "header toc"
+            "body toc";
+        grid-template-columns: minmax(0, 3fr) 1.5fr;
+    }
+
     .action-buttons {
         grid-template-columns: 1fr 1fr;
     }

@@ -19,171 +19,160 @@
 {% endblock breadcrumbs %}
 {% block content %}
 {% csrf_token %}
-<div class="row gx-md-5">
-    <div class="col-xl-9 col-lg-8">
-        <div class="resource-detail-top-section">
-            <div class="d-flex flex-column align-items-start row-gap-1 mb-2">
-                <h1 class="text-break mb-0">{{ resource.name }}</h1>
-                {% if 'shortName' in resource.json and resource.json.shortName %}
-                <span class="text-body-secondary">({{ resource.json.shortName }})</span>
-                {% endif %}
+<div class="metadata-detail-layout">
+    <div class="metadata-detail-layout__content">
+        <div class="metadata-detail-layout__header">
+            <div class="resource-detail-top-section">
+                <div class="d-flex flex-column align-items-start row-gap-1 mb-2">
+                    <h1 class="text-break mb-0">{{ resource.name }}</h1>
+                    {% if 'shortName' in resource.json and resource.json.shortName %}
+                    <span class="text-body-secondary">({{ resource.json.shortName }})</span>
+                    {% endif %}
+                </div>
+                <div class="text-body-secondary">
+                    Last modified on {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y' }}
+                    {% block inline_post_last_modified_date_content %}{% endblock inline_post_last_modified_date_content %}
+                </div>
+                {% block post_last_modified_date_content %}{% endblock post_last_modified_date_content %}
             </div>
-            <div class="text-body-secondary">
-                Last modified on {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y' }}
-                {% block inline_post_last_modified_date_content %}{% endblock inline_post_last_modified_date_content %}
-            </div>
-            {% block post_last_modified_date_content %}{% endblock post_last_modified_date_content %}
+            {% block pre_responsible_parties_content %}{% endblock pre_responsible_parties_content %}
+            {# Responsible parties section #}
+            {% include 'browse/detail/sections/top/responsible_parties_top_section.html' %}
+            {% block pre_description_content %}{% endblock pre_description_content %}
+            {% block description_section %}
+            {% include 'browse/detail/sections/description_section.html' %}
+            {% endblock description_section %}
         </div>
-        {% block pre_responsible_parties_content %}{% endblock pre_responsible_parties_content %}
-        {# Responsible parties section #}
-        {% include 'browse/detail/sections/top/responsible_parties_top_section.html' %}
-        <section class="d-lg-none d-block resource-detail-section">
-            <details>
-                <summary class="summary-hover summary-marker-baseline">
-                    <h2 class="fs-6 exclude-from-toc">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-ul me-2" style="transform: translateY(0.125rem);" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
-                        </svg>
-                        In This Page
-                    </h2>
-                </summary>
-                <ul id="toc-md" class="toc list-group list-group-flush">
+        <aside class="metadata-detail-layout__toc">
+            <section class="resource-detail-section">
+                <h2 class="exclude-from-toc px-lg-3 px-0">In This Page</h2>
+                <ul class="toc list-group list-group-flush">
                     {% include 'browse/detail/components/toc/toc_placeholder.html' %}
                 </ul>
-            </details>
-        </section>
-        {% block pre_description_content %}{% endblock pre_description_content %}
-        {% block description_section %}
-        {% include 'browse/detail/sections/description_section.html' %}
-        {% endblock description_section %}
-        {% block post_description_content %}{% endblock post_description_content %}
-        <section id="further-information-section" class="resource-detail-section">
-            <details>
-                <summary class="summary-hover">
-                    <h2 id="resources-and-further-information" class="exclude-from-toc">Further Resources and Information</h2>
-                </summary>
-                <div class="d-flex flex-column">
-                    <section class="resource-detail-section">
-                        <h3>Resources</h3>
-                        <a
-                            href="{% url resource_download_url_name resource.id %}"
-                            id="metadata-file-link"
-                            class="btn btn-outline-dark icon-link icon-link-hover"
-                            style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0);">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text" viewBox="0 0 16 16">
-                                <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5"/>
-                                <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
-                            </svg>Go to Metadata File
-                        </a>
-                    </section>
-                    {% block further_information_extra_sections %}{% endblock further_information_extra_sections %}
-                    {% if property_table_dict.items|length > 0 %}
-                    <section>
-                        <h3>More Properties</h3>
-                        <div class="table-responsive">
-                            <table class="table table-hover resource-property-table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Property</th>
-                                        <th scope="col">Value</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for key, value in property_table_dict.items %}
-                                    {# Prevent repeating properties like name and description. #}
-                                    {% if 'Entry Name' not in key and 'Entry Description' not in key and 'Data Subset Name' not in key and 'Data Subset Description' not in key %}
-                                    {# An ID is added to the <tr> for operational modes to allow them to be linked to directly. #}
-                                    <tr {% if 'Instrument Operational Mode' in key and 'Id' in key %}id="{{ value.strip }}"{% endif %}>
-                                        <td>{{ key|safe }}</td>
-                                        <td>
-                                            {% if not value.strip %}
-                                            <i class="text-body-secondary">Not used</i>
-                                            {% elif value in ontology_server_urls %}
-                                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                                            {% elif value in resource_server_urls %}
-                                            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                                            {% else %}
-                                            {{ value.strip|urlize }}
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                    {% endif %}
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+            </section>
+        </aside>
+        <div class="metadata-detail-layout__body">
+            {% block post_description_content %}{% endblock post_description_content %}
+            <section id="further-information-section" class="resource-detail-section">
+                <details>
+                    <summary class="summary-hover">
+                        <h2 id="resources-and-further-information" class="exclude-from-toc">Further Resources and Information</h2>
+                    </summary>
+                    <div class="d-flex flex-column">
+                        <section class="resource-detail-section">
+                            <h3>Resources</h3>
+                            <a
+                                href="{% url resource_download_url_name resource.id %}"
+                                id="metadata-file-link"
+                                class="btn btn-outline-dark icon-link icon-link-hover"
+                                style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text" viewBox="0 0 16 16">
+                                    <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5"/>
+                                    <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
+                                </svg>Go to Metadata File
+                            </a>
+                        </section>
+                        {% block further_information_extra_sections %}{% endblock further_information_extra_sections %}
+                        {% if property_table_dict.items|length > 0 %}
+                        <section>
+                            <h3>More Properties</h3>
+                            <div class="table-responsive">
+                                <table class="table table-hover resource-property-table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Property</th>
+                                            <th scope="col">Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for key, value in property_table_dict.items %}
+                                        {# Prevent repeating properties like name and description. #}
+                                        {% if 'Entry Name' not in key and 'Entry Description' not in key and 'Data Subset Name' not in key and 'Data Subset Description' not in key %}
+                                        {# An ID is added to the <tr> for operational modes to allow them to be linked to directly. #}
+                                        <tr {% if 'Instrument Operational Mode' in key and 'Id' in key %}id="{{ value.strip }}"{% endif %}>
+                                            <td>{{ key|safe }}</td>
+                                            <td>
+                                                {% if not value.strip %}
+                                                <i class="text-body-secondary">Not used</i>
+                                                {% elif value in ontology_server_urls %}
+                                                {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                                                {% elif value in resource_server_urls %}
+                                                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                                                {% else %}
+                                                {{ value.strip|urlize }}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                        {% endif %}
+                        <section id="metadata-information-section">
+                            <h3>Metadata Information</h3>
+                            <div class="table-responsive rounded">
+                                <table class="table table-borderless resource-key-details mb-0 p-3">
+                                    <tbody>
+                                        <tr>
+                                            <td class="bg-body-tertiary"><b>Editor</b></td>
+                                            <td class="bg-body-tertiary">{{ resource.institution_id|default:'Unknown' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-body-tertiary"><b>Version</b></td>
+                                            <td class="bg-body-tertiary">{{ resource.identifier.PITHIA_Identifier.version }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-body-tertiary"><b>Created</b></td>
+                                            <td class="bg-body-tertiary">{{ scientific_metadata_creation_date_parsed|date:'l jS N Y, H:i' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-body-tertiary"><b>Last Modified</b></td>
+                                            <td class="bg-body-tertiary">{{ scientific_metadata_last_modification_date_parsed|date:'l jS N Y, H:i' }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                </details>
+            </section>
+            {% if related_metadata_url %}
+            <section id="related-metadata-section" class="resource-detail-section">
+                <details>
+                    <summary class="summary-hover">
+                        <h2 id="related-metadata" class="d-inline-block text-nowrap">
+                            Related Metadata
+                            <span id="related-metadata-num" class="text-body-secondary">
+                                <span class="placeholder placeholder-lg col-2 bg-body-secondary align-text-bottom rounded ms-1"></span>
+                            </span>
+                        </h2>
+                    </summary>
+                    <div id="related-metadata-list-wrapper">
+                        <div class="d-flex flex-column row-gap-2 pt-4 pb-4">
+                            <div class="placeholder placeholder-lg col-lg-4 bg-body-secondary rounded mb-2"></div>
+                            <div class="placeholder placeholder-lg col-lg-6 bg-body-secondary rounded"></div>
+                            <div class="placeholder placeholder-lg col-lg-6 bg-body-secondary rounded"></div>
                         </div>
-                    </section>
-                    {% endif %}
-                    <section id="metadata-information-section">
-                        <h3>Metadata Information</h3>
-                        <div class="table-responsive rounded">
-                            <table class="table table-borderless resource-key-details mb-0 p-3">
-                                <tbody>
-                                    <tr>
-                                        <td class="bg-body-tertiary"><b>Editor</b></td>
-                                        <td class="bg-body-tertiary">{{ resource.institution_id|default:'Unknown' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="bg-body-tertiary"><b>Version</b></td>
-                                        <td class="bg-body-tertiary">{{ resource.identifier.PITHIA_Identifier.version }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="bg-body-tertiary"><b>Created</b></td>
-                                        <td class="bg-body-tertiary">{{ scientific_metadata_creation_date_parsed|date:'l jS N Y, H:i' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="bg-body-tertiary"><b>Last Modified</b></td>
-                                        <td class="bg-body-tertiary">{{ scientific_metadata_last_modification_date_parsed|date:'l jS N Y, H:i' }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="d-flex flex-column row-gap-2 border-top py-4">
+                            <div class="placeholder placeholder-lg col-lg-4 bg-body-secondary rounded mb-2"></div>
+                            <div class="placeholder placeholder-lg col-lg-6 bg-body-secondary rounded"></div>
+                            <div class="placeholder placeholder-lg col-lg-6 bg-body-secondary rounded"></div>
                         </div>
-                    </section>
-                </div>
-            </details>
-        </section>
-        {% if related_metadata_url %}
-        <section id="related-metadata-section" class="resource-detail-section">
-            <details>
-                <summary class="summary-hover">
-                    <h2 id="related-metadata" class="d-inline-block text-nowrap">
-                        Related Metadata
-                        <span id="related-metadata-num" class="text-body-secondary">
-                            <span class="placeholder placeholder-lg col-2 bg-body-secondary align-text-bottom rounded ms-1"></span>
-                        </span>
-                    </h2>
-                </summary>
-                <div id="related-metadata-list-wrapper">
-                    <div class="d-flex flex-column row-gap-2 pt-4 pb-4">
-                        <div class="placeholder placeholder-lg col-lg-4 bg-body-secondary rounded mb-2"></div>
-                        <div class="placeholder placeholder-lg col-lg-6 bg-body-secondary rounded"></div>
-                        <div class="placeholder placeholder-lg col-lg-6 bg-body-secondary rounded"></div>
+                        <div class="d-flex flex-column row-gap-2 border-top pt-4">
+                            <div class="placeholder placeholder-lg col-lg-4 bg-body-secondary rounded mb-2"></div>
+                            <div class="placeholder placeholder-lg col-lg-6 bg-body-secondary rounded"></div>
+                            <div class="placeholder placeholder-lg col-lg-6 bg-body-secondary rounded"></div>
+                        </div>
                     </div>
-                    <div class="d-flex flex-column row-gap-2 border-top py-4">
-                        <div class="placeholder placeholder-lg col-lg-4 bg-body-secondary rounded mb-2"></div>
-                        <div class="placeholder placeholder-lg col-lg-6 bg-body-secondary rounded"></div>
-                        <div class="placeholder placeholder-lg col-lg-6 bg-body-secondary rounded"></div>
-                    </div>
-                    <div class="d-flex flex-column row-gap-2 border-top pt-4">
-                        <div class="placeholder placeholder-lg col-lg-4 bg-body-secondary rounded mb-2"></div>
-                        <div class="placeholder placeholder-lg col-lg-6 bg-body-secondary rounded"></div>
-                        <div class="placeholder placeholder-lg col-lg-6 bg-body-secondary rounded"></div>
-                    </div>
-                </div>
-            </details>
-        </section>
-        {% endif %}
-        <div class="mt-5">
-            <a href="#" class="text-body link-underline-by-default">Back to top</a>
+                </details>
+            </section>
+            {% endif %}
+            <div class="mt-5">
+                <a href="#" class="text-body link-underline-by-default">Back to top</a>
+            </div>
         </div>
     </div>
-    <aside class="col-xl-3 col-lg-4 resource-detail-aside border-start">
-        <section class="d-lg-block d-none resource-detail-aside-section">
-            <h2 class="px-3">In This Page</h2>
-            <ul id="toc-lg" class="toc list-group list-group-flush">
-                {% include 'browse/detail/components/toc/toc_placeholder.html' %}
-            </ul>
-        </section>
-    </aside>
 </div>
 {% endblock content %}
