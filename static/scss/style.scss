@@ -946,14 +946,6 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
     flex-shrink: 0;
 }
 
-/* #responsible-parties-top-section dd > span::after {
-    content: ', ';
-}
-
-#responsible-parties-top-section dd:last-child > span::after {
-    content: '';
-} */
-
 .standard-identifier-list,
 .standard-identifier-list li {
     display: inline;
@@ -2595,8 +2587,6 @@ ul.tree ul {
         var(--circle-4-y-position) + var(--line-height) + var(--line-spacing)
     );
     --circle-5-position: var(--circle-x-position) var(--circle-5-y-position);
-
-    /* --bs-breadcrumb-divider: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 12 12"><path fill-rule="evenodd" d="M 8.5155 1.2345 a 0.375 0.375 90 0 1 0 0.531 L 4.2802 6 l 4.2353 4.2345 a 0.375 0.375 90 0 1 -0.531 0.531 l -4.5 -4.5 a 0.375 0.375 90 0 1 0 -0.531 l 4.5 -4.5 a 0.375 0.375 90 0 1 0.531 0"/></svg>'); */
 
     --resource-detail-top-section-padding: 1.5rem;
     --resource-detail-section-padding: 2rem;
