@@ -51,20 +51,20 @@
         {% block post_definition_content %}
         {# If the ontology term does not have a definition, display broader/narrowers in the main section. #}
         {% if not ontology_term_metadata.definition %}
-        {# Narrower terms #}
-        {% if ontology_term_metadata.urls_of_narrower_terms %}
-        <section class="resource-detail-section">
-            {% include 'ontology/detail/narrower_terms_heading.html' %}
-            {% with ontology_browser_urls=ontology_term_metadata.urls_of_narrower_terms %}
-            {% include 'ontology/detail/ontology_browser_url_list.html' %}
-            {% endwith %}
-        </section>
-        {% endif %}
         {# Broader terms #}
         {% if ontology_term_metadata.urls_of_broader_terms %}
         <section class="resource-detail-section">
             {% include 'ontology/detail/broader_terms_heading.html' %}
             {% with ontology_browser_urls=ontology_term_metadata.urls_of_broader_terms %}
+            {% include 'ontology/detail/ontology_browser_url_list.html' %}
+            {% endwith %}
+        </section>
+        {% endif %}
+        {# Narrower terms #}
+        {% if ontology_term_metadata.urls_of_narrower_terms %}
+        <section class="resource-detail-section">
+            {% include 'ontology/detail/narrower_terms_heading.html' %}
+            {% with ontology_browser_urls=ontology_term_metadata.urls_of_narrower_terms %}
             {% include 'ontology/detail/ontology_browser_url_list.html' %}
             {% endwith %}
         </section>
@@ -105,19 +105,6 @@
         {# Appears in the aside section #}
         {# If the ontology term has a definition, display broader/narrowers in the aside section. #}
         {% if ontology_term_metadata.definition %}
-        {# Narrower terms #}
-        {% if ontology_term_metadata.urls_of_narrower_terms %}
-        <section class="resource-detail-aside-section">
-            <details open>
-                <summary class="summary-marker-baseline mb-3">
-                    {% include 'ontology/detail/narrower_terms_heading.html' %}
-                </summary>
-                {% with ontology_browser_urls=ontology_term_metadata.urls_of_narrower_terms %}
-                {% include 'ontology/detail/ontology_browser_url_list.html' %}
-                {% endwith %}
-            </details>
-        </section>
-        {% endif %}
         {# Broader terms #}
         {% if ontology_term_metadata.urls_of_broader_terms %}
         <section class="resource-detail-aside-section">
@@ -126,6 +113,19 @@
                     {% include 'ontology/detail/broader_terms_heading.html' %}
                 </summary>
                 {% with ontology_browser_urls=ontology_term_metadata.urls_of_broader_terms %}
+                {% include 'ontology/detail/ontology_browser_url_list.html' %}
+                {% endwith %}
+            </details>
+        </section>
+        {% endif %}
+        {# Narrower terms #}
+        {% if ontology_term_metadata.urls_of_narrower_terms %}
+        <section class="resource-detail-aside-section">
+            <details open>
+                <summary class="summary-marker-baseline mb-3">
+                    {% include 'ontology/detail/narrower_terms_heading.html' %}
+                </summary>
+                {% with ontology_browser_urls=ontology_term_metadata.urls_of_narrower_terms %}
                 {% include 'ontology/detail/ontology_browser_url_list.html' %}
                 {% endwith %}
             </details>
