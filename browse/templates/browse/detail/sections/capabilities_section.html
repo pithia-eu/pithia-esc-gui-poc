@@ -4,45 +4,108 @@
         Capabilities
         <span class="text-body-secondary">({{ resource.properties.capabilities|length }})</span>
     </h2>
-    {% if resource.properties.capabilities|length == 1 %}
-    {% with cap=resource.properties.capabilities.0 %}
-    {% include 'browse/detail/components/capability_details_pane_component.html' %}
-    {% endwith %}
-    {% else %}
-    <details class="details-capabilities-top" open>
-        <summary class="d-inline-block">
-            <span class="fs-6 fw-semibold text-body">
-                <!-- Show when details are collapsed -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-bar-expand collapsed" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M3.646 10.146a.5.5 0 0 1 .708 0L8 13.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708m0-4.292a.5.5 0 0 0 .708 0L8 2.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8"/>
-                </svg>
-                <!-- Show when details are open -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-bar-contract open" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M3.646 14.854a.5.5 0 0 0 .708 0L8 11.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708m0-13.708a.5.5 0 0 1 .708 0L8 4.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8"/>
-                </svg>
-                <span class="link-underline-by-default">
-                    <span class="collapsed">Show</span>
-                    <span class="open">Hide</span>
-                    {{ resource.properties.capabilities|length }} capabilities
-                </span>
-            </span>
-        </summary>
-        <ul class="list-group list-group-flush mt-2">
-            {% for cap in resource.properties.capabilities %}
-            <li class="list-group-item p-0">
-                {% if forloop.counter == 1 %}
-                {% with is_open=True %}
-                {% include 'browse/detail/components/capability_details_component.html' %}
-                {% endwith %}
-                {% else %}
-                {% with is_open=False %}
-                {% include 'browse/detail/components/capability_details_component.html' %}
-                {% endwith %}
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
-    </details>
-    {% endif %}
+    <div class="table-responsive">
+        <table class="capabilities-table table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th class="text-nowrap">Name</th>
+                    <th class="text-nowrap">Observed Property</th>
+                    <th class="text-nowrap">Dimensionality Instance</th>
+                    <th class="text-nowrap">Dimensionality Timeline</th>
+                    <th class="text-nowrap">Cadence</th>
+                    <th class="text-nowrap">Vector Representation</th>
+                    <th class="text-nowrap">Co-ordinate System</th>
+                    <th class="text-nowrap">Units</th>
+                    <th class="text-nowrap">Qualifiers</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cap in resource.properties.capabilities %}
+                <tr>
+                    <td class="align-middle">
+                        {{ cap.name }}
+                    </td>
+                    <td class="align-middle">
+                        {% if cap.observed_property %}
+                        {% with value=cap.observed_property %}
+                        {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                        {% endwith %}
+                        {% else %}
+                        <span class="text-body-tertiary">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="align-middle">
+                        {% if cap.dimensionality_instance %}
+                        {% with value=cap.dimensionality_instance %}
+                        {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                        {% endwith %}
+                        {% else %}
+                        <span class="text-body-tertiary">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="align-middle">
+                        {% if cap.dimensionality_timeline %}
+                        {% with value=cap.dimensionality_timeline %}
+                        {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                        {% endwith %}
+                        {% else %}
+                        <span class="text-body-tertiary">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="align-middle">
+                        {% if cap.cadence %}
+                        Every
+                        {% if cap.cadence == '1' %}
+                        {{ cap.cadence_units|default:'N/A' }}
+                        {% else %}
+                        {{ cap.cadence|default:'N/A' }} {{ cap.cadence_units|default:'unknown units' }}s
+                        {% endif %}
+                        {% else %}
+                        <span class="text-body-tertiary">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="align-middle">
+                        {% if cap.vector_representations %}
+                        {% for vector_representation in cap.vector_representations %}
+                        {% with value=vector_representation %}
+                        {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                        {% endwith %}
+                        {% endfor %}
+                        {% else %}
+                        <span class="text-body-tertiary">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="align-middle">
+                        {% if cap.coordinate_system %}
+                        {% with value=cap.coordinate_system %}
+                        {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                        {% endwith %}
+                        {% else %}
+                        <span class="text-body-tertiary">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="align-middle">
+                        {% if cap.units %}
+                        {% with value=cap.units %}
+                        {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                        {% endwith %}
+                        {% else %}
+                        <span class="text-body-tertiary">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="align-middle">
+                        {% if cap.qualifiers %}
+                        {% with value=qualifier %}
+                        {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                        {% endwith %}
+                        {% else %}
+                        <span class="text-body-tertiary">-</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </section>
 {% endif %}

@@ -1043,147 +1043,15 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
     padding-block-end: var(--resource-detail-section-padding);
 }
 
-.resource-detail-section details.details-capabilities-top[open] > summary .open,
-.resource-detail-section
-    details.details-capability-links-top[open]
-    > summary
-    .open,
-.resource-detail-section
-    details.details-capabilities-top:not([open])
-    > summary
-    .collapsed,
-.resource-detail-section
-    details.details-capability-links-top:not([open])
-    > summary
-    .collapsed {
-    display: inline;
+.resource-detail-section .capabilities-table th,
+.resource-detail-section .capabilities-table td {
+    min-width: 10em;
+    padding-inline: 1em;
 }
 
-.resource-detail-section details.details-capabilities-top:not([open]) .open,
-.resource-detail-section details.details-capability-links-top:not([open]) .open,
-.resource-detail-section details.details-capabilities-top[open] .collapsed,
-.resource-detail-section details.details-capability-links-top[open] .collapsed {
-    display: none;
-}
-
-.resource-detail-section
-    details.details-capabilities-top
-    li
-    > details[name="details-capabilities"]
-    > summary
-    > div::after,
-.resource-detail-section
-    details.details-capability-links-top
-    li
-    > details[name="details-capability-links"]
-    > summary
-    > div::after {
-    content: "Show details";
-    display: block;
-    color: var(--bs-secondary-color);
-    font-size: var(--fs-sm);
-}
-
-.resource-detail-section
-    details.details-capabilities-top
-    li
-    > details[name="details-capabilities"][open]
-    > summary
-    > div::after,
-.resource-detail-section
-    details.details-capability-links-top
-    li
-    > details[name="details-capability-links"][open]
-    > summary
-    > div::after {
-    content: "Hide details";
-}
-
-.resource-detail-section
-    details.details-capabilities-top
-    li:first-child
-    > details[name="details-capabilities"]
-    > summary,
-.resource-detail-section
-    details.details-capability-links-top
-    li:first-child
-    > details[name="details-capability-links"]
-    summary {
-    border-top-left-radius: var(--bs-border-radius);
-    border-top-right-radius: var(--bs-border-radius);
-}
-
-.resource-detail-section
-    details.details-capabilities-top
-    li:last-child
-    > details[name="details-capabilities"]:not([open])
-    > summary,
-.resource-detail-section
-    details.details-capability-links-top
-    li:last-child
-    > details[name="details-capability-links"]:not([open])
-    summary {
-    border-bottom-left-radius: var(--bs-border-radius);
-    border-bottom-right-radius: var(--bs-border-radius);
-}
-
-.capability-details-pane,
-.capability-link-details-pane,
-.resource-detail-section
-    details.details-capabilities-top
-    li
-    > details[name="details-capabilities"][open]
-    > div,
-.resource-detail-section > details[name="details-capabilities"][open] > div,
-.resource-detail-section
-    details.details-capability-links-top
-    li
-    > details[name="details-capability-links"][open]
-    > div,
-.resource-detail-section
-    > details[name="details-capability-links"][open]
-    > div {
-    border-radius: var(--bs-border-radius);
-}
-
-.resource-detail-section
-    details.details-capabilities-top
-    li
-    > details[name="details-capabilities"][open]:has(> summary:hover)
-    > div,
-.resource-detail-section
-    details.details-capabilities-top
-    li
-    > details[name="details-capabilities"][open]:has(> summary:focus-visible)
-    > div,
-.resource-detail-section
-    > details[name="details-capabilities"][open]:has(> summary:hover)
-    > div,
-.resource-detail-section
-    > details[name="details-capabilities"][open]:has(> summary:focus-visible)
-    > div,
-.resource-detail-section
-    details.details-capability-links-top
-    li
-    > details[name="details-capability-links"][open]:has(> summary:hover)
-    > div,
-.resource-detail-section
-    details.details-capability-links-top
-    li
-    > details[name="details-capability-links"][open]:has(
-        > summary:focus-visible
-    )
-    > div,
-.resource-detail-section
-    > details[name="details-capability-links"][open]:has(> summary:hover)
-    > div,
-.resource-detail-section
-    > details[name="details-capability-links"][open]:has(
-        > summary:focus-visible
-    )
-    > div {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+.resource-detail-section .capabilities-table th:first-child,
+.resource-detail-section .capabilities-table td:first-child {
+    min-width: 12em;
 }
 
 #capability-links-help-button {
@@ -2471,6 +2339,10 @@ ul.tree ul {
         box-shadow: 0 -3em 3em -1em var(--bs-body-bg) inset;
         pointer-events: none;
         transition: all 0.2s ease-out;
+    }
+
+    .resource-detail-section .table-responsive:has(.capabilities-table) {
+        max-height: 30em;
     }
 }
 
