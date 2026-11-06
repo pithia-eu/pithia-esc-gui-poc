@@ -2276,6 +2276,17 @@ ul.tree ul {
     .resource-detail-aside {
         border-left-width: 0 !important;
     }
+
+    /* Resource detail page - table of contents */
+    .metadata-detail-layout__toc ul,
+    .metadata-detail-layout__toc li {
+        background-color: var(--bs-tertiary-bg);
+    }
+
+    .metadata-detail-layout__toc ul {
+        padding: 0.5em 1em;
+        border-radius: var(--bs-border-radius);
+    }
 }
 
 @media (max-width: 768px) {
