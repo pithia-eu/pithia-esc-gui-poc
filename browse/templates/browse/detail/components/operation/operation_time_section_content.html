@@ -1,15 +1,20 @@
-{% if resource.properties.operation_time.time_period.begin.time_position %}
-<span class="d-inline-block rounded font-monospace fs-xs bg-body-tertiary px-2 py-1">
-    {{ resource.properties.operation_time.time_period.begin.time_position|date:'M jS Y, H:i' }}
+{% if resource.properties.operation_time.time_period.begin.time_position or resource.properties.operation_time.time_period.end.time_position %}
+<span class="operation-time-range">
+    {{ start_time_conjunction|default:'' }}
+    {% if resource.properties.operation_time.time_period.begin.time_position %}
+    <span class="d-inline-block rounded font-monospace fs-xs bg-body-tertiary px-2 py-1">
+        {{ resource.properties.operation_time.time_period.begin.time_position|date:'M jS Y' }}
+    </span>
+    {% else %}
+    N/A
+    {% endif %}
+    {{ end_time_conjunction|default:'to' }}
+    {% if resource.properties.operation_time.time_period.end.time_position %}
+    <span class="d-inline-block rounded font-monospace fs-xs bg-body-tertiary px-2 py-1">
+        {{ resource.properties.operation_time.time_period.end.time_position|date:'M jS Y' }}
+    </span>
+    {% else %}
+    N/A
+    {% endif %}
 </span>
-{% else %}
-N/A
-{% endif %}
-–
-{% if resource.properties.operation_time.time_period.end.time_position %}
-<span class="d-inline-block rounded font-monospace fs-xs bg-body-tertiary px-2 py-1">
-    {{ resource.properties.operation_time.time_period.end.time_position|date:'M jS Y, H:i' }}
-</span>
-{% else %}
-N/A
 {% endif %}

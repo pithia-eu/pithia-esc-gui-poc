@@ -937,6 +937,11 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
     width: 25%;
 }
 
+/* Resource detail page - status, operation time */
+.metadata-server-url:has(~ .operation-time-range) .metadata-server-url-text::after {
+    content: ", ";
+}
+
 /* Resource detail page - top section (h1 heading, short name, last modified date) */
 .resource-detail-top-section {
     padding-bottom: var(--resource-detail-top-section-padding);

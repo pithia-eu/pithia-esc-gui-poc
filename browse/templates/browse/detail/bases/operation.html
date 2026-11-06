@@ -2,25 +2,12 @@
 
 {# Appears after the last modified date #}
 {% block post_last_modified_date_content %}
-{# Operation time #}
-{% if resource.properties.operation_time.time_period.begin.time_position or resource.properties.operation_time.time_period.end.time_position %}
-<section class="fs-sm pt-3 pb-0">
-    <div class="d-flex align-items-baseline gap-2">
-        <h2 id="operation-time" class="text-body-secondary fs-sm mb-0">
-            Active Between
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-xs bi bi-dot" viewBox="0 0 16 16">
-                <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
-            </svg>
-        </h2>
-        {% include 'browse/detail/components/operation/operation_time_section_content.html' %}
-    </div>
-</section>
-{% endif %}
-{# Status #}
-{% if resource.properties.status %}
-<section class="d-flex align-items-center flex-wrap row-gap-1 column-gap-1 fs-sm text-body-secondary pt-0 pb-0">
+{# Status and/or operation time #}
+{% if resource.properties.status or resource.properties.operation_time.time_period.begin.time_position or resource.properties.operation_time.time_period.end.time_position %}
+<section class="d-flex align-items-center flex-wrap row-gap-1 column-gap-1 fs-sm text-body-secondary pt-4 pb-0">
+    {% if resource.properties.status %}
     <h2 id="status" class="d-inline fs-sm mb-0">
-        Status
+        Status{% if resource.properties.operation_time.time_period.begin.time_position or resource.properties.operation_time.time_period.end.time_position %} & Operation Time{% endif %}
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-xs bi bi-dot" viewBox="0 0 16 16">
             <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
         </svg>
@@ -28,6 +15,20 @@
     {% with value=resource.properties.status url_text_extra_classes='text-secondary-emphasis' %}
     {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
     {% endwith %}
+    {# Operation Time #}
+    {% if resource.properties.operation_time.time_period.begin.time_position or resource.properties.operation_time.time_period.end.time_position %}
+    {% include 'browse/detail/components/operation/operation_time_section_content.html' %}
+    {% endif %}
+    {% elif resource.properties.operation_time.time_period.begin.time_position or resource.properties.operation_time.time_period.end.time_position %}
+    {# Operation Time #}
+    <h2 id="operation-time" class="d-inline fs-sm mb-0">
+        Operation Time
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="fs-xs bi bi-dot" viewBox="0 0 16 16">
+            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+        </svg>
+    </h2>
+    {% include 'browse/detail/components/operation/operation_time_section_content.html' %}
+    {% endif %}
 </section>
 {% endif %}
 {% endblock post_last_modified_date_content %}
