@@ -41,7 +41,6 @@
             <select
                 id="{{ request.institution_selection_form.institutions.auto_id }}-{{ user_menu_location|default:'header' }}"
                 name="{{ request.institution_selection_form.institutions.name }}"
-                {% comment %} id="{{ request.institution_selection_form.institutions.auto_id }}" {% endcomment %}
                 class="form-select mb-3"
                 required="{{ request.institution_selection_form.institutions.required }}"
                 {% with num_available_institutions=request.institution_selection_form.fields.institutions.choices|length|add:-1 %}
