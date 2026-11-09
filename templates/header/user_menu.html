@@ -1,5 +1,6 @@
 {% if request.session.is_authenticated %}
 <div class="dropdown user-dropdown text-start">
+    {# Dropdown button #}
     <a
         href="#"
         class="d-inline-block text-decoration-none dropdown-toggle pithia-blue-2"
@@ -18,8 +19,10 @@
             {% endif %}
         </span>
     </a>
+    {# Dropdown menu #}
     <div class="dropdown-menu dropdown-menu-lg-end dropdown-menu-start">
         {% if request.session.institution_for_login_session %}
+        {# Dropdown header - current institution #}
         <div class="px-4 py-2">
             <small class="fw-bold" style="white-space: pre-wrap;">{{ request.session.institution_for_login_session }}</small>
             <div class="text-body-secondary" style="white-space: pre-wrap;">{% if request.session.subgroup_for_login_session == 'admins' %}Admin{% else %}Member{% endif %}</div>
@@ -44,20 +47,12 @@
                 class="form-select mb-3"
                 required="{{ request.institution_selection_form.institutions.required }}"
                 {% with num_available_institutions=request.institution_selection_form.fields.institutions.choices|length|add:-1 %}
-                {% if num_available_institutions == 1 %}
-                placeholder="{{ num_available_institutions }} other available..."
-                {% else %}
-                placeholder="{{ num_available_institutions }} others available..."
-                {% endif %}
+                placeholder="{{ num_available_institutions }} other{{ num_available_institutions|pluralize }} available..."
                 {% endwith %}
                 >
                 <option value="" disabled selected>
                     {% with num_available_institutions=request.institution_selection_form.fields.institutions.choices|length|add:-1 %}
-                    {% if num_available_institutions == 1 %}
-                    {{ num_available_institutions }} other available...
-                    {% else %}
-                    {{ num_available_institutions }} others available...
-                    {% endif %}
+                    {{ num_available_institutions }} other{{ num_available_institutions|pluralize }} available...
                     {% endwith %}
                 </option>
                 {% for value, text in request.institution_selection_form.fields.institutions.choices %}
