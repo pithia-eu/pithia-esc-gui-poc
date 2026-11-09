@@ -57,6 +57,7 @@ class UserInfoMiddleware(object):
             request.session.is_authenticated = True
             self.copy_user_id_to_session(request)
             self.copy_user_given_name_to_session(request, user_info)
+            self.copy_user_family_name_to_session(request, user_info)
             self.copy_user_privilege_info_to_session(request, user_info)
 
             institution_id_logged_in_with = get_institution_id_for_login_session(request.session)
@@ -141,6 +142,10 @@ class UserInfoMiddleware(object):
     def copy_user_given_name_to_session(self, request, user_info: dict):
         request.session.update({
             'user_given_name': user_info.get('given_name')
+        })
+    def copy_user_family_name_to_session(self, request, user_info: dict):
+        request.session.update({
+            'user_family_name': user_info.get('family_name')
         })
 
     def logout_and_return_response(self, request):

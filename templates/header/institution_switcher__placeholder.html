@@ -1,0 +1,9 @@
+{% if request.session.institution_for_login_session %}
+{% with num_available_institutions=request.institution_selection_form.fields.institutions.choices|length|add:-1 %}
+{{ num_available_institutions }} other{{ num_available_institutions|pluralize }} available...
+{% endwith %}
+{% else %}
+{% with num_available_institutions=request.institution_selection_form.fields.institutions.choices|length %}
+{{ num_available_institutions }} available...
+{% endwith %}
+{% endif %}

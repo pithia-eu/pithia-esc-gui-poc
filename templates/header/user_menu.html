@@ -21,48 +21,67 @@
     </a>
     {# Dropdown menu #}
     <div class="dropdown-menu dropdown-menu-lg-end dropdown-menu-start">
-        {% if request.session.institution_for_login_session %}
-        {# Dropdown header - current institution #}
-        <div class="px-4 py-2">
-            <small class="fw-bold" style="white-space: pre-wrap;">{{ request.session.institution_for_login_session }}</small>
-            <div class="text-body-secondary" style="white-space: pre-wrap;">{% if request.session.subgroup_for_login_session == 'admins' %}Admin{% else %}Member{% endif %}</div>
+        <div class="{% if not request.session.institution_for_login_session %}pb-2{% endif %}">
+            <div class="fs-xs fw-bold px-4 pt-2">
+                {{ request.session.user_given_name }} {{ request.session.user_family_name }}
+            </div>
+            {% if request.session.institution_for_login_session %}
+            {# Dropdown header - current institution #}
+            <div class="text-body-secondary fs-xs px-4 pb-2">
+                <div>
+                    <span class="text-break">{{ request.session.institution_for_login_session }}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot align-middle" viewBox="0 0 16 16">
+                        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                    </svg>
+                    <span>
+                        {% if request.session.subgroup_for_login_session == 'admins' %}
+                        Admin
+                        {% else %}
+                        Member
+                        {% endif %}
+                    </span>
+                </div>
+                {# Dropdown item - view current institution members #}
+                <a href="{% url 'list_users_in_current_institution' %}" class="icon-link link-underline-secondary link-underline-opacity-100 link-underline-opacity-0-hover fs-xs">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+                    </svg>View Members
+                </a>
+            </div>
+            {% endif %}
         </div>
         <hr class="dropdown-divider">
-        {% endif %}
         {% if request.session.is_authenticated %}
         {% if request.session.user_institution_subgroups|length > 1 %}
+        {# Dropdown menu - institution switcher #}
         <form
             action="{% url 'choose_institution_for_login_session' %}?next={{ request.path }}"
             method="POST"
-            class="px-4 pt-2 pb-3"
+            class="fs-xs px-4 pt-2 pb-3"
             style="min-width: 18rem;">
             {% csrf_token %}
-            <div class="fw-bold pb-2">
-                Switch to Another Institution
+            <div class="fw-bold pb-1">
+                Switch Institution
             </div>
-            {{ request.institution_selection_form.institutions.label_tag }}
+            <div class="text-body-secondary">{{ request.institution_selection_form.institutions.label_tag }}</div>
             <select
                 id="{{ request.institution_selection_form.institutions.auto_id }}-{{ user_menu_location|default:'header' }}"
                 name="{{ request.institution_selection_form.institutions.name }}"
-                class="form-select mb-3"
+                class="form-select form-select-sm mb-3"
                 required="{{ request.institution_selection_form.institutions.required }}"
-                {% with num_available_institutions=request.institution_selection_form.fields.institutions.choices|length|add:-1 %}
-                placeholder="{{ num_available_institutions }} other{{ num_available_institutions|pluralize }} available..."
-                {% endwith %}
+                placeholder="{% include 'header/institution_switcher__placeholder.html' %}"
                 >
                 <option value="" disabled selected>
-                    {% with num_available_institutions=request.institution_selection_form.fields.institutions.choices|length|add:-1 %}
-                    {{ num_available_institutions }} other{{ num_available_institutions|pluralize }} available...
-                    {% endwith %}
+                    {% include 'header/institution_switcher__placeholder.html' %}
                 </option>
-                {% for value, text in request.institution_selection_form.fields.institutions.choices %}
-                {% if request.session.institution_for_login_session != text %}
-                <option value="{{ value }}">{{ text }}</option>
+                {% for institution_value, institution_choice in request.institution_selection_form.fields.institutions.choices %}
+                {% if request.session.institution_for_login_session != institution_choice %}
+                <option value="{{ institution_value }}">{{ institution_choice }}</option>
                 {% endif %}
                 {% endfor %}
             </select>
             {{ request.institution_selection_form.next }}
-            <button href="#" type="submit" class="btn btn-outline-dark w-100">
+            <button href="#" type="submit" class="btn btn-outline-dark btn-sm w-100">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
                 </svg>
@@ -70,15 +89,9 @@
             </button>
         </form>
         <hr class="dropdown-divider">
-        <a href="{% url 'home' %}#my-institutions-management" class="dropdown-item">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-buildings me-2" viewBox="0 0 16 16">
-                <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
-                <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
-            </svg>Manage My Institutions
-        </a>
-        <hr class="dropdown-divider">
         {% endif %}
         {% endif %}
+        {# Dropdown menu - logout button #}
         <form action="{% url 'logout' %}" method="POST">
             {% csrf_token %}
             <button type="submit" class="dropdown-item logout-button">
