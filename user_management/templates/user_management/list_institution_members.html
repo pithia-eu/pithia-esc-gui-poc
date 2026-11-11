@@ -8,60 +8,108 @@
 <script src="{% static 'user_management/list_institution_members.js' %}" defer></script>
 {% endblock scripts %}
 {% block content %}
+{% with current_institution=request.session.institution_for_login_session|default:'Unknown Institution' %}
 <div class="col-xl-7 col-lg-9 d-flex flex-column row-gap-2">
-    <hgroup class="d-flex flex-column row-gap-1 mb-3">
-        <h1>
+    <hgroup class="d-flex flex-column row-gap-4 mb-3">
+        <h1 class="mb-0">
             {{ title }}
         </h1>
-        <p class="fs-base-2 line-clamp line-clamp-2 text-body-secondary mb-0">
-            {% if request.session.institution_for_login_session %}
-            {{ request.session.institution_for_login_session }}
-            {% else %}
-            Unknown Institution
-            {% endif %}
+        <p class="border-start border-primary fw-semibold fs-base-2 text-body-secondary line-clamp line-clamp-2 ps-4 py-2 mb-0">
+            {{ current_institution }}
         </p>
     </hgroup>
     <section>
-        <h2 class="fs-4">Admins</h2>
+        <div class="d-flex align-items-center column-gap-2 w-100 mb-2">
+            <h2 class="fw-semibold fs-base-2 mb-0">Admins</h2>
+            <button
+                class="d-inline-flex btn btn-transparent rounded-circle"
+                data-bs-toggle="popover"
+                data-bs-content="Admins have the same capabilities as members, in addition to being able to accept/reject new membership requests (received via email)."
+                aria-label="Help"
+                style="aspect-ratio: 1 / 1; padding: 1px;">
+                <span
+                    class="d-inline-flex rounded-circle border border-secondary"
+                    style="aspect-ratio: 1 / 1; border-width: 1.5px !important;"
+                    aria-hidden="true">
+                    <span
+                        class="fw-semibold text-body-secondary fs-xs lh-1"
+                        style="width: 1em; height: 1em;">?</span>
+                </span>
+            </button>
+        </div>
         {% if not admins %}
         No admins were found for this institution.
         {% else %}
-        <ul class="list-group">
-            {% for user in admins %}
-            {% if user.status == 'ACTIVE' %}
-            <li class="list-group-item">
-                <div class="d-inline-flex align-items-sm-center align-items-baseline column-gap-3 w-100">
-                    {{ user.name }}
-                    {% if user.email %}
-                    {% include 'user_management/list_institution_members_dropdown_menu.html/' %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-3">Name</th>
+                        <th class="px-4 py-3">Email Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in admins %}
+                    {% if user.status == 'ACTIVE' %}
+                    <tr>
+                        <td class="px-4 py-3">{{ user.name }}</td>
+                        <td class="px-4 py-3">
+                            <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+                        </td>
+                    </tr>
                     {% endif %}
-                </div>
-            </li>
-            {% endif %}
-            {% endfor %}
-        </ul>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% endif %}
     </section>
     <section>
-        <h2 class="fs-4">Members</h2>
+        <div class="d-flex align-items-center column-gap-2 w-100 mb-2">
+            <h2 class="fw-semibold fs-base-2 mb-0">Members</h2>
+            <button
+                class="d-inline-flex btn btn-transparent btn-sm fs-sm rounded-circle"
+                data-bs-toggle="popover"
+                data-bs-content="Members can add, edit and remove content under their institution."
+                aria-label="Help"
+                style="aspect-ratio: 1 / 1; padding: 1px;">
+                <span
+                    class="d-inline-flex rounded-circle border border-secondary"
+                    style="aspect-ratio: 1 / 1; border-width: 1.5px !important;"
+                    aria-hidden="true">
+                    <span
+                        class="fw-semibold text-body-secondary fs-xs lh-1"
+                        style="width: 1em; height: 1em;">?</span>
+                </span>
+            </button>
+        </div>
         {% if not members %}
         No members were found for this institution.
         {% else %}
-        <ul class="list-group">
-            {% for user in members %}
-            {% if user.status == 'ACTIVE' %}
-            <li class="list-group-item">
-                <div class="d-inline-flex align-items-sm-center align-items-baseline column-gap-3 w-100">
-                    {{ user.name }}
-                    {% if user.email %}
-                    {% include 'user_management/list_institution_members_dropdown_menu.html/' %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-3">Name</th>
+                        <th class="px-4 py-3">Email Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in members %}
+                    {% if user.status == 'ACTIVE' %}
+                    <tr>
+                        <td class="px-4 py-3">{{ user.name }}</td>
+                        <td class="px-4 py-3">
+                            <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+                        </td>
+                    </tr>
                     {% endif %}
-                </div>
-            </li>
-            {% endif %}
-            {% endfor %}
-        </ul>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% endif %}
     </section>
 </div>
+{% endwith %}
 {% endblock content %}

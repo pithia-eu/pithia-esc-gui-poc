@@ -8,6 +8,14 @@ async function copyMemberEmailAddress(memberEmailAddress) {
     await navigator.clipboard.writeText(memberEmailAddress);
 }
 
+function setupHelpPopovers() {
+    document.querySelectorAll("[data-bs-toggle='popover']").forEach(popoverElement => {
+        new bootstrap.Popover(popoverElement, {
+            trigger: "focus",
+        });
+    });
+}
+
 window.addEventListener("load", async () => {
     const dropdowns = document.querySelectorAll(".dropdown-institution-member");
     for await (const dropdown of dropdowns) {
@@ -36,4 +44,5 @@ window.addEventListener("load", async () => {
             window.clearTimeout(copyButtonTextResetTimeout);
         });
     }
+    setupHelpPopovers();
 });
