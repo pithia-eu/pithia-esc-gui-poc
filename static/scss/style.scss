@@ -330,16 +330,9 @@ a.external-link:not(a.icon-link)::after {
 
 /* || Bootstrap custom elements */
 .btn-transparent {
-    --bs-btn-color: var(--bs-dark);
-    --bs-btn-bg: rgb(0, 0, 0, 0);
-    --bs-btn-border-color: rgb(0, 0, 0, 0);
-    --bs-btn-hover-color: var(--bs-dark);
-    --bs-btn-hover-bg: var(--bs-gray-200);
-    --bs-btn-hover-border-color: var(--bs-gray-300);
-    --bs-btn-focus-shadow-rgb: 233, 236, 239;
-    --bs-btn-active-color: var(--bs-dark);
-    --bs-btn-active-bg: var(--bs-gray-300);
-    --bs-btn-active-border-color: var(--bs-gray-400);
+    @extend .btn-light;
+    background-color: transparent;
+    border-color: transparent;
 }
 
 .bi {
