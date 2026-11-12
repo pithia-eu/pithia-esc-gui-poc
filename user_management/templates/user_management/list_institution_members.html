@@ -4,9 +4,6 @@
 {% block breadcrumbs %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
-{% block scripts %}
-<script src="{% static 'user_management/list_institution_members.js' %}" defer></script>
-{% endblock scripts %}
 {% block content %}
 {% with current_institution=request.session.institution_for_login_session|default:'Unknown Institution' %}
 <div class="col-xl-7 col-lg-9 d-flex flex-column row-gap-2">
