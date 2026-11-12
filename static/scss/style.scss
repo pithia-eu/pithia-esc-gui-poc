@@ -201,17 +201,6 @@ a.nav-link:focus-visible,
     text-decoration: underline;
 }
 
-/* Breadcrumb */
-.breadcrumb-wrapper .breadcrumb .breadcrumb-item a {
-    text-decoration: none;
-}
-
-.breadcrumb-wrapper .breadcrumb .breadcrumb-item a:hover,
-.breadcrumb-wrapper .breadcrumb .breadcrumb-item a:focus-visible,
-.breadcrumb-wrapper .breadcrumb .breadcrumb-item a:active {
-    text-decoration: underline;
-}
-
 /* Link styles - Bootstrap elements */
 a.btn,
 a.badge,
@@ -558,8 +547,12 @@ header .login-link {
 
 /* || Navbar */
 #navbar-global {
-    background: rgba(var(--bs-secondary-bg-rgb), 0.5);
-    padding-block: 0.25rem;
+    border-block: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color);
+    padding-block: 0.75rem;
+}
+
+#navbar-global .nav-link {
+    color: var(--bs-secondary-color);
 }
 
 .user-dropdown > a:first-of-type > .user-menu-dropdown-text {

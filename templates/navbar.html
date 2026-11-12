@@ -1,6 +1,6 @@
 <nav id="navbar-global" class="navbar navbar-expand-xl mb-0">
     <div class="container-xxl gx-sm-5 gx-4">
-        <a class="d-md-none d-flex align-items-center navbar-brand header-logo-link" href="/">
+        <a class="d-md-none d-flex align-items-center column-gap-1 navbar-brand header-logo-link" href="/">
             {% load static %}
             {% include 'header/logo.html' %}
             <div class="d-inline-flex flex-column align-items-start text-decoration-none fs-4">
@@ -11,13 +11,13 @@
         <button class="navbar-toggler mx-2 my-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div id="navbarNav" class="collapse navbar-collapse px-xl-0 px-2">
+        <div id="navbarNav" class="collapse navbar-collapse fw-medium px-xl-0 px-2">
             <div class="d-md-none d-block border-bottom pt-4 pb-3">
                 {% with user_menu_location='navbar' %}
                 {% include 'header/user_menu.html' %}
                 {% endwith %}
             </div>
-            <ul class="navbar-nav align-items-xl-center align-items-start column-gap-4 fs-sm fw-medium text-secondary-emphasis w-100 py-xl-0 pt-md-2 pt-3 pb-3 mb-0">
+            <ul class="navbar-nav align-items-xl-center align-items-start column-gap-4 fs-sm w-100 py-md-0 pt-3 pb-3 mb-0">
                 <li class="nav-item">
                     <div class="dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">

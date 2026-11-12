@@ -91,12 +91,12 @@
     {% endif %}
     <div class="container-xxl gx-sm-5 gx-4">
         {% block breadcrumb_wrapper %}
-        <div class="breadcrumb-wrapper pt-3">
+        <div class="breadcrumb-wrapper fw-medium pt-md-2 pb-md-1 pt-1">
             {% url 'home' as base_url %}
             {% if not request.path == base_url %}
             <div class="d-flex align-items-center justify-content-between column-gap-5">
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-md-2 mb-3">
+                    <ol class="breadcrumb">
                         {% load project_tags %}
                         {% breadcrumb_item 'Home' 'home' %}
                         {% block breadcrumbs %}{% endblock breadcrumbs %}
