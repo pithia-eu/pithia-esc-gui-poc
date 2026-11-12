@@ -547,8 +547,9 @@ header .login-link {
 
 /* || Navbar */
 #navbar-global {
-    border-block: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color);
-    padding-block: 0.75rem;
+    border-top: none;
+    border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color);
+    padding-block: 1.25rem;
 }
 
 #navbar-global .nav-link {
@@ -2132,6 +2133,12 @@ ul.tree ul {
 
     .page-info-emphasised {
         display: inline-block;
+    }
+
+
+    #navbar-global {
+        border-block: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color);
+        padding-block: 0.75rem;
     }
 
     .breadcrumb {
