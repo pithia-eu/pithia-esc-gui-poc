@@ -259,7 +259,7 @@ def list_users_in_current_institution(request):
     members = sorted(get_members_without_admins_by_institution_id(institution_id), key=lambda d: d['name'])
     admins = sorted(get_admins_by_institution_id(institution_id), key=lambda d: d['name'])
     return render(request, 'user_management/list_institution_members.html', {
-        'title': 'Memberships',
+        'title': 'Member Entitlements',
         'admins': admins,
         'members': members,
     })
