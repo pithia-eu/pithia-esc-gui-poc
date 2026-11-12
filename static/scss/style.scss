@@ -1956,6 +1956,10 @@ ul.tree ul {
     display: none;
 }
 
+.ts-wrapper.single.full.has-items .ts-control {
+    padding-bottom: 0.375rem;
+}
+
 #id_instrument_mode_pair_mode-ts-dropdown
     .optgroup[data-disabled]
     + .optgroup:not([data-disabled])::before {
