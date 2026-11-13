@@ -5,7 +5,8 @@
 <link rel="stylesheet" href="{% static 'utils/highlight/highlight-custom.min.css' %}">
 {% endblock styles %}
 {% block scripts %}
-<script src="{% static 'utils/xml_download.js' %}" type="module" type="text/javascript" defer></script>
+<script src="{% static 'utils/xml_download.js' %}" type="module" type="text/javascript"></script>
+{% block extra_scripts %}{% endblock extra_scripts %}
 <script src="{% static 'utils/highlight/highlight.min.js' %}"></script>
 <script>
     hljs.safeMode();
