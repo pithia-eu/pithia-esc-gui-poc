@@ -312,8 +312,6 @@ a.external-link:not(a.icon-link)::after {
 
 /* || Bootstrap custom elements */
 .btn-transparent {
-    --bs-btn-bg: transparent;
-    --bs-btn-border-color: transparent;
     @include button-variant(
         map.get($theme-colors, "light"),
         map.get($theme-colors, "light"),
@@ -322,6 +320,8 @@ a.external-link:not(a.icon-link)::after {
         $active-background: shade-color(map.get($theme-colors, "light"), $btn-active-bg-shade-amount),
         $active-border: shade-color(map.get($theme-colors, "light"), $btn-active-border-shade-amount)
     );
+    --bs-btn-bg: transparent;
+    --bs-btn-border-color: transparent;
 }
 
 .bi {
@@ -2504,8 +2504,6 @@ $color-mode-type: data;
     }
 
     .btn-transparent {
-        --bs-btn-bg: transparent;
-        --bs-btn-border-color: transparent;
         @include button-variant(
             map.get($theme-colors, "dark"),
             map.get($theme-colors, "dark"),
@@ -2514,6 +2512,8 @@ $color-mode-type: data;
             $active-background: tint-color(map.get($theme-colors, "dark"), $btn-active-bg-tint-amount),
             $active-border: tint-color(map.get($theme-colors, "dark"), $btn-active-border-tint-amount)
         );
+        --bs-btn-bg: transparent;
+        --bs-btn-border-color: transparent;
     }
 
     .btn-light,
