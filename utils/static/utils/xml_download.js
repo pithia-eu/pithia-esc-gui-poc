@@ -1,7 +1,13 @@
 const xmlDownloadButton = document.querySelector(".xml-file-download-btn");
 const xmlFileContent = document.querySelector(".xml-display-area").textContent;
-const xmlFileName = `${document.querySelector("#resource-localid").value}.xml`;
+const xmlFileName = `${document.querySelector("#file-name").value}${getFileExtension()}`;
 
+function getFileExtension() {
+    if (document.querySelector("#file-name").dataset.fileExtension) {
+        return document.querySelector("#file-name").dataset.fileExtension;
+    }
+    return ".xml";
+}
 
 function setupXmlFileDownloadLink() {
     const xmlFile = new Blob([xmlFileContent], {

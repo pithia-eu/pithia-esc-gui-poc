@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import include, path
 from . import views
 
-from browse.views import schemas
+from browse.views import schema_detail, schemas
 
 urlpatterns = [
     path('', views.index, name='home'),
@@ -20,6 +20,7 @@ urlpatterns = [
     path('help/', include('help.urls')),
     path('admin/', admin.site.urls),
     path('schemas/', schemas, name='schemas'),
+    path('schemas/<str:schema_name>/', schema_detail, name='schema_detail'),
     path('registration-help/', views.registration_help, name='registration_help'),
     path('data-collection-registration-guide', views.data_collection_registration_guide, name='data_collection_registration_guide'),
     path('static-dataset-registration-guide', views.static_dataset_registration_guide, name='static_dataset_registration_guide'),

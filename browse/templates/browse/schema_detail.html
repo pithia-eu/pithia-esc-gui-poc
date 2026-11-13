@@ -1,0 +1,9 @@
+{% extends 'utils/xml_file_viewer.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item schemas_index_title 'schemas' %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
+{% block main_heading_text %}
+{{ title }}
+{% endblock main_heading_text %}

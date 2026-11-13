@@ -1,10 +1,13 @@
 import copy
+from http import HTTPStatus
 import itertools
 import json
 import logging
 import re
+import requests
 from dateutil.parser import isoparse
 from django.http import (
+    Http404,
     HttpResponseBadRequest,
     JsonResponse,
 )
@@ -148,6 +151,22 @@ def schemas(request):
     """
     return render(request, 'browse/schemas.html', {
         'title': _XML_SCHEMAS_PAGE_TITLE
+    })
+
+
+def schema_detail(request, schema_name: str):
+    """A detail page to view a schema's markup in a way that preserves
+    the formatting.
+    """
+    response = requests.get(f'https://metadata.pithia.eu/schemas/2.2/{schema_name}')
+    if response.status_code == HTTPStatus.NOT_FOUND:
+        raise Http404()
+    return render(request, 'browse/schema_detail.html', {
+        'schemas_index_title': _XML_SCHEMAS_PAGE_TITLE,
+        'title': schema_name,
+        'xml': response.text,
+        'file_extension': '.xsd',
+        'file_name_no_extension': schema_name.replace('.xsd', ''),
     })
 
 
