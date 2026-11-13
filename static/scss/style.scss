@@ -311,7 +311,7 @@ a.external-link:not(a.icon-link)::after {
 }
 
 /* || Bootstrap custom elements */
-.btn-transparent {
+.btn-clear {
     @include button-variant(
         map.get($theme-colors, "light"),
         map.get($theme-colors, "light"),
@@ -2503,7 +2503,7 @@ $color-mode-type: data;
         display: inline;
     }
 
-    .btn-transparent {
+    .btn-clear {
         @include button-variant(
             map.get($theme-colors, "dark"),
             map.get($theme-colors, "dark"),
