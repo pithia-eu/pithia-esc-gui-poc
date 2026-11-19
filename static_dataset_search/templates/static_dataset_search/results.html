@@ -15,3 +15,22 @@
     <a href="{% url 'static_dataset_search:index' %}">Start new search</a>
 </p>
 {% endblock search_again_section %}
+{% block extra_search_result_content %}
+{% for param_type, param_urls in parameters.items %}
+{# Features of interest - display what this search result can also be queried by. #}
+{% if param_type|lower == 'features of interest' %}
+<ul class="d-inline list-unstyled">
+    {% for url in r.properties.features_of_interest %}
+    <li class="d-inline">
+        {% with value=url %}
+        {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+        {% endwith %}
+        {% if not forloop.last %}
+        <i class="bi bi-dot"></i>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endfor %}
+{% endblock extra_search_result_content %}

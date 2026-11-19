@@ -27,10 +27,8 @@
         <div class="border-start border-2 border-primary fs-sm px-3 mb-4">
             <div class="d-flex flex-column">
                 {% for param_type, param_urls in parameters.items %}
-                {% if param_urls|length %}
                 <details class="text-body-secondary">
                     <summary>{{ param_type }} ({{ param_urls|length }})</summary>
-                    {% comment %} <div class="spinner-border spinner-border-sm text-body-secondary border-1 mt-2"></div> {% endcomment %}
                     <ul class="mt-2{% if forloop.last %} mb-0{% endif %}">
                         {% for param_url in param_urls %}
                         <li>
@@ -41,7 +39,6 @@
                         {% endfor %}
                     </ul>
                 </details>
-                {% endif %}
                 {% endfor %}
             </div>
         </div>
@@ -59,6 +56,10 @@
             {% else %}
             <i class="text-body-secondary">No description</i>
             {% endif %}
+        </div>
+        <div class="fs-xs text-body-secondary">
+            {% block extra_search_result_content %}
+            {% endblock extra_search_result_content %}
         </div>
     </li>
     {% endfor %}
