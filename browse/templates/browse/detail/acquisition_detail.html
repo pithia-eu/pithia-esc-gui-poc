@@ -1,8 +1,8 @@
-{% extends 'browse/detail/bases/base.html' %}
+{% extends 'browse/detail/bases/detail_base.html' %}
 
 {# Appears after the description #}
 {% block post_description_content %}
-{% with capabilities_column_header='Computation Capabilities' %}
+{% with capabilities_column_header='Acquisition Capabilities' %}
 {% include 'browse/detail/sections/capability_links_section.html' %}
 {% endwith %}
 {% endblock post_description_content %}

@@ -409,7 +409,7 @@ class ResourceDetailView(TemplateView):
     resource_server_urls = []
     resource_list_by_type_url_name = ''
     resource_download_url_name = ''
-    template_name = 'browse/detail/bases/base.html'
+    template_name = 'browse/detail/bases/detail_base.html'
 
     def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
         property_table_dict = remove_common_disallowed_properties_from_property_table_dict(property_table_dict)
@@ -514,7 +514,7 @@ class OrganisationDetailView(ResourceDetailView):
     model = models.Organisation
     resource_list_by_type_url_name = 'browse:list_organisations'
     resource_download_url_name = 'utils:view_organisation_as_xml'
-    template_name = 'browse/detail/bases/organisation.html'
+    template_name = 'browse/detail/organisation_detail.html'
 
     def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
         cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
@@ -542,7 +542,7 @@ class IndividualDetailView(ResourceDetailView):
     model = models.Individual
     resource_list_by_type_url_name = 'browse:list_individuals'
     resource_download_url_name = 'utils:view_individual_as_xml'
-    template_name = 'browse/detail/bases/individual.html'
+    template_name = 'browse/detail/individual_detail.html'
 
     def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
         cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
@@ -570,7 +570,7 @@ class ProjectDetailView(ResourceDetailView):
     project_abstract_split = []
 
     model = models.Project
-    template_name = 'browse/detail/bases/project.html'
+    template_name = 'browse/detail/project_detail.html'
     resource_list_by_type_url_name = 'browse:list_projects'
     resource_download_url_name = 'utils:view_project_as_xml'
 
@@ -610,7 +610,7 @@ class PlatformDetailView(ResourceDetailView):
     model = models.Platform
     resource_list_by_type_url_name = 'browse:list_platforms'
     resource_download_url_name = 'utils:view_platform_as_xml'
-    template_name = 'browse/detail/bases/platform.html'
+    template_name = 'browse/detail/platform_detail.html'
 
     def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
         cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
@@ -642,7 +642,7 @@ class InstrumentDetailView(ResourceDetailView):
     model = models.Instrument
     resource_list_by_type_url_name = 'browse:list_instruments'
     resource_download_url_name = 'utils:view_instrument_as_xml'
-    template_name = 'browse/detail/bases/instrument.html'
+    template_name = 'browse/detail/instrument_detail.html'
 
     def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
         cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
@@ -673,7 +673,7 @@ class OperationDetailView(ResourceDetailView):
     model = models.Operation
     resource_list_by_type_url_name = 'browse:list_operations'
     resource_download_url_name = 'utils:view_operation_as_xml'
-    template_name = 'browse/detail/bases/operation.html'
+    template_name = 'browse/detail/operation_detail.html'
 
     def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
         cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
@@ -702,7 +702,7 @@ class AcquisitionCapabilitiesDetailView(ResourceDetailView):
     model = models.AcquisitionCapabilities
     resource_list_by_type_url_name = 'browse:list_acquisition_capability_sets'
     resource_download_url_name = 'utils:view_acquisition_capability_set_as_xml'
-    template_name = 'browse/detail/bases/acquisition_capabilities.html'
+    template_name = 'browse/detail/acquisition_capabilities_detail.html'
 
     def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
         cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
@@ -734,7 +734,7 @@ class AcquisitionDetailView(ResourceDetailView):
     model = models.Acquisition
     resource_list_by_type_url_name = 'browse:list_acquisitions'
     resource_download_url_name = 'utils:view_acquisition_as_xml'
-    template_name = 'browse/detail/bases/acquisition.html'
+    template_name = 'browse/detail/acquisition_detail.html'
 
     def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
         cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
@@ -760,7 +760,7 @@ class ComputationCapabilitiesDetailView(ResourceDetailView):
     model = models.ComputationCapabilities
     resource_list_by_type_url_name = 'browse:list_computation_capability_sets'
     resource_download_url_name = 'utils:view_computation_capability_set_as_xml'
-    template_name = 'browse/detail/bases/computation_capabilities.html'
+    template_name = 'browse/detail/computation_capabilities_detail.html'
 
     def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
         cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
@@ -794,7 +794,7 @@ class ComputationDetailView(ResourceDetailView):
     model = models.Computation
     resource_list_by_type_url_name = 'browse:list_computations'
     resource_download_url_name = 'utils:view_computation_as_xml'
-    template_name = 'browse/detail/bases/computation.html'
+    template_name = 'browse/detail/computation_detail.html'
 
     def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
         cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
@@ -820,7 +820,7 @@ class ProcessDetailView(ResourceDetailView):
     model = models.Process
     resource_list_by_type_url_name = 'browse:list_processes'
     resource_download_url_name = 'utils:view_process_as_xml'
-    template_name = 'browse/detail/bases/process.html'
+    template_name = 'browse/detail/process_detail.html'
 
     def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
         cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
@@ -851,7 +851,7 @@ class DataCollectionDetailView(ResourceDetailView, OnlineResourcesViewMixin):
     model = models.DataCollection
     resource_list_by_type_url_name = 'browse:list_data_collections'
     resource_download_url_name = 'utils:view_data_collection_as_xml'
-    template_name = 'browse/detail/bases/data_collection.html'
+    template_name = 'browse/detail/data_collection_detail.html'
 
     def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
         cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
@@ -924,7 +924,7 @@ class StaticDatasetEntryDetailView(ResourceDetailView):
     model = models.StaticDatasetEntry
     resource_list_by_type_url_name = 'browse:list_static_dataset_entries'
     resource_download_url_name = 'utils:view_static_dataset_entry_as_xml'
-    template_name = 'browse/detail/bases/static_dataset_entry.html'
+    template_name = 'browse/detail/static_dataset_entry_detail.html'
 
     def get_description_from_xml(self, resource):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}entryDescription').text
@@ -958,7 +958,7 @@ class DataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin):
     model = models.DataSubset
     resource_list_by_type_url_name = 'browse:list_data_subsets'
     resource_download_url_name = 'utils:view_data_subset_as_xml'
-    template_name = 'browse/detail/bases/data_subset.html'
+    template_name = 'browse/detail/data_subset_detail.html'
     interaction_methods_by_type = {}
 
     def get_description_from_xml(self, resource):
@@ -1055,7 +1055,7 @@ class WorkflowDetailView(ResourceDetailView):
     A detail page displaying the properties of
     a Workflow registration.
     """
-    template_name = 'browse/detail/bases/workflow.html'
+    template_name = 'browse/detail/workflow_detail.html'
     model = models.Workflow
     resource_list_by_type_url_name = 'browse:list_workflows'
     resource_download_url_name = 'utils:view_workflow_as_xml'
