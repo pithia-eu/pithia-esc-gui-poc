@@ -18,13 +18,10 @@
 {% endif %}
 {# Website #}
 {% include 'browse/detail/sections/website_section.html' %}
-{% endblock post_last_modified_date_content %}
-
-{# Appears after the last modified date, before the description #}
-{% block pre_description_content %}
+{# Sub-projects #}
 {% if resource.properties.sub_projects %}
-<section class="resource-detail-section">
-    <details>
+<div class="mt-4">
+    <details class="d-inline-block">
         <summary class="summary-hover">
             <h2 id="sub-projects" class="fs-6">
                 Sub-projects
@@ -41,8 +38,12 @@
             {% endfor %}
         </ul>
     </details>
-</section>
+</div>
 {% endif %}
+{% endblock post_last_modified_date_content %}
+
+{# Appears after the last modified date, before the description #}
+{% block pre_description_content %}
 {% if resource.abstract.strip|length > 0 %}
 <section class="resource-detail-section">
     <h2 id="abstract" class="mb-2">Abstract</h2>

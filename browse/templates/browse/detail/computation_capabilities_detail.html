@@ -22,15 +22,13 @@
 {% include 'browse/detail/components/type_section_list.html' %}
 {% endwith %}
 {% endif %}
-{% endblock post_last_modified_date_content %}
-
-{# Appears before the description #}
-{% block pre_description_content %}
 {% if resource.properties.child_computations %}
-<section class="resource-detail-section">
-    <details>
-        <summary class="summary-hover py-4">
-            <h2 id="child-computations" class="fs-6">Child Computations <span class="text-body-secondary">({{ resource.properties.child_computations|length }})</span></h2>
+<div class="mt-4">
+    <details class="d-inline-block">
+        <summary class="summary-hover">
+            <h2 class="fs-6" id="child-computations">
+                Child Computations <span class="text-body-secondary">({{ resource.properties.child_computations|length }})</span>
+            </h2>
         </summary>
         <ul class="list-group list-group-flush">
             {% for child_computation_url in resource.properties.child_computations %}
@@ -42,9 +40,9 @@
             {% endfor %}
         </ul>
     </details>
-</section>
+</div>
 {% endif %}
-{% endblock pre_description_content %}
+{% endblock post_last_modified_date_content %}
 
 {# Appears after the description #}
 {% block post_description_content %}
