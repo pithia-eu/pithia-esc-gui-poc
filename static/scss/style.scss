@@ -1024,9 +1024,11 @@ footer .nav-item .nav-link:not(.nav-item:last-child .nav-link) {
 }
 
 .resource-detail-top-section p:last-child,
-.resource-detail-section p:last-child,
 .resource-detail-top-section ul:last-child,
-.resource-detail-section ul:last-child {
+.resource-detail-top-section dl:last-child,
+.resource-detail-section p:last-child,
+.resource-detail-section ul:last-child,
+.resource-detail-section dl:last-child {
     margin-bottom: 0;
 }
 
